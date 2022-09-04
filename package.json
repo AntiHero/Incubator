@@ -5,6 +5,10 @@
   "repository": "git@github.com:AntiHero/Incubator.git",
   "author": "Aleksandr Schemelev <prophreaker@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --watch src -e ts --exec \"node --require ts-node/register --inspect src/index.ts\""
+  },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "nodemon": "^2.0.19",
