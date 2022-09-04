@@ -1,6 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
+import YAML from 'yamljs';
+import swaggerUi from 'swagger-ui-express';
+
 const app = express();
 
 interface Car {
@@ -17,6 +20,9 @@ const cars: { [key: number | string]: Car } = {
 
 let id = 1;
 
+const swaggerDoc = YAML.load('./swagger.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use(bodyParser.json());
 
 app.get('/', (_, res) => {
