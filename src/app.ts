@@ -1,4 +1,5 @@
 import express from 'express';
+import { resolve } from 'node:path';
 import bodyParser from 'body-parser';
 
 import YAML from 'yamljs';
@@ -15,7 +16,13 @@ interface Car {
 }
 
 const cars: { [key: number | string]: Car } = {
-  0: { make: 'BMW', model: 'E46', engine: 'M57D30', color: '317', year: '2002' },
+  0: {
+    make: 'BMW',
+    model: 'E46',
+    engine: 'M57D30',
+    color: '317',
+    year: '2002',
+  },
 };
 
 let id = 1;
@@ -26,7 +33,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 app.use(bodyParser.json());
 
 app.get('/', (_, res) => {
-  res.status(200).send('<h1>Hello, Express</h1>');
+  res.status(200).sendFile(resolve(process.cwd(), 'pages/index.html'));
 });
 
 app.get('/cars', (_, res) => {
@@ -34,7 +41,13 @@ app.get('/cars', (_, res) => {
 });
 
 app.post('/cars', (req, res) => {
-  const { make = '', model = '', engine = '', color = '', year = '' } = req.body;
+  const {
+    make = '',
+    model = '',
+    engine = '',
+    color = '',
+    year = '',
+  } = req.body;
 
   if (make.length && engine.length && color.length && year.length) {
     const car: Car = { make, model, engine, color, year };
