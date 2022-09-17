@@ -2,11 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import json from './videos.json';
-
-import { h01 } from './@types/';
-
-let videos = json as h01.Video[];
+import videos from './fakeDb';
 
 export async function getFavicon (
   req: http.IncomingMessage,
@@ -45,7 +41,7 @@ export async function deleteVideos (
   res: http.ServerResponse<http.IncomingMessage>
 ): Promise<void> {
   await Promise.resolve().then(() => {
-    videos = [];
+    videos.splice(0);
   });
 
   res.statusCode = 204;

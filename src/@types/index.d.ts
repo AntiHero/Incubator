@@ -7,27 +7,27 @@ export declare namespace h01 {
     P720 = 'P720',
     P1080 = 'P1080',
     P1440 = 'P1440',
-    P160 = 'P2160',
+    P2160 = 'P2160',
   }
 
   interface CreateVideoInputModel {
     title: string;
     author: string;
-    availableResolutions?: Resolutions[];
+    availableResolutions: Resolutions[];
   }
 
   interface UpdateVideoInputModel extends CreateVideoInputModel {
-    canBeDownloaded?: boolean;
-    minAgeRestriction?: number;
-    publicationDate?: string;
+    canBeDownloaded: boolean;
+    minAgeRestriction: number;
+    publicationDate: string;
   }
 
   interface Video {
     id: number;
-    title: string;
-    author: string;
+    title: string | null;
+    author: string | null;
     canBeDownloaded: boolean;
-    minAgeRestriction: number;
+    minAgeRestriction: number | null;
     createdAt: string;
     publicationDate: string;
     availableResolutions: Resolutions[];
@@ -37,6 +37,12 @@ export declare namespace h01 {
 export interface FieldError {
   message: string;
   field: string;
+}
+
+export interface MetadataObj {
+  name: string | symbol;
+  parameterIndex: number;
+  isValid(arg: any): true | string;
 }
 
 export interface APIErrorResult {

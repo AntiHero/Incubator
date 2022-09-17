@@ -1,9 +1,12 @@
 import http from 'node:http';
+import { APIErrorResult } from './@types';
 
 import * as Controllers from './controllers';
-import { FieldError, APIErrorResult } from './@types';
+// import { FieldError, APIErrorResult } from './@types';
 
 const PORT = process.env.PORT || 9009;
+
+export const errors: APIErrorResult = { errorsMessages: [] };
 
 const server = http.createServer(async (req, res) => {
   switch (req.url) {
@@ -17,11 +20,13 @@ const server = http.createServer(async (req, res) => {
 
       break;
     }
-    case '/ht_01/api/testing/all-data': {
+    case '/testing/all-data': {
       switch (req.method) {
         case 'DELETE': {
           await Controllers.deleteVideos(req, res);
-          
+
+          console.log(res.statusCode, 'statusCode');
+
           break;
         }
       }
