@@ -1,18 +1,29 @@
+import { errors } from '../';
 import { h01 } from '../@types';
 import { addOneDay } from '../utils/addOneDay';
 import { generateId } from '../utils/idGenerator';
-import { Boolean, Enum, Format, Max, MaxLength, Min, NullableNumber, Number, String, Validate } from '../utils/decorators';
-import { errors } from '../';
+import {
+  Boolean,
+  Enum,
+  Format,
+  Max,
+  MaxLength,
+  Min,
+  NullableNumber,
+  Number,
+  String,
+  Validate,
+} from '../utils/decorators';
 
 export const resolutions = {
-  P144: h01.Resolutions.P144,
-  P240: h01.Resolutions.P240,
-  P360: h01.Resolutions.P360,
-  P480: h01.Resolutions.P480,
-  P720: h01.Resolutions.P720,
-  P1080: h01.Resolutions.P1080,
-  P1440: h01.Resolutions.P1440,
-  P2160: h01.Resolutions.P2160,
+  P144: 'P144',
+  P240: 'P240',
+  P360: 'P360',
+  P480: 'P480',
+  P720: 'P720',
+  P1080: 'P1080',
+  P1440: 'P1440',
+  P2160: 'P2160',
 } as const;
 
 export class Video implements h01.Video {
@@ -30,7 +41,7 @@ export class Video implements h01.Video {
 
   public publicationDate = addOneDay(this.createdAt);
 
-  public availableResolutions: h01.Resolutions[] = [];
+  public availableResolutions: h01.Resolutions[keyof h01.Resolutions][] = [];
 
   constructor () {
     this.id = generateId();
@@ -83,11 +94,10 @@ export class Video implements h01.Video {
     @Min(1)
     @NullableNumber()
     minAgeRestriction?: h01.UpdateVideoInputModel['minAgeRestriction'],
-    @Format({ format: '$date-time '})
+    @Format({ format: '$date-time ' })
     publicationDate?: h01.UpdateVideoInputModel['publicationDate']
   ) {
     for (const arg of arguments) {
-
     }
 
     const video: Partial<h01.Video> = {
@@ -102,6 +112,5 @@ export class Video implements h01.Video {
     };
 
     return video;
-  
   }
 }

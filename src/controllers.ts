@@ -2,7 +2,10 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import { resolve } from 'node:path';
 
+import { h01 } from './@types';
+
 import videos from './fakeDb';
+import { Video } from './model/video';
 
 export async function getFavicon (
   req: http.IncomingMessage,
@@ -45,4 +48,39 @@ export async function deleteVideos (
   });
 
   res.statusCode = 204;
+}
+
+export async function getVideo (
+  _: http.IncomingMessage,
+  res: http.ServerResponse<http.IncomingMessage>,
+  id: string
+) {
+  for (const video of videos) {
+    if (video.id === parseInt(id)) {
+      res.statusCode = 200;
+
+      return Promise.resolve().then(() => {
+        res.write(JSON.stringify(video));
+      });
+    }
+
+    res.statusCode = 404;
+  }
+}
+
+export async function postVideo (
+  _: http.IncomingMessage,
+  res: http.ServerResponse<http.IncomingMessage>,
+  { author, title, availableResolutions }: h01.CreateVideoInputModel
+) {
+  const video = new Video().create(author, title, availableResolutions);
+  
+  return Promise.resolve().then(() => {
+    videos.push(video);
+    
+    res.writeHead(201, {
+      'Content-Type': 'text/plain',
+    });
+    res.write(JSON.stringify(video));
+  });
 }
