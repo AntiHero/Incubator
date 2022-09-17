@@ -20,7 +20,7 @@ const server = http.createServer(async (req, res) => {
 
       break;
     }
-    case '/testing/all-data': {
+    case '/hometask_01/api/testing/all-data': {
       switch (req.method) {
         case 'DELETE': {
           await Controllers.deleteVideos(req, res);

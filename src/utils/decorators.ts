@@ -292,7 +292,7 @@ export function Format ({
         switch (format) {
           case FORMATS['$date-time']: {
             if (
-              !/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]{3}Z)*$/.test(
+              !/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/.test(
                 arg
               )
             )
