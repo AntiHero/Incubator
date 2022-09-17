@@ -74,10 +74,10 @@ export async function postVideo (
   { author, title, availableResolutions }: h01.CreateVideoInputModel
 ) {
   const video = new Video().create(author, title, availableResolutions);
-  
+
   return Promise.resolve().then(() => {
     videos.push(video);
-    
+
     res.writeHead(201, {
       'Content-Type': 'text/plain',
     });

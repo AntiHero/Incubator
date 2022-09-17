@@ -17,8 +17,8 @@ const server = http.createServer(async (req, res) => {
   const isRouteWithId = checkRouteWithId(req.url as string);
 
   if (isRouteWithId) {
-    url = `${constants.BASE_ROUTE}/:id`;
     id = getIdFromRoute(url);
+    url = `${constants.BASE_ROUTE}/:id`;
   }
 
   switch (url) {
@@ -73,6 +73,7 @@ const server = http.createServer(async (req, res) => {
     case `${constants.BASE_ROUTE}/:id`: {
       switch (req.method) {
         case 'GET': {
+          console.log('here', id);
           await Controllers.getVideo(req, res, id);
 
           break;
