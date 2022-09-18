@@ -94,10 +94,6 @@ const server = http.createServer(async (req, res) => {
 
       break;
     }
-    default: {
-      res.statusCode = 404;
-      res.write('path not found');
-    }
   }
 
   res.end();
