@@ -1,3 +1,5 @@
+import { Video } from "../model/video";
+
 export declare namespace h01 {
   interface Resolutions {
     P144: 'P144';

@@ -49,12 +49,12 @@ export class Video implements h01.Video {
 
   @Validate({ errors })
   create (
-    @MaxLength(40)
-    @String()
-    title: h01.CreateVideoInputModel['title'],
     @MaxLength(20)
     @String()
     author: h01.CreateVideoInputModel['author'],
+    @MaxLength(40)
+    @String()
+    title: h01.CreateVideoInputModel['title'],
     @Enum({ collection: resolutions })
     availableResolutions: h01.CreateVideoInputModel['availableResolutions']
   ): h01.Video {
@@ -80,12 +80,12 @@ export class Video implements h01.Video {
   update (
     @Number()
     id: number,
-    @MaxLength(40)
-    @String()
-    title?: h01.UpdateVideoInputModel['title'],
     @MaxLength(20)
     @String()
     author?: h01.UpdateVideoInputModel['author'],
+    @MaxLength(40)
+    @String()
+    title?: h01.UpdateVideoInputModel['title'],
     @Enum({ collection: resolutions })
     availableResolutions?: h01.UpdateVideoInputModel['availableResolutions'],
     @Boolean()
@@ -97,20 +97,32 @@ export class Video implements h01.Video {
     @Format({ format: '$date-time ' })
     publicationDate?: h01.UpdateVideoInputModel['publicationDate']
   ) {
-    for (const arg of arguments) {
+    const updatedVideo: Partial<h01.Video> = {};
+
+    if (author !== undefined) {
+      updatedVideo.author = author;
     }
 
-    const video: Partial<h01.Video> = {
-      id,
-      author: author || this.author,
-      title: title || this.title,
-      canBeDownloaded: canBeDownloaded || this.canBeDownloaded,
-      minAgeRestriction: minAgeRestriction || this.minAgeRestriction,
-      createdAt: this.createdAt,
-      publicationDate: this.publicationDate,
-      availableResolutions: this.availableResolutions,
-    };
+    if (title !== undefined) {
+      updatedVideo.title = title;
+    }
 
-    return video;
+    if (availableResolutions !== undefined) {
+      updatedVideo.availableResolutions = availableResolutions;
+    }
+
+    if (canBeDownloaded !== undefined) {
+      updatedVideo.canBeDownloaded = canBeDownloaded;
+    }
+
+    if (minAgeRestriction !== undefined) {
+      updatedVideo.minAgeRestriction = minAgeRestriction;
+    }
+
+    if (publicationDate !== undefined) {
+      updatedVideo.publicationDate = publicationDate;
+    }
+
+    return updatedVideo;
   }
 }

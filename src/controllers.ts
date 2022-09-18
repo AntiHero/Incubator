@@ -57,7 +57,9 @@ export async function getVideo (
 ) {
   for (const video of videos) {
     if (video.id === parseInt(id)) {
-      res.statusCode = 200;
+      res.writeHead(200, {
+        'Content-Type': 'text/plain',
+      });
 
       return Promise.resolve().then(() => {
         res.write(JSON.stringify(video));
@@ -83,4 +85,72 @@ export async function postVideo (
     });
     res.write(JSON.stringify(video));
   });
+}
+
+export async function updateVideo (
+  _: http.IncomingMessage,
+  res: http.ServerResponse<http.IncomingMessage>,
+  {
+    id,
+    author,
+    title,
+    availableResolutions,
+    canBeDownloaded,
+    minAgeRestriction,
+    publicationDate,
+  }: { id: number } & h01.UpdateVideoInputModel
+) {
+  try {
+    const updatedVideo = new Video().update(
+      id,
+      author,
+      title,
+      availableResolutions,
+      canBeDownloaded,
+      minAgeRestriction,
+      publicationDate
+    );
+
+    let isFound = false;
+
+    for (const video of videos) {
+      if (video.id === id) {
+        isFound = true;
+        await Promise.resolve().then(() => {
+          for (const key in updatedVideo) {
+            if (key in video) {
+              (video as any)[key] =
+                updatedVideo[key as keyof Partial<h01.Video>];
+            }
+          }
+        });
+      }
+    }
+
+    res.statusCode = 204;
+
+    if (!isFound) {
+      res.statusCode = 404;
+    }
+  } catch (e) {
+    throw new Error('Creation error');
+  }
+}
+
+export async function deleteVideo (
+  _: http.IncomingMessage,
+  res: http.ServerResponse<http.IncomingMessage>,
+  id: number
+) {
+  for (let i = 0; i < videos.length; i++) {
+    if (videos[i].id === id) {
+      await Promise.resolve().then(() => videos.splice(i, 1));
+
+      res.statusCode = 204;
+    }
+  }
+
+  res.statusCode = 404;
+
+  return Promise.resolve();
 }

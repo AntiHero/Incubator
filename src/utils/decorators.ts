@@ -1,5 +1,4 @@
 import { APIErrorResult, MetadataObj } from '../@types';
-import { resolutions } from '../model/video';
 import { getFunctionParamNames } from './getFunctionParamNames';
 
 const FORMATS = { '$date-time': '$date-time ' } as const;
@@ -17,9 +16,13 @@ export function MaxLength (num: number) {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
         if (typeof arg !== 'string') return true;
 
@@ -44,9 +47,13 @@ export function Max (num: number) {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
         if (typeof arg !== 'number') return true;
 
@@ -69,9 +76,13 @@ export function MinLength (num: number) {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
         if (typeof arg !== 'string') return true;
 
@@ -97,9 +108,13 @@ export function Min (num: number) {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: number) {
         if (typeof arg !== 'number') return true;
 
@@ -122,9 +137,13 @@ export function NullableString () {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
         return (
           typeof arg === 'string' ||
@@ -149,9 +168,13 @@ export function NullableNumber () {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: number) {
         return (
           typeof arg === 'number' ||
@@ -187,7 +210,7 @@ export function Enum ({ collection }: { collection: Record<any, string> }) {
         const values = Object.values(collection);
         for (const resolution of arg) {
           if (!values.includes(resolution))
-            return `No valid resolution provided`;
+            return `Invalid resolution ${resolution} provided`;
         }
 
         return true;
@@ -209,9 +232,13 @@ export function Number () {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: number) {
         return (
           (typeof arg === 'number' && !Object.is(arg, NaN)) ||
@@ -235,9 +262,13 @@ export function Boolean () {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: boolean) {
         return typeof arg === 'boolean' || `Should be of type boolean`;
       },
@@ -285,9 +316,13 @@ export function Format ({
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
         if (typeof arg !== 'string') return true;
 
@@ -309,8 +344,38 @@ export function Format ({
   };
 }
 
+export function InCollection ({ collection }: { collection: any[] }) {
+  return (
+    target: {
+      [key: string | symbol]: any;
+      metadata: Set<MetadataObj>;
+    },
+    propertyKey: string | symbol,
+    parameterIndex: number
+  ): void => {
+    if (!target.metadata) {
+      target.metadata = new Set();
+    }
+
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
+    target.metadata.add({
+      name: propertyKey,
+      parameterIndex,
+      parameterName,
+      isValid (id: number) {
+        for (const item of collection) {
+          if (item.id === id) return true;
+        }
+
+        return `There is no such ${id} in collection`;
+      },
+    });
+  };
+}
+
 export function Validate ({ errors }: { errors: APIErrorResult }) {
-  console.log(errors, 'errors');
   return (
     target: {
       [key: string | symbol]: any;
@@ -322,6 +387,7 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
     const method = descriptor.value;
 
     if (!target.metadata) return;
+    
     ((descriptor.value = function (...rest: any): any {
       let noErrors = true;
 
@@ -337,12 +403,11 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
                 field: metaObj.parameterName as string,
                 message: result,
               });
-              console.log(errors);
             }
           }
         }
       }
-
+      
       if (!noErrors) throw new Error('Validation error');
 
       return method.apply(this, rest);

@@ -52,11 +52,14 @@ const server = http.createServer(async (req, res) => {
               resolvePromise();
             } catch (e) {
               if (errors.errorsMessages.length) {
-                // res.writeHead(400, { 'Content-Type': 'text/plain' });
-                // res.write(JSON.stringify(errors.errorsMessages));
-                // errors.errorsMessages.splice(0);
+                res.writeHead(400, { 'Content-Type': 'text/plain' });
+                res.write(JSON.stringify(errors));
+
+                errors.errorsMessages.splice(0);
+              } else {
+                res.statusCode = 403;
               }
-              res.statusCode = 403;
+
               res.end();
             }
           });
@@ -74,8 +77,51 @@ const server = http.createServer(async (req, res) => {
     case `${constants.BASE_ROUTE}/:id`: {
       switch (req.method) {
         case 'GET': {
-          console.log('here', id);
           await Controllers.getVideo(req, res, id);
+
+          break;
+        }
+        case 'PUT': {
+          let rawData = '';
+          let resolvePromise: () => void;
+
+          req.on('data', chunk => {
+            rawData += chunk;
+          });
+
+          req.on('end', async () => {
+            try {
+              const parsedData = JSON.parse(rawData) as {
+                id: number;
+              } & h01.UpdateVideoInputModel;
+
+              parsedData.id = parseInt(id);
+
+              await Controllers.updateVideo(req, res, parsedData);
+
+              resolvePromise();
+            } catch (e) {
+              if (errors.errorsMessages.length) {
+                res.writeHead(400, { 'Content-Type': 'text/plain' });
+                res.write(JSON.stringify(errors));
+
+                errors.errorsMessages.splice(0);
+              } else {
+                res.statusCode = 403;
+              }
+
+              res.end();
+            }
+          });
+
+          await new Promise<void>(resolve => {
+            resolvePromise = resolve;
+          });
+
+          break;
+        }
+        case 'DELETE': {
+          await Controllers.deleteVideo(req, res, parseInt(id));
 
           break;
         }
