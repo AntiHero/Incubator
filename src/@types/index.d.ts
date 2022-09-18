@@ -41,6 +41,7 @@ export interface FieldError {
 
 export interface MetadataObj {
   name: string | symbol;
+  parameterName?: string;
   parameterIndex: number;
   isValid(arg: any): true | string;
 }

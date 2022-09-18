@@ -1,14 +1,13 @@
 import http from 'node:http';
-import { APIErrorResult, h01 } from './@types';
+import { h01 } from './@types';
 
-import * as Controllers from './controllers';
+import { errors } from './errors';
 import * as constants from './constants';
-import { checkRouteWithId } from './utils/checkRouteWithId';
+import * as Controllers from './controllers';
 import { getIdFromRoute } from './utils/getIdFromRoute';
+import { checkRouteWithId } from './utils/checkRouteWithId';
 
 const PORT = process.env.PORT || 9009;
-
-export const errors: APIErrorResult = { errorsMessages: [] };
 
 const server = http.createServer(async (req, res) => {
   let url = req.url as string;
@@ -53,10 +52,12 @@ const server = http.createServer(async (req, res) => {
               resolvePromise();
             } catch (e) {
               if (errors.errorsMessages.length) {
-                res.writeHead(400, { 'Content-Type': 'text/plain' });
-                res.write(JSON.stringify(errors.errorsMessages));
-                errors.errorsMessages.splice(0);
+                // res.writeHead(400, { 'Content-Type': 'text/plain' });
+                // res.write(JSON.stringify(errors.errorsMessages));
+                // errors.errorsMessages.splice(0);
               }
+              res.statusCode = 403;
+              res.end();
             }
           });
 

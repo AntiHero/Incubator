@@ -1,4 +1,4 @@
-import { errors } from '../';
+import { errors } from '../errors';
 import { h01 } from '../@types';
 import { addOneDay } from '../utils/addOneDay';
 import { generateId } from '../utils/idGenerator';
@@ -52,7 +52,7 @@ export class Video implements h01.Video {
     @MaxLength(40)
     @String()
     title: h01.CreateVideoInputModel['title'],
-    @MaxLength(2)
+    @MaxLength(20)
     @String()
     author: h01.CreateVideoInputModel['author'],
     @Enum({ collection: resolutions })

@@ -1,4 +1,6 @@
 import { APIErrorResult, MetadataObj } from '../@types';
+import { resolutions } from '../model/video';
+import { getFunctionParamNames } from './getFunctionParamNames';
 
 const FORMATS = { '$date-time': '$date-time ' } as const;
 
@@ -174,13 +176,16 @@ export function Enum ({ collection }: { collection: Record<any, string> }) {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string[]) {
         const values = Object.values(collection);
-
-        for (const resolution in arg) {
+        for (const resolution of arg) {
           if (!values.includes(resolution))
             return `No valid resolution provided`;
         }
@@ -217,7 +222,7 @@ export function Number () {
   };
 }
 
-export function Boolean() {
+export function Boolean () {
   return (
     target: {
       [key: string | symbol]: any;
@@ -234,10 +239,7 @@ export function Boolean() {
       name: propertyKey,
       parameterIndex,
       isValid (arg: boolean) {
-        return (
-          typeof arg === 'boolean' ||
-          `Should be of type boolean`
-        );
+        return typeof arg === 'boolean' || `Should be of type boolean`;
       },
     });
   };
@@ -308,6 +310,7 @@ export function Format ({
 }
 
 export function Validate ({ errors }: { errors: APIErrorResult }) {
+  console.log(errors, 'errors');
   return (
     target: {
       [key: string | symbol]: any;
@@ -319,8 +322,7 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
     const method = descriptor.value;
 
     if (!target.metadata) return;
-
-    return ((descriptor.value = function (...rest: any): any {
+    ((descriptor.value = function (...rest: any): any {
       let noErrors = true;
 
       if (target.metadata) {
@@ -332,9 +334,10 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
               if (noErrors) noErrors = false;
 
               errors.errorsMessages.push({
-                field: propertyKey,
+                field: metaObj.parameterName as string,
                 message: result,
               });
+              console.log(errors);
             }
           }
         }
