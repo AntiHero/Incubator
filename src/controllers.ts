@@ -116,6 +116,7 @@ export async function updateVideo (
     for (const video of videos) {
       if (video.id === id) {
         isFound = true;
+        
         await Promise.resolve().then(() => {
           for (const key in updatedVideo) {
             if (key in video) {
@@ -147,10 +148,10 @@ export async function deleteVideo (
       await Promise.resolve().then(() => videos.splice(i, 1));
 
       res.statusCode = 204;
+
+      return;
     }
   }
 
   res.statusCode = 404;
-
-  return Promise.resolve();
 }

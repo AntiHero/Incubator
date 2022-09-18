@@ -289,11 +289,15 @@ export function String () {
       target.metadata = new Set();
     }
 
+    const propertyParams = getFunctionParamNames(target[propertyKey]);
+    const parameterName = propertyParams[parameterIndex];
+
     target.metadata.add({
       name: propertyKey,
       parameterIndex,
+      parameterName,
       isValid (arg: string) {
-        return typeof arg === 'string' || `Should be of type string or null`;
+        return typeof arg === 'string' || `Should be of type string`;
       },
     });
   };
@@ -387,7 +391,7 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
     const method = descriptor.value;
 
     if (!target.metadata) return;
-    
+
     ((descriptor.value = function (...rest: any): any {
       let noErrors = true;
 
