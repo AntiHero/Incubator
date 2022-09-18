@@ -43,12 +43,12 @@ export class Video implements h01.Video {
 
   public availableResolutions: h01.Resolutions[keyof h01.Resolutions][] = [];
 
-  constructor () {
+  constructor() {
     this.id = generateId();
   }
 
   @Validate({ errors })
-  create (
+  create(
     @MaxLength(20)
     @String()
     author: h01.CreateVideoInputModel['author'],
@@ -77,7 +77,7 @@ export class Video implements h01.Video {
   }
 
   @Validate({ errors })
-  update (
+  update(
     @Number()
     id: number,
     @MaxLength(20)
@@ -95,6 +95,7 @@ export class Video implements h01.Video {
     @NullableNumber()
     minAgeRestriction?: h01.UpdateVideoInputModel['minAgeRestriction'],
     @Format({ format: '$date-time ' })
+    @String()
     publicationDate?: h01.UpdateVideoInputModel['publicationDate']
   ) {
     const updatedVideo: Partial<h01.Video> = {};

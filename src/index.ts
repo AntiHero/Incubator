@@ -37,7 +37,7 @@ const server = http.createServer(async (req, res) => {
           let rawData = '';
           let resolvePromise: () => void;
 
-          req.on('data', chunk => {
+          req.on('data', (chunk) => {
             rawData += chunk;
           });
 
@@ -64,7 +64,7 @@ const server = http.createServer(async (req, res) => {
             }
           });
 
-          await new Promise<void>(resolve => {
+          await new Promise<void>((resolve) => {
             resolvePromise = resolve;
           });
 
@@ -85,7 +85,7 @@ const server = http.createServer(async (req, res) => {
           let rawData = '';
           let resolvePromise: () => void;
 
-          req.on('data', chunk => {
+          req.on('data', (chunk) => {
             rawData += chunk;
           });
 
@@ -114,7 +114,7 @@ const server = http.createServer(async (req, res) => {
             }
           });
 
-          await new Promise<void>(resolve => {
+          await new Promise<void>((resolve) => {
             resolvePromise = resolve;
           });
 

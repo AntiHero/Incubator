@@ -7,7 +7,7 @@ import { h01 } from './@types';
 import videos from './fakeDb';
 import { Video } from './model/video';
 
-export async function getFavicon (
+export async function getFavicon(
   req: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>
 ): Promise<void> {
@@ -26,7 +26,7 @@ export async function getFavicon (
   res.end();
 }
 
-export async function getVideos (
+export async function getVideos(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>
 ): Promise<void> {
@@ -39,7 +39,7 @@ export async function getVideos (
   });
 }
 
-export async function deleteVideos (
+export async function deleteVideos(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>
 ): Promise<void> {
@@ -50,7 +50,7 @@ export async function deleteVideos (
   res.statusCode = 204;
 }
 
-export async function getVideo (
+export async function getVideo(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>,
   id: string
@@ -70,7 +70,7 @@ export async function getVideo (
   }
 }
 
-export async function postVideo (
+export async function postVideo(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>,
   { author, title, availableResolutions }: h01.CreateVideoInputModel
@@ -87,7 +87,7 @@ export async function postVideo (
   });
 }
 
-export async function updateVideo (
+export async function updateVideo(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>,
   {
@@ -116,7 +116,7 @@ export async function updateVideo (
     for (const video of videos) {
       if (video.id === id) {
         isFound = true;
-        
+
         await Promise.resolve().then(() => {
           for (const key in updatedVideo) {
             if (key in video) {
@@ -138,7 +138,7 @@ export async function updateVideo (
   }
 }
 
-export async function deleteVideo (
+export async function deleteVideo(
   _: http.IncomingMessage,
   res: http.ServerResponse<http.IncomingMessage>,
   id: number

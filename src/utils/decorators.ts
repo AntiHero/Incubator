@@ -3,7 +3,7 @@ import { getFunctionParamNames } from './getFunctionParamNames';
 
 const FORMATS = { '$date-time': '$date-time ' } as const;
 
-export function MaxLength (num: number) {
+export function MaxLength(num: number) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -23,7 +23,7 @@ export function MaxLength (num: number) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         if (typeof arg !== 'string') return true;
 
         return (
@@ -34,7 +34,7 @@ export function MaxLength (num: number) {
   };
 }
 
-export function Max (num: number) {
+export function Max(num: number) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -54,7 +54,7 @@ export function Max (num: number) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         if (typeof arg !== 'number') return true;
 
         return arg <= num || `Number is too large, should be less than ${num}`;
@@ -63,7 +63,7 @@ export function Max (num: number) {
   };
 }
 
-export function MinLength (num: number) {
+export function MinLength(num: number) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -83,7 +83,7 @@ export function MinLength (num: number) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         if (typeof arg !== 'string') return true;
 
         return (
@@ -95,7 +95,7 @@ export function MinLength (num: number) {
   };
 }
 
-export function Min (num: number) {
+export function Min(num: number) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -115,7 +115,7 @@ export function Min (num: number) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: number) {
+      isValid(arg: number) {
         if (typeof arg !== 'number') return true;
 
         return arg >= num || `Number is too small, should be more than ${num} `;
@@ -124,7 +124,7 @@ export function Min (num: number) {
   };
 }
 
-export function NullableString () {
+export function NullableString() {
   return (
     target: {
       [key: string | symbol]: any;
@@ -144,7 +144,7 @@ export function NullableString () {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         return (
           typeof arg === 'string' ||
           arg === null ||
@@ -155,7 +155,7 @@ export function NullableString () {
   };
 }
 
-export function NullableNumber () {
+export function NullableNumber() {
   return (
     target: {
       [key: string | symbol]: any;
@@ -175,7 +175,7 @@ export function NullableNumber () {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: number) {
+      isValid(arg: number) {
         return (
           typeof arg === 'number' ||
           arg === null ||
@@ -186,7 +186,7 @@ export function NullableNumber () {
   };
 }
 
-export function Enum ({ collection }: { collection: Record<any, string> }) {
+export function Enum({ collection }: { collection: Record<any, string> }) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -206,7 +206,7 @@ export function Enum ({ collection }: { collection: Record<any, string> }) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string[]) {
+      isValid(arg: string[]) {
         const values = Object.values(collection);
         for (const resolution of arg) {
           if (!values.includes(resolution))
@@ -219,7 +219,7 @@ export function Enum ({ collection }: { collection: Record<any, string> }) {
   };
 }
 
-export function Number () {
+export function Number() {
   return (
     target: {
       [key: string | symbol]: any;
@@ -239,7 +239,7 @@ export function Number () {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: number) {
+      isValid(arg: number) {
         return (
           (typeof arg === 'number' && !Object.is(arg, NaN)) ||
           `Should be of type number`
@@ -249,7 +249,7 @@ export function Number () {
   };
 }
 
-export function Boolean () {
+export function Boolean() {
   return (
     target: {
       [key: string | symbol]: any;
@@ -269,14 +269,14 @@ export function Boolean () {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: boolean) {
+      isValid(arg: boolean) {
         return typeof arg === 'boolean' || `Should be of type boolean`;
       },
     });
   };
 }
 
-export function String () {
+export function String() {
   return (
     target: {
       [key: string | symbol]: any;
@@ -296,14 +296,14 @@ export function String () {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         return typeof arg === 'string' || `Should be of type string`;
       },
     });
   };
 }
 
-export function Format ({
+export function Format({
   format,
 }: {
   format: typeof FORMATS[keyof typeof FORMATS];
@@ -327,7 +327,7 @@ export function Format ({
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (arg: string) {
+      isValid(arg: string) {
         if (typeof arg !== 'string') return true;
 
         switch (format) {
@@ -348,7 +348,7 @@ export function Format ({
   };
 }
 
-export function InCollection ({ collection }: { collection: any[] }) {
+export function InCollection({ collection }: { collection: any[] }) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -368,7 +368,7 @@ export function InCollection ({ collection }: { collection: any[] }) {
       name: propertyKey,
       parameterIndex,
       parameterName,
-      isValid (id: number) {
+      isValid(id: number) {
         for (const item of collection) {
           if (item.id === id) return true;
         }
@@ -379,7 +379,7 @@ export function InCollection ({ collection }: { collection: any[] }) {
   };
 }
 
-export function Validate ({ errors }: { errors: APIErrorResult }) {
+export function Validate({ errors }: { errors: APIErrorResult }) {
   return (
     target: {
       [key: string | symbol]: any;
@@ -392,7 +392,7 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
 
     if (!target.metadata) return;
 
-    ((descriptor.value = function (...rest: any): any {
+    (descriptor.value = function (...rest: any): any {
       let noErrors = true;
 
       if (target.metadata) {
@@ -411,10 +411,10 @@ export function Validate ({ errors }: { errors: APIErrorResult }) {
           }
         }
       }
-      
+
       if (!noErrors) throw new Error('Validation error');
 
       return method.apply(this, rest);
-    }) as unknown) as typeof method;
+    }) as unknown as typeof method;
   };
 }

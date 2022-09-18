@@ -1,4 +1,4 @@
-import { BASE_ROUTE } from "../constants";
+import { BASE_ROUTE } from '../constants';
 
 export function getIdFromRoute(route: string): string {
   const regex = new RegExp(`${BASE_ROUTE}/(\\d+)`);

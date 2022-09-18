@@ -1,4 +1,4 @@
-import { Video } from "../model/video";
+import { Video } from '../model/video';
 
 export declare namespace h01 {
   interface Resolutions {
