@@ -7,29 +7,32 @@ export interface APIErrorResult {
   errorsMessages: FieldError[];
 }
 
-export interface h02 {
-  db: {
-    BlogInputModel: {
+export declare namespace h02 {
+  namespace db {
+    interface BlogInputModel {
       name: string;
       youtubeUrl: string;
-    };
-    BlogViewModel: {
+    }
+
+    interface BlogViewModel {
       id: string | null;
       name: string | null;
       youtubeUrl: string | null;
-    };
-    PostInputModel: {
+    }
+
+    interface PostInputModel {
       title: string;
       content: string;
       blogId: string;
-    };
-    PostViewModel: {
+    }
+   
+    interface PostViewModel {
       id: string | null;
       title: string | null;
       shortDescription: string | null;
       content: string | null;
       blogId: string | null;
       blogName: string | null;
-    };
-  };
+    }
+  }
 }
