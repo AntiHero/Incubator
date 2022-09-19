@@ -1,3 +1,3 @@
-import { APIErrorResult } from './@types';
+import { APIErrorResult} from "./@types";
 
 export const errors: APIErrorResult = { errorsMessages: [] };
