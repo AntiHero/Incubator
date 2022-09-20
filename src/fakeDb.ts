@@ -5,7 +5,7 @@ export default {
     {
       id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       name: 'About everything',
-      youtubeUrl: 'https://www.youtube.com/watch?v=vxM3F7qw050',
+      youtubeUrl: 'https://www.youtube.com/watch',
     },
   ] as h02.db.BlogViewModel[],
   posts: [

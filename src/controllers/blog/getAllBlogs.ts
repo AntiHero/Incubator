@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import * as blogsRepository from '../repository/blogs.repository';
+
+import * as blogsRepository from '@/repository/blogs.repository';
 
 export const getAllBlogs = async (_: Request, res: Response) => {
   const blogs = await blogsRepository.getAllBlogs();
