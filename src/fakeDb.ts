@@ -1,3 +1,5 @@
+import { h02} from "./@types"
+
 export default {
   blogs: [
     {
@@ -5,7 +7,7 @@ export default {
       name: 'About everything',
       youtubeUrl: 'https://www.youtube.com/watch?v=vxM3F7qw050',
     },
-  ],
+  ] as h02.db.BlogViewModel[],
   posts: [
     {
       id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6e',
@@ -15,5 +17,5 @@ export default {
       blogId: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d',
       blogName: 'About everything',
     },
-  ],
+  ] as h02.db.PostViewModel[],
 };
