@@ -14,7 +14,7 @@ const MAX_TITLE_LEN = 30;
 const MAX_CONTENT_LEN = 1000;
 const MAX_SHORT_DESCR_LEN = 100;
 
-export const postBlog = [
+export const postPost = [
   ...checkAuthorization,
   body(PostFields.title)
     .isString()

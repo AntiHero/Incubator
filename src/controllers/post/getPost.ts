@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import * as postsRepository from '../../repository/posts.repository';
 
-export const getBlog = async (req: Request, res: Response) => {
+export const getPost = async (req: Request, res: Response) => {
   const id = req.params.id;
 
   const blog = await postsRepository.findPostById(id);
