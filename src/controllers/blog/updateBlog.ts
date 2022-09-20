@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import { BlogFields } from '../../@types';
+import { APIErrorResult, BlogFields } from '../../@types';
 import * as ErrorMessages from '../../errorMessages';
 import * as blogsRepository from '../../repository/blogs.repository';
 import { checkAuthorization } from '../../customValidators/checkAuthorization';
@@ -40,7 +40,13 @@ export const updateBlog = [
       res
         .type('text/plain')
         .status(400)
-        .send(JSON.stringify(customValidationResult(req).array({ onlyFirstError: true })));
+        .send(
+          JSON.stringify({
+            errorsMessages: customValidationResult(req).array({
+              onlyFirstError: true,
+            }),
+          } as APIErrorResult)
+        );
 
       return;
     }
