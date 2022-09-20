@@ -7,7 +7,7 @@ export const getAllPosts = async (): Promise<h02.db.PostViewModel[]> => {
 
 export const savePost = async (post: h02.db.PostViewModel) => {
   for (const blog of data.blogs) {
-    if (blog.id === post.blogId && blog.name === post.blogName) {
+    if (blog.id === post.blogId) {
       return Promise.resolve().then(() => data.posts.push(post));
     }
   }
@@ -25,10 +25,10 @@ export const findPostById = async (id: string) => {
 
 export const findPostByIdAndUpdate = async (
   id: string,
-  { content, title, shortDescription, blogId, blogName }: h02.db.PostViewModel
+  { content, title, shortDescription, blogId }: h02.db.PostInputModel
 ) => {
   for (const blog of data.blogs) {
-    if (blog.id === blogId && blog.name === blogName) {
+    if (blog.id === blogId) {
       for (const post of data.posts) {
         if (post.id === id)
           return Promise.resolve().then(() => {
@@ -36,7 +36,6 @@ export const findPostByIdAndUpdate = async (
             post.title = title;
             post.shortDescription = shortDescription;
             post.blogId = blogId;
-            post.blogName = blogName;
           });
       }
     }
