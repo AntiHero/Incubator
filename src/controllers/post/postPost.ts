@@ -73,7 +73,7 @@ export const postPost = [
       res
         .type('text/plain')
         .status(201)
-        .send(JSON.stringify(blog));
+        .send(JSON.stringify(post));
 
       return;
     }
