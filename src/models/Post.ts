@@ -1,17 +1,38 @@
-import { h02 } from "../@types";
+import { v4 as uuidv4 } from 'uuid';
+
+import { h02 } from '../@types';
 
 class Post implements h02.db.PostViewModel {
   public id: string | null = null;
 
-  public title: string | null = null;
-  
-  public shortDescription: string | null = null;
+  constructor (
+    public title: string,
+    public shortDescription: string,
+    public content: string,
+    public blogId: string,
+    public blogName: string
+  ) {
+    this.id = uuidv4();
+    this.title = title;
+    this.shortDescription = shortDescription;
+    this.content = content;
+    this.blogId = blogId;
+    this.blogName = blogName;
+  }
 
-  public content: string | null = null;
+  public async save () {
+    return Promise.resolve().then(() => {
+      const post = {
+        id: this.id,
+        title: this.title,
+        shortDescription: this.shortDescription,
+        content: this.content,
+        blogId: this.blogId,
+      };
 
-  public blogId: string | null = null;
-
-  public blogName: string | null = null;
+      return post;
+    });
+  }
 }
 
 export default Post;
