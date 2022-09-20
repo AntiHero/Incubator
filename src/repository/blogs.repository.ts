@@ -28,7 +28,7 @@ export const findBlogByIdAndUpdate = async (id: string, { name, youtubeUrl }: h0
   return null;
 }
 
-export const findBlogByIndAndDelete = async (id: string) => {
+export const findBlogByIdAndDelete = async (id: string) => {
   for (const [index, blog] of Object.entries(data.blogs)) {
     if (blog.id === id) {
       data.blogs.splice(Number(index), 1);
@@ -38,4 +38,15 @@ export const findBlogByIndAndDelete = async (id: string) => {
   }
 
   return null;
+}
+
+export const deleteAll = async () => {
+  try {
+    await Promise.resolve().then(() => data.blogs.splice(0)); 
+    await Promise.resolve().then(() => data.posts.splice(0)); 
+  } catch (e) {
+    return null;
+  }
+  
+  return true;
 }
