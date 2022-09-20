@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser';
 import express from 'express';
 
 import blogsRouter from './routes/blogs.router';
@@ -7,6 +8,8 @@ import testingRouter from './routes/testing.router';
 const app = express();
 
 app.set('port', process.env.PORT || 9000);
+
+app.use(bodyParser.json());
 
 app.use('/posts', postsRouter);
 app.use('/blogs', blogsRouter);
