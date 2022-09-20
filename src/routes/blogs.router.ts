@@ -6,7 +6,6 @@ import { updateBlog } from '../controllers/blog/updateBlog';
 import { deleteBlog } from '../controllers/blog/deleteBlog';
 import { getAllBlogs } from '../controllers/blog/getAllBlogs';
 
-
 const blogsRouter = Router();
 
 blogsRouter.get('/', getAllBlogs);
