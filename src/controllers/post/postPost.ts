@@ -38,7 +38,11 @@ export const postPost = [
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
     .isLength({ max: MAX_SHORT_DESCR_LEN })
-    .withMessage(ErrorMessages.MAX_LENGHTH_ERROR(MAX_SHORT_DESCR_LEN)),
+    .withMessage(ErrorMessages.MAX_LENGHTH_ERROR(MAX_SHORT_DESCR_LEN))
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage(ErrorMessages.EMPTY_STRING_ERROR),
   body(PostFields.blogId)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
