@@ -33,8 +33,12 @@ export const postBlog = [
       res
         .type('text/plain')
         .status(400)
-        .send(JSON.stringify(customValidationResult(req).array({ onlyFirstError: true })));
-      
+        .send(
+          JSON.stringify(
+            customValidationResult(req).array({ onlyFirstError: true })
+          )
+        );
+
       return;
     }
 
@@ -42,6 +46,9 @@ export const postBlog = [
 
     await blogsRepository.saveBlog(blog);
 
-    res.status(204).end();
+    res
+      .type('text/plain')
+      .status(201)
+      .send(JSON.stringify(blog));
   },
 ];
