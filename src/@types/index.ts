@@ -36,3 +36,8 @@ export declare namespace h02 {
     }
   }
 }
+
+export enum BlogFields {
+  name = 'name',
+  youtubeUrl = 'youtubeUrl',
+}
