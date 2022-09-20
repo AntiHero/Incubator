@@ -34,6 +34,8 @@ export const postBlog = [
         .type('text/plain')
         .status(400)
         .send(JSON.stringify(customValidationResult(req).array()));
+      
+      return;
     }
 
     const blog = new Blog(req.body.name, req.body.youtubeUrl);

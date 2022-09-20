@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { header, validationResult } from 'express-validator';
+import { header } from 'express-validator';
 
 import { Headers } from '../@types';
 import { customValidationResult } from './customValidationResults';

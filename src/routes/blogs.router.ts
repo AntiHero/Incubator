@@ -1,15 +1,17 @@
-import { Router } from "express";
+import { Router } from 'express';
+import { getAllBlogs } from '../controllers/getAllBlogs';
+import { postBlog } from '../controllers/postBlog';
 
 const blogsRouter = Router();
 
-blogsRouter.get('/', /*TODO*/ );
+blogsRouter.get('/', getAllBlogs);
 
-blogsRouter.post('/', /*TODO*/ );
+blogsRouter.post('/', postBlog);
 
-blogsRouter.get('/:id', /*TODO*/ );
+blogsRouter.get('/:id' /*TODO*/);
 
-blogsRouter.put('/:id', /*TODO*/ );
+blogsRouter.put('/:id' /*TODO*/);
 
-blogsRouter.delete('/:id', /*TODO*/ );
+blogsRouter.delete('/:id' /*TODO*/);
 
 export default blogsRouter;
