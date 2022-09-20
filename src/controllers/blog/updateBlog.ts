@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import Blog from '../../models/Blog';
 import { BlogFields } from '../../@types';
 import * as ErrorMessages from '../../errorMessages';
 import * as blogsRepository from '../../repository/blogs.repository';
@@ -15,8 +14,7 @@ const MAX_YOUTUBEURL_LEN = 40;
 export const updateBlog = [
   ...checkAuthorization,
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params.id);
-    if (await blogsRepository.findBlogById(req.params.id) === null) {
+    if ((await blogsRepository.findBlogById(req.params.id)) === null) {
       res.status(404).end();
       return;
     }
@@ -42,14 +40,15 @@ export const updateBlog = [
       res
         .type('text/plain')
         .status(400)
-        .send(JSON.stringify(customValidationResult(req).array()));
+        .send(JSON.stringify(customValidationResult(req).array({ onlyFirstError: true })));
 
       return;
     }
 
-    const blog = new Blog(req.body.name, req.body.youtubeUrl);
-
-    await blogsRepository.saveBlog(blog);
+    await blogsRepository.findBlogByIdAndUpdate(req.params.id, {
+      name: req.body.name,
+      youtubeUrl: req.body.youtubeUrl,
+    });
 
     res.status(204).end();
   },

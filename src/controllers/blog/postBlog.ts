@@ -4,7 +4,7 @@ import { body } from 'express-validator';
 import Blog from '../../models/Blog';
 import { BlogFields } from '../../@types';
 import * as ErrorMessages from '../../errorMessages';
-import * as blogsRepository from '../..//repository/blogs.repository';
+import * as blogsRepository from '../../repository/blogs.repository';
 import { checkAuthorization } from '../../customValidators/checkAuthorization';
 import { customValidationResult } from '../../customValidators/customValidationResults';
 
@@ -33,7 +33,7 @@ export const postBlog = [
       res
         .type('text/plain')
         .status(400)
-        .send(JSON.stringify(customValidationResult(req).array()));
+        .send(JSON.stringify(customValidationResult(req).array({ onlyFirstError: true })));
       
       return;
     }
