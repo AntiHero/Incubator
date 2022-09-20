@@ -10,7 +10,6 @@
     "dev": "nodemon -e ts,yaml --exec \"node -r tsconfig-paths/register --require ts-node/register --inspect src/index.ts\""
   },
   "devDependencies": {
-    "@types/express": "^4.17.14",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.37.0",
     "eslint": "^8.0.1",
@@ -26,6 +25,7 @@
     "tsconfig-paths": "^4.1.0"
   },
   "dependencies": {
+    "@types/express": "^4.17.14",
     "@types/node": "^18.7.18",
     "@types/uuid": "^8.3.4",
     "body-parser": "^1.20.0",
