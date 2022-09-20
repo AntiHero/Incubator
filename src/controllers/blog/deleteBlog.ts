@@ -6,7 +6,7 @@ import { checkAuthorization } from '../../customValidators/checkAuthorization';
 export const deleteBlog = [
   ...checkAuthorization,
   async (req: Request, res: Response) => {
-    const result = blogsRepository.findBlogByIdAndDelete(req.params.id);
+    const result = await blogsRepository.findBlogByIdAndDelete(req.params.id);
 
     if (result === null) {
       res.status(404).end();
