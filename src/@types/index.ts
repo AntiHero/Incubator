@@ -1,4 +1,4 @@
-interface FieldError {
+export interface FieldError {
   message: string | null;
   field: string | null;
 }
@@ -40,4 +40,8 @@ export declare namespace h02 {
 export enum BlogFields {
   name = 'name',
   youtubeUrl = 'youtubeUrl',
+}
+  
+export enum Headers {
+  'Authorization' = 'authorization'
 }
