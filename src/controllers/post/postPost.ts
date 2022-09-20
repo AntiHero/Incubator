@@ -70,7 +70,11 @@ export const postPost = [
 
       await postsRepository.savePost(post);
 
-      res.status(204).end();
+      res
+        .type('text/plain')
+        .status(201)
+        .send(JSON.stringify(blog));
+
       return;
     }
 
