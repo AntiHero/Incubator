@@ -17,6 +17,10 @@ export const postBlog = [
   body(BlogFields.name)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage(ErrorMessages.IS_EMPTY_STRING_ERROR)
     .isLength({ max: MAX_NAME_LEN })
     .withMessage(ErrorMessages.MAX_LENGHTH_ERROR(MAX_NAME_LEN)),
   body(BlogFields.youtubeUrl)
