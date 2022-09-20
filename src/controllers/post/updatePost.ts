@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 
 import { APIErrorResult, PostFields } from '../../@types';
 import * as ErrorMessages from '../../errorMessages';
+import * as blogsRepository from '../../repository/blogs.repository';
 import * as postsRepository from '../../repository/posts.repository';
 import { checkAuthorization } from '../../customValidators/checkAuthorization';
 import { customValidationResult } from '../../customValidators/customValidationResults';
@@ -51,7 +52,14 @@ export const updatePost = [
     .withMessage(ErrorMessages.EMPTY_STRING_ERROR),
   body(PostFields.blogId)
     .isString()
-    .withMessage(ErrorMessages.NOT_STRING_ERROR),
+    .withMessage(ErrorMessages.NOT_STRING_ERROR)
+    .custom(async (value: string) => {
+      const blog = await blogsRepository.findBlogById(value);
+
+      if (blog === null) throw new Error('Corresponding blog was not found');
+
+      return true;
+    }),
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) {
       res
