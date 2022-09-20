@@ -25,7 +25,7 @@ export declare namespace h02 {
       content: string;
       blogId: string;
     }
-   
+
     interface PostViewModel {
       id: string | null;
       title: string | null;
