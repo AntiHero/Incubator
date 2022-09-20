@@ -23,6 +23,7 @@ export declare namespace h02 {
     interface PostInputModel {
       title: string;
       content: string;
+      shortDescription: string;
       blogId: string;
     }
 
@@ -41,7 +42,15 @@ export enum BlogFields {
   name = 'name',
   youtubeUrl = 'youtubeUrl',
 }
-  
+
+export enum PostFields {
+  title = 'title',
+  content = 'content',
+  blogId = 'blogId',
+  blogName = 'blogName',
+  shortDescription = 'shortDescription',
+}
+
 export enum Headers {
-  'Authorization' = 'authorization'
+  'Authorization' = 'authorization',
 }
