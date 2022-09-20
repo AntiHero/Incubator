@@ -48,9 +48,9 @@ export const findPostByIdAndDelete = async (id: string) => {
   for (const [index, post] of Object.entries(data.posts)) {
     if (post.id === id) {
       data.posts.splice(Number(index), 1);
-    }
 
-    return true;
+      return true;
+    }
   }
 
   return null;
