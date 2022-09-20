@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import Post from '../../models/Post';
-import { PostFields } from '../../@types';
+import { APIErrorResult, PostFields } from '../../@types';
 import * as ErrorMessages from '../../errorMessages';
 import * as postsRepository from '../../repository/posts.repository';
 import * as blogsRepository from '../../repository/blogs.repository';
@@ -46,7 +46,13 @@ export const postPost = [
       res
         .type('text/plain')
         .status(400)
-        .send(JSON.stringify(customValidationResult(req).array({ onlyFirstError: true })));
+        .send(
+          JSON.stringify({
+            errorsMessages: customValidationResult(req).array({
+              onlyFirstError: true,
+            }),
+          } as APIErrorResult)
+        );
 
       return;
     }
@@ -67,7 +73,7 @@ export const postPost = [
       res.status(204).end();
       return;
     }
-      
+
     res.end();
   },
 ];
