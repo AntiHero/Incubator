@@ -36,9 +36,6 @@
     "typescript": "*",
     "uuid": "^9.0.0"
   },
-  "_moduleAliases": {
-    "@": "dist"
-  },
   "engines": {
     "node": ">14.x"
   }

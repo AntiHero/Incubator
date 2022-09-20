@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import * as blogsRepository from '@/repository/blogs.repository';
+import * as blogsRepository from '../../repository/blogs.repository';
 
 export const getBlog = async (req: Request, res: Response) => {
   const id = req.params.id;
