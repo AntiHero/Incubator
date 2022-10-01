@@ -18,6 +18,7 @@ export declare namespace h02 {
       id: string | null;
       name: string | null;
       youtubeUrl: string | null;
+      createdAt?: string;
     }
 
     interface PostInputModel {
@@ -34,6 +35,7 @@ export declare namespace h02 {
       content: string | null;
       blogId: string | null;
       blogName: string | null;
+      createdAt?: string;
     }
   }
 }

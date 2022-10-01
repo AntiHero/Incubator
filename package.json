@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
+    "build": "tsc",
     "dev": "nodemon -e ts,yaml --exec \"node -r tsconfig-paths/register --require ts-node/register --inspect src/index.ts\""
   },
   "devDependencies": {
