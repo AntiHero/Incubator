@@ -7,9 +7,10 @@ export const validateObjectId = (
   next: NextFunction
 ) => {
   const id = req.params.id;
+  
   if (ObjectId.isValid(id)) {
     if (String(new ObjectId(id)) === id) return next();
+  } else {
+    res.sendStatus(404);
   }
-
-  res.sendStatus(404);
 };
