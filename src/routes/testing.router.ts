@@ -1,6 +1,6 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { deleteAll } from "../controllers/testing/deleteAll";
+import { deleteAll } from '@/controllers/testing/deleteAll';
 
 const testingRouter = Router();
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import * as postsRepository from '../../repository/posts.repository';
-import { checkAuthorization } from '../../customValidators/checkAuthorization';
+import * as postsRepository from '@/repository/posts.repository';
+import { checkAuthorization } from '@/customValidators/checkAuthorization';
 
 export const deletePost = [
   ...checkAuthorization,
@@ -17,4 +17,3 @@ export const deletePost = [
     res.status(204).end();
   },
 ];
-

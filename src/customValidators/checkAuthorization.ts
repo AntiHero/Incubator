@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { header } from 'express-validator';
 
-import { Headers } from '../@types';
+import { Headers } from '@/@types';
 import { customValidationResult } from './customValidationResults';
 
 const AUTHENTICATION_SCHEME = 'Basic';
@@ -25,7 +25,7 @@ export const checkAuthorization = [
     if (decodedLoginPassowrd !== [login, password].join(':')) {
       throw new Error('Incorrect login/password pair');
     }
-    
+
     return true;
   }),
   (req: Request, res: Response, next: NextFunction) => {

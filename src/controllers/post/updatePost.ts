@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import { APIErrorResult, PostFields } from '../../@types';
-import * as ErrorMessages from '../../errorMessages';
-import * as blogsRepository from '../../repository/blogs.repository';
-import * as postsRepository from '../../repository/posts.repository';
-import { checkAuthorization } from '../../customValidators/checkAuthorization';
-import { customValidationResult } from '../../customValidators/customValidationResults';
+import * as ErrorMessages from '@/errorMessages';
+import { APIErrorResult, PostFields } from '@/@types';
+import * as blogsRepository from '@/repository/blogs.repository';
+import * as postsRepository from '@/repository/posts.repository';
+import { checkAuthorization } from '@/customValidators/checkAuthorization';
+import { customValidationResult } from '@/customValidators/customValidationResults';
 
 /* Constraints */
 const MAX_TITLE_LEN = 30;
@@ -73,7 +73,6 @@ export const updatePost = [
           } as APIErrorResult)
         );
 
-
       return;
     }
 
@@ -81,10 +80,9 @@ export const updatePost = [
       content: req.body.content,
       shortDescription: req.body.shortDescription,
       blogId: req.body.blogId,
-      title: req.body.title
+      title: req.body.title,
     });
-    
-    
+
     res.status(204).end();
     return;
   },

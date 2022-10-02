@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import * as blogsRepository from '../../repository/blogs.repository';
-import { checkAuthorization } from '../../customValidators/checkAuthorization';
+import * as blogsRepository from '@/repository/blogs.repository';
+import { checkAuthorization } from '@/customValidators/checkAuthorization';
 
 export const deleteBlog = [
   ...checkAuthorization,

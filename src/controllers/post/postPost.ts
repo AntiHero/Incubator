@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import Post from '../../models/Post';
-import { APIErrorResult, PostFields } from '../../@types';
-import * as ErrorMessages from '../../errorMessages';
-import * as postsRepository from '../../repository/posts.repository';
-import * as blogsRepository from '../../repository/blogs.repository';
-import { checkAuthorization } from '../../customValidators/checkAuthorization';
-import { customValidationResult } from '../../customValidators/customValidationResults';
+import Post from '@/models/Post';
+import * as ErrorMessages from '@/errorMessages';
+import { APIErrorResult, PostFields } from '@/@types';
+import * as postsRepository from '@/repository/posts.repository';
+import * as blogsRepository from '@/repository/blogs.repository';
+import { checkAuthorization } from '@/customValidators/checkAuthorization';
+import { customValidationResult } from '@/customValidators/customValidationResults';
 
 /* Constraints */
 const MAX_TITLE_LEN = 30;
@@ -82,10 +82,7 @@ export const postPost = [
 
       await postsRepository.savePost(post);
 
-      res
-        .type('text/plain')
-        .status(201)
-        .send(JSON.stringify(post));
+      res.type('text/plain').status(201).send(JSON.stringify(post));
 
       return;
     }

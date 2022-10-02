@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export interface FieldError {
   message: string | null;
   field: string | null;
@@ -15,10 +17,10 @@ export declare namespace h02 {
     }
 
     interface BlogViewModel {
-      id: string | null;
-      name: string | null;
-      youtubeUrl: string | null;
-      createdAt?: string;
+      id: string;
+      name: string;
+      youtubeUrl: string;
+      createdAt: string;
     }
 
     interface PostInputModel {
@@ -29,13 +31,13 @@ export declare namespace h02 {
     }
 
     interface PostViewModel {
-      id: string | null;
-      title: string | null;
-      shortDescription: string | null;
-      content: string | null;
-      blogId: string | null;
-      blogName: string | null;
-      createdAt?: string;
+      id: string;
+      title: string;
+      shortDescription: string;
+      content: string;
+      blogId: string;
+      blogName: string;
+      createdAt: string;
     }
   }
 }
@@ -55,4 +57,21 @@ export enum PostFields {
 
 export enum Headers {
   'Authorization' = 'authorization',
+}
+
+export interface Blog {
+  _id: ObjectId;
+  name: string;
+  youtubeUrl: string;
+  createdAt: Date;
+}
+
+export interface Post {
+  _id: ObjectId;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: ObjectId;
+  blogName: string;
+  createdAt: Date;
 }

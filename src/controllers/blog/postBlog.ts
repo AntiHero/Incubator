@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import Blog from '../../models/Blog';
-import { APIErrorResult, BlogFields } from '../../@types';
-import * as ErrorMessages from '../../errorMessages';
-import * as blogsRepository from '../../repository/blogs.repository';
-import { checkAuthorization } from '../../customValidators/checkAuthorization';
-import { customValidationResult } from '../../customValidators/customValidationResults';
+import Blog from '@/models/Blog';
+import * as ErrorMessages from '@/errorMessages';
+import { APIErrorResult, BlogFields } from '@/@types';
+import * as blogsRepository from '@/repository/blogs.repository';
+import { checkAuthorization } from '@/customValidators/checkAuthorization';
+import { customValidationResult } from '@/customValidators/customValidationResults';
 
 /* Constraints */
 const MAX_NAME_LEN = 15;
@@ -31,7 +31,7 @@ export const postBlog = [
     .matches(
       /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     )
-    .withMessage(ErrorMessages.NOT_MATCHNG_PATTER_ERROR),
+    .withMessage(ErrorMessages.WRONG_PATTERN_ERROR),
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) {
       res
@@ -52,9 +52,6 @@ export const postBlog = [
 
     await blogsRepository.saveBlog(blog);
 
-    res
-      .type('text/plain')
-      .status(201)
-      .send(JSON.stringify(blog));
+    res.type('text/plain').status(201).send(JSON.stringify(blog));
   },
 ];
