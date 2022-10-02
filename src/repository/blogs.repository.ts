@@ -9,17 +9,13 @@ export const getAllBlogs = async () => {
 
   const blogs: h02.db.BlogViewModel[] = [];
 
-  await cursor.forEach((doc) => {
+  await cursor.forEach(doc => {
     const blog = convertToBlog(doc);
     blogs.push(blog);
   });
 
   return blogs;
 };
-
-// export const getAllBlogs = async (): Promise<h02.db.BlogViewModel[]> => {
-//   return Promise.resolve().then(() => data.blogs);
-// };
 
 export const saveBlog = async (blog: h02.db.BlogInputModel) => {
   const { insertedId } = await blogsCollection.insertOne({
@@ -30,10 +26,6 @@ export const saveBlog = async (blog: h02.db.BlogInputModel) => {
   return findBlogById(insertedId);
 };
 
-// export const saveBlog = async (blog: h02.db.BlogViewModel) => {
-//   return Promise.resolve().then(() => data.blogs.push(blog));
-// };
-
 export const findBlogById = async (id: string | ObjectId) => {
   const doc = await blogsCollection.findOne<Blog>({
     _id: typeof id === 'string' ? new ObjectId(id) : id,
@@ -43,14 +35,6 @@ export const findBlogById = async (id: string | ObjectId) => {
 
   return convertToBlog(doc);
 };
-
-// export const findBlogById = async (id: string) => {
-//   for (const blog of data.blogs) {
-//     if (blog.id === id) return Promise.resolve().then(() => blog);
-//   }
-
-//   return null;
-// };
 
 export const findBlogByIdAndUpdate = async (
   id: string,
@@ -66,21 +50,6 @@ export const findBlogByIdAndUpdate = async (
   return null;
 };
 
-// export const findBlogByIdAndUpdate = async (
-//   id: string,
-//   { name, youtubeUrl }: h02.db.BlogInputModel
-// ) => {
-//   for (const blog of data.blogs) {
-//     if (blog.id === id)
-//       return Promise.resolve().then(() => {
-//         blog.name = name;
-//         blog.youtubeUrl = youtubeUrl;
-//       });
-//   }
-
-//   return null;
-// };
-
 export const findBlogByIdAndDelete = async (id: string) => {
   const result = await blogsCollection.deleteOne({ _id: new ObjectId(id) });
 
@@ -88,29 +57,6 @@ export const findBlogByIdAndDelete = async (id: string) => {
 
   return null;
 };
-
-// export const findBlogByIdAndDelete = async (id: string) => {
-//   for (const [index, blog] of Object.entries(data.blogs)) {
-//     if (blog.id === id) {
-//       data.blogs.splice(Number(index), 1);
-
-//       return true;
-//     }
-//   }
-
-//   return null;
-// };
-
-// export const deleteAll = async () => {
-//   try {
-//     await Promise.resolve().then(() => data.blogs.splice(0));
-//     await Promise.resolve().then(() => data.posts.splice(0));
-//   } catch (e) {
-//     return null;
-//   }
-
-//   return true;
-// };
 
 export const deleteAll = async () => {
   await blogsCollection.deleteMany({});
