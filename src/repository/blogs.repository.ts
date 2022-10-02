@@ -34,13 +34,11 @@ export const saveBlog = async (blog: h02.db.BlogInputModel) => {
 export const findBlogById = async (id: string) => {
   const doc = await blogsCollection.findOne<Blog>(
     { _id: new ObjectId(id) },
-    { projection: { _id: 0, createdAt: 0 } }
   );
   
   if (!doc) return null;
 
-  // return convertToBlog(doc);
-  return doc;
+  return convertToBlog(doc);
 };
 
 // export const findBlogById = async (id: string) => {
