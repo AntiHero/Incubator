@@ -50,8 +50,8 @@ export const postBlog = [
 
     const blog = new Blog(req.body.name, req.body.youtubeUrl);
 
-    await blogsRepository.saveBlog(blog);
+    const createdBlog = await blogsRepository.saveBlog(blog);
 
-    res.type('text/plain').status(201).send(JSON.stringify(blog));
+    res.type('text/plain').status(201).send(createdBlog);
   },
 ];

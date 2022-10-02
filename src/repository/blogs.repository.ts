@@ -22,18 +22,18 @@ export const getAllBlogs = async () => {
 // };
 
 export const saveBlog = async (blog: h02.db.BlogInputModel) => {
-  await blogsCollection.insertOne({ ...blog, createdAt: new Date() });
+  const { insertedId } = await blogsCollection.insertOne({ ...blog, createdAt: new Date() });
 
-  return true;
+  return findBlogById(insertedId);
 };
 
 // export const saveBlog = async (blog: h02.db.BlogViewModel) => {
 //   return Promise.resolve().then(() => data.blogs.push(blog));
 // };
 
-export const findBlogById = async (id: string) => {
+export const findBlogById = async (id: string | ObjectId) => {
   const doc = await blogsCollection.findOne<Blog>(
-    { _id: new ObjectId(id) },
+    { _id: typeof id === 'string' ? new ObjectId(id) : id},
   );
   
   if (!doc) return null;
