@@ -7,7 +7,7 @@ export const getBlog = [
   validateObjectId,
   async (req: Request, res: Response) => {
     const id = req.params.id;
-    console.log(id);
+
     const blog = await blogsRepository.findBlogById(id);
 
     if (blog) {
@@ -16,7 +16,7 @@ export const getBlog = [
         .status(200)
         .send(JSON.stringify(blog));
     } else {
-      res.status(404).end();
+      res.sendStatus(404);
     }
   },
 ];
