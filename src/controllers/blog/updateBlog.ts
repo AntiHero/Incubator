@@ -6,6 +6,7 @@ import { APIErrorResult, BlogFields } from '@/@types';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { checkAuthorization } from '@/customValidators/checkAuthorization';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 
 /* Constraints */
 const MAX_NAME_LEN = 15;
@@ -13,6 +14,7 @@ const MAX_YOUTUBEURL_LEN = 40;
 
 export const updateBlog = [
   ...checkAuthorization,
+  validateObjectId,
   async (req: Request, res: Response, next: NextFunction) => {
     if ((await blogsRepository.findBlogById(req.params.id)) === null) {
       res.status(404).end();

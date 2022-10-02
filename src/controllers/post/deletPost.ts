@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 
 import * as postsRepository from '@/repository/posts.repository';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 import { checkAuthorization } from '@/customValidators/checkAuthorization';
 
 export const deletePost = [
   ...checkAuthorization,
+  validateObjectId,
   async (req: Request, res: Response) => {
     const result = await postsRepository.findPostByIdAndDelete(req.params.id);
 

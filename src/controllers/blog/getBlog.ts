@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 
 import * as blogsRepository from '@/repository/blogs.repository';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 
-export const getBlog = async (req: Request, res: Response) => {
+export const getBlog = [validateObjectId, async (req: Request, res: Response) => {
   const id = req.params.id;
 
   const blog = await blogsRepository.findBlogById(id);
@@ -12,4 +13,4 @@ export const getBlog = async (req: Request, res: Response) => {
   } else {
     res.status(404).end();
   }
-};
+}];

@@ -5,6 +5,7 @@ import * as ErrorMessages from '@/errorMessages';
 import { APIErrorResult, PostFields } from '@/@types';
 import * as blogsRepository from '@/repository/blogs.repository';
 import * as postsRepository from '@/repository/posts.repository';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 import { checkAuthorization } from '@/customValidators/checkAuthorization';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
@@ -15,6 +16,7 @@ const MAX_SHORT_DESCR_LEN = 100;
 
 export const updatePost = [
   ...checkAuthorization,
+  validateObjectId,
   async (req: Request, res: Response, next: NextFunction) => {
     if ((await postsRepository.findPostById(req.params.id)) === null) {
       res.status(404).end();
