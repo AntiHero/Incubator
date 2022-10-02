@@ -80,9 +80,9 @@ export const postPost = [
         blog.name as string
       );
 
-      await postsRepository.savePost(post);
+      const createdPost = await postsRepository.savePost(post);
 
-      res.type('text/plain').status(201).send(JSON.stringify(post));
+      res.type('text/plain').status(201).send(JSON.stringify(createdPost));
 
       return;
     }

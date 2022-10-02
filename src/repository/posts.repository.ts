@@ -29,13 +29,13 @@ export const savePost = async (post: h02.db.PostInputModel) => {
 
   if (!blog) return null;
 
-  await postsCollection.insertOne({
+  const { insertedId } = await postsCollection.insertOne({
     ...post,
     blogId: new ObjectId(blogId),
     createdAt: new Date(),
   });
 
-  return true;
+  return findPostById(insertedId);
 };
 
 // export const savePost = async (post: h02.db.PostViewModel) => {
@@ -48,8 +48,10 @@ export const savePost = async (post: h02.db.PostInputModel) => {
 //   return null;
 // };
 
-export const findPostById = async (id: string) => {
-  const doc = await postsCollection.findOne<Post>({ _id: new ObjectId(id) });
+export const findPostById = async (id: string | ObjectId) => {
+  const doc = await postsCollection.findOne<Post>({
+    _id: typeof id === 'string' ? new ObjectId(id) : id,
+  });
 
   if (!doc) return null;
 

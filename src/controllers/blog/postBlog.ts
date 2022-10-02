@@ -52,6 +52,6 @@ export const postBlog = [
 
     const createdBlog = await blogsRepository.saveBlog(blog);
 
-    res.type('text/plain').status(201).send(createdBlog);
+    res.type('text/plain').status(201).send(JSON.stringify(createdBlog));
   },
 ];

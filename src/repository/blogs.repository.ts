@@ -9,7 +9,7 @@ export const getAllBlogs = async () => {
 
   const blogs: h02.db.BlogViewModel[] = [];
 
-  await cursor.forEach(doc => {
+  await cursor.forEach((doc) => {
     const blog = convertToBlog(doc);
     blogs.push(blog);
   });
@@ -22,7 +22,10 @@ export const getAllBlogs = async () => {
 // };
 
 export const saveBlog = async (blog: h02.db.BlogInputModel) => {
-  const { insertedId } = await blogsCollection.insertOne({ ...blog, createdAt: new Date() });
+  const { insertedId } = await blogsCollection.insertOne({
+    ...blog,
+    createdAt: new Date(),
+  });
 
   return findBlogById(insertedId);
 };
@@ -32,10 +35,10 @@ export const saveBlog = async (blog: h02.db.BlogInputModel) => {
 // };
 
 export const findBlogById = async (id: string | ObjectId) => {
-  const doc = await blogsCollection.findOne<Blog>(
-    { _id: typeof id === 'string' ? new ObjectId(id) : id},
-  );
-  
+  const doc = await blogsCollection.findOne<Blog>({
+    _id: typeof id === 'string' ? new ObjectId(id) : id,
+  });
+
   if (!doc) return null;
 
   return convertToBlog(doc);

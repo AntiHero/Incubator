@@ -11,10 +11,7 @@ export const getBlog = [
     const blog = await blogsRepository.findBlogById(id);
 
     if (blog) {
-      res
-        .type('text/plain')
-        .status(200)
-        .send(JSON.stringify(blog));
+      res.type('text/plain').status(200).send(JSON.stringify(blog));
     } else {
       res.sendStatus(404);
     }
