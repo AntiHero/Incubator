@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb';
 
-import { h02, Post } from '@/@types';
+import { h04, Post } from '@/@types';
 import { blogsCollection, postsCollection } from './collections';
 import { convertToPost } from '@/utils/convertToPost';
 
 export const getAllPosts = async () => {
   const cursor = postsCollection.find<Post>({});
 
-  const posts: h02.db.PostInputModel[] = [];
+  const posts: h04.PostInputModel[] = [];
 
   await cursor.forEach(doc => {
     const post = convertToPost(doc);
@@ -17,7 +17,7 @@ export const getAllPosts = async () => {
   return posts;
 };
 
-export const savePost = async (post: h02.db.PostInputModel) => {
+export const savePost = async (post: h04.PostInputModel) => {
   const blogId = post.blogId;
 
   const blog = await blogsCollection.findOne({
@@ -47,7 +47,7 @@ export const findPostById = async (id: string | ObjectId) => {
 
 export const findPostByIdAndUpdate = async (
   id: string,
-  { content, title, shortDescription, blogId }: h02.db.PostInputModel
+  { content, title, shortDescription, blogId }: h04.PostInputModel
 ) => {
   const query = { _id: new ObjectId(id) };
   const blog = blogsCollection.findOne(query);

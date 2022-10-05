@@ -1,8 +1,6 @@
-import { Post, h02 } from '@/@types';
+import { Post, h04 } from '@/@types';
 
-export const convertToPost = <T extends Post>(
-  doc: T
-): h02.db.PostViewModel => ({
+export const convertToPost = <T extends Post>(doc: T): h04.PostViewModel => ({
   id: String(doc._id),
   title: doc.title,
   shortDescription: doc.shortDescription,

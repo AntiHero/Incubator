@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongodb';
 
-import { h02, Blog } from '@/@types';
+import { h04, Blog } from '@/@types';
 import { convertToBlog } from '@/utils/convertToBlog';
 import { blogsCollection, postsCollection } from './collections';
 
 export const getAllBlogs = async () => {
   const cursor = blogsCollection.find<Blog>({});
 
-  const blogs: h02.db.BlogViewModel[] = [];
+  const blogs: h04.BlogViewModel[] = [];
 
   await cursor.forEach(doc => {
     const blog = convertToBlog(doc);
@@ -17,7 +17,7 @@ export const getAllBlogs = async () => {
   return blogs;
 };
 
-export const saveBlog = async (blog: h02.db.BlogInputModel) => {
+export const saveBlog = async (blog: h04.BlogInputModel) => {
   const { insertedId } = await blogsCollection.insertOne({
     ...blog,
     createdAt: new Date(),
@@ -38,7 +38,7 @@ export const findBlogById = async (id: string | ObjectId) => {
 
 export const findBlogByIdAndUpdate = async (
   id: string,
-  { name, youtubeUrl }: h02.db.BlogInputModel
+  { name, youtubeUrl }: h04.BlogInputModel
 ) => {
   const query = { _id: new ObjectId(id) };
   const update = { $set: { name, youtubeUrl } };

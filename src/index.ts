@@ -2,6 +2,7 @@ import 'module-alias/register';
 
 import app from './app';
 import connectToDb from './utils/connectToDb';
+
 connectToDb().then(
   () => {
     console.log('\x1b[36m%s\x1b[0m', 'Connected to MongoDb');

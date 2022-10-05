@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import Blog from '@/models/Blog';
+import { BlogFields } from '@/fields';
+import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import { APIErrorResult, BlogFields } from '@/@types';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { checkAuthorization } from '@/customValidators/checkAuthorization';
 import { customValidationResult } from '@/customValidators/customValidationResults';

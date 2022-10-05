@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import Post from '@/models/Post';
+import { PostFields } from '@/fields';
+import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import { APIErrorResult, PostFields } from '@/@types';
 import * as postsRepository from '@/repository/posts.repository';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { checkAuthorization } from '@/customValidators/checkAuthorization';
@@ -82,7 +83,10 @@ export const postPost = [
 
       const createdPost = await postsRepository.savePost(post);
 
-      res.type('text/plain').status(201).send(JSON.stringify(createdPost));
+      res
+        .type('text/plain')
+        .status(201)
+        .send(JSON.stringify(createdPost));
 
       return;
     }

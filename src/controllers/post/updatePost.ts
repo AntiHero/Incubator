@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 
+import { PostFields } from '@/fields';
+import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import { APIErrorResult, PostFields } from '@/@types';
 import * as blogsRepository from '@/repository/blogs.repository';
 import * as postsRepository from '@/repository/posts.repository';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
