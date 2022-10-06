@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { body } from 'express-validator';
 
 import Post from '@/models/Post';
-import { PostFields } from '@/fields';
+import { PostFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as postsRepository from '@/repository/posts.repository';

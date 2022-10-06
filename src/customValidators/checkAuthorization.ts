@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { header } from 'express-validator';
 
-import { Headers } from '@/fields';
+import { Headers } from '@/enums';
 import { customValidationResult } from './customValidationResults';
 
 const AUTHENTICATION_SCHEME = 'Basic';

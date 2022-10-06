@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 
-import { BlogFields } from '@/fields';
+import { BlogFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as blogsRepository from '@/repository/blogs.repository';
