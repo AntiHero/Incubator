@@ -17,7 +17,7 @@ blogsRouter.get('/:id', getBlog);
 
 blogsRouter.get('/:id/posts', findBlogPosts);
 
-blogsRouter.post('/:id/posts', /** */);
+blogsRouter.post('/:id/posts', () => { /*TODO */});
 
 blogsRouter.put('/:id', updateBlog);
 
