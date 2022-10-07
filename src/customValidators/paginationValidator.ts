@@ -20,9 +20,9 @@ export const validatePaginationQuery = [
     .default(10),
   async (req: Request, _: Response, next: NextFunction) => {
     const sortByResult = await query(PaginationQueryParams.sortBy)
+      .isString()
       .trim()
       .toLowerCase()
-      .isIn(Object.values(PostFields))
       .run(req, { dryRun: true });
 
     if (!sortByResult.isEmpty()) {
@@ -42,11 +42,12 @@ export const validatePaginationQuery = [
       ((req.query as unknown) as PaginationQuery).sortDirection =
         SortDirection.desc;
     } else {
-      ((req.query as unknown) as PaginationQuery).sortDirection = SortDirectionKeys.asc
-        ? SortDirection.asc
-        : SortDirection.desc;
+      ((req.query as unknown) as PaginationQuery).sortDirection =
+        req.query.sortDirection === SortDirectionKeys.asc
+          ? SortDirection.asc
+          : SortDirection.desc;
     }
 
     next();
-  }
+  },
 ];
