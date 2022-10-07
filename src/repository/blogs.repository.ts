@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 
+import { countSkip } from '@/utils/countSkip';
 import { convertToBlog } from '@/utils/convertToBlog';
 import { h04, Blog, Post, PaginationQuery } from '@/@types';
 import { blogsCollection, postsCollection } from './collections';
-import { countSkip } from '@/utils/countSkip';
 
 export const getAllBlogs = async () => {
   const cursor = blogsCollection.find<Blog>({});

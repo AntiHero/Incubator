@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 
-import { h04, Post } from '@/@types';
+import { countSkip } from '@/utils/countSkip';
 import { convertToPost } from '@/utils/convertToPost';
+import { h04, PaginationQuery, Post } from '@/@types';
 import { blogsCollection, postsCollection } from './collections';
 
 export const getAllPosts = async () => {
@@ -72,4 +73,40 @@ export const findPostByIdAndDelete = async (id: string) => {
 
 export const deleteAll = async () => {
   await postsCollection.deleteMany({});
+};
+
+export const getPostsCount = async () => {
+  const cursor = await postsCollection
+    .aggregate<{ totalCount: number }>([
+      {
+        $match: {},
+      },
+      {
+        $count: 'totalCount',
+      },
+    ])
+    .toArray();
+
+  return cursor.length ? cursor[0].totalCount : 0;
+};
+
+export const findPostsByQuery = async (query: PaginationQuery) => {
+  const posts = await postsCollection
+    .aggregate<Post>([
+      {
+        $match: {},
+      },
+      {
+        $sort: { [query.sortBy]: query.sortDirection },
+      },
+      {
+        $skip: countSkip(query.pageSize, query.pageNumber),
+      },
+      {
+        $limit: query.pageSize,
+      },
+    ])
+    .toArray();
+
+  return posts;
 };
