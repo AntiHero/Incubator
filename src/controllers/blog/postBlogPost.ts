@@ -57,7 +57,7 @@ export const postBlogPost = [
       return true;
     }),
   async (req: Request, res: Response) => {
-    const blog = await blogsRepository.findBlogById(req.body.blogId);
+    const blog = await blogsRepository.findBlogById(req.params.id);
 
     if (blog === null) return res.sendStatus(404);
 
@@ -80,7 +80,7 @@ export const postBlogPost = [
       req.body.title,
       req.body.shortDescription,
       req.body.content,
-      req.body.blogId,
+      req.params.id,
       blog.name as string
     );
 
