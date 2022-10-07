@@ -21,10 +21,10 @@ export enum SortDirection {
   asc = 1,
   desc = -1,
 }
-  
+
 export enum SortDirectionKeys {
   asc = 'asc',
-  desc = 'desc'
+  desc = 'desc',
 }
 
 export enum PaginationQueryParams {
@@ -32,5 +32,5 @@ export enum PaginationQueryParams {
   pageSize = 'pageSize',
   sortBy = 'sortBy',
   sortDirection = 'sortDirection',
-  searchNameTerm = 'searchNameTerm'
+  searchNameTerm = 'searchNameTerm',
 }

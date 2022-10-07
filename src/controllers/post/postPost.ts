@@ -83,10 +83,7 @@ export const postPost = [
 
       const createdPost = await postsRepository.savePost(post);
 
-      res
-        .type('text/plain')
-        .status(201)
-        .send(JSON.stringify(createdPost));
+      res.type('text/plain').status(201).send(JSON.stringify(createdPost));
 
       return;
     }

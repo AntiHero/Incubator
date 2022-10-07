@@ -1,7 +1,7 @@
 import { h04 } from '@/@types';
 
 class Post implements h04.PostInputModel {
-  constructor (
+  constructor(
     public title: string,
     public shortDescription: string,
     public content: string,
@@ -15,7 +15,7 @@ class Post implements h04.PostInputModel {
     this.blogName = blogName;
   }
 
-  public async save () {
+  public async save() {
     return Promise.resolve().then(() => {
       const post = {
         title: this.title,

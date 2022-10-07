@@ -10,14 +10,8 @@ import {
 import { PaginationQuery } from '@/@types';
 
 export const validatePaginationQuery = [
-  query(PaginationQueryParams.pageNumber)
-    .trim()
-    .toInt()
-    .default(1),
-  query(PaginationQueryParams.pageSize)
-    .trim()
-    .toInt()
-    .default(10),
+  query(PaginationQueryParams.pageNumber).trim().toInt().default(1),
+  query(PaginationQueryParams.pageSize).trim().toInt().default(10),
   async (req: Request, _: Response, next: NextFunction) => {
     const sortByResult = await query(PaginationQueryParams.sortBy)
       .isString()
@@ -39,10 +33,10 @@ export const validatePaginationQuery = [
       .run(req, { dryRun: true });
 
     if (!sortByResult.isEmpty()) {
-      ((req.query as unknown) as PaginationQuery).sortDirection =
+      (req.query as unknown as PaginationQuery).sortDirection =
         SortDirection.desc;
     } else {
-      ((req.query as unknown) as PaginationQuery).sortDirection =
+      (req.query as unknown as PaginationQuery).sortDirection =
         req.query.sortDirection === SortDirectionKeys.asc
           ? SortDirection.asc
           : SortDirection.desc;
@@ -58,9 +52,12 @@ export const validatePaginationQuery = [
       .run(req, { dryRun: true });
 
     if (!searchNameTerm.isEmpty()) {
-      ((req.query as unknown) as PaginationQuery).searchNameTerm = /.*/i;
+      (req.query as unknown as PaginationQuery).searchNameTerm = /.*/i;
     } else {
-      ((req.query as unknown) as PaginationQuery).searchNameTerm = new RegExp(req.query.searchNameTerm as string, 'i');
+      (req.query as unknown as PaginationQuery).searchNameTerm = new RegExp(
+        req.query.searchNameTerm as string,
+        'i'
+      );
     }
 
     next();

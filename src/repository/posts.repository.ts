@@ -10,7 +10,7 @@ export const getAllPosts = async () => {
 
   const posts: h04.PostInputModel[] = [];
 
-  await cursor.forEach(doc => {
+  await cursor.forEach((doc) => {
     const post = convertToPost(doc);
     posts.push(post);
   });

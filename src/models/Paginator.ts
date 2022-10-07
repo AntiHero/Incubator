@@ -1,8 +1,9 @@
 import { Paginator as PaginatorInterface, h04 } from '@/@types';
 
 class Paginator
-  implements PaginatorInterface<h04.BlogViewModel[] | h04.PostViewModel[]> {
-  constructor (
+  implements PaginatorInterface<h04.BlogViewModel[] | h04.PostViewModel[]>
+{
+  constructor(
     public pagesCount: number,
     public page: number,
     public pageSize: number,

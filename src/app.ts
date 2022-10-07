@@ -16,7 +16,7 @@ app.use('/posts', postsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/testing', testingRouter);
 
-app.use('/validators', validatePaginationQuery)
+app.use('/validators', validatePaginationQuery);
 
 app.use('*', (_, res) => {
   res.status(200).end();

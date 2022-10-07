@@ -71,5 +71,5 @@ export interface PaginationQuery {
   pageSize: number;
   sortBy: string;
   sortDirection: SortDirection;
-  searchNameTerm: RegExp
+  searchNameTerm: RegExp;
 }

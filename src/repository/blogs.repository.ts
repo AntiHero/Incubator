@@ -10,7 +10,7 @@ export const getAllBlogs = async () => {
 
   const blogs: h04.BlogViewModel[] = [];
 
-  await cursor.forEach(doc => {
+  await cursor.forEach((doc) => {
     const blog = convertToBlog(doc);
     blogs.push(blog);
   });

@@ -12,13 +12,8 @@ export const getBlogPosts = [
   validateObjectId,
   ...validatePaginationQuery,
   async (req: Request, res: Response) => {
-    const {
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-      searchNameTerm
-    } = (req.query as unknown) as PaginationQuery;
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      req.query as unknown as PaginationQuery;
 
     const id = req.params.id;
 
@@ -27,20 +22,23 @@ export const getBlogPosts = [
       pageSize,
       sortBy,
       sortDirection,
-      searchNameTerm
+      searchNameTerm,
     });
 
     if (posts === null) return res.sendStatus(404);
-    
-    const totalCount = await blogsRepository.getBlogPostsCount(id) as number;
-    
-    const items = posts.map(convertToPost)
 
-    const result = new Paginator(Math.ceil(totalCount / pageSize), pageNumber, pageSize, totalCount, items);
+    const totalCount = (await blogsRepository.getBlogPostsCount(id)) as number;
 
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(result));
+    const items = posts.map(convertToPost);
+
+    const result = new Paginator(
+      Math.ceil(totalCount / pageSize),
+      pageNumber,
+      pageSize,
+      totalCount,
+      items
+    );
+
+    res.type('text/plain').status(200).send(JSON.stringify(result));
   },
 ];

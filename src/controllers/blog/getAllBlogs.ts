@@ -6,19 +6,29 @@ import { convertToBlog } from '@/utils/convertToBlog';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { validatePaginationQuery } from '@/customValidators/paginationValidator';
 
-export const getAllBlogs = [...validatePaginationQuery, async (req: Request, res: Response) => {
-    const {
+export const getAllBlogs = [
+  ...validatePaginationQuery,
+  async (req: Request, res: Response) => {
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      req.query as unknown as PaginationQuery;
+
+    const blogs = await blogsRepository.findBlogsByQuery({
       pageNumber,
       pageSize,
       sortBy,
       sortDirection,
-      searchNameTerm
-    } = (req.query as unknown) as PaginationQuery;
+      searchNameTerm,
+    });
+    const totalCount = await blogsRepository.getBlogsCount(req.query);
+    const items = blogs.map(convertToBlog);
+    const result = new Paginator(
+      Math.ceil(totalCount / pageSize),
+      pageNumber,
+      pageSize,
+      totalCount,
+      items
+    );
 
-  const blogs = await blogsRepository.findBlogsByQuery({pageNumber, pageSize, sortBy, sortDirection, searchNameTerm});
-  const totalCount = await blogsRepository.getBlogsCount(req.query);
-  const items = blogs.map(convertToBlog);
-  const result = new Paginator(Math.ceil(totalCount / pageSize), pageNumber, pageSize, totalCount, items);
-
-  res.type('text/plain').status(200).send(JSON.stringify(result));
-}];
+    res.type('text/plain').status(200).send(JSON.stringify(result));
+  },
+];
