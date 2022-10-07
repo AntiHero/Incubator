@@ -7,7 +7,7 @@ import * as ErrorMessages from '@/errorMessages';
 import * as blogsRepository from '@/repository/blogs.repository';
 import * as postsRepository from '@/repository/posts.repository';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
-import { checkAuthorization } from '@/customValidators/checkAuthorization';
+import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 /* Constraints */

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { SortDirection } from '@/enums';
 
 export interface FieldError {
   message: string | null;
@@ -63,4 +64,11 @@ export interface Paginator<T> {
   pageSize: number;
   totalCount: number;
   items: T;
+}
+
+export interface PaginationQuery {
+  pageNumber: number;
+  pageSize: number;
+  sortBy: string;
+  sortDirection: SortDirection;
 }

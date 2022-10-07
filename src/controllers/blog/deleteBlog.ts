@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
 import * as blogsRepository from '@/repository/blogs.repository';
-import { checkAuthorization } from '@/customValidators/checkAuthorization';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
+import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 
 export const deleteBlog = [
   ...checkAuthorization,

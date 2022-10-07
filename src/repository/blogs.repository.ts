@@ -1,8 +1,9 @@
 import { ObjectId } from 'mongodb';
 
-import { h04, Blog } from '@/@types';
 import { convertToBlog } from '@/utils/convertToBlog';
+import { h04, Blog, Post, PaginationQuery } from '@/@types';
 import { blogsCollection, postsCollection } from './collections';
+import { countSkip } from '@/utils/countSkip';
 
 export const getAllBlogs = async () => {
   const cursor = blogsCollection.find<Blog>({});
@@ -61,4 +62,50 @@ export const findBlogByIdAndDelete = async (id: string) => {
 export const deleteAll = async () => {
   await blogsCollection.deleteMany({});
   await postsCollection.deleteMany({});
+};
+
+export const getBlogPostsCount = async (id: string) => {
+  const blog = await blogsCollection.findOne<Blog>({ _id: new ObjectId(id) });
+
+  if (blog === null) return null;
+
+  const { totalCount }= (await postsCollection
+    .aggregate<{totalCount: number}>([
+      {
+        $match: { blogId: new ObjectId(id) },
+      },
+      {
+        $count: 'totalCount'
+      },
+    ]).toArray())[0]
+
+  return totalCount;
+}
+
+export const findBlogPostsByQuery = async (
+  id: string,
+  query: PaginationQuery
+) => {
+  const blog = await blogsCollection.findOne<Blog>({ _id: new ObjectId(id) });
+
+  if (blog === null) return null;
+
+  const posts = await postsCollection
+    .aggregate<Post>([
+      {
+        $match: { blogId: new ObjectId(id) },
+      },
+      {
+        $sort: { [query.sortBy]: query.sortDirection },
+      },
+      {
+        $skip: countSkip(query.pageSize, query.pageNumber),
+      },
+      {
+        $limit: query.pageSize,
+      },
+    ])
+    .toArray();
+  console.log(posts);
+  return posts;
 };

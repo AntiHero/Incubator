@@ -7,7 +7,7 @@ import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as postsRepository from '@/repository/posts.repository';
 import * as blogsRepository from '@/repository/blogs.repository';
-import { checkAuthorization } from '@/customValidators/checkAuthorization';
+import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 /* Constraints */

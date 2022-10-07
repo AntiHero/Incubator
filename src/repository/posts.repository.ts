@@ -45,27 +45,6 @@ export const findPostById = async (id: string | ObjectId) => {
   return convertToPost(doc);
 };
 
-export const findPostsByQuery = async <T extends Record<string, any>>(
-  query: T
-) => {
-  const blogName = await blogsCollection.findOne<string>(
-    { _id: new ObjectId(query.id) },
-    { projection: { _id: 0, name: 1 } }
-  );
-
-  if (blogName === null) return null;
-
-  const posts = await blogsCollection
-    .aggregate<Post>([
-      {
-        $match: { blogName },
-      },
-    ])
-    .toArray();
-
-  return posts;
-};
-
 export const findPostByIdAndUpdate = async (
   id: string,
   { content, title, shortDescription, blogId }: h04.PostInputModel
