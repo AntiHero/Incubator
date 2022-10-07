@@ -6,6 +6,7 @@ import { updateBlog } from '@/controllers/blog/updateBlog';
 import { deleteBlog } from '@/controllers/blog/deleteBlog';
 import { getAllBlogs } from '@/controllers/blog/getAllBlogs';
 import { getBlogPosts } from '@/controllers/blog/getBlogPosts';
+import { postBlogPost } from '@/controllers/blog/postBlogPost';
 
 const blogsRouter = Router();
 
@@ -17,7 +18,7 @@ blogsRouter.get('/:id', getBlog);
 
 blogsRouter.get('/:id/posts', getBlogPosts);
 
-blogsRouter.post('/:id/posts', (req, res) => { res.sendStatus(200) });
+blogsRouter.post('/:id/posts', postBlogPost);
 
 blogsRouter.put('/:id', updateBlog);
 
