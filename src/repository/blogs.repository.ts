@@ -87,7 +87,7 @@ export const getBlogPostsCount = async (id: string) => {
 
 export const getBlogsCount = async () => {
   const { totalCount } = (
-    await postsCollection
+    await blogsCollection
       .aggregate<{ totalCount: number }>([
         {
           $match: {},
@@ -98,7 +98,6 @@ export const getBlogsCount = async () => {
       ])
       .toArray()
   )[0];
-
   return totalCount;
 };
 
