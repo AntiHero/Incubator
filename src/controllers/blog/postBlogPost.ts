@@ -46,16 +46,6 @@ export const postBlogPost = [
     .not()
     .isEmpty()
     .withMessage(ErrorMessages.EMPTY_STRING_ERROR),
-  body(PostFields.blogId)
-    .isString()
-    .withMessage(ErrorMessages.NOT_STRING_ERROR)
-    .custom(async (value: string) => {
-      const blog = await blogsRepository.findBlogById(value);
-
-      if (blog === null) throw new Error('Corresponding blog was not found');
-
-      return true;
-    }),
   async (req: Request, res: Response) => {
     const blog = await blogsRepository.findBlogById(req.params.id);
 
