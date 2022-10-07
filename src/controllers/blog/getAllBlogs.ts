@@ -12,10 +12,11 @@ export const getAllBlogs = [...validatePaginationQuery, async (req: Request, res
       pageSize,
       sortBy,
       sortDirection,
+      searchNameTerm
     } = (req.query as unknown) as PaginationQuery;
 
-  const blogs = await blogsRepository.findBlogsByQuery({pageNumber, pageSize, sortBy, sortDirection});
-  const totalCount = await blogsRepository.getBlogsCount();
+  const blogs = await blogsRepository.findBlogsByQuery({pageNumber, pageSize, sortBy, sortDirection, searchNameTerm});
+  const totalCount = await blogsRepository.getBlogsCount(req.query);
   const items = blogs.map(convertToBlog);
   const result = new Paginator(Math.ceil(totalCount / pageSize), pageNumber, pageSize, totalCount, items);
 

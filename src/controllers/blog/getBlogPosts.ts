@@ -17,6 +17,7 @@ export const getBlogPosts = [
       pageSize,
       sortBy,
       sortDirection,
+      searchNameTerm
     } = (req.query as unknown) as PaginationQuery;
 
     const id = req.params.id;
@@ -26,6 +27,7 @@ export const getBlogPosts = [
       pageSize,
       sortBy,
       sortDirection,
+      searchNameTerm
     });
 
     if (posts === null) return res.sendStatus(404);

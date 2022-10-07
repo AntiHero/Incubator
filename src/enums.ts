@@ -32,4 +32,5 @@ export enum PaginationQueryParams {
   pageSize = 'pageSize',
   sortBy = 'sortBy',
   sortDirection = 'sortDirection',
+  searchNameTerm = 'searchNameTerm'
 }

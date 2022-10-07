@@ -50,4 +50,19 @@ export const validatePaginationQuery = [
 
     next();
   },
+  async (req: Request, _: Response, next: NextFunction) => {
+    const searchNameTerm = await query(PaginationQueryParams.searchNameTerm)
+      .isString()
+      .trim()
+      .toLowerCase()
+      .run(req, { dryRun: true });
+
+    if (!searchNameTerm.isEmpty()) {
+      ((req.query as unknown) as PaginationQuery).searchNameTerm = /.*/i;
+    } else {
+      ((req.query as unknown) as PaginationQuery).searchNameTerm = new RegExp(req.query.searchNameTerm as string, 'i');
+    }
+
+    next();
+  },
 ];
