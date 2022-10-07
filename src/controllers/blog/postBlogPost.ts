@@ -9,6 +9,7 @@ import * as postsRepository from '@/repository/posts.repository';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 
 /* Constraints */
 const MAX_TITLE_LEN = 30;
@@ -17,6 +18,7 @@ const MAX_SHORT_DESCR_LEN = 100;
 
 export const postBlogPost = [
   ...checkAuthorization,
+  validateObjectId,
   body(PostFields.title)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
@@ -55,6 +57,10 @@ export const postBlogPost = [
       return true;
     }),
   async (req: Request, res: Response) => {
+    const blog = await blogsRepository.findBlogById(req.body.blogId);
+
+    if (blog === null) return res.sendStatus(404);
+
     if (!customValidationResult(req).isEmpty()) {
       res
         .type('text/plain')
@@ -69,10 +75,6 @@ export const postBlogPost = [
 
       return;
     }
-
-    const blog = await blogsRepository.findBlogById(req.body.blogId);
-
-    if (blog === null) return res.sendStatus(404);
 
     const post = new Post(
       req.body.title,

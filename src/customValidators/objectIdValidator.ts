@@ -11,6 +11,6 @@ export const validateObjectId = (
   if (ObjectId.isValid(id)) {
     if (String(new ObjectId(id)) === id) return next();
   } else {
-    res.sendStatus(401);
+    res.sendStatus(404);
   }
 };
