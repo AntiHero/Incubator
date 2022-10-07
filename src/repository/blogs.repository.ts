@@ -69,18 +69,38 @@ export const getBlogPostsCount = async (id: string) => {
 
   if (blog === null) return null;
 
-  const { totalCount }= (await postsCollection
-    .aggregate<{totalCount: number}>([
-      {
-        $match: { blogId: new ObjectId(id) },
-      },
-      {
-        $count: 'totalCount'
-      },
-    ]).toArray())[0]
+  const { totalCount } = (
+    await postsCollection
+      .aggregate<{ totalCount: number }>([
+        {
+          $match: { blogId: new ObjectId(id) },
+        },
+        {
+          $count: 'totalCount',
+        },
+      ])
+      .toArray()
+  )[0];
 
   return totalCount;
-}
+};
+
+export const getBlogsCount = async () => {
+  const { totalCount } = (
+    await postsCollection
+      .aggregate<{ totalCount: number }>([
+        {
+          $match: {},
+        },
+        {
+          $count: 'totalCount',
+        },
+      ])
+      .toArray()
+  )[0];
+
+  return totalCount;
+};
 
 export const findBlogPostsByQuery = async (
   id: string,
@@ -108,4 +128,25 @@ export const findBlogPostsByQuery = async (
     .toArray();
   console.log(posts);
   return posts;
+};
+
+export const findBlogsByQuery = async (query: PaginationQuery) => {
+  const blogs = await blogsCollection
+    .aggregate<Blog>([
+      {
+        $match: {},
+      },
+      {
+        $sort: { [query.sortBy]: query.sortDirection },
+      },
+      {
+        $skip: countSkip(query.pageSize, query.pageNumber),
+      },
+      {
+        $limit: query.pageSize,
+      },
+    ])
+    .toArray();
+
+  return blogs;
 };
