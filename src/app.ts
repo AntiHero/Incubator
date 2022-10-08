@@ -14,6 +14,10 @@ app.use(bodyParser.json());
 app.use('/posts', postsRouter);
 app.use('/blogs', blogsRouter);
 app.use('/testing', testingRouter);
+app.use('/', (req, res) => {
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
+  res.end();
+});
 
 app.use('*', (_, res) => {
   res.status(200).end();
