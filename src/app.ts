@@ -1,6 +1,5 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import { validatePaginationQuery } from './customValidators/paginationValidator';
 
 import blogsRouter from './routes/blogs.router';
 import postsRouter from './routes/posts.router';
