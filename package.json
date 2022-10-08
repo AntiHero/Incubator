@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc & tsc-alias",
     "dev": "nodemon -e ts,yaml --exec \"node -r tsconfig-paths/register --require ts-node/register --inspect src/index.ts\""
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "prettier": "^2.7.1"
   },
   "dependencies": {
+    "tsc-alias": "^1.7.0",
     "@types/express": "^4.17.14",
     "@types/node": "^18.7.18",
     "@types/uuid": "^8.3.4",
@@ -36,7 +37,7 @@
     "mongodb": "^4.10.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
-    "typescript": "*"
+    "typescript": "^4.8.4"
   },
   "engines": {
     "node": ">14.x"
