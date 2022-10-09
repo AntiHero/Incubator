@@ -122,7 +122,6 @@ export const findBlogPostsByQuery = async (
       },
     ])
     .toArray();
-  console.log(posts);
   return posts;
 };
 
