@@ -32,12 +32,12 @@ export const updateBlog = [
     .isEmpty()
     .withMessage(ErrorMessages.EMPTY_STRING_ERROR)
     .isLength({ max: MAX_NAME_LEN })
-    .withMessage(ErrorMessages.MAX_LENGHTH_ERROR(MAX_NAME_LEN)),
+    .withMessage(ErrorMessages.MAX_LENGTH_ERROR(MAX_NAME_LEN)),
   body(BlogFields.youtubeUrl)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
     .isLength({ max: MAX_YOUTUBEURL_LEN })
-    .withMessage(ErrorMessages.MAX_LENGHTH_ERROR(MAX_YOUTUBEURL_LEN))
+    .withMessage(ErrorMessages.MAX_LENGTH_ERROR(MAX_YOUTUBEURL_LEN))
     .matches(
       /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
     )

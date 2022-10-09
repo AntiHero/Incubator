@@ -33,4 +33,12 @@ export enum PaginationQueryParams {
   sortBy = 'sortBy',
   sortDirection = 'sortDirection',
   searchNameTerm = 'searchNameTerm',
+  searchLoginTerm = 'searchLoginTerm',
+  searchEmailTerm = 'searchEmailTerm',
+}
+
+export enum UserFields {
+  login = 'login',
+  email = 'email',
+  password = 'password',
 }

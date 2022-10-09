@@ -71,5 +71,34 @@ export interface PaginationQuery {
   pageSize: number;
   sortBy: string;
   sortDirection: SortDirection;
-  searchNameTerm: RegExp;
+  searchNameTerm?: RegExp;
+  searchLoginTerm?: RegExp;
+  searchEmailTerm?: RegExp;
+}
+
+export declare namespace h05 {
+  interface LoginInputModel {
+    login: string;
+    password: string;
+  }
+
+  interface UserInputModel {
+    login: string;
+    password: string;
+    email: string;
+  }
+
+  interface UserViewModel {
+    id: string;
+    login: string;
+    email: string;
+    createdAt: string;
+  }
+}
+
+export interface User {
+  _id: ObjectId;
+  login: string;
+  email: string;
+  createdAt: Date;
 }

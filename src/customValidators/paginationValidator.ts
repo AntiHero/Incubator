@@ -9,6 +9,9 @@ import {
 } from '@/enums';
 import { PaginationQuery } from '@/@types';
 
+const validateQueryString = (queryParam: string) =>
+  query(queryParam).isString().trim().toLowerCase();
+
 export const validatePaginationQuery = [
   query(PaginationQueryParams.pageNumber).trim().toInt().default(1),
   query(PaginationQueryParams.pageSize).trim().toInt().default(10),
@@ -45,17 +48,44 @@ export const validatePaginationQuery = [
     next();
   },
   async (req: Request, _: Response, next: NextFunction) => {
-    const searchNameTerm = await query(PaginationQueryParams.searchNameTerm)
-      .isString()
-      .trim()
-      .toLowerCase()
-      .run(req, { dryRun: true });
+    const dryRun = true;
+
+    const [searchNameTerm, searchLoginTerm, searchEmailTerm] =
+      await Promise.all([
+        validateQueryString(PaginationQueryParams.searchNameTerm).run(req, {
+          dryRun,
+        }),
+        validateQueryString(PaginationQueryParams.searchLoginTerm).run(req, {
+          dryRun,
+        }),
+        validateQueryString(PaginationQueryParams.searchLoginTerm).run(req, {
+          dryRun,
+        }),
+      ]);
 
     if (!searchNameTerm.isEmpty()) {
       (req.query as unknown as PaginationQuery).searchNameTerm = /.*/i;
     } else {
       (req.query as unknown as PaginationQuery).searchNameTerm = new RegExp(
         req.query.searchNameTerm as string,
+        'i'
+      );
+    }
+
+    if (!searchLoginTerm.isEmpty()) {
+      (req.query as unknown as PaginationQuery).searchLoginTerm = /.*/i;
+    } else {
+      (req.query as unknown as PaginationQuery).searchLoginTerm = new RegExp(
+        (('^' + req.query.searchLoginTerm) as string) + '.*',
+        'i'
+      );
+    }
+
+    if (!searchEmailTerm.isEmpty()) {
+      (req.query as unknown as PaginationQuery).searchEmailTerm = /.*/i;
+    } else {
+      (req.query as unknown as PaginationQuery).searchEmailTerm = new RegExp(
+        '^' + (req.query.searchEmailTerm as string) + '.*',
         'i'
       );
     }
