@@ -49,7 +49,7 @@ export const validatePaginationQuery = [
   },
   async (req: Request, _: Response, next: NextFunction) => {
     const dryRun = true;
-
+    
     const [searchNameTerm, searchLoginTerm, searchEmailTerm] =
       await Promise.all([
         validateQueryString(PaginationQueryParams.searchNameTerm).run(req, {
@@ -58,7 +58,7 @@ export const validatePaginationQuery = [
         validateQueryString(PaginationQueryParams.searchLoginTerm).run(req, {
           dryRun,
         }),
-        validateQueryString(PaginationQueryParams.searchLoginTerm).run(req, {
+        validateQueryString(PaginationQueryParams.searchEmailTerm).run(req, {
           dryRun,
         }),
       ]);
@@ -73,7 +73,7 @@ export const validatePaginationQuery = [
     }
 
     if (!searchLoginTerm.isEmpty()) {
-      (req.query as unknown as PaginationQuery).searchLoginTerm = /.*/i;
+      (req.query as unknown as PaginationQuery).searchLoginTerm = /$-/;
     } else {
       (req.query as unknown as PaginationQuery).searchLoginTerm = new RegExp(
         (('^' + req.query.searchLoginTerm) as string) + '.*',
@@ -82,7 +82,7 @@ export const validatePaginationQuery = [
     }
 
     if (!searchEmailTerm.isEmpty()) {
-      (req.query as unknown as PaginationQuery).searchEmailTerm = /.*/i;
+      (req.query as unknown as PaginationQuery).searchEmailTerm = /$-/;
     } else {
       (req.query as unknown as PaginationQuery).searchEmailTerm = new RegExp(
         '^' + (req.query.searchEmailTerm as string) + '.*',
