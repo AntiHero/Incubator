@@ -73,7 +73,7 @@ export const validatePaginationQuery = [
     }
 
     if (!searchLoginTerm.isEmpty()) {
-      (req.query as unknown as PaginationQuery).searchLoginTerm = /$-/;
+      (req.query as unknown as PaginationQuery).searchLoginTerm = /.*/i;
     } else {
       (req.query as unknown as PaginationQuery).searchLoginTerm = new RegExp(
         (('^' + req.query.searchLoginTerm) as string) + '.*',
@@ -82,7 +82,7 @@ export const validatePaginationQuery = [
     }
 
     if (!searchEmailTerm.isEmpty()) {
-      (req.query as unknown as PaginationQuery).searchEmailTerm = /$-/;
+      (req.query as unknown as PaginationQuery).searchEmailTerm = /.*/i;
     } else {
       (req.query as unknown as PaginationQuery).searchEmailTerm = new RegExp(
         '^' + (req.query.searchEmailTerm as string) + '.*',
