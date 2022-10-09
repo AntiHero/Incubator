@@ -83,3 +83,7 @@ export const findUsersByQuery = async (query: PaginationQuery) => {
 
   return users;
 };
+
+export const deleteAll = async () => {
+  await usersCollection.deleteMany({});
+};
