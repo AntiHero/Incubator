@@ -82,17 +82,10 @@ export const validatePaginationQuery = [
       if (!term.isEmpty()) {
         ((req.query as unknown) as PaginationQuery)[field] = /.*/i;
       } else {
-        if (field === PaginationQueryParams.searchNameTerm) {
-          ((req.query as unknown) as PaginationQuery).searchNameTerm = new RegExp(
-            req.query.searchNameTerm as string,
-            'i'
-          );
-        } else {
           ((req.query as unknown) as PaginationQuery)[field] = new RegExp(
             ((req.query[field]) as string),
             'i'
           );
-        }
       }
 
       console.log(req.query);
