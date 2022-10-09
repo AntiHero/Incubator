@@ -30,6 +30,13 @@ export const login = [
     .isLength({ min: MIN_PASSWORD_LEN })
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
+    const user = await usersRepository.findUserByLoginAndPassword(
+      req.body.login,
+      req.body.password
+    );
+
+    if (!user) return res.sendStatus(401);
+
     if (!customValidationResult(req).isEmpty()) {
       res
         .type('text/plain')
@@ -44,13 +51,6 @@ export const login = [
 
       return;
     }
-
-    const user = await usersRepository.findUserByLoginAndPassword(
-      req.body.login,
-      req.body.password
-    );
-
-    if (!user) return res.sendStatus(401);
 
     res.sendStatus(204);
   },
