@@ -16,12 +16,12 @@ blogsRouter.post('/', postBlog);
 
 blogsRouter.get('/:id', getBlog);
 
-blogsRouter.get('/:id/posts', getBlogPosts);
-
-blogsRouter.post('/:id/posts', postBlogPost);
-
 blogsRouter.put('/:id', updateBlog);
 
 blogsRouter.delete('/:id', deleteBlog);
+
+blogsRouter.get('/:id/posts', getBlogPosts);
+
+blogsRouter.post('/:id/posts', postBlogPost);
 
 export default blogsRouter;
