@@ -6,11 +6,10 @@ import { usersCollection } from './collections';
 import { countSkip } from '@/utils/countSkip';
 
 export const createUser = async (userData: UserModel): Promise<User> => {
-  await usersCollection.insertOne({
-    ...userData,
-  });
+  await usersCollection.insertOne(userData);
 
   // userData will be equal to created user (mutated during insertion process)
+  console.log(userData, 'userData')
   return userData as unknown as User;
 };
 
