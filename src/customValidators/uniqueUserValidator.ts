@@ -9,7 +9,7 @@ export const validateUserUnicity = body([
 ]).custom(async (value) => {
   const user = await findUserByLoginOrEmail(value);
 
-  if (!user) throw new Error('User already exists');
+  if (user) throw new Error('User already exists');
 
   return true;
 });
