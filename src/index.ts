@@ -13,5 +13,3 @@ connectToDb().then(
   },
   () => console.error('Connenction error')
 );
-
-export = app;
