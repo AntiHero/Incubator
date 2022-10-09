@@ -9,7 +9,7 @@ export const createUser = async (userData: UserModel): Promise<User> => {
   await usersCollection.insertOne(userData);
 
   // userData will be equal to created user (mutated during insertion process)
-  return (userData as unknown) as User;
+  return userData as unknown as User;
 };
 
 export const findUserById = async (id: string | ObjectId) => {
@@ -28,6 +28,13 @@ export const findUserByIdAndDelete = async (id: string) => {
   if (result.deletedCount === 1) return true;
 
   return null;
+};
+
+export const findUserByLoginAndPassword = async (
+  login: string,
+  password: string
+) => {
+  return usersCollection.findOne({ login, password });
 };
 
 export const findUserByLoginOrEmail = async (loginOrEmail: string) => {

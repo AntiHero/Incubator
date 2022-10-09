@@ -8,7 +8,7 @@ export const validateUserUnicity = body([
   UserFields.email,
 ]).custom(async (value) => {
   const user = await findUserByLoginOrEmail(value);
-  
+
   if (user) throw new Error('User already exists');
 
   return true;

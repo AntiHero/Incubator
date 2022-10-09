@@ -15,20 +15,11 @@ type SearchTerms =
   | PaginationQueryParams.searchLoginTerm;
 
 const validateQueryString = (queryParam: string) =>
-  query(queryParam)
-    .isString()
-    .trim()
-    .toLowerCase();
+  query(queryParam).isString().trim().toLowerCase();
 
 export const validatePaginationQuery = [
-  query(PaginationQueryParams.pageNumber)
-    .trim()
-    .toInt()
-    .default(1),
-  query(PaginationQueryParams.pageSize)
-    .trim()
-    .toInt()
-    .default(10),
+  query(PaginationQueryParams.pageNumber).trim().toInt().default(1),
+  query(PaginationQueryParams.pageSize).trim().toInt().default(10),
   async (req: Request, _: Response, next: NextFunction) => {
     const sortByResult = await query(PaginationQueryParams.sortBy)
       .isString()
@@ -50,10 +41,10 @@ export const validatePaginationQuery = [
       .run(req, { dryRun: true });
 
     if (!sortByResult.isEmpty()) {
-      ((req.query as unknown) as PaginationQuery).sortDirection =
+      (req.query as unknown as PaginationQuery).sortDirection =
         SortDirection.desc;
     } else {
-      ((req.query as unknown) as PaginationQuery).sortDirection =
+      (req.query as unknown as PaginationQuery).sortDirection =
         req.query.sortDirection === SortDirectionKeys.asc
           ? SortDirection.asc
           : SortDirection.desc;
@@ -80,15 +71,13 @@ export const validatePaginationQuery = [
       const field = term.context.fields[0] as SearchTerms;
 
       if (!term.isEmpty()) {
-        ((req.query as unknown) as PaginationQuery)[field] = /.*/i;
+        (req.query as unknown as PaginationQuery)[field] = /.*/i;
       } else {
-          ((req.query as unknown) as PaginationQuery)[field] = new RegExp(
-            ((req.query[field]) as string),
-            'i'
-          );
+        (req.query as unknown as PaginationQuery)[field] = new RegExp(
+          req.query[field] as string,
+          'i'
+        );
       }
-
-      console.log(req.query);
     }
 
     next();
