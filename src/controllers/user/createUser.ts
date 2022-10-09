@@ -5,11 +5,11 @@ import User from '@/models/User';
 import { UserFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import * as usersRepository from '@/repository/users.repository';
-import { validateObjectId } from '@/customValidators/objectIdValidator';
-import { checkAuthorization } from '@/customValidators/basicAuthValidator';
-import { customValidationResult } from '@/customValidators/customValidationResults';
 import { convertToUser } from '@/utils/convertToUser';
+import * as usersRepository from '@/repository/users.repository';
+import { checkAuthorization } from '@/customValidators/basicAuthValidator';
+import { validateUserUnicity } from '@/customValidators/uniqueUserValidator';
+import { customValidationResult } from '@/customValidators/customValidationResults';
 
 const MIN_PASSWORD_LEN = 6;
 const MAX_PASSWORD_LEN = 20;
@@ -19,7 +19,6 @@ const MAX_LOGIN_LEN = 10;
 
 export const createUser = [
   ...checkAuthorization,
-  validateObjectId,
   body(UserFields.login)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
@@ -42,6 +41,7 @@ export const createUser = [
     .trim()
     .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
     .withMessage(ErrorMessages.WRONG_PATTERN_ERROR),
+  validateUserUnicity,
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) {
       res
