@@ -24,17 +24,17 @@ export const createUser = [
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
     .trim()
     .isLength({ max: MAX_LOGIN_LEN })
-    .withMessage(ErrorMessages.MAX_LENGTH_ERROR)
+    .withMessage(ErrorMessages.MAX_LENGTH_ERROR(MAX_LOGIN_LEN))
     .isLength({ min: MIN_LOGIN_LEN })
-    .withMessage(ErrorMessages.MIN_LENGTH_ERROR),
+    .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_LOGIN_LEN)),
   body(UserFields.password)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
     .trim()
     .isLength({ max: MAX_PASSWORD_LEN })
-    .withMessage(ErrorMessages.MAX_LENGTH_ERROR)
+    .withMessage(ErrorMessages.MAX_LENGTH_ERROR(MAX_PASSWORD_LEN))
     .isLength({ min: MIN_PASSWORD_LEN })
-    .withMessage(ErrorMessages.MIN_LENGTH_ERROR),
+    .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   body(UserFields.email)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
