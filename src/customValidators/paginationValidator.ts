@@ -89,7 +89,7 @@ export const validatePaginationQuery = [
           );
         } else {
           ((req.query as unknown) as PaginationQuery)[field] = new RegExp(
-            (('^' + req.query[field]) as string) + '.*',
+            ((req.query[field]) as string),
             'i'
           );
         }
