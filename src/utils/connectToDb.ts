@@ -1,6 +1,6 @@
-import { client } from '@/repository/collections';
+import { MongoClient } from 'mongodb';
 
-const connectToDb = async () => {
+const connectToDb = async (client: MongoClient) => {
   await client.connect();
 };
 

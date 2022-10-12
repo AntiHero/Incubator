@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 
 import { PaginationQuery, User } from '@/@types';
 import UserModel from '@/models/User';
-import { usersCollection } from './collections';
+import { usersCollection } from '../clients';
 import { countSkip } from '@/utils/countSkip';
 
 export const createUser = async (userData: UserModel): Promise<User> => {

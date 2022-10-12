@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { countSkip } from '@/utils/countSkip';
 import { convertToPost } from '@/utils/convertToPost';
 import { h04, PaginationQuery, Post } from '@/@types';
-import { blogsCollection, postsCollection } from './collections';
+import { blogsCollection, postsCollection } from '../clients';
 
 export const getAllPosts = async () => {
   const cursor = postsCollection.find<Post>({});

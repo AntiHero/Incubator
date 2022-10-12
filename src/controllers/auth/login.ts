@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { UserFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import * as usersRepository from '@/repository/users.repository';
+import * as usersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 const MAX_PASSWORD_LEN = 20;
@@ -30,12 +30,10 @@ export const login = [
     .isLength({ min: MIN_PASSWORD_LEN })
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
-    const user = await usersRepository.findUserByLoginAndPassword(
-      req.body.login,
-      req.body.password
-    );
+    const { login, password } = req.body;
+    const token = await usersService.authenticateUser({ login, password });
 
-    if (!user) return res.sendStatus(401);
+    if (!token) return res.sendStatus(401);
 
     if (!customValidationResult(req).isEmpty()) {
       res
@@ -52,6 +50,6 @@ export const login = [
       return;
     }
 
-    res.sendStatus(204);
+    res.status(200).json({ accessToken: token });
   },
 ];

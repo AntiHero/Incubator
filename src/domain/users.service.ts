@@ -14,3 +14,15 @@ export const createUser = async (
 export const deleteUser = async (id: string) => {
   return usersRepository.findUserByIdAndDelete(id);
 };
+
+export const authenticateUser = async ({
+  login,
+  password,
+}: h05.LoginInputModel) => {
+  const user = await usersRepository.findUserByLoginAndPassword(
+    login,
+    password
+  );
+
+  if (!user) return null;
+};

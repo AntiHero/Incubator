@@ -2,12 +2,10 @@ import { NextFunction, Response, Request } from 'express';
 import { header } from 'express-validator';
 
 import { Headers } from '@/enums';
+import { basicLogin, basicPassword } from '@/constants';
 import { customValidationResult } from './customValidationResults';
 
 const AUTHENTICATION_SCHEME = 'Basic';
-
-const login = 'admin';
-const password = 'qwerty';
 
 export const checkAuthorization = [
   header(Headers.Authorization).custom((value: string) => {
@@ -22,7 +20,7 @@ export const checkAuthorization = [
       'base64'
     ).toString();
 
-    if (decodedLoginPassowrd !== [login, password].join(':')) {
+    if (decodedLoginPassowrd !== [basicLogin, basicPassword].join(':')) {
       throw new Error('Incorrect login/password pair');
     }
 
