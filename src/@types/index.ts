@@ -10,37 +10,6 @@ export interface APIErrorResult {
   errorsMessages: FieldError[];
 }
 
-export declare namespace h04 {
-  interface BlogInputModel {
-    name: string;
-    youtubeUrl: string;
-  }
-
-  interface BlogViewModel {
-    id: string;
-    name: string;
-    youtubeUrl: string;
-    createdAt: string;
-  }
-
-  interface PostInputModel {
-    title: string;
-    content: string;
-    shortDescription: string;
-    blogId: string;
-  }
-
-  interface PostViewModel {
-    id: string;
-    title: string;
-    shortDescription: string;
-    content: string;
-    blogId: string;
-    blogName: string;
-    createdAt: string;
-  }
-}
-
 export interface Blog {
   _id: ObjectId;
   name: string;
@@ -76,6 +45,52 @@ export interface PaginationQuery {
   searchEmailTerm?: RegExp;
 }
 
+export interface User {
+  _id: ObjectId;
+  login: string;
+  email: string;
+  createdAt: Date;
+}
+
+export interface Comment {
+  _id: ObjectId;
+  content: string;
+  userId: ObjectId;
+  userLogin: string;
+  createdAt: string;
+}
+
+export declare namespace h04 {
+  interface BlogInputModel {
+    name: string;
+    youtubeUrl: string;
+  }
+
+  interface BlogViewModel {
+    id: string;
+    name: string;
+    youtubeUrl: string;
+    createdAt: string;
+  }
+
+  interface PostInputModel {
+    title: string;
+    content: string;
+    shortDescription: string;
+    blogId: string;
+  }
+
+  interface PostViewModel {
+    id: string;
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+    blogName: string;
+    createdAt: string;
+  }
+}
+
 export declare namespace h05 {
   interface LoginInputModel {
     login: string;
@@ -96,9 +111,20 @@ export declare namespace h05 {
   }
 }
 
-export interface User {
-  _id: ObjectId;
-  login: string;
-  email: string;
-  createdAt: Date;
+export declare namespace h06 {
+  interface CommentInputModel {
+    content: string;
+  }
+
+  interface CommentViewModel {
+    id: string;
+    content: string;
+    userId: string;
+    userLogin: string;
+    createdAt: string;
+  }
+
+  interface LoginSuccessViewModel {
+    accessToken: string;
+  }
 }

@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult } from '@/@types';
+import { APIErrorResult, h06 } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as usersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
@@ -49,7 +49,8 @@ export const login = [
 
       return;
     }
-
-    res.status(200).json({ accessToken: token });
+    
+    const payload: h06.LoginSuccessViewModel = { accessToken: token };
+    res.status(200).json(payload);
   },
 ];
