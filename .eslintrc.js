@@ -3,6 +3,7 @@ module.exports = {
     node: true,
     es2021: true,
     browser: true,
+    jest: true,
   },
   extends: [
     'plugin:@typescript-eslint/recommended',

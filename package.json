@@ -6,11 +6,13 @@
   "author": "Aleksandr Schemelev <prophreaker@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "test": "jest",
     "start": "ts-node src/index.ts",
     "build": "tsc & tsc-alias",
     "dev": "nodemon -e ts,yaml --exec \"node -r tsconfig-paths/register --require ts-node/register --inspect src/index.ts\""
   },
   "devDependencies": {
+    "@types/jest": "^29.1.2",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.37.0",
     "eslint": "^8.0.1",
@@ -21,8 +23,10 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.0.0",
+    "jest": "^29.1.2",
     "nodemon": "^2.0.19",
-    "prettier": "^2.7.1"
+    "prettier": "^2.7.1",
+    "ts-jest": "^29.0.3"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
