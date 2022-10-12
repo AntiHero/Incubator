@@ -22,7 +22,7 @@ afterAll(async () => {
 
 describe('testing /auth/login', () => {
   test('should sign in user when POST /auth/login', async () => {
-    expect.assertions(2);
+    expect.assertions(1);
 
     const customUserCreds = { login: 'testUser', password: 'testPass' };
     const customUser = { ...customUserCreds, email: 'custom-email@gmail.com' };
