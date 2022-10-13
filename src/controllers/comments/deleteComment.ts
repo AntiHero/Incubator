@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import * as commentsService from '@/domain/comments.service';
+import { checkAuthorization } from '@/customValidators/bearerAuthValidator';
 
 export const deleteComment = [
   ...checkAuthorization,
