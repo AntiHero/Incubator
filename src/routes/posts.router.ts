@@ -13,12 +13,12 @@ postsRouters.get('/', getAllPosts);
 
 postsRouters.post('/', postPost);
 
+postsRouters.post('/:id/comments', postComment);
+
 postsRouters.get('/:id', getPost);
 
 postsRouters.put('/:id', updatePost);
 
 postsRouters.delete('/:id', deletePost);
-
-postsRouters.post('/:id/comments', postComment);
 
 export default postsRouters;
