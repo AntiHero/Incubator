@@ -20,6 +20,8 @@ export const deleteComment = [
       return;
     }
 
+    await commentsService.deleteComment(commentId);
+    
     res.sendStatus(204);
   },
 ];
