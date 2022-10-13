@@ -46,7 +46,7 @@ export const postComment = [
     }
 
     const doc = await usersRepository.findUserById(req.userId);
-
+    
     if (doc) {
       const user = convertToUser(doc);
       const content = req.body.content as string;
@@ -62,6 +62,6 @@ export const postComment = [
       return;
     }
     
-    res.end();
+    res.status(205).end();
   },
 ];

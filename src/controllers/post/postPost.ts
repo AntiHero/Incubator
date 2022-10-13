@@ -88,6 +88,6 @@ export const postPost = [
       return;
     }
 
-    res.status(203).end();
+    res.end();
   },
 ];
