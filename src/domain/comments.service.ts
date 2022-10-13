@@ -25,3 +25,7 @@ export const findCommentsByQuery = async (
 export const getCommentsCount = async (postId: string) => {
   return commentsRepository.getCommentsCount(postId);
 };
+
+export const getComment = async (commentId: string) => {
+  return commentsRepository.findCommentById(commentId);
+}
