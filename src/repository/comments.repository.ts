@@ -11,7 +11,7 @@ export const getAllComments = async () => {
 
   const comments: h06.CommentViewModel[] = [];
 
-  await cursor.forEach(doc => {
+  await cursor.forEach((doc) => {
     const comment = convertToComment(doc);
     comments.push(comment);
   });

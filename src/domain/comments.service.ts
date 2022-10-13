@@ -28,12 +28,15 @@ export const getCommentsCount = async (postId: string) => {
 
 export const getComment = async (commentId: string) => {
   return commentsRepository.findCommentById(commentId);
-}
+};
 
 export const deleteComment = async (commentId: string) => {
   return commentsRepository.findCommentByIdAndDelete(commentId);
-}
+};
 
-export const updateComment = async (id: string, { content } : h06.CommentInputModel) => {
+export const updateComment = async (
+  id: string,
+  { content }: h06.CommentInputModel
+) => {
   return await commentsRepository.updateCommentById(id, { content });
-}
+};

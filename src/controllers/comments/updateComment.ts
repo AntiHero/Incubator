@@ -54,6 +54,6 @@ export const updateComment = [
       content: req.body.content,
     });
 
-    res.sendStatus(204)
+    res.sendStatus(204);
   },
 ];
