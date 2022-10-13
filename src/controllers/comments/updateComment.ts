@@ -50,14 +50,10 @@ export const updateComment = [
       return;
     }
 
-    const updatedComment = commentsService.updateComment(commentId, {
+    await commentsService.updateComment(commentId, {
       content: req.body.content,
     });
-    res
-      .status(201)
-      .set('Content-Type', 'text/plain')
-      .json(updatedComment);
 
-    res.end();
+    res.sendStatus(204)
   },
 ];
