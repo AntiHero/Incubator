@@ -11,7 +11,7 @@ export const getComments = [
   validatePaginationQuery,
   async (req: Request, res: Response) => {
     const postId = req.params.id;
-    const post = postRepository.findPostById(postId);
+    const post = await postRepository.findPostById(postId);
 
     if (!post) return res.sendStatus(404);
 
