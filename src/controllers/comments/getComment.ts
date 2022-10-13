@@ -12,6 +12,6 @@ export const getComment = [
 
     if (!comment) return res.sendStatus(404);
 
-    res.status(200).set('Content-Type', 'text/plain').json(comment);
+    res.status(200).type('text/plain').json(comment);
   },
 ];

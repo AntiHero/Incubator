@@ -57,11 +57,11 @@ export const postComment = [
         postId
       );
 
-      res.status(201).set('Content-Type', 'text/plain').json(comment);
+      res.status(201).type('text/plain').json(comment);
 
       return;
     }
-
+    
     res.end();
   },
 ];

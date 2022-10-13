@@ -37,3 +37,7 @@ export const authenticateUser = async ({
 
   return token;
 };
+
+export const getUser = async (userId: string) => {
+  return usersRepository.findUserById(userId);
+};
