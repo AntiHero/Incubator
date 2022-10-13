@@ -37,9 +37,12 @@ describe('testing /auth/login', () => {
       )
       .send(customUser)
       .expect(201);
-    
-    const authResponse = await api.post('/auth/login').send(customUserCreds).expect(200);
-    
+
+    const authResponse = await api
+      .post('/auth/login')
+      .send(customUserCreds)
+      .expect(200);
+
     expect(authResponse.body.accessToken).toMatch(/^\w+\.\w+\.\w+$/);
   });
 });

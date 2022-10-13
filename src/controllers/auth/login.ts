@@ -49,7 +49,7 @@ export const login = [
 
       return;
     }
-    
+
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
     res.status(200).json(payload);
   },

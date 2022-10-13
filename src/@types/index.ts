@@ -1,5 +1,14 @@
 import { ObjectId } from 'mongodb';
+
 import { SortDirection } from '@/enums';
+
+declare global {
+  namespace Express {
+    export interface Request {
+      userId: string;
+    }
+  }
+}
 
 export interface FieldError {
   message: string | null;
@@ -57,7 +66,7 @@ export interface Comment {
   content: string;
   userId: ObjectId;
   userLogin: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export declare namespace h04 {

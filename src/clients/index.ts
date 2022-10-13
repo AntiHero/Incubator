@@ -9,15 +9,17 @@ const url = process.env.MONGODB_URL as string;
 const testUrl = process.env.MONGODB_TEST_URL as string;
 
 export const client = new MongoClient(url);
-export let testClient: MongoClient; 
+export let testClient: MongoClient;
 
 export let usersCollection = client.db(dbName).collection('users');
 export let blogsCollection = client.db(dbName).collection('blogs');
 export let postsCollection = client.db(dbName).collection('posts');
+export let commentsCollection = client.db(dbName).collection('comments');
 
 if (process.env.MODE === 'test') {
   testClient = new MongoClient(testUrl);
   usersCollection = testClient.db(testDbName).collection('users');
   blogsCollection = testClient.db(testDbName).collection('blogs');
   postsCollection = testClient.db(testDbName).collection('posts');
+  commentsCollection = testClient.db(testDbName).collection('comments');
 }

@@ -4,7 +4,6 @@ import { h05, User } from '@/@types';
 import UserModel from '@/models/User';
 import * as usersRepository from '@/repository/users.repository';
 
-
 export const createUser = async (
   userData: h05.UserInputModel
 ): Promise<User | null> => {
@@ -32,9 +31,9 @@ export const authenticateUser = async ({
   const userForToken = {
     username: user.username,
     id: user._id,
-  }
+  };
 
   const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret');
-  
+
   return token;
 };

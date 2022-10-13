@@ -42,3 +42,10 @@ export enum UserFields {
   email = 'email',
   password = 'password',
 }
+
+export enum CommentFields {
+  content = 'content',
+  userId = 'userId',
+  userLogin = 'userLogin',
+  createdAt = 'createdAt',
+}
