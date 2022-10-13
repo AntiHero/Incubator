@@ -21,7 +21,7 @@ export const deleteComment = [
     }
 
     await commentsService.deleteComment(commentId);
-    
+
     res.sendStatus(204);
   },
 ];
