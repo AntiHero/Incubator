@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import * as commentsService from '@/domain/comments.service';
+import { validateObjectId } from '@/customValidators/objectIdValidator';
 import { checkAuthorization } from '@/customValidators/bearerAuthValidator';
 
 export const deleteComment = [
   ...checkAuthorization,
+  validateObjectId,
   async (req: Request, res: Response) => {
     const userId = req.userId;
     const commentId = req.params.id;

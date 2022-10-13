@@ -11,7 +11,7 @@ export const getAllComments = async () => {
 
   const comments: h06.CommentViewModel[] = [];
 
-  await cursor.forEach((doc) => {
+  await cursor.forEach(doc => {
     const comment = convertToComment(doc);
     comments.push(comment);
   });
@@ -82,6 +82,20 @@ export const findCommentByIdAndDelete = async (id: string) => {
   const result = await commentsCollection.deleteOne({ _id: new ObjectId(id) });
 
   if (result.deletedCount === 1) return true;
+
+  return null;
+};
+
+export const updateCommentById = async (
+  id: string,
+  { content }: h06.CommentInputModel
+) => {
+  const query = { _id: new ObjectId(id) };
+  const update = { $set: { content } };
+
+  const result = await commentsCollection.updateOne(query, update);
+
+  if (result.modifiedCount === 1) return true;
 
   return null;
 };

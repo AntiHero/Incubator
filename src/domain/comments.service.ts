@@ -33,3 +33,11 @@ export const getComment = async (commentId: string) => {
 export const deleteComment = async (commentId: string) => {
   return commentsRepository.findCommentByIdAndDelete(commentId);
 }
+
+export const updateComment = async (id: string, { content } : h06.CommentInputModel) => {
+  const result = await commentsRepository.updateCommentById(id, { content });
+
+  if (!result) return null;
+
+  return await commentsRepository.findCommentById(id);
+}
