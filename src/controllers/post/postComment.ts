@@ -62,6 +62,6 @@ export const postComment = [
       return;
     }
     
-    res.status(205).end();
+    res.end();
   },
 ];

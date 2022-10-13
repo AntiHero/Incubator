@@ -8,7 +8,7 @@ import * as postRepository from '@/repository/posts.repository';
 import { validatePaginationQuery } from '@/customValidators/paginationValidator';
 
 export const getComments = [
-  validatePaginationQuery,
+  ...validatePaginationQuery,
   async (req: Request, res: Response) => {
     const postId = req.params.id;
     const post = await postRepository.findPostById(postId);
