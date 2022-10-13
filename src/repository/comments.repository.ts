@@ -29,7 +29,7 @@ export const findCommentById = async (id: string | ObjectId) => {
   return convertToComment(doc);
 };
 
-export const saveComment = async (comment: CommentModel, postId: string) => {
+export const saveComment = async (comment: CommentModel, postId?: string) => {
   const { insertedId } = await commentsCollection.insertOne({
     ...comment,
     userId: new ObjectId(comment.userId),
