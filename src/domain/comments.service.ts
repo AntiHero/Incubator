@@ -29,3 +29,7 @@ export const getCommentsCount = async (postId: string) => {
 export const getComment = async (commentId: string) => {
   return commentsRepository.findCommentById(commentId);
 }
+
+export const deleteComment = async (commentId: string) => {
+  return commentsRepository.findCommentByIdAndDelete(commentId);
+}

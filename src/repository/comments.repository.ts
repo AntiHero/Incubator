@@ -77,3 +77,11 @@ export const findCommentsByQuery = async (
 
   return posts;
 };
+
+export const findCommentByIdAndDelete = async (id: string) => {
+  const result = await commentsCollection.deleteOne({ _id: new ObjectId(id) });
+
+  if (result.deletedCount === 1) return true;
+
+  return null;
+};
