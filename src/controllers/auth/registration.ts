@@ -5,8 +5,8 @@ import User from '@/models/User';
 import { UserFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
+import * as EmailManager from '@/managers/emailManager';
 import * as usersRepository from '@/repository/users.repository';
-import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import { validateUserUnicity } from '@/customValidators/uniqueUserValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
@@ -17,7 +17,6 @@ const MIN_LOGIN_LEN = 3;
 const MAX_LOGIN_LEN = 10;
 
 export const registration = [
-  ...checkAuthorization,
   body(UserFields.login)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
@@ -61,6 +60,8 @@ export const registration = [
 
     const userData = new User(login, email, password);
     await usersRepository.createUser(userData);
+    
+    await EmailManager.sendConfirmationEmail({to: email as string}) 
 
     res.sendStatus(204);
   },
