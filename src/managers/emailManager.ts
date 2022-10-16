@@ -29,14 +29,15 @@ const createMailOpts = ({
   html?: string;
 }): Mail.Options => {
   const opts: Mail.Options = {};
-
+  console.log(html);
   opts.from = from;
   opts.to = to;
   opts.subject = subject;
 
-  if (opts.text) opts.text = text;
-  if (opts.html) opts.html = html;
+  if (text) opts.text = text;
+  if (html) opts.html = html;
 
+  console.log(opts)
   return opts;
 };
 
@@ -83,8 +84,6 @@ export const sendConfirmationEmail = async ({
   subject?: string;
   html?: string;
 }) => {
-  subject ??= 'Confirmation Email';
-
   const info = await sendEmail({ from, to, subject, html });
 
   return info;
