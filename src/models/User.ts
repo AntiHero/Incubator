@@ -1,7 +1,7 @@
-import { h05, UserConfirmationType } from '@/@types';
 import { v4 as uuidv4 } from 'uuid';
 
-const fiveMinInMs = 5 * 60 * 1000;
+import { fiveMinInMs } from '@/constants';
+import { h05, UserConfirmationType } from '@/@types';
 
 class UserModel implements h05.UserInputModel {
   public createdAt: Date;

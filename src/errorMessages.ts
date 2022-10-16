@@ -6,3 +6,4 @@ export const MIN_LENGTH_ERROR = (min: number) =>
   `Value should be more than ${min} characters long`;
 export const EMPTY_STRING_ERROR =
   'Field should not be empty or consists of spaces';
+export const NOT_EMAIL = 'Field is not email';

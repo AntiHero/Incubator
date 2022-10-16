@@ -2,18 +2,18 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { ConfirmationRequest } from '@/enums';
-import { APIErrorResult } from '@/@types';
+import { APIErrorResult, h05 } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as UsersService from '@/domain/users.service';
+import { validateConfirmation } from '@/customValidators/validateConfirmation';
 import { customValidationResult } from '@/customValidators/customValidationResults';
-import { validateConfirmationCode } from '@/customValidators/validateConfirmationCode';
 
 export const registrationConfirmation = [
   body(ConfirmationRequest.code)
     .isString()
     .withMessage(ErrorMessages.NOT_STRING_ERROR)
     .trim()
-    .custom(validateConfirmationCode),
+    .custom(validateConfirmation),
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) {
       res
@@ -30,15 +30,12 @@ export const registrationConfirmation = [
       return;
     }
 
-    const { code }: { code: string } = req.body;
+    const user = (await UsersService.findUserByConfirmationCode(
+      req.body.code
+    )) as h05.UserViewModel;
 
-    const confirmation = await UsersService.checkUsersConfirmationCode(code);
+    await UsersService.confirmUser(user.id);
 
-    if (!confirmation) {
-      return res.sendStatus(404);
-    }
-
-    await UsersService.confirmUser(confirmation);
     res.sendStatus(204);
   },
 ];

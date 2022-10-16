@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 
-import UserModel from '@/models/User';
-import { h05, User } from '@/@types';
-import * as usersRepository from '@/repository/users.repository';
 import { UserFields } from '@/enums';
+import UserModel from '@/models/User';
+import { h05, User, UserUpdatesType } from '@/@types';
+import { convertToUser } from '@/utils/convertToUser';
+import * as usersRepository from '@/repository/users.repository';
 
 export const createUser = async (
   userData: h05.UserInputModel
@@ -43,7 +44,7 @@ export const getUser = async (userId: string) => {
   return usersRepository.findUserById(userId);
 };
 
-export const checkUsersConfirmationCode = async (code: string) => {
+export const checkUsersConfirmation = async (code: string) => {
   const user = await usersRepository.findUserByConfirmatinoCode(code);
   if (
     !user ||
@@ -55,8 +56,31 @@ export const checkUsersConfirmationCode = async (code: string) => {
   return user._id.toString();
 };
 
+export const getUserConfirmationStatus = async (id: string) => {
+  const user = await usersRepository.findUserById(id);
+
+  if (!user) return null;
+
+  return user.confirmationInfo.isConfirmed;
+};
+
+export const findUserByConfirmationCode = async (code: string) => {
+  const user = await usersRepository.findUserByConfirmatinoCode(code);
+
+  if (!user) return null;
+
+  return convertToUser(user);
+};
+
 export const confirmUser = async (id: string) => {
   return usersRepository.findUserByIdAndUpdate(id, {
     [UserFields['confirmationInfo.isConfirmed']]: true,
   });
+};
+
+export const updateUser = async (
+  id: string,
+  updates: Partial<{ [K in UserUpdatesType]: any }>
+) => {
+  return usersRepository.findUserByIdAndUpdate(id, updates);
 };
