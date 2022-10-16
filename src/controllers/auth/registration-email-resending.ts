@@ -3,12 +3,9 @@ import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
-import { fiveMinInMs } from '@/constants';
 import * as ErrorMessages from '@/errorMessages';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
-import * as EmailManager from '@/managers/emailManager';
-import * as UsersRepository from '@/repository/users.repository';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import { validateConfirmationStatus } from '@/customValidators/validateConfirmationStatus';
 
@@ -36,20 +33,13 @@ export const registrationEmailResending = [
 
     const { email }: { email: string } = req.body;
 
-    const user = await UsersRepository.findUserByLoginOrEmail(email);
+    const user = await UsersService.findUserByLoginOrEmail(email);
 
     if (!user) return res.sendStatus(404);
 
     const userId = convertToUser(user).id;
 
-    await UsersService.updateUser(userId, {
-      'confirmationInfo.expDate': Date.now() + fiveMinInMs,
-    });
-
-    await EmailManager.sendConfirmationEmail({
-      to: email as string,
-      code: user.confirmationInfo.code,
-    });
+    await UsersService.resendConfirmationEmail(userId, email);
 
     res.sendStatus(204);
   },

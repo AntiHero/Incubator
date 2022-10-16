@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken';
+import { v4 as uuid } from 'uuid';
 
 import { UserFields } from '@/enums';
 import UserModel from '@/models/User';
+import { fiveMinInMs } from '@/constants';
 import { h05, User, UserUpdatesType } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
+import * as EmailManager from '@/managers/emailManager';
 import * as usersRepository from '@/repository/users.repository';
 
 export const createUser = async (
@@ -83,4 +86,22 @@ export const updateUser = async (
   updates: Partial<{ [K in UserUpdatesType]: any }>
 ) => {
   return usersRepository.findUserByIdAndUpdate(id, updates);
+};
+
+export const findUserByLoginOrEmail = async (loginOrEmail: string) => {
+  return usersRepository.findUserByLoginOrEmail(loginOrEmail);
+};
+
+export const resendConfirmationEmail = async (id: string, email: string) => {
+  const newCode = uuid();
+
+  await usersRepository.findUserByIdAndUpdate(id, {
+    'confirmationInfo.expDate': Date.now() + fiveMinInMs,
+    'confirmationInfo.code': newCode,
+  });
+
+  await EmailManager.sendConfirmationEmail({
+    to: email as string,
+    code: newCode,
+  });
 };
