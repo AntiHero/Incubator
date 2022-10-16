@@ -41,6 +41,8 @@ export enum UserFields {
   login = 'login',
   email = 'email',
   password = 'password',
+  'confirmationInfo.code' = 'confirmationInfo.code',
+  'confirmationInfo.isConfirmed' = 'confirmationInfo.isConfirmed',
 }
 
 export enum CommentFields {
@@ -48,4 +50,8 @@ export enum CommentFields {
   userId = 'userId',
   userLogin = 'userLogin',
   createdAt = 'createdAt',
+}
+
+export enum ConfirmationRequest {
+  code = 'code',
 }

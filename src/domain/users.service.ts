@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-import { h05, User } from '@/@types';
 import UserModel from '@/models/User';
+import { h05, User } from '@/@types';
 import * as usersRepository from '@/repository/users.repository';
+import { UserFields } from '@/enums';
 
 export const createUser = async (
   userData: h05.UserInputModel
@@ -40,4 +41,22 @@ export const authenticateUser = async ({
 
 export const getUser = async (userId: string) => {
   return usersRepository.findUserById(userId);
+};
+
+export const checkUsersConfirmationCode = async (code: string) => {
+  const user = await usersRepository.findUserByConfirmatinoCode(code);
+  if (
+    !user ||
+    user.confirmationInfo.isConfirmed ||
+    user.confirmationInfo.expDate < Date.now()
+  )
+    return null;
+
+  return user._id.toString();
+};
+
+export const confirmUser = async (id: string) => {
+  return usersRepository.findUserByIdAndUpdate(id, {
+    [UserFields['confirmationInfo.isConfirmed']]: true,
+  });
 };

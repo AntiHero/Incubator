@@ -1,9 +1,10 @@
 import { ObjectId } from 'mongodb';
 
-import { PaginationQuery, User } from '@/@types';
+import { UserFields } from '@/enums';
 import UserModel from '@/models/User';
-import { usersCollection } from '../clients';
+import { usersCollection } from '@/clients';
 import { countSkip } from '@/utils/countSkip';
+import { PaginationQuery, User, UserUpdatesType } from '@/@types';
 
 export const createUser = async (userData: UserModel): Promise<User> => {
   await usersCollection.insertOne(userData);
@@ -20,6 +21,26 @@ export const findUserById = async (id: string | ObjectId) => {
   if (!doc) return null;
 
   return doc;
+};
+
+export const findUserByIdAndUpdate = async (
+  id: string,
+  updates: Partial<{ [K in UserUpdatesType]: any }>
+) => {
+  const updateObj: Partial<{ [K in UserUpdatesType]: any }> = {};
+
+  for (const key in updates) {
+    updateObj[key as UserUpdatesType] = updates[key as UserUpdatesType];
+  }
+
+  const result = await usersCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updateObj }
+  );
+
+  if (result.modifiedCount === 1) return true;
+
+  return null;
 };
 
 export const findUserByIdAndDelete = async (id: string) => {
@@ -89,6 +110,12 @@ export const findUsersByQuery = async (query: PaginationQuery) => {
     .toArray();
 
   return users;
+};
+
+export const findUserByConfirmatinoCode = async (code: string) => {
+  return usersCollection.findOne<User>({
+    [UserFields['confirmationInfo.code']]: code,
+  });
 };
 
 export const deleteAll = async () => {

@@ -5,10 +5,12 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 const user = process.env.GMAIL_USER;
 const pass = process.env.GMAIL_PASSWORD;
 
-const defaultSender = `Student <${user}>`;
+// const defaultSender = `Student <${user}>`;
+const defaultSender = user as string;
 
 const transport: SMTPTransport.Options = {
   service: 'gmail',
+  from: user,
   auth: {
     user,
     pass,
@@ -29,7 +31,6 @@ const createMailOpts = ({
   html?: string;
 }): Mail.Options => {
   const opts: Mail.Options = {};
-  console.log(html);
   opts.from = from;
   opts.to = to;
   opts.subject = subject;
@@ -37,7 +38,6 @@ const createMailOpts = ({
   if (text) opts.text = text;
   if (html) opts.html = html;
 
-  console.log(opts)
   return opts;
 };
 
@@ -66,9 +66,11 @@ const sendEmail = async ({
   }
 };
 
-const confirmationHtml = `<h1>Thank for your registration</h1>
+const createConfirmationHtml = (
+  code: string
+) => `<h1>Thank for your registration</h1>
   <p>To finish registration please follow the link below:
-     <a href='https://somesite.com/confirm-email?code=your_confirmation_code'>complete registration</a>
+     <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>
  </p>`;
 
 const confirmatinoSubject = 'Confirmation Email';
@@ -76,14 +78,14 @@ const confirmatinoSubject = 'Confirmation Email';
 export const sendConfirmationEmail = async ({
   from = defaultSender,
   to,
-  subject = confirmatinoSubject,
-  html = confirmationHtml,
+  code,
 }: {
   from?: string;
   to: string;
-  subject?: string;
-  html?: string;
+  code: string;
 }) => {
+  const subject = confirmatinoSubject;
+  const html = createConfirmationHtml(code);
   const info = await sendEmail({ from, to, subject, html });
 
   return info;

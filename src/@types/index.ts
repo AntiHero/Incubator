@@ -54,11 +54,18 @@ export interface PaginationQuery {
   searchEmailTerm?: RegExp;
 }
 
+export interface UserConfirmationType {
+  isConfirmed: boolean;
+  code: string;
+  expDate: number;
+}
+
 export interface User {
   _id: ObjectId;
   login: string;
   email: string;
   createdAt: Date;
+  confirmationInfo: UserConfirmationType;
 }
 
 export interface Comment {
@@ -137,3 +144,29 @@ export declare namespace h06 {
     accessToken: string;
   }
 }
+
+export declare namespace h07 {
+  interface RegistrationConfirmationCodeModel {
+    code: string;
+  }
+
+  interface RegistrationEmailResending {
+    email: string;
+  }
+}
+
+type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
+
+type DotNestedKeys<T> = (
+  T extends object
+    ? {
+        [K in Exclude<keyof T, symbol>]: `${K}${DotPrefix<
+          DotNestedKeys<T[K]>
+        >}`;
+      }[Exclude<keyof T, symbol>]
+    : ''
+) extends infer D
+  ? Extract<D, string>
+  : never;
+
+export type UserUpdatesType = DotNestedKeys<Omit<Partial<User>, '_id'>>;

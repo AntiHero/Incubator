@@ -59,9 +59,12 @@ export const registration = [
     const { login, email, password } = req.body;
 
     const userData = new User(login, email, password);
-    await usersRepository.createUser(userData);
-    
-    await EmailManager.sendConfirmationEmail({to: email as string}) 
+    const user = await usersRepository.createUser(userData);
+
+    await EmailManager.sendConfirmationEmail({
+      to: email as string,
+      code: user.confirmationInfo.code,
+    });
 
     res.sendStatus(204);
   },
