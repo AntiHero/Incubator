@@ -39,7 +39,7 @@ export const authenticateUser = async ({
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: 10});
-  const refreshToken = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: '10d'});
+  const refreshToken = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: 20});
 
   return [token, refreshToken];
 };
