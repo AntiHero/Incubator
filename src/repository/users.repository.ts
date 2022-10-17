@@ -55,7 +55,7 @@ export const findUserByLoginAndPassword = async (
   login: string,
   password: string
 ) => {
-  return usersCollection.findOne({ login, password });
+  return usersCollection.findOne<User>({ login, password });
 };
 
 export const findUserByLoginOrEmail = async (loginOrEmail: string) => {

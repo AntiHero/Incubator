@@ -15,16 +15,21 @@ export const checkAuthorization = [
       throw new Error('Invalid authentication scheme');
     }
 
-    const decodedToken = jwt.verify(
-      token,
-      process.env.SECRET ?? 'simple_secret'
-    ) as jwt.JwtPayload;
-    const id = decodedToken.id;
+    try {
+      const decodedToken = jwt.verify(
+        token,
+        process.env.SECRET ?? 'simple_secret'
+      ) as jwt.JwtPayload;
 
-    if (!id) {
+      const id = decodedToken.id;
+
+      if (!id) {
+        throw new Error('Invalid token');
+      } else {
+        req.userId = id;
+      }
+    } catch (e) {
       throw new Error('Invalid token');
-    } else {
-      req.userId = id;
     }
 
     return true;

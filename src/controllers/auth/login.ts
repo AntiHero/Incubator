@@ -31,12 +31,12 @@ export const login = [
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
+
     const userAuthResult = await usersService.authenticateUser({
       login,
       password,
     });
 
-    console.log(userAuthResult);
     if (!userAuthResult) return res.sendStatus(401);
 
     const [token, refreshToken] = userAuthResult;

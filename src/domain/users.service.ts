@@ -22,10 +22,23 @@ export const deleteUser = async (id: string) => {
   return usersRepository.findUserByIdAndDelete(id);
 };
 
+export const generateTokens = (userForToken: Record<string, any>) => {
+  const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', {
+    expiresIn: 10,
+  });
+  const refreshToken = jwt.sign(
+    userForToken,
+    process.env.SECRET ?? 'simple_secret',
+    { expiresIn: 20 }
+  );
+
+  return [token, refreshToken];
+};
+
 export const authenticateUser = async ({
   login,
   password,
-}: h05.LoginInputModel) => {
+}: h05.LoginInputModel & { id?: string }) => {
   const user = await usersRepository.findUserByLoginAndPassword(
     login,
     password
@@ -34,14 +47,11 @@ export const authenticateUser = async ({
   if (!user) return null;
 
   const userForToken = {
-    username: user.username,
+    username: user.login,
     id: user._id,
   };
 
-  const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: 10});
-  const refreshToken = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: 20});
-
-  return [token, refreshToken];
+  return generateTokens(userForToken);
 };
 
 export const getUser = async (userId: string) => {
