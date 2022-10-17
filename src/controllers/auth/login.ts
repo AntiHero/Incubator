@@ -31,9 +31,14 @@ export const login = [
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
-    const token = await usersService.authenticateUser({ login, password });
+    const userAuthResult = await usersService.authenticateUser({
+      login,
+      password,
+    });
 
-    if (!token) return res.sendStatus(401);
+    if (!userAuthResult) return res.sendStatus(401);
+
+    const [token, refreshToken] = userAuthResult;
 
     if (!customValidationResult(req).isEmpty()) {
       res
@@ -51,6 +56,8 @@ export const login = [
     }
 
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
     res.status(200).json(payload);
   },
 ];
