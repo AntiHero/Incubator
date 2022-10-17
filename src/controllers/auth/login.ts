@@ -36,6 +36,7 @@ export const login = [
       password,
     });
 
+    console.log(userAuthResult);
     if (!userAuthResult) return res.sendStatus(401);
 
     const [token, refreshToken] = userAuthResult;
@@ -57,7 +58,7 @@ export const login = [
 
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
   },
 ];
