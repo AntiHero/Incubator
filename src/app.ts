@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/auth.router';
 import blogsRouter from './routes/blogs.router';
@@ -12,6 +13,7 @@ const app = express();
 
 app.set('port', process.env.PORT || 9000);
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use('/auth', authRouter);
