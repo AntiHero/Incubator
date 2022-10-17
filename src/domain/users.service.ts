@@ -38,7 +38,7 @@ export const authenticateUser = async ({
     id: user._id,
   };
 
-  const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret');
+  const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', { expiresIn: 10});
 
   return token;
 };
