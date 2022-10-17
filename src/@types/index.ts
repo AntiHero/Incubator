@@ -143,6 +143,12 @@ export declare namespace h06 {
   interface LoginSuccessViewModel {
     accessToken: string;
   }
+  
+  interface MeViewModel {
+    email: string;
+    login: string;
+    userId: string;
+  }
 }
 
 export declare namespace h07 {
