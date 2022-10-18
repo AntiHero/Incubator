@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { me } from '@/controllers/auth/me';
 import { login } from '@/controllers/auth/login';
+import { logout } from '@/controllers/auth/logout';
 import { registration } from '@/controllers/auth/registration';
 import { refreshToken } from '@/controllers/auth/refresh-token';
 import { registrationConfirmation } from '@/controllers/auth/registration-confirmation';
@@ -12,6 +13,8 @@ const authRouer = Router();
 authRouer.get('/me', me);
 
 authRouer.post('/login', login);
+
+authRouer.post('/logout', logout);
 
 authRouer.post('/registration', registration);
 

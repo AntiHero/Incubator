@@ -1,31 +1,12 @@
-import jwt from 'jsonwebtoken';
 import { h06, User } from '@/@types';
-import { cookie } from 'express-validator';
 import { Request, Response } from 'express';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+import { refreshTokenValidator } from '@/customValidators/refreshTokenValidator';
 
 export const refreshToken = [
-  cookie('refreshToken').custom((token, { req }) => {
-    try {
-      const decodedToken = jwt.verify(
-        token,
-        process.env.SECRET ?? 'simple_secret'
-      ) as jwt.JwtPayload;
-      const id = decodedToken.id;
-
-      if (!id) {
-        throw new Error('Invalid token');
-      } else {
-        req.userId = id;
-      }
-    } catch (e) {
-      throw new Error('Invalid token');
-    }
-
-    return true;
-  }),
+  refreshTokenValidator,
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
