@@ -1,9 +1,11 @@
-import { h06, User } from '@/@types';
 import { Request, Response } from 'express';
+
+import { h06, TokenInputModel, User } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
-import { customValidationResult } from '@/customValidators/customValidationResults';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
+import { customValidationResult } from '@/customValidators/customValidationResults';
+import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
 
 export const refreshToken = [
   validateRefreshToken,
@@ -21,6 +23,8 @@ export const refreshToken = [
 
     const [token, refreshToken] = UsersService.generateTokens(userForToken);
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
+    
+    await tokensBlackListRepository.saveToken({ value: req.cookies.refreshToken} as TokenInputModel);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);

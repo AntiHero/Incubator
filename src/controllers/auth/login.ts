@@ -57,7 +57,7 @@ export const login = [
     }
 
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
-
+    
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
   },

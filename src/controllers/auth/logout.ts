@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
+import { TokenInputModel } from '@/@types';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
-import { TokenInputModel } from '@/@types';
 
 export const logout = [
   validateRefreshToken,
