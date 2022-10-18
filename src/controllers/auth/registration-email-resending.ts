@@ -7,7 +7,7 @@ import * as ErrorMessages from '@/errorMessages';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
-import { validateConfirmationStatus } from '@/customValidators/validateConfirmationStatus';
+import { validateConfirmationStatus } from '@/customValidators/confirmationStatusValidator';
 
 export const registrationEmailResending = [
   body(UserFields.email)

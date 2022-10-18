@@ -5,7 +5,7 @@ import { ConfirmationRequest } from '@/enums';
 import { APIErrorResult, h05 } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as UsersService from '@/domain/users.service';
-import { validateConfirmation } from '@/customValidators/validateConfirmation';
+import { validateConfirmation } from '@/customValidators/confirmationValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 export const registrationConfirmation = [
