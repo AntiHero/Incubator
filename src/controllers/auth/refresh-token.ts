@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
-import { refreshTokenValidator } from '@/customValidators/refreshTokenValidator';
+import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 
 export const refreshToken = [
-  refreshTokenValidator,
+  validateRefreshToken,
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { cookie } from 'express-validator';
 
-export const refreshTokenValidator = cookie('refreshToken').custom(
+export const validateRefreshToken = cookie('refreshToken').custom(
   (token, { req }) => {
     try {
       const decodedToken = jwt.verify(
