@@ -176,3 +176,12 @@ type DotNestedKeys<T> = (
   : never;
 
 export type UserUpdatesType = DotNestedKeys<Omit<Partial<User>, '_id'>>;
+
+export interface Token {
+  _id: ObjectId;
+  value: string;
+}
+
+export interface TokenInputModel {
+  value: string;
+}

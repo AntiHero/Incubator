@@ -15,6 +15,7 @@ export let usersCollection = client.db(dbName).collection('users');
 export let blogsCollection = client.db(dbName).collection('blogs');
 export let postsCollection = client.db(dbName).collection('posts');
 export let commentsCollection = client.db(dbName).collection('comments');
+export let tokensBlackListCollection = client.db(dbName).collection('tokensBlkLst');
 
 if (process.env.MODE === 'test') {
   testClient = new MongoClient(testUrl);
@@ -22,4 +23,5 @@ if (process.env.MODE === 'test') {
   blogsCollection = testClient.db(testDbName).collection('blogs');
   postsCollection = testClient.db(testDbName).collection('posts');
   commentsCollection = testClient.db(testDbName).collection('comments');
+  tokensBlackListCollection = client.db(testDbName).collection('tokensBlkLst');
 }

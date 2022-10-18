@@ -1,16 +1,22 @@
 import jwt from 'jsonwebtoken';
 import { cookie } from 'express-validator';
+import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
 
 export const validateRefreshToken = cookie('refreshToken').custom(
-  (token, { req }) => {
+  async (token, { req }) => {
     try {
       const decodedToken = jwt.verify(
         token,
         process.env.SECRET ?? 'simple_secret'
       ) as jwt.JwtPayload;
+
       const id = decodedToken.id;
 
-      if (!id) {
+      const blackListedToken = await tokensBlackListRepository.findTokenByValue(
+        token
+      );
+
+      if (!id || blackListedToken) {
         throw new Error('Invalid token');
       } else {
         req.userId = id;
