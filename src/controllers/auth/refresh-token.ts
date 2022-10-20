@@ -23,8 +23,10 @@ export const refreshToken = [
 
     const [token, refreshToken] = UsersService.generateTokens(userForToken);
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
-    
-    await tokensBlackListRepository.saveToken({ value: req.cookies.refreshToken} as TokenInputModel);
+
+    await tokensBlackListRepository.saveToken({
+      value: req.cookies.refreshToken,
+    } as TokenInputModel);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);

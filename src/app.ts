@@ -8,10 +8,12 @@ import postsRouter from './routes/posts.router';
 import usersRouter from './routes/users.router';
 import testingRouter from './routes/testing.router';
 import commentsRouter from './routes/comments.router';
+import securityDeviceRouter from './routes/security.router';
 
 const app = express();
 
 app.set('port', process.env.PORT || 9000);
+app.set('trust proxy', true);
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -22,6 +24,7 @@ app.use('/blogs', blogsRouter);
 app.use('/users', usersRouter);
 app.use('/testing', testingRouter);
 app.use('/comments', commentsRouter);
+app.use('/security/devices', securityDeviceRouter);
 
 app.use('*', (_, res) => {
   res.status(200).end();

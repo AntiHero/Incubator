@@ -13,7 +13,11 @@ export const me = [
     const doc = (await usersService.getUser(userId)) as User;
 
     const user = convertToUser(doc);
-    const userView: h06.MeViewModel = {email: user.email, login: user.login, userId: user.id } 
+    const userView: h06.MeViewModel = {
+      email: user.email,
+      login: user.login,
+      userId: user.id,
+    };
 
     res.status(200).type('text/plain').json(userView);
   },

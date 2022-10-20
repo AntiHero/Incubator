@@ -143,7 +143,7 @@ export declare namespace h06 {
   interface LoginSuccessViewModel {
     accessToken: string;
   }
-  
+
   interface MeViewModel {
     email: string;
     login: string;
@@ -159,6 +159,23 @@ export declare namespace h07 {
   interface RegistrationEmailResending {
     email: string;
   }
+}
+
+export declare namespace h09 {
+  interface DeviceVieModel {
+    ip: string;
+    title: string;
+    lastActiveDate: string;
+    deviceId: string;
+  }
+}
+
+export interface DeviceSecurity {
+  _id: ObjectId;
+  ip: string;
+  title: string;
+  deviceId: string;
+  lastActiveDate: Date;
 }
 
 type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;

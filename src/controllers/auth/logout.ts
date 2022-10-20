@@ -11,7 +11,9 @@ export const logout = [
     if (!customValidationResult(req).isEmpty() || !req.cookies.refreshToken)
       return res.sendStatus(401);
 
-    await tokensBlackListRepository.saveToken({ value: req.cookies.refreshToken} as TokenInputModel);
+    await tokensBlackListRepository.saveToken({
+      value: req.cookies.refreshToken,
+    } as TokenInputModel);
 
     res.sendStatus(204);
   },
