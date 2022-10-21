@@ -33,7 +33,7 @@ export const login = [
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
-    
+
     const deviceId = uuid();
 
     const userAuthResult = await usersService.authenticateUser({

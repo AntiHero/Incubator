@@ -30,7 +30,7 @@ export const generateTokens = (userForToken: Record<string, any>) => {
   const refreshToken = jwt.sign(
     userForToken,
     process.env.SECRET ?? 'simple_secret',
-    { expiresIn: 20_000_000 }
+    { expiresIn: 20 }
   );
 
   return [token, refreshToken];
@@ -39,7 +39,7 @@ export const generateTokens = (userForToken: Record<string, any>) => {
 export const authenticateUser = async ({
   login,
   password,
-  deviceId
+  deviceId,
 }: h05.LoginInputModel & { deviceId?: string }) => {
   const user = await usersRepository.findUserByLoginAndPassword(
     login,
