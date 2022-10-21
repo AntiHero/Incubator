@@ -30,7 +30,7 @@ export const generateTokens = (userForToken: Record<string, any>) => {
   const refreshToken = jwt.sign(
     userForToken,
     process.env.SECRET ?? 'simple_secret',
-    { expiresIn: 20 }
+    { expiresIn: 200 }
   );
 
   return [token, refreshToken];
