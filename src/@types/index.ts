@@ -172,12 +172,21 @@ export declare namespace h09 {
   }
 }
 
-export interface SecurityDevice {
-  _id?: ObjectId;
+export interface SecuirityDeviceInput {
   ip: string;
   title: string;
   deviceId: string;
   lastActiveDate: Date;
+  userId: string;
+}
+
+export interface SecurityDevice {
+  _id: ObjectId;
+  ip: string;
+  title: string;
+  deviceId: string;
+  lastActiveDate: Date;
+  userId: ObjectId;
 }
 
 type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;

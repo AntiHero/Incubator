@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { deleteDevice } from '@/controllers/security/deleteDevice';
 import { getAllDevices } from '@/controllers/security/getAllDevices';
 import { deleteAllDevices } from '@/controllers/security/deleteAllDevices';
 
@@ -9,8 +10,6 @@ securityDeviceRouter.get('/', getAllDevices);
 
 securityDeviceRouter.delete('/', deleteAllDevices);
 
-securityDeviceRouter.delete('/:id', () => {
-  null;
-});
+securityDeviceRouter.delete('/:id', deleteDevice);
 
 export default securityDeviceRouter;

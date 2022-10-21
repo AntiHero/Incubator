@@ -9,7 +9,9 @@ export const deleteDevice = [
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
-    await SecurityService.terminateAllSessions();
+    const device = SecurityService.getDevice({ deviceId: req.deviceId });
+
+    if (!device) return res.sendStatus(404);
 
     res.sendStatus(204);
   },

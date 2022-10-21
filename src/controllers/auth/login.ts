@@ -3,11 +3,11 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult, h06, SecurityDevice } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as UsersService from '@/domain/users.service';
-import { customValidationResult } from '@/customValidators/customValidationResults';
 import SecurityService from '@/domain/security.service';
+import { APIErrorResult, h06, SecuirityDeviceInput } from '@/@types';
+import { customValidationResult } from '@/customValidators/customValidationResults';
 
 const MAX_PASSWORD_LEN = 20;
 const MIN_LOGIN_LEN = 3;
@@ -69,11 +69,12 @@ export const login = [
     const ip = req.ip;
     const userAgent = req.headers['user-agent'];
 
-    const device: SecurityDevice = {
+    const device: SecuirityDeviceInput = {
       ip,
       deviceId,
       lastActiveDate: new Date(),
       title: userAgent || 'unknown',
+      userId,
     };
 
     await SecurityService.saveDevice(device);

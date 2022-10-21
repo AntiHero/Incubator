@@ -1,4 +1,4 @@
-import { SecurityDevice } from '@/@types';
+import { SecuirityDeviceInput } from '@/@types';
 import SecurityRepository from '@/repository/security.repository';
 
 class SecurityService {
@@ -10,8 +10,12 @@ class SecurityService {
     return SecurityRepository.getAll();
   }
 
-  async saveDevice(device: SecurityDevice) {
+  async saveDevice(device: SecuirityDeviceInput) {
     return SecurityRepository.save(device);
+  }
+
+  async getDevice(query: Record<string, any>) {
+    return SecurityRepository.findByQuery(query);
   }
 }
 

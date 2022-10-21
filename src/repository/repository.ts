@@ -28,4 +28,12 @@ export class Repository<T extends Document> {
   async deleteAll() {
     await this.collection.deleteMany({});
   }
+
+  async findByQuery(query: Record<string, any>) {
+    const doc = await this.collection.findOne<T>(query);
+
+    if (!doc) return null;
+
+    return doc;
+  }
 }
