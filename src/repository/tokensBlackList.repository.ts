@@ -16,3 +16,7 @@ export const findTokenByValue = async (value: string) => {
 
   return doc;
 };
+
+export const deleteAll = async () => {
+  await tokensBlackListCollection.deleteMany({});
+};

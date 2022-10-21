@@ -12,7 +12,7 @@ export const getAllDevices = [
 
     const docs = await SecurityService.getDevicesList();
 
-    const devices = docs.map(doc => {
+    const devices = docs.map((doc) => {
       const device = convertToDevice(doc);
 
       return device;

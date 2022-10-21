@@ -3,7 +3,7 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult, h06, h09 } from '@/@types';
+import { APIErrorResult, h06, h09, SecurityDevice } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as usersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
@@ -63,11 +63,11 @@ export const login = [
     const ip = req.ip;
     const userAgent = req.headers['user-agent'];
 
-    const device: h09.DeviceViewModel = {
+    const device: SecurityDevice = {
       ip,
       deviceId: uuid(),
-      lastActiveDate: new Date().toString(),
-      title: userAgent || 'unknown'
+      lastActiveDate: new Date(),
+      title: userAgent || 'unknown',
     };
 
     await SecurityService.saveDevice(device);

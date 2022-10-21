@@ -172,7 +172,7 @@ export declare namespace h09 {
 }
 
 export interface SecurityDevice {
-  _id: ObjectId;
+  _id?: ObjectId;
   ip: string;
   title: string;
   deviceId: string;

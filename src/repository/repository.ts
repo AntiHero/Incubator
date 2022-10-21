@@ -1,8 +1,4 @@
-import {
-  Document,
-  ObjectId,
-  Collection,
-} from 'mongodb';
+import { Document, ObjectId, Collection } from 'mongodb';
 
 export class Repository<T extends Document> {
   constructor(protected collection: Collection<Document>) {
