@@ -2,11 +2,10 @@ import {
   Document,
   ObjectId,
   Collection,
-  OptionalUnlessRequiredId,
 } from 'mongodb';
 
 export class Repository<T extends Document> {
-  constructor(private collection: Collection<Document>) {
+  constructor(protected collection: Collection<Document>) {
     this.collection = collection;
   }
 
@@ -16,7 +15,7 @@ export class Repository<T extends Document> {
     return docs;
   }
 
-  async save(inputData: OptionalUnlessRequiredId<T>) {
+  async save(inputData: any) {
     await this.collection.insertOne(inputData);
 
     return inputData;

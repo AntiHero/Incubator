@@ -15,6 +15,8 @@ export enum PostFields {
 
 export enum Headers {
   'Authorization' = 'authorization',
+  'XForwardedFor' = 'x-forwareded-for',
+  'UserAgent' = 'User-Agent',
 }
 
 export enum SortDirection {

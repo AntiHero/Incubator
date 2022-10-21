@@ -1,11 +1,13 @@
+import { v4 as uuid } from 'uuid';
 import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult, h06 } from '@/@types';
+import { APIErrorResult, h06, h09 } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import * as usersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+import SecurityService from '@/domain/security.service';
 
 const MAX_PASSWORD_LEN = 20;
 const MIN_LOGIN_LEN = 3;
@@ -57,6 +59,18 @@ export const login = [
     }
 
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
+
+    const ip = req.ip;
+    const userAgent = req.headers['user-agent'];
+
+    const device: h09.DeviceViewModel = {
+      ip,
+      deviceId: uuid(),
+      lastActiveDate: new Date().toString(),
+      title: userAgent || 'unknown'
+    };
+
+    await SecurityService.saveDevice(device);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
