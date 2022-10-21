@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     export interface Request {
       userId: string;
+      refreshTokenExp: number;
     }
   }
 }
@@ -201,4 +202,5 @@ export interface Token {
 
 export interface TokenInputModel {
   value: string;
+  expDate: string;
 }

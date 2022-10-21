@@ -26,6 +26,7 @@ export const refreshToken = [
 
     await tokensBlackListRepository.saveToken({
       value: req.cookies.refreshToken,
+      expDate: String(req.refreshTokenExp),
     } as TokenInputModel);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });

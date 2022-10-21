@@ -11,6 +11,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
       ) as jwt.JwtPayload;
 
       const id = decodedToken.id;
+      const exp = decodedToken.exp;
 
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
         token
@@ -20,6 +21,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         throw new Error('Invalid token');
       } else {
         req.userId = id;
+        req.refreshTokenExp = exp;
       }
     } catch (e) {
       throw new Error('Invalid token');

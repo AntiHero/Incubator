@@ -13,6 +13,7 @@ export const logout = [
 
     await tokensBlackListRepository.saveToken({
       value: req.cookies.refreshToken,
+      expDate: String(req.refreshTokenExp),
     } as TokenInputModel);
 
     res.sendStatus(204);
