@@ -1,8 +1,11 @@
 import { Router } from 'express';
 
-import { deleteAllDevices } from '@/controllers/security/deleteAll';
+import { getAllDevices } from '@/controllers/security/getAllDevices';
+import { deleteAllDevices } from '@/controllers/security/deleteAllDevices';
 
 const securityDeviceRouter = Router();
+
+securityDeviceRouter.get('/', getAllDevices);
 
 securityDeviceRouter.delete('/', deleteAllDevices);
 

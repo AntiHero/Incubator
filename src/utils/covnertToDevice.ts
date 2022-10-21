@@ -1,9 +1,8 @@
-import { SecurityDevice } from '@/@types';
+import { SecurityDevice, h09 } from '@/@types';
 
-export const convertToDevice = <T extends SecurityDevice>(doc: T) => ({
-  id: String(doc._id),
+export const convertToDevice = <T extends SecurityDevice>(doc: T): h09.DeviceViewModel => ({
   ip: doc.ip,
   title: doc.title,
   deviceId: doc.deviceId,
-  lastActivated: doc.lastActiveDate.toISOString(),
+  lastActiveDate: doc.lastActiveDate.toISOString(),
 });

@@ -13,9 +13,9 @@ export const getAllDevices = [
     const docs = await SecurityService.getDevicesList();
 
     const devices = docs.map(doc => {
-      const { id, ...deviceInfo } = convertToDevice(doc);
+      const device = convertToDevice(doc);
 
-      return deviceInfo;
+      return device;
     });
 
     res.type('text/plain').json(devices);

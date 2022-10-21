@@ -5,7 +5,7 @@ import {
   OptionalUnlessRequiredId,
 } from 'mongodb';
 
-export class Repository<T> {
+export class Repository<T extends Document> {
   constructor(private collection: Collection<Document>) {
     this.collection = collection;
   }
