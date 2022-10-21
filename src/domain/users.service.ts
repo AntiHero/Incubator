@@ -30,7 +30,7 @@ export const generateTokens = (userForToken: Record<string, any>) => {
   const refreshToken = jwt.sign(
     userForToken,
     process.env.SECRET ?? 'simple_secret',
-    { expiresIn: 20 }
+    { expiresIn: 20_000_000 }
   );
 
   return [token, refreshToken];
@@ -39,7 +39,8 @@ export const generateTokens = (userForToken: Record<string, any>) => {
 export const authenticateUser = async ({
   login,
   password,
-}: h05.LoginInputModel & { id?: string }) => {
+  deviceId
+}: h05.LoginInputModel & { deviceId?: string }) => {
   const user = await usersRepository.findUserByLoginAndPassword(
     login,
     password
@@ -50,6 +51,7 @@ export const authenticateUser = async ({
   const userForToken = {
     username: user.login,
     id: user._id,
+    deviceId,
   };
 
   return generateTokens(userForToken);

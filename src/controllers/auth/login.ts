@@ -33,10 +33,13 @@ export const login = [
     .withMessage(ErrorMessages.MIN_LENGTH_ERROR(MIN_PASSWORD_LEN)),
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
+    
+    const deviceId = uuid();
 
     const userAuthResult = await usersService.authenticateUser({
       login,
       password,
+      deviceId,
     });
 
     if (!userAuthResult) return res.sendStatus(401);
@@ -65,7 +68,7 @@ export const login = [
 
     const device: SecurityDevice = {
       ip,
-      deviceId: uuid(),
+      deviceId,
       lastActiveDate: new Date(),
       title: userAgent || 'unknown',
     };
