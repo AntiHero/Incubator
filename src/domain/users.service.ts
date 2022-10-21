@@ -22,7 +22,7 @@ export const deleteUser = async (id: string) => {
   return usersRepository.findUserByIdAndDelete(id);
 };
 
-export const generateTokens = (userForToken: Record<string, any>) => {
+const generateTokens = (userForToken: Record<string, any>) => {
   const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', {
     expiresIn: 10,
   });
@@ -39,8 +39,7 @@ export const generateTokens = (userForToken: Record<string, any>) => {
 export const authenticateUser = async ({
   login,
   password,
-  deviceId,
-}: h05.LoginInputModel & { deviceId?: string }) => {
+}: h05.LoginInputModel) => {
   const user = await usersRepository.findUserByLoginAndPassword(
     login,
     password
@@ -48,9 +47,21 @@ export const authenticateUser = async ({
 
   if (!user) return null;
 
+  return user._id.toString();
+};
+
+export const createTokensPair = async ({
+  login,
+  userId,
+  deviceId,
+}: {
+  login?: string;
+  userId?: string;
+  deviceId?: string;
+}) => {
   const userForToken = {
-    username: user.login,
-    id: user._id,
+    username: login,
+    id: userId,
     deviceId,
   };
 

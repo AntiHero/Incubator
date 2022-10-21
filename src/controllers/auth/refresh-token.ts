@@ -19,9 +19,10 @@ export const refreshToken = [
     const userForToken = {
       username: user.login,
       id: user.id,
+      deviceId: req.deviceId
     };
 
-    const [token, refreshToken] = UsersService.generateTokens(userForToken);
+    const [token, refreshToken] = await UsersService.createTokensPair(userForToken);
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     await tokensBlackListRepository.saveToken({

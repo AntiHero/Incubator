@@ -12,6 +12,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
 
       const id = decodedToken.id;
       const exp = decodedToken.exp;
+      const deviceId = decodedToken.deviceId;
 
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
         token
@@ -21,6 +22,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         throw new Error('Invalid token');
       } else {
         req.userId = id;
+        req.deviceId = deviceId;
         req.refreshTokenExp = exp;
       }
     } catch (e) {

@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     export interface Request {
       userId: string;
+      deviceId: string;
       refreshTokenExp: number;
     }
   }

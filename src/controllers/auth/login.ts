@@ -3,9 +3,9 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult, h06, h09, SecurityDevice } from '@/@types';
+import { APIErrorResult, h06, SecurityDevice } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import * as usersService from '@/domain/users.service';
+import * as UsersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import SecurityService from '@/domain/security.service';
 
@@ -36,15 +36,18 @@ export const login = [
 
     const deviceId = uuid();
 
-    const userAuthResult = await usersService.authenticateUser({
+    const userId = await UsersService.authenticateUser({
       login,
       password,
-      deviceId,
     });
 
-    if (!userAuthResult) return res.sendStatus(401);
+    if (!userId) return res.sendStatus(401);
 
-    const [token, refreshToken] = userAuthResult;
+    const [token, refreshToken] = await UsersService.createTokensPair({
+      login,
+      userId,
+      deviceId,
+    });
 
     if (!customValidationResult(req).isEmpty()) {
       res
