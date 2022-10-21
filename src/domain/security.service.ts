@@ -4,6 +4,10 @@ class SecurityService {
   async terminateAllSessions() {
     await SecurityRepository.deleteAll();
   }
+  
+  async getDevicesList() {
+    return SecurityRepository.getAll();
+  }
 }
 
-export default SecurityService;
+export default new SecurityService();

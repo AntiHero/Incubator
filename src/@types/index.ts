@@ -162,7 +162,7 @@ export declare namespace h07 {
 }
 
 export declare namespace h09 {
-  interface DeviceVieModel {
+  interface DeviceViewModel {
     ip: string;
     title: string;
     lastActiveDate: string;
@@ -170,7 +170,7 @@ export declare namespace h09 {
   }
 }
 
-export interface DeviceSecurity {
+export interface SecurityDevice {
   _id: ObjectId;
   ip: string;
   title: string;
