@@ -29,11 +29,17 @@ export class Repository<T extends Document> {
     await this.collection.deleteMany({});
   }
 
-  async findByQuery(query: Record<string, any>) {
+  async findOneByQuery(query: Record<string, any>) {
     const doc = await this.collection.findOne<T>(query);
 
     if (!doc) return null;
 
     return doc;
+  }
+  
+  async findAllByQuery(query: Record<string, any>) {
+    const docs = await this.collection.find<T>(query).toArray();
+
+    return docs;
   }
 }

@@ -78,7 +78,7 @@ export const login = [
     const ip = req.ip;
     const userAgent = req.headers['user-agent'];    
 
-    const device: SecuirityDeviceInput = {
+    const newDevice: SecuirityDeviceInput = {
       ip,
       deviceId,
       lastActiveDate: new Date(),
@@ -86,7 +86,8 @@ export const login = [
       userId,
     };
 
-    await SecurityService.saveDevice(device);
+    await SecurityService.createDeviceIfNotExists(newDevice);
+    // await SecurityService.saveDevice(device);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
