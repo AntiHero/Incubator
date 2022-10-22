@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { h06, TokenInputModel, User } from '@/@types';
+import { h06, TokenInputModel, User, UserForToken } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
@@ -16,15 +16,16 @@ export const refreshToken = [
       (await UsersService.getUser(req.userId)) as User
     );
 
-    const userForToken = {
-      username: user.login,
-      id: user.id,
+    const userForToken: UserForToken = {
+      login: user.login,
+      userId: user.id,
       deviceId: req.deviceId,
     };
 
     const [token, refreshToken] = await UsersService.createTokensPair(
       userForToken
     );
+
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     await tokensBlackListRepository.saveToken({

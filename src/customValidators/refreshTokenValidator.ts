@@ -14,6 +14,8 @@ export const validateRefreshToken = cookie('refreshToken').custom(
       const exp = decodedToken.exp;
       const deviceId = decodedToken.deviceId;
 
+      console.log(deviceId, 'deviceId', id, exp);
+
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
         token
       );
@@ -26,6 +28,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         req.refreshTokenExp = exp;
       }
     } catch (e) {
+      console.log('ошибка');
       throw new Error('Invalid token');
     }
 

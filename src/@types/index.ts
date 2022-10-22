@@ -214,3 +214,9 @@ export interface TokenInputModel {
   value: string;
   expDate: string;
 }
+
+export interface UserForToken {
+  login: string;
+  userId: string;
+  deviceId: string;
+}

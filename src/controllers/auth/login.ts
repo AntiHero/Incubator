@@ -6,7 +6,12 @@ import { UserFields } from '@/enums';
 import * as ErrorMessages from '@/errorMessages';
 import * as UsersService from '@/domain/users.service';
 import SecurityService from '@/domain/security.service';
-import { APIErrorResult, h06, SecuirityDeviceInput } from '@/@types';
+import {
+  APIErrorResult,
+  h06,
+  SecuirityDeviceInput,
+  UserForToken,
+} from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 const MAX_PASSWORD_LEN = 20;
@@ -43,11 +48,15 @@ export const login = [
 
     if (!userId) return res.sendStatus(401);
 
-    const [token, refreshToken] = await UsersService.createTokensPair({
+    const userForToken: UserForToken = {
       login,
       userId,
       deviceId,
-    });
+    };
+
+    const [token, refreshToken] = await UsersService.createTokensPair(
+      userForToken
+    );
 
     if (!customValidationResult(req).isEmpty()) {
       res
