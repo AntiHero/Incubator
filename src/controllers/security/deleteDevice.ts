@@ -10,13 +10,12 @@ export const deleteDevice = [
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
     const deviceId = req.params.id;
-    console.log(req.params.id, 'id');
 
+    if (req.deviceId !== deviceId) return res.sendStatus(403);
+    
     const device = await SecurityService.getDevice({ deviceId });
 
     if (!device) return res.sendStatus(404);
-
-    if (device.deviceId.toString() !== deviceId) return res.sendStatus(403);
 
     await SecurityService.deleteDeviceByQuery({ deviceId });
 
