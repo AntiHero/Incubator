@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
-import { h06, TokenInputModel, User, UserForToken } from '@/@types';
+import { h06, TokenInputModel, UserForToken } from '@/@types';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
@@ -12,9 +12,11 @@ export const refreshToken = [
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
-    const user = convertToUser(
-      (await UsersService.getUser(req.userId)) as User
-    );
+    const dbUser = await UsersService.getUser(req.userId)
+    
+    if (!dbUser) return res.sendStatus(404); 
+    
+    const user = convertToUser(dbUser);
 
     const userForToken: UserForToken = {
       login: user.login,
