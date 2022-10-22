@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import { h06, TokenInputModel, User, UserForToken } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
+import { h06, TokenInputModel, User, UserForToken } from '@/@types';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
@@ -18,7 +18,7 @@ export const refreshToken = [
 
     const userForToken: UserForToken = {
       login: user.login,
-      userId: user.id,
+      userId: req.userId,
       deviceId: req.deviceId,
     };
 

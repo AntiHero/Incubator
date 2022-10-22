@@ -80,7 +80,7 @@ export const login = [
 
     const device: SecuirityDeviceInput = {
       ip,
-      deviceId: '1',
+      deviceId,
       lastActiveDate: new Date(),
       title: userAgent || 'unknown',
       userId,
