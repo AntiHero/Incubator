@@ -3,31 +3,31 @@ import SecurityRepository from '@/repository/security.repository';
 import { convertToDevice } from '@/utils/covnertToDevice';
 
 class SecurityService {
-  async terminateAllSessions () {
+  async terminateAllSessions() {
     await SecurityRepository.deleteAll();
   }
 
-  async terminateAllSessionsButOne (query: { deviceId: string }) {
+  async terminateAllSessionsButOne(query: { deviceId: string }) {
     await SecurityRepository.deleteAllButOneByDeviceIdQuery(query);
   }
 
-  async getDevicesList () {
+  async getDevicesList() {
     return SecurityRepository.getAll();
   }
 
-  async saveDevice (device: SecuirityDeviceInput) {
+  async saveDevice(device: SecuirityDeviceInput) {
     return SecurityRepository.save(device);
   }
 
-  async getDevice (query: Record<string, any>) {
+  async getDevice(query: Record<string, any>) {
     return SecurityRepository.findOneByQuery(query);
   }
 
-  async getDevicesByQuery (query: Record<string, any>) {
+  async getDevicesByQuery(query: Record<string, any>) {
     return SecurityRepository.findAllByQuery(query);
   }
 
-  async createDeviceIfNotExists (newDevice: SecuirityDeviceInput) {
+  async createDeviceIfNotExists(newDevice: SecuirityDeviceInput) {
     const existingDevices = await this.getDevicesByQuery({
       userId: newDevice.userId,
     });
@@ -56,14 +56,11 @@ class SecurityService {
     return null;
   }
 
-  async deleteDeviceByQuery (query: Record<string, any>) {
+  async deleteDeviceByQuery(query: Record<string, any>) {
     return SecurityRepository.deleteOneByQuery(query);
   }
 
-  async updateOne (
-    filter: Record<string, any>,
-    query: Record<string, any>
-  ) {
+  async updateOne(filter: Record<string, any>, query: Record<string, any>) {
     return SecurityRepository.updateOne(filter, query);
   }
 }

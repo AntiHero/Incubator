@@ -18,7 +18,7 @@ export class Repository<T extends Document> {
   }
 
   async findById(id: string) {
-    const doc = this.collection.findOne<T>({ _id: new ObjectId(id) });
+    const doc = await this.collection.findOne<T>({ _id: new ObjectId(id) });
 
     if (!doc) return null;
 
