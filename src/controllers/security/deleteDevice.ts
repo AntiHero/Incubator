@@ -15,7 +15,7 @@ export const deleteDevice = [
 
     if (!device) return res.sendStatus(404);
 
-    if (req.deviceId !== deviceId) return res.sendStatus(403);
+    if (req.userId !== device.userId) return res.sendStatus(403);
 
     await SecurityService.deleteDeviceByQuery({ deviceId });
 
