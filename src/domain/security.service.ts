@@ -37,7 +37,7 @@ class SecurityService {
     for (const deviceFromDb of existingDevices) {
       const device = convertToDevice(deviceFromDb);
 
-      if (device.ip === newDevice.ip && device.title === newDevice.title) {
+      if (device.title === newDevice.title) {
         isCurrentDevice = true;
 
         await SecurityRepository.updateOne(
