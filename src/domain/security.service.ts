@@ -23,7 +23,7 @@ class SecurityService {
     return SecurityRepository.findAllByQuery(query);
   }
 
-  async createDeviceIfNotExists (newDevice: SecuirityDeviceInput) {
+  async createDeviceIfNotExists(newDevice: SecuirityDeviceInput) {
     const existingDevices = await this.getDevicesByQuery({
       userId: newDevice.userId,
     });
@@ -46,9 +46,9 @@ class SecurityService {
 
     return null;
   }
-  
-  async deleteDeviceById(deviceId: string) {
-    return SecurityRepository.deleteById(deviceId);
+
+  async deleteDeviceByQuery(query: Record<string, any>) {
+    return SecurityRepository.deleteByQuery(query);
   }
 }
 
