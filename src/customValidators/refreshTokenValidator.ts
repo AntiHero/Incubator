@@ -26,7 +26,6 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         req.refreshTokenExp = exp;
       }
     } catch (e) {
-      console.log('ошибка');
       throw new Error('Invalid token');
     }
 

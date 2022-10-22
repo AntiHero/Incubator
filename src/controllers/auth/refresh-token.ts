@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
+import SecurityService from '@/domain/security.service';
 import { h06, TokenInputModel, UserForToken } from '@/@types';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
@@ -35,6 +36,7 @@ export const refreshToken = [
       expDate: String(req.refreshTokenExp),
     } as TokenInputModel);
 
+    SecurityService.updateOne({ deviceId: req.deviceId}, { lastActiveDate: new Date });
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
   },

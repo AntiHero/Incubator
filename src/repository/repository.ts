@@ -59,8 +59,8 @@ export class Repository<T extends Document> {
     return null;
   }
 
-  async updateOne(query: Record<string, any>, update: Record<string, any>) {
-    const result = await this.collection.updateOne(query, { $set: update });
+  async updateOne(filter: Record<string, any>, update: Record<string, any>) {
+    const result = await this.collection.updateOne(filter, { $set: update });
 
     if (result.modifiedCount === 1) return true;
 
