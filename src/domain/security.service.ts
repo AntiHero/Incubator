@@ -7,6 +7,10 @@ class SecurityService {
     await SecurityRepository.deleteAll();
   }
 
+  async terminateAllSessionsButOne(query: { deviceId: string }) {
+    await SecurityRepository.deleteAllButOneByDeviceIdQuery(query);
+  }
+
   async getDevicesList() {
     return SecurityRepository.getAll();
   }
@@ -48,7 +52,7 @@ class SecurityService {
   }
 
   async deleteDeviceByQuery(query: Record<string, any>) {
-    return SecurityRepository.deleteByQuery(query);
+    return SecurityRepository.deleteOneByQuery(query);
   }
 }
 

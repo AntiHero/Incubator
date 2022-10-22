@@ -51,10 +51,18 @@ export class Repository<T extends Document> {
     return null;
   }
 
-  async deleteByQuery(query: Record<string, any>) {
+  async deleteOneByQuery(query: Record<string, any>) {
     const result = await this.collection.deleteOne(query);
 
     if (result.deletedCount === 1) return true;
+
+    return null;
+  }
+
+  async updateOne(query: Record<string, any>, update: Record<string, any>) {
+    const result = await this.collection.updateOne(query, { $set: update });
+
+    if (result.modifiedCount === 1) return true;
 
     return null;
   }
