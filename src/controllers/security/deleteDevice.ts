@@ -11,11 +11,11 @@ export const deleteDevice = [
 
     const deviceId = req.params.id;
 
-    if (req.deviceId !== deviceId) return res.sendStatus(403);
-    
     const device = await SecurityService.getDevice({ deviceId });
 
     if (!device) return res.sendStatus(404);
+
+    if (req.deviceId !== deviceId) return res.sendStatus(403);
 
     await SecurityService.deleteDeviceByQuery({ deviceId });
 
