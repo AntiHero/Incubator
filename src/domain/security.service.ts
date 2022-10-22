@@ -39,6 +39,7 @@ class SecurityService {
 
       if (device.ip === newDevice.ip && device.title === newDevice.title) {
         isCurrentDevice = true;
+        
         await SecurityRepository.updateOne(
           { deviceId: device.deviceId },
           { lastActiveDate: new Date() }

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { TokenInputModel } from '@/@types';
+import SecurityService from '@/domain/security.service';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
@@ -15,6 +16,8 @@ export const logout = [
       value: req.cookies.refreshToken,
       expDate: String(req.refreshTokenExp),
     } as TokenInputModel);
+
+    await SecurityService.deleteDeviceByQuery({ deviceId: req.deviceId });
 
     res.sendStatus(204);
   },
