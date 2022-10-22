@@ -76,11 +76,11 @@ export const login = [
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     const ip = req.ip;
-    const userAgent = req.headers['user-agent'];
+    const userAgent = req.headers['user-agent'];    
 
     const device: SecuirityDeviceInput = {
       ip,
-      deviceId,
+      deviceId: '1',
       lastActiveDate: new Date(),
       title: userAgent || 'unknown',
       userId,
