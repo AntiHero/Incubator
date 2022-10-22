@@ -186,7 +186,7 @@ export interface SecurityDevice {
   title: string;
   deviceId: string;
   lastActiveDate: Date;
-  userId: ObjectId;
+  userId: string;
 }
 
 type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;

@@ -46,6 +46,10 @@ class SecurityService {
 
     return null;
   }
+  
+  async deleteDeviceById(deviceId: string) {
+    return SecurityRepository.deleteById(deviceId);
+  }
 }
 
 export default new SecurityService();
