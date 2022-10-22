@@ -10,9 +10,10 @@ export const deleteDevice = [
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
     const device = await SecurityService.getDevice({ deviceId: req.params.id });
-    console.log(device)
 
     if (!device) return res.sendStatus(404);
+    
+    if (device.userId.toString() !== req.userId) return res.sendStatus(403);
 
     res.sendStatus(204);
   },
