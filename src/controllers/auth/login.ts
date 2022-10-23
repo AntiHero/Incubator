@@ -39,12 +39,13 @@ export const login = [
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
 
-    
     const userId = await UsersService.authenticateUser({
       login,
       password,
     });
     
+    console.log(userId, 'userId');
+
     if (!userId) return res.sendStatus(401);
     
     if (!customValidationResult(req).isEmpty()) {
@@ -62,15 +63,14 @@ export const login = [
       return;
     }
 
-    const deviceId = uuid();
-
+    const newDeviceId = uuid();
 
     const ip = req.ip;
     const userAgent = req.headers['user-agent'];
 
     const newDevice: SecuirityDeviceInput = {
       ip,
-      deviceId,
+      deviceId: newDeviceId,
       lastActiveDate: new Date(),
       title: userAgent || 'unknown',
       userId,
@@ -81,9 +81,11 @@ export const login = [
     const userForToken: UserForToken = {
       login,
       userId,
-      deviceId: existingDeviceId ?? deviceId,
+      deviceId: existingDeviceId ?? newDeviceId,
     };
     
+    console.log(userForToken.deviceId, 'deviceId');
+
     const [token, refreshToken] = await UsersService.createTokensPair(
       userForToken
     );
