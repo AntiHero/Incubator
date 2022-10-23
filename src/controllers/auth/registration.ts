@@ -66,6 +66,7 @@ export const registration = [
       code: user.confirmationInfo.code,
     });
 
-    res.sendStatus(204);
+    // res.sendStatus(204);
+    res.sendStatus(429);
   },
 ];
