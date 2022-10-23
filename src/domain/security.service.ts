@@ -3,42 +3,41 @@ import SecurityRepository from '@/repository/security.repository';
 import { convertToDevice } from '@/utils/covnertToDevice';
 
 class SecurityService {
-  async terminateAllSessions () {
+  async terminateAllSessions() {
     await SecurityRepository.deleteAll();
   }
 
-  async terminateAllSessionsButOne (query: { userId: string, deviceId: string }) {
-    console.log(query)
+  async terminateAllSessionsButOne(query: {
+    userId: string;
+    deviceId: string;
+  }) {
     await SecurityRepository.deleteAllButOne(query);
   }
 
-  async getDevicesList (userId: string) {
+  async getDevicesList(userId: string) {
     return SecurityRepository.findAllByQuery({ userId });
   }
 
-  async saveDevice (device: SecuirityDeviceInput) {
+  async saveDevice(device: SecuirityDeviceInput) {
     return SecurityRepository.save(device);
   }
 
-  async getDevice (query: Record<string, any>) {
+  async getDevice(query: Record<string, any>) {
     return SecurityRepository.findOneByQuery(query);
   }
 
-  async getDevicesByQuery (query: Record<string, any>) {
+  async getDevicesByQuery(query: Record<string, any>) {
     return SecurityRepository.findAllByQuery(query);
   }
 
-  async createDeviceIfNotExists (newDevice: SecuirityDeviceInput) {
+  async createDeviceIfNotExists(newDevice: SecuirityDeviceInput) {
     const existingDevices = await this.getDevicesByQuery({
       userId: newDevice.userId,
     });
 
-    console.log(existingDevices, 'existingDevices');
     for (const deviceFromDb of existingDevices) {
       const device = convertToDevice(deviceFromDb);
 
-      console.log(device.title, newDevice.title, device.deviceId);
-      console.log(device.title === newDevice.title);
       if (device.title === newDevice.title) {
         await SecurityRepository.updateOne(
           { deviceId: device.deviceId },
@@ -54,11 +53,11 @@ class SecurityService {
     return null;
   }
 
-  async deleteDeviceByQuery (query: Record<string, any>) {
+  async deleteDeviceByQuery(query: Record<string, any>) {
     return SecurityRepository.deleteOneByQuery(query);
   }
 
-  async updateOne (filter: Record<string, any>, query: Record<string, any>) {
+  async updateOne(filter: Record<string, any>, query: Record<string, any>) {
     return SecurityRepository.updateOne(filter, query);
   }
 }

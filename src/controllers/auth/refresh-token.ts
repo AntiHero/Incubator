@@ -29,8 +29,6 @@ export const refreshToken = [
       userForToken
     );
 
-    console.log(req.deviceId, 'deviceId in refresh token');
-
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     await tokensBlackListRepository.saveToken({
@@ -48,4 +46,3 @@ export const refreshToken = [
     res.status(200).json(payload);
   },
 ];
-
