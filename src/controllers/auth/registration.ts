@@ -59,21 +59,20 @@ export const registration = [
 
       return;
     }
-      
-    const { login, email, password } = req.body;
-
-    const userData = new User(login, email, password);
-    const user = await usersRepository.createUser(userData);
-
-    await EmailManager.sendConfirmationEmail({
-      to: email as string,
-      code: user.confirmationInfo.code,
-    });
-
-    const ip = req.ip;
 
     try {
+      const ip = req.ip;
+
       rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
+
+      const { login, email, password } = req.body;
+      const userData = new User(login, email, password);
+      const user = await usersRepository.createUser(userData);
+
+      await EmailManager.sendConfirmationEmail({
+        to: email as string,
+        code: user.confirmationInfo.code,
+      });
 
       res.sendStatus(204);
     } catch (e) {
