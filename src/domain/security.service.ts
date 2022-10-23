@@ -37,7 +37,8 @@ class SecurityService {
     for (const deviceFromDb of existingDevices) {
       const device = convertToDevice(deviceFromDb);
 
-      console.log(device.title, device.deviceId);
+      console.log(device.title, newDevice.title, device.deviceId);
+      console.log(device.title === newDevice.title);
       if (device.title === newDevice.title) {
         await SecurityRepository.updateOne(
           { deviceId: device.deviceId },
