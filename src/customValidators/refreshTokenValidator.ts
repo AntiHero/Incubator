@@ -12,6 +12,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
       ) as jwt.JwtPayload;
 
       const id = decodedToken.id;
+      const expDate = decodedToken.exp;
       const deviceId = decodedToken.deviceId;
 
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
@@ -23,6 +24,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         throw new Error('Invalid token');
       } else {
         req.userId = id;
+        req.expDate = expDate;
         req.deviceId = deviceId;
       }
     } catch (e) {

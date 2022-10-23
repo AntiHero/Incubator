@@ -29,18 +29,20 @@ export const refreshToken = [
       userForToken
     );
 
+    console.log(req.deviceId, 'deviceId in refresh token');
+
     const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     await tokensBlackListRepository.saveToken({
       value: req.cookies.refreshToken,
-      expDate: String(req.refreshTokenExp),
+      expDate: String(req.expDate),
     } as TokenInputModel);
 
     await SecurityService.updateOne(
       { deviceId: req.deviceId },
       { lastActiveDate: new Date() }
     );
-    
+
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     res.status(200).json(payload);
