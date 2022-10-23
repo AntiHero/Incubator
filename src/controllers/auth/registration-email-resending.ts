@@ -2,12 +2,16 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
-import { APIErrorResult } from '@/@types';
+import * as constants from '@/constants';
+import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
+import { APIErrorResult, IpsType } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import { validateConfirmationStatus } from '@/customValidators/confirmationStatusValidator';
+
+const ips: IpsType = {};
 
 export const registrationEmailResending = [
   body(UserFields.email)
@@ -37,10 +41,17 @@ export const registrationEmailResending = [
 
     if (!user) return res.sendStatus(404);
 
-    const userId = convertToUser(user).id;
+    const ip = req.ip;
 
-    await UsersService.resendConfirmationEmail(userId, email);
+    try {
+      rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
 
-    res.sendStatus(204);
+      const userId = convertToUser(user).id;
+      await UsersService.resendConfirmationEmail(userId, email);
+
+      res.sendStatus(204);
+    } catch (e) {
+      return res.sendStatus(429);
+    }
   },
 ];
