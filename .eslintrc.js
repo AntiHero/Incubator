@@ -18,4 +18,7 @@ module.exports = {
   },
   rules: { '@typescript-eslint/no-explicit-any': 'off' },
   ignorePatterns: ['src/@types/*.ts'],
+  globals: {
+    NodeJS: true,
+  },
 };

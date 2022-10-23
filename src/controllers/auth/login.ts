@@ -3,7 +3,10 @@ import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
+import * as constants from '@/constants';
+import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
+import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import SecurityService from '@/domain/security.service';
 import {
@@ -13,7 +16,6 @@ import {
   UserForToken,
 } from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
-import { convertToUser } from '@/utils/convertToUser';
 
 const MAX_PASSWORD_LEN = 20;
 const MIN_LOGIN_LEN = 3;
@@ -45,7 +47,20 @@ export const login = [
       password,
     });
 
-    if (!dbUser) return res.sendStatus(401);
+    const ip = req.ip;
+
+    if (!dbUser) {
+      try {
+        rateLimit(ip, constants.RATE_LIMIT, {
+          timeout: constants.MAX_TIMEOUT,
+          cb: () => res.sendStatus(401),
+        });
+      } catch (e) {
+        res.sendStatus(429);
+      }
+
+      return;
+    }
 
     const userId = convertToUser(dbUser).id;
 
@@ -66,7 +81,6 @@ export const login = [
 
     const newDeviceId = uuid();
 
-    const ip = req.ip;
     const userAgent = req.headers['user-agent'];
 
     const newDevice: SecuirityDeviceInput = {
