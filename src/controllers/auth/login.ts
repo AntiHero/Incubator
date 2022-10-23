@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 
 import { UserFields } from '@/enums';
 import * as constants from '@/constants';
-import { rateLimit, ips } from '@/utils/rateLimit';
+import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
 import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
@@ -43,25 +43,25 @@ export const login = [
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
 
-    const ip = req.ip;
-
-    if (ips[ip]) {
-      if (ips[ip].count > constants.RATE_LIMIT) {
-        res.sendStatus(429);
-
-        return;
-      }
-    }
-
     const dbUser = await UsersService.authenticateUser({
       login,
       password,
     });
 
-    if (!dbUser) {
-      rateLimit(ip, constants.MAX_TIMEOUT);
+    const ip = req.ip;
 
-      res.sendStatus(401);
+    if (!dbUser) {
+      try {
+        rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT, () =>
+          res.sendStatus(401)
+        );
+          
+        res.sendStatus(401);
+
+        // if (limitNotExceeded) { console.log(res.statusCode); return res.sendStatus(401); };
+      } catch (e) {
+        res.sendStatus(429);
+      }
 
       return;
     }
