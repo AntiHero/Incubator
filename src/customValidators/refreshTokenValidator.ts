@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { cookie } from 'express-validator';
+import securityDevicesRepository from '@/repository/security.repository';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
 
 export const validateRefreshToken = cookie('refreshToken').custom(
@@ -17,8 +18,10 @@ export const validateRefreshToken = cookie('refreshToken').custom(
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
         token
       );
+      
+      const isInSession = await securityDevicesRepository.findOneByQuery({ deviceId });
 
-      if (!id || blackListedToken) {
+      if (!id || !isInSession || blackListedToken) {
         throw new Error('Invalid token');
       } else {
         req.userId = id;
