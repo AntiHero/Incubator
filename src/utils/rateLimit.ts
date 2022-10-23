@@ -1,6 +1,8 @@
+import { Response } from 'express';
+
 interface RateLimiter {
   count: number;
-  timer: NodeJS.Timeout;
+  error: boolean;
 }
 
 const ips: { [key: string]: RateLimiter } = {};
@@ -8,19 +10,29 @@ const ips: { [key: string]: RateLimiter } = {};
 export const rateLimit = (
   ip: string,
   limit: number,
-  options: { timeout: number; cb: () => void }
+  timeout: number,
+  cb: () => void
 ) => {
   if (ips[ip]) {
     ips[ip].count += 1;
 
     if (ips[ip].count > limit) {
-      delete ips[ip];
+      ips[ip].error = true;
 
       throw new Error('Rate limit exceeded');
     }
   } else {
-    const timer = setTimeout(options.cb, options.timeout);
+    ips[ip] = { count: 1, error: false };
 
-    ips[ip] = { count: 1, timer };
+    // cb();
+
+    return new Promise(res =>
+      setTimeout(() => {
+        console.log(ips[ip])
+        res(!ips[ip].error);
+
+        delete ips[ip];
+      }, timeout)
+    );
   }
 };

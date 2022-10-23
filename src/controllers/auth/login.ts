@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+
 import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
@@ -51,10 +52,13 @@ export const login = [
 
     if (!dbUser) {
       try {
-        rateLimit(ip, constants.RATE_LIMIT, {
-          timeout: constants.MAX_TIMEOUT,
-          cb: () => res.sendStatus(401),
-        });
+        rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT, () =>
+          res.sendStatus(401)
+        );
+          
+        res.sendStatus(401);
+
+        // if (limitNotExceeded) { console.log(res.statusCode); return res.sendStatus(401); };
       } catch (e) {
         res.sendStatus(429);
       }
