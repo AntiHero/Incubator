@@ -24,13 +24,13 @@ export const deleteUser = async (id: string) => {
 
 const generateTokens = (userForToken: Record<string, any>) => {
   const token = jwt.sign(userForToken, process.env.SECRET ?? 'simple_secret', {
-    expiresIn: 10,
+    expiresIn: 60,
   });
 
   const refreshToken = jwt.sign(
     userForToken,
     process.env.SECRET ?? 'simple_secret',
-    { expiresIn: 20000 }
+    { expiresIn: 2000 }
   );
 
   return [token, refreshToken];
