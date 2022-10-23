@@ -36,10 +36,11 @@ export const refreshToken = [
       expDate: String(req.refreshTokenExp),
     } as TokenInputModel);
 
-    SecurityService.updateOne(
+    await SecurityService.updateOne(
       { deviceId: req.deviceId },
       { lastActiveDate: new Date() }
     );
+    
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     res.status(200).json(payload);
