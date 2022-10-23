@@ -4,7 +4,7 @@ import * as tokensBlackListRepository from '@/repository/tokensBlackList.reposit
 
 export const validateRefreshToken = cookie('refreshToken').custom(
   async (token, { req }) => {
-    console.log(req.url, 'url')
+    console.log(req.url, 'url in token validation')
     try {
       const decodedToken = jwt.verify(
         token,
@@ -27,7 +27,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         req.deviceId = deviceId;
       }
     } catch (e) {
-      console.log('error')
+      console.log('tokn error')
       throw new Error('Invalid token');
     }
 
