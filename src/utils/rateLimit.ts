@@ -1,11 +1,11 @@
-interface RateLimiter {
-  count: number;
-  error: boolean;
-}
+import { IpsType } from '@/@types';
 
-const ips: { [key: string]: RateLimiter } = {};
-
-export const rateLimit = (ip: string, limit: number, timeout: number) => {
+export const rateLimit = (
+  ips: IpsType,
+  ip: string,
+  limit: number,
+  timeout: number
+) => {
   if (ips[ip]) {
     ips[ip].count += 1;
 

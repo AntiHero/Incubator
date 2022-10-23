@@ -11,12 +11,15 @@ import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/domain/users.service';
 import SecurityService from '@/domain/security.service';
 import {
-  APIErrorResult,
   h06,
-  SecuirityDeviceInput,
+  IpsType,
   UserForToken,
+  APIErrorResult,
+  SecuirityDeviceInput,
 } from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+
+const ips: IpsType = {};
 
 const MAX_PASSWORD_LEN = 20;
 const MIN_LOGIN_LEN = 3;
@@ -52,8 +55,8 @@ export const login = [
 
     if (!dbUser) {
       try {
-        rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
-          
+        rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
+
         res.sendStatus(401);
       } catch (e) {
         res.sendStatus(429);

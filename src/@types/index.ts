@@ -220,3 +220,10 @@ export interface UserForToken {
   userId: string;
   deviceId: string;
 }
+
+export type IpsType = { [key: string]: RateLimiter };
+
+interface RateLimiter {
+  count: number;
+  error: boolean;
+}
