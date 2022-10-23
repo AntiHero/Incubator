@@ -3,7 +3,9 @@ import { Request, Response } from 'express';
 
 import User from '@/models/User';
 import { UserFields } from '@/enums';
+import * as constants from '@/constants';
 import { APIErrorResult } from '@/@types';
+import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
 import * as EmailManager from '@/managers/emailManager';
 import * as usersRepository from '@/repository/users.repository';
@@ -15,6 +17,8 @@ const MAX_PASSWORD_LEN = 20;
 
 const MIN_LOGIN_LEN = 3;
 const MAX_LOGIN_LEN = 10;
+
+const ips: IpsType = {};
 
 export const registration = [
   body(UserFields.login)
@@ -55,7 +59,7 @@ export const registration = [
 
       return;
     }
-
+      
     const { login, email, password } = req.body;
 
     const userData = new User(login, email, password);
@@ -66,7 +70,14 @@ export const registration = [
       code: user.confirmationInfo.code,
     });
 
-    res.sendStatus(204);
-    // res.sendStatus(429);
+    const ip = req.ip;
+
+    try {
+      rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
+
+      res.sendStatus(204);
+    } catch (e) {
+      res.sendStatus(429);
+    }
   },
 ];
