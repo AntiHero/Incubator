@@ -55,8 +55,6 @@ export const login = [
         rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
           
         res.sendStatus(401);
-
-        // if (limitNotExceeded) { console.log(res.statusCode); return res.sendStatus(401); };
       } catch (e) {
         res.sendStatus(429);
       }
