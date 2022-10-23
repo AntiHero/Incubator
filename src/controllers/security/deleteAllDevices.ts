@@ -10,6 +10,7 @@ export const deleteAllDevices = [
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
     await SecurityService.terminateAllSessionsButOne({
+      userId: req.userId,
       deviceId: req.deviceId,
     });
 

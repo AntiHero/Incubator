@@ -3,8 +3,8 @@ import { Repository } from './repository';
 import { deviceAuthSessions } from '@/clients';
 
 class SecurityRepository extends Repository<SecurityDevice> {
-  async deleteAllButOneByDeviceIdQuery(query: { deviceId: string }) {
-    await this.collection.deleteMany({ deviceId: { $nin: [query.deviceId] } });
+  async deleteAllButOneByDeviceIdQuery(query: { userId: string, deviceId: string }) {
+    await this.collection.deleteMany({ userId: query.userId, deviceId: { $nin: [query.deviceId] } });
   }
 }
 

@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { cookie } from 'express-validator';
-import securityDevicesRepository from '@/repository/security.repository';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';
 
 export const validateRefreshToken = cookie('refreshToken').custom(
   async (token, { req }) => {
+    console.log(req.url, 'url')
     try {
       const decodedToken = jwt.verify(
         token,
@@ -18,7 +18,6 @@ export const validateRefreshToken = cookie('refreshToken').custom(
       const blackListedToken = await tokensBlackListRepository.findTokenByValue(
         token
       );
-      
 
       if (!id || blackListedToken) {
         throw new Error('Invalid token');
@@ -28,6 +27,7 @@ export const validateRefreshToken = cookie('refreshToken').custom(
         req.deviceId = deviceId;
       }
     } catch (e) {
+      console.log('error')
       throw new Error('Invalid token');
     }
 

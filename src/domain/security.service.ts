@@ -7,7 +7,7 @@ class SecurityService {
     await SecurityRepository.deleteAll();
   }
 
-  async terminateAllSessionsButOne (query: { deviceId: string }) {
+  async terminateAllSessionsButOne (query: { userId: string, deviceId: string }) {
     await SecurityRepository.deleteAllButOneByDeviceIdQuery(query);
   }
 
