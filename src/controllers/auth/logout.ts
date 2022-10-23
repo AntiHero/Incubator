@@ -14,7 +14,7 @@ export const logout = [
 
     await tokensBlackListRepository.saveToken({
       value: req.cookies.refreshToken,
-      expDate: String(req.refreshTokenExp),
+      expDate: String(req.expDate),
     } as TokenInputModel);
 
     await SecurityService.deleteDeviceByQuery({ deviceId: req.deviceId });
