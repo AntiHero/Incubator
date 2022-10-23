@@ -18,7 +18,7 @@ export const getAllDevices = [
     );
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
-    const docs = await SecurityService.getDevicesList();
+    const docs = await SecurityService.getDevicesList(req.userId);
 
     const devices = docs.map(doc => {
       const device = convertToDevice(doc);

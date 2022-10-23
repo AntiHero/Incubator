@@ -12,8 +12,8 @@ class SecurityService {
     await SecurityRepository.deleteAllButOne(query);
   }
 
-  async getDevicesList () {
-    return SecurityRepository.getAll();
+  async getDevicesList (userId: string) {
+    return SecurityRepository.findAllByQuery({ userId });
   }
 
   async saveDevice (device: SecuirityDeviceInput) {
