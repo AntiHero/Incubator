@@ -53,15 +53,16 @@ export const login = [
 
     const ip = req.ip;
 
-    if (!dbUser) {
-      try {
-        rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
-
-        res.sendStatus(401);
-      } catch (e) {
-        res.sendStatus(429);
+    if (ips[ip]) {
+      if (ips[ip].count > constants.RATE_LIMIT) {
+        return res.sendStatus(429);
       }
+    }
 
+    if (!dbUser) {
+      rateLimit(ips, ip, constants.MAX_TIMEOUT);
+      res.sendStatus(401);
+      
       return;
     }
 
