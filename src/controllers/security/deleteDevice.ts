@@ -9,6 +9,8 @@ export const deleteDevice = [
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
+    console.log('--------DELETE /security/devices/id---------');
+    console.log(req.deviceId, 'deviceId from token', req.params.id, 'device id from params', req.userId, 'userId');
     const deviceId = req.params.id;
 
     const device = await SecurityService.getDevice({ deviceId });
