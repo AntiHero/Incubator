@@ -8,6 +8,7 @@ import { customValidationResult } from '@/customValidators/customValidationResul
 export const getAllDevices = [
   validateRefreshToken,
   async (req: Request, res: Response) => {
+    console.log('----------GET /security/devices/---------');
     if (!customValidationResult(req).isEmpty()) return res.sendStatus(401);
 
     const docs = await SecurityService.getDevicesList();
@@ -17,6 +18,10 @@ export const getAllDevices = [
 
       return device;
     });
+    
+    console.log(devices, 'device list');
+    console.log(req.userId, 'userId');
+    console.log(req.deviceId, 'deviceId')
 
     res.type('text/plain').json(devices);
   },
