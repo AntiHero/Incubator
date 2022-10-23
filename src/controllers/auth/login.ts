@@ -39,25 +39,14 @@ export const login = [
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
 
-    const deviceId = uuid();
-
+    
     const userId = await UsersService.authenticateUser({
       login,
       password,
     });
-
+    
     if (!userId) return res.sendStatus(401);
-
-    const userForToken: UserForToken = {
-      login,
-      userId,
-      deviceId,
-    };
-
-    const [token, refreshToken] = await UsersService.createTokensPair(
-      userForToken
-    );
-
+    
     if (!customValidationResult(req).isEmpty()) {
       res
         .type('text/plain')
@@ -73,7 +62,8 @@ export const login = [
       return;
     }
 
-    const payload: h06.LoginSuccessViewModel = { accessToken: token };
+    const deviceId = uuid();
+
 
     const ip = req.ip;
     const userAgent = req.headers['user-agent'];
@@ -86,8 +76,19 @@ export const login = [
       userId,
     };
 
-    await SecurityService.createDeviceIfNotExists(newDevice);
-    // await SecurityService.saveDevice(device);
+    const existingDeviceId = await SecurityService.createDeviceIfNotExists(newDevice);
+
+    const userForToken: UserForToken = {
+      login,
+      userId,
+      deviceId: existingDeviceId ?? deviceId,
+    };
+    
+    const [token, refreshToken] = await UsersService.createTokensPair(
+      userForToken
+    );
+
+    const payload: h06.LoginSuccessViewModel = { accessToken: token };
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
     res.status(200).json(payload);
