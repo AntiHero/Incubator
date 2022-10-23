@@ -8,7 +8,8 @@ class SecurityService {
   }
 
   async terminateAllSessionsButOne (query: { userId: string, deviceId: string }) {
-    await SecurityRepository.deleteAllButOneByDeviceIdQuery(query);
+    console.log(query)
+    await SecurityRepository.deleteAllButOne(query);
   }
 
   async getDevicesList () {
