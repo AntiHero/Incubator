@@ -52,9 +52,7 @@ export const login = [
 
     if (!dbUser) {
       try {
-        rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT, () =>
-          res.sendStatus(401)
-        );
+        rateLimit(ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
           
         res.sendStatus(401);
 

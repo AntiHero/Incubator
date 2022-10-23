@@ -1,5 +1,3 @@
-import { Response } from 'express';
-
 interface RateLimiter {
   count: number;
   error: boolean;
@@ -11,7 +9,6 @@ export const rateLimit = (
   ip: string,
   limit: number,
   timeout: number,
-  cb: () => void
 ) => {
   if (ips[ip]) {
     ips[ip].count += 1;
@@ -24,11 +21,8 @@ export const rateLimit = (
   } else {
     ips[ip] = { count: 1, error: false };
 
-    // cb();
-
     return new Promise(res =>
       setTimeout(() => {
-        console.log(ips[ip])
         res(!ips[ip].error);
 
         delete ips[ip];
