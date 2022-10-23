@@ -16,6 +16,7 @@ import {
   UserForToken,
   APIErrorResult,
   SecuirityDeviceInput,
+  User,
 } from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
@@ -46,23 +47,21 @@ export const login = [
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
 
-    const dbUser = await UsersService.authenticateUser({
-      login,
-      password,
-    });
-
     const ip = req.ip;
 
-    if (!dbUser) {
-      try {
-        rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
+    let dbUser: User | null;
 
-        res.sendStatus(401);
-      } catch (e) {
-        res.sendStatus(429);
-      }
+    try {
+      rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
 
-      return;
+      dbUser = await UsersService.authenticateUser({
+        login,
+        password,
+      });
+
+      if (!dbUser) return res.sendStatus(401);
+    } catch (e) {
+      return res.sendStatus(429);
     }
 
     const userId = convertToUser(dbUser).id;
