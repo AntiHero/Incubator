@@ -47,7 +47,7 @@ export const authenticateUser = async ({
 
   if (!user) return null;
 
-  return user._id.toString();
+  return user;
 };
 
 export const createTokensPair = async ({

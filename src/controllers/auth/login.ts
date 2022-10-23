@@ -13,6 +13,7 @@ import {
   UserForToken,
 } from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
+import { convertToUser } from '@/utils/convertToUser';
 
 const MAX_PASSWORD_LEN = 20;
 const MIN_LOGIN_LEN = 3;
@@ -39,14 +40,16 @@ export const login = [
   async (req: Request, res: Response) => {
     const { login, password } = req.body;
 
-    const userId = await UsersService.authenticateUser({
+    const dbUser = await UsersService.authenticateUser({
       login,
       password,
     });
 
-    console.log(userId, 'userId');
+    if (!dbUser) return res.sendStatus(401);
+    
+    const userId = convertToUser(dbUser).id;
 
-    if (!userId) return res.sendStatus(401);
+    console.log(login, password, userId, 'userId');
 
     if (!customValidationResult(req).isEmpty()) {
       res
