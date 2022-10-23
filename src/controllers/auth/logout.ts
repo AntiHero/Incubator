@@ -18,6 +18,8 @@ export const logout = [
     } as TokenInputModel);
 
     await SecurityService.deleteDeviceByQuery({ deviceId: req.deviceId });
+    
+    res.clearCookie('refreshToken');
 
     res.sendStatus(204);
   },
