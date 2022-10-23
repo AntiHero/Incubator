@@ -225,5 +225,4 @@ export type IpsType = { [key: string]: RateLimiter };
 
 interface RateLimiter {
   count: number;
-  error: boolean;
 }

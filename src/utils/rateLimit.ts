@@ -10,12 +10,10 @@ export const rateLimit = (
     ips[ip].count += 1;
 
     if (ips[ip].count > limit) {
-      ips[ip].error = true;
-
       throw new Error('Rate limit exceeded');
     }
   } else {
-    ips[ip] = { count: 1, error: false };
+    ips[ip] = { count: 1 };
 
     setTimeout(() => {
       delete ips[ip];
