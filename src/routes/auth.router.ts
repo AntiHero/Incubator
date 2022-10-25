@@ -18,7 +18,7 @@ authRouer.post('/login', login);
 
 authRouer.post('/logout', logout);
 
-authRouer.post('/new-password', newPassword)
+authRouer.post('/new-password', newPassword);
 
 authRouer.post('/registration', registration);
 

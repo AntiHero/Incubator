@@ -30,6 +30,14 @@ export const newPassword = [
     .trim()
     .custom(validateRecoveryCode),
   async (req: Request, res: Response) => {
+    try {
+      const ip = req.ip;
+
+      rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
+    } catch (e) {
+      return res.sendStatus(429);
+    }
+
     if (!customValidationResult(req).isEmpty()) {
       res
         .type('text/plain')
@@ -45,18 +53,10 @@ export const newPassword = [
       return;
     }
 
-    try {
-      const ip = req.ip;
-
-      rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
-    } catch (e) {
-      return res.sendStatus(429);
-    }
-
     const userId = req.userId;
     const newPassword = req.body[NewPasswordRequest.newPassword];
 
-    await UsersService.updateUser(userId, {password: newPassword})
+    await UsersService.updateUser(userId, { password: newPassword });
 
     res.sendStatus(204);
   },

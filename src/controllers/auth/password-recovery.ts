@@ -10,7 +10,7 @@ import { convertToUser } from '@/utils/convertToUser';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
 const ips: IpsType = {};
- 
+
 export const passwordRecovery = [
   body('email')
     .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
@@ -30,7 +30,7 @@ export const passwordRecovery = [
 
       return;
     }
-    
+
     const ip = req.ip;
 
     try {

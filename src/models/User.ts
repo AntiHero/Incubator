@@ -7,7 +7,7 @@ class UserModel implements h05.UserInputModel {
   public createdAt: Date;
 
   public confirmationInfo: UserConfirmationType;
-  
+
   public passwordRecovery: PasswordRecoveryType;
 
   constructor(
@@ -25,8 +25,8 @@ class UserModel implements h05.UserInputModel {
       expDate: Date.now() + fiveMinInMs,
     };
     this.passwordRecovery = {
-      code: null
-    }
+      code: null,
+    };
   }
 }
 

@@ -64,7 +64,7 @@ export interface UserConfirmationType {
 
 export type PasswordRecoveryType = {
   code: string | null;
-}
+};
 
 export interface User {
   _id: ObjectId;
@@ -183,7 +183,7 @@ export declare namespace h10 {
     newPassword: string;
     recoveryCode: string;
   }
-  
+
   interface PasswordRecoveryInputModel {
     email: string;
   }

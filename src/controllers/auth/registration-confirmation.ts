@@ -22,7 +22,7 @@ export const registrationConfirmation = [
     if (!customValidationResult(req).isEmpty()) {
       try {
         const ip = req.ip;
-        
+
         rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
 
         res
