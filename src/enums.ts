@@ -45,6 +45,7 @@ export enum UserFields {
   password = 'password',
   'confirmationInfo.code' = 'confirmationInfo.code',
   'confirmationInfo.isConfirmed' = 'confirmationInfo.isConfirmed',
+  'passwordRecovery.code' = 'passwordRecovery.code',
 }
 
 export enum CommentFields {
@@ -56,4 +57,9 @@ export enum CommentFields {
 
 export enum ConfirmationRequest {
   code = 'code',
+}
+
+export enum NewPasswordRequest {
+  newPassword = 'newPassword',
+  recoveryCode = 'recoveryCode',
 }

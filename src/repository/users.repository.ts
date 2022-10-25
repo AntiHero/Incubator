@@ -10,7 +10,7 @@ export const createUser = async (userData: UserModel): Promise<User> => {
   await usersCollection.insertOne(userData);
 
   // userData will be equal to created user (mutated during insertion process)
-  return userData as unknown as User;
+  return (userData as unknown) as User;
 };
 
 export const findUserById = async (id: string | ObjectId) => {
@@ -110,6 +110,12 @@ export const findUsersByQuery = async (query: PaginationQuery) => {
     .toArray();
 
   return users;
+};
+
+export const findUserByRecoveryCode = async (code: string) => {
+  return usersCollection.findOne<User>({
+    [UserFields['passwordRecovery.code']]: code,
+  });
 };
 
 export const findUserByConfirmatinoCode = async (code: string) => {

@@ -63,13 +63,14 @@ export interface UserConfirmationType {
 }
 
 export type PasswordRecoveryType = {
-  code: number | null;
+  code: string | null;
 }
 
 export interface User {
   _id: ObjectId;
   login: string;
   email: string;
+  password: string;
   createdAt: Date;
   confirmationInfo: UserConfirmationType;
   passwordRecovery: PasswordRecoveryType;

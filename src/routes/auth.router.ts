@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { me } from '@/controllers/auth/me';
 import { login } from '@/controllers/auth/login';
 import { logout } from '@/controllers/auth/logout';
+import { newPassword } from '@/controllers/auth/new-password';
 import { registration } from '@/controllers/auth/registration';
 import { refreshToken } from '@/controllers/auth/refresh-token';
 import { passwordRecovery } from '@/controllers/auth/password-recovery';
@@ -16,6 +17,8 @@ authRouer.get('/me', me);
 authRouer.post('/login', login);
 
 authRouer.post('/logout', logout);
+
+authRouer.post('/new-password', newPassword)
 
 authRouer.post('/registration', registration);
 

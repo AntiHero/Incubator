@@ -143,3 +143,11 @@ export const sendRecoveryEmail = async (id: string, email: string) => {
     code: newCode,
   });
 };
+
+export const checkRecoveryCode = async(code: string) => {
+  const dbUser = await usersRepository.findUserByRecoveryCode(code);
+  
+  if (!dbUser || dbUser.passwordRecovery.code !== code) return null;
+  
+  return convertToUser(dbUser).id;
+};
