@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { h06, User } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
-import * as usersService from '@/domain/users.service';
+import * as usersService from '@/app/users.service';
 import { checkAuthorization } from '@/customValidators/bearerAuthValidator';
 
 export const me = [

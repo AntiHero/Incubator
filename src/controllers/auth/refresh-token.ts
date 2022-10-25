@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
 import { convertToUser } from '@/utils/convertToUser';
-import * as UsersService from '@/domain/users.service';
-import SecurityService from '@/domain/security.service';
+import * as UsersService from '@/app/users.service';
+import SecurityService from '@/app/security.service';
 import { h06, TokenInputModel, UserForToken } from '@/@types';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';

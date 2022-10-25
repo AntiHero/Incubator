@@ -1,8 +1,8 @@
 import 'module-alias/register';
 
 import app from './app';
-import connectToDb from './utils/connectToDb';
 import { client } from '@/clients';
+import connectToDb from './utils/connectToDb';
 
 connectToDb(client).then(
   () => {

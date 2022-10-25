@@ -7,9 +7,9 @@ import { UserFields } from '@/enums';
 import * as constants from '@/constants';
 import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
+import * as UsersService from '@/app/users.service';
+import SecurityService from '@/app/security.service';
 import { convertToUser } from '@/utils/convertToUser';
-import * as UsersService from '@/domain/users.service';
-import SecurityService from '@/domain/security.service';
 import {
   h06,
   IpsType,

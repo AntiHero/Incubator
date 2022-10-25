@@ -5,7 +5,7 @@ import { CommentFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
 import { convertToUser } from '@/utils/convertToUser';
-import * as commentsService from '@/domain/comments.service';
+import * as commentsService from '@/app/comments.service';
 import * as postRepository from '@/repository/posts.repository';
 import * as usersRepository from '@/repository/users.repository';
 import { customValidationResult } from '@/customValidators/customValidationResults';

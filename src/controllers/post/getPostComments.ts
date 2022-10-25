@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 
 import { PaginationQuery } from '@/@types';
 import Paginator from '@/models/Paginator';
+import * as commentsService from '@/app/comments.service';
 import { convertToComment } from '@/utils/convertToComment';
-import * as commentsService from '@/domain/comments.service';
 import * as postRepository from '@/repository/posts.repository';
 import { validatePaginationQuery } from '@/customValidators/paginationValidator';
 

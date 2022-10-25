@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import * as usersService from '@/domain/users.service';
+import * as usersService from '@/app/users.service';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
 import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 

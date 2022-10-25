@@ -130,3 +130,16 @@ export const resendConfirmationEmail = async (id: string, email: string) => {
     code: newCode,
   });
 };
+
+export const sendRecoveryEmail = async (id: string, email: string) => {
+  const newCode = uuid();
+
+  await usersRepository.findUserByIdAndUpdate(id, {
+    'passwordRecovery.code': newCode,
+  });
+
+  await EmailManager.sendRecoveryEmail({
+    to: email,
+    code: newCode,
+  });
+};

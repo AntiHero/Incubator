@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import * as commentsService from '@/domain/comments.service';
+import * as commentsService from '@/app/comments.service';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
 
 export const getComment = [

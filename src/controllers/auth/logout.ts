@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { TokenInputModel } from '@/@types';
-import SecurityService from '@/domain/security.service';
+import SecurityService from '@/app/security.service';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import * as tokensBlackListRepository from '@/repository/tokensBlackList.repository';

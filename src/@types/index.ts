@@ -62,12 +62,17 @@ export interface UserConfirmationType {
   expDate: number;
 }
 
+export type PasswordRecoveryType = {
+  code: number | null;
+}
+
 export interface User {
   _id: ObjectId;
   login: string;
   email: string;
   createdAt: Date;
   confirmationInfo: UserConfirmationType;
+  passwordRecovery: PasswordRecoveryType;
 }
 
 export interface Comment {
@@ -169,6 +174,17 @@ export declare namespace h09 {
     title: string;
     lastActiveDate: string;
     deviceId: string;
+  }
+}
+
+export declare namespace h10 {
+  interface NewPasswordRecoveryInputModel {
+    newPassword: string;
+    recoveryCode: string;
+  }
+  
+  interface PasswordRecoveryInputModel {
+    email: string;
   }
 }
 

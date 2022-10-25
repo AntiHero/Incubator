@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { CommentFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
-import * as commentsService from '@/domain/comments.service';
+import * as commentsService from '@/app/comments.service';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import { checkAuthorization as checkBearerAuth } from '@/customValidators/bearerAuthValidator';
 

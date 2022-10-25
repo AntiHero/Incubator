@@ -5,7 +5,7 @@ import * as constants from '@/constants';
 import { ConfirmationRequest } from '@/enums';
 import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
-import * as UsersService from '@/domain/users.service';
+import * as UsersService from '@/app/users.service';
 import { APIErrorResult, h05, IpsType } from '@/@types';
 import { validateConfirmation } from '@/customValidators/confirmationValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';

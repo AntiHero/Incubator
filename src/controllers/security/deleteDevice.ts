@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import SecurityService from '@/domain/security.service';
+import SecurityService from '@/app/security.service';
 import { validateRefreshToken } from '@/customValidators/refreshTokenValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 

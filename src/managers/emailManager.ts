@@ -90,3 +90,28 @@ export const sendConfirmationEmail = async ({
 
   return info;
 };
+
+const recoverySubject = 'Recovery Email';
+
+const createRecoveryEmail = (
+  code: string
+) => `<h1>Password recovery</h1>
+<p>To finish password recovery please follow the link below:
+   <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
+</p>`;
+
+export const sendRecoveryEmail = async ({
+  from = defaultSender,
+  to,
+  code,
+}: {
+  from?: string;
+  to: string;
+  code: string;
+}) => {
+  const subject = recoverySubject;
+  const html = createRecoveryEmail(code);
+  const info = await sendEmail({ from, to, subject, html });
+
+  return info;
+};

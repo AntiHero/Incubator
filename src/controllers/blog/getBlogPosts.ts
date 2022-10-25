@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 
 import Paginator from '@/models/Paginator';
 import { PaginationQuery } from '@/@types';
+import * as blogsService from '@/app/blogs.service';
 import { convertToPost } from '@/utils/convertToPost';
-import * as blogsService from '@/domain/blogs.service';
 import * as blogsRepository from '@/repository/blogs.repository';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
 import { validatePaginationQuery } from '@/customValidators/paginationValidator';

@@ -1,24 +1,20 @@
 import { body } from 'express-validator';
 import { Request, Response } from 'express';
 
-import { UserFields } from '@/enums';
 import * as constants from '@/constants';
+import * as errors from '@/errorMessages';
 import { rateLimit } from '@/utils/rateLimit';
-import * as ErrorMessages from '@/errorMessages';
 import { APIErrorResult, IpsType } from '@/@types';
-import { convertToUser } from '@/utils/convertToUser';
 import * as UsersService from '@/app/users.service';
+import { convertToUser } from '@/utils/convertToUser';
 import { customValidationResult } from '@/customValidators/customValidationResults';
-import { validateConfirmationStatus } from '@/customValidators/confirmationStatusValidator';
 
 const ips: IpsType = {};
-
-export const registrationEmailResending = [
-  body(UserFields.email)
-    .isEmail()
-    .withMessage(ErrorMessages.NOT_EMAIL)
-    .trim()
-    .custom(validateConfirmationStatus),
+ 
+export const passwordRecovery = [
+  body('email')
+    .matches(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    .withMessage(errors.WRONG_PATTERN_ERROR),
   async (req: Request, res: Response) => {
     if (!customValidationResult(req).isEmpty()) {
       res
@@ -34,24 +30,24 @@ export const registrationEmailResending = [
 
       return;
     }
-
-    const { email }: { email: string } = req.body;
-
-    const user = await UsersService.findUserByLoginOrEmail(email);
-
-    if (!user) return res.sendStatus(404);
-
+    
     const ip = req.ip;
 
     try {
       rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);
-
-      const userId = convertToUser(user).id;
-      await UsersService.resendConfirmationEmail(userId, email);
-
-      res.sendStatus(204);
     } catch (e) {
       return res.sendStatus(429);
     }
+
+    const email: string = req.body.email;
+
+    const dbUser = await UsersService.findUserByLoginOrEmail(email);
+
+    if (dbUser) {
+      const { id, email } = convertToUser(dbUser);
+      await UsersService.sendRecoveryEmail(id, email);
+    }
+
+    res.sendStatus(204);
   },
 ];

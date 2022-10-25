@@ -1,4 +1,4 @@
-import { checkUsersConfirmation } from '@/domain/users.service';
+import { checkUsersConfirmation } from '@/app/users.service';
 
 export const validateConfirmation = async (value: string) => {
   const confirmation = await checkUsersConfirmation(value);
