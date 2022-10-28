@@ -7,8 +7,8 @@ import * as constants from '@/constants';
 import { rateLimit } from '@/utils/rateLimit';
 import * as ErrorMessages from '@/errorMessages';
 import { APIErrorResult, IpsType } from '@/@types';
+import * as UsersService from '@/app/users.service';
 import * as EmailManager from '@/managers/emailManager';
-import * as usersRepository from '@/repository/users.repository';
 import { validateUserUnicity } from '@/customValidators/uniqueUserValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
@@ -67,7 +67,8 @@ export const registration = [
 
       const { login, email, password } = req.body;
       const userData = new User(login, email, password);
-      const user = await usersRepository.createUser(userData);
+      // const user = await usersRepository.createUser(userData);
+      const user = await UsersService.createUser(userData);
 
       await EmailManager.sendConfirmationEmail({
         to: email as string,

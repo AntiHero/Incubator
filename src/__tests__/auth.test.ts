@@ -43,6 +43,6 @@ describe('testing /auth/login', () => {
       .send(customUserCreds)
       .expect(200);
 
-    expect(authResponse.body.accessToken).toMatch(/^\w+\.\w+\.\w+$/);
+    expect(authResponse.body.accessToken).toMatch(/^[\w-]+\.[\w-]+\.[\w-]+$/);
   });
 });

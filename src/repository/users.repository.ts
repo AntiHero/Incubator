@@ -27,15 +27,15 @@ export const findUserByIdAndUpdate = async (
   id: string,
   updates: Partial<{ [K in UserUpdatesType]: any }>
 ) => {
-  const updateObj: Partial<{ [K in UserUpdatesType]: any }> = {};
+  // const updateObj: Partial<{ [K in UserUpdatesType]: any }> = {};
 
-  for (const key in updates) {
-    updateObj[key as UserUpdatesType] = updates[key as UserUpdatesType];
-  }
+  // for (const key in updates) {
+  //   updateObj[key as UserUpdatesType] = updates[key as UserUpdatesType];
+  // }
 
   const result = await usersCollection.updateOne(
     { _id: new ObjectId(id) },
-    { $set: updateObj }
+    { $set: updates }
   );
 
   if (result.modifiedCount === 1) return true;
@@ -51,11 +51,8 @@ export const findUserByIdAndDelete = async (id: string) => {
   return null;
 };
 
-export const findUserByLoginAndPassword = async (
-  login: string,
-  password: string
-) => {
-  return usersCollection.findOne<User>({ login, password });
+export const findUserByLogin = async (login: string) => {
+  return usersCollection.findOne<User>({ login });
 };
 
 export const findUserByLoginOrEmail = async (loginOrEmail: string) => {

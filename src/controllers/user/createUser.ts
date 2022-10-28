@@ -5,8 +5,8 @@ import User from '@/models/User';
 import { UserFields } from '@/enums';
 import { APIErrorResult } from '@/@types';
 import * as ErrorMessages from '@/errorMessages';
+import * as UsersService from '@/app/users.service';
 import { convertToUser } from '@/utils/convertToUser';
-import * as usersRepository from '@/repository/users.repository';
 import { checkAuthorization } from '@/customValidators/basicAuthValidator';
 import { validateUserUnicity } from '@/customValidators/uniqueUserValidator';
 import { customValidationResult } from '@/customValidators/customValidationResults';
@@ -54,15 +54,14 @@ export const createUser = [
             }),
           } as APIErrorResult)
         );
-
       return;
     }
 
     const { login, email, password } = req.body;
 
     const userData = new User(login, email, password);
-    const user = await usersRepository.createUser(userData);
-
+    // const user = await usersRepository.createUser(userData);
+    const user = await UsersService.createUser(userData);
     res.type('text/plain').status(201).json(convertToUser(user));
   },
 ];

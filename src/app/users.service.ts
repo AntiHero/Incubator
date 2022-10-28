@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
+import bcrypt from 'bcrypt';
 
 import { UserFields } from '@/enums';
 import UserModel from '@/models/User';
@@ -11,8 +12,11 @@ import * as usersRepository from '@/repository/users.repository';
 
 export const createUser = async (
   userData: h05.UserInputModel
-): Promise<User | null> => {
-  const user = new UserModel(userData.login, userData.email, userData.password);
+): Promise<User> => {
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(userData.password, saltRounds);
+
+  const user = new UserModel(userData.login, userData.email, passwordHash);
   const doc = await usersRepository.createUser(user);
 
   return doc;
@@ -40,12 +44,12 @@ export const authenticateUser = async ({
   login,
   password,
 }: h05.LoginInputModel) => {
-  const user = await usersRepository.findUserByLoginAndPassword(
-    login,
-    password
-  );
+  const user = await usersRepository.findUserByLogin(login);
 
   if (!user) return null;
+
+  const passwordCorrect = await bcrypt.compare(password, user.password);
+  if (!passwordCorrect) return null;
 
   return user;
 };
@@ -110,6 +114,13 @@ export const updateUser = async (
   id: string,
   updates: Partial<{ [K in UserUpdatesType]: any }>
 ) => {
+  if (updates.password) {
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(updates.password, saltRounds);
+
+    updates.password = passwordHash;
+  }
+
   return usersRepository.findUserByIdAndUpdate(id, updates);
 };
 

@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
 import * as dotenv from 'dotenv';
+import { Collection, Document, MongoClient } from 'mongodb';
 
 dotenv.config();
 
@@ -8,19 +8,15 @@ const testDbName = process.env.TEST_DB_NAME;
 const url = process.env.MONGODB_URL as string;
 const testUrl = process.env.MONGODB_TEST_URL as string;
 
-export const client = new MongoClient(url);
+export let client: MongoClient;
 export let testClient: MongoClient;
 
-export let usersCollection = client.db(dbName).collection('users');
-export let blogsCollection = client.db(dbName).collection('blogs');
-export let postsCollection = client.db(dbName).collection('posts');
-export let commentsCollection = client.db(dbName).collection('comments');
-export let tokensBlackListCollection = client
-  .db(dbName)
-  .collection('tokensBlkLst');
-export let deviceAuthSessions = client
-  .db(dbName)
-  .collection('deviceAuthSessions');
+export let usersCollection: Collection<Document>;
+export let blogsCollection: Collection<Document>;
+export let postsCollection: Collection<Document>;
+export let commentsCollection: Collection<Document>;
+export let deviceAuthSessions: Collection<Document>;
+export let tokensBlackListCollection: Collection<Document>;
 
 if (process.env.MODE === 'test') {
   testClient = new MongoClient(testUrl);
@@ -28,6 +24,18 @@ if (process.env.MODE === 'test') {
   blogsCollection = testClient.db(testDbName).collection('blogs');
   postsCollection = testClient.db(testDbName).collection('posts');
   commentsCollection = testClient.db(testDbName).collection('comments');
-  deviceAuthSessions = client.db(testDbName).collection('deviceAuthSessions');
-  tokensBlackListCollection = client.db(testDbName).collection('tokensBlkLst');
+  deviceAuthSessions = testClient
+    .db(testDbName)
+    .collection('deviceAuthSessions');
+  tokensBlackListCollection = testClient
+    .db(testDbName)
+    .collection('tokensBlkLst');
+} else {
+  client = new MongoClient(url);
+  usersCollection = client.db(dbName).collection('users');
+  blogsCollection = client.db(dbName).collection('blogs');
+  postsCollection = client.db(dbName).collection('posts');
+  commentsCollection = client.db(dbName).collection('comments');
+  tokensBlackListCollection = client.db(dbName).collection('tokensBlkLst');
+  deviceAuthSessions = client.db(dbName).collection('deviceAuthSessions');
 }

@@ -55,6 +55,7 @@ describe('testing /posts/:postId/comments', () => {
     const postBlogResponse = await api
       .post('/blogs')
       .set(basicAuthHeader)
+      .set('Accept', 'text/plain')
       .send(blog)
       .expect(201);
 
