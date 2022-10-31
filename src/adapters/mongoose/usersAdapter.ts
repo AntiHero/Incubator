@@ -83,7 +83,7 @@ export class UserMongooseAdapter {
     return counts.length ? counts[0].totalCount : 0;
   }
 
-  async findUserByQuery(query: PaginationQuery) {
+  async findUsersByQuery(query: PaginationQuery) {
     const users = await this.Model.aggregate<UserDBType>([
       {
         $match: {

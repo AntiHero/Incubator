@@ -8,11 +8,15 @@ import { fiveMinInMs } from '@/constants';
 import { convertToUser } from '@/utils/convertToUser';
 import { User } from '@/adapters/mongoose/usersModel';
 import * as EmailManager from '@/managers/emailManager';
-import { h05, UserDBType, UserUpdatesType } from '@/@types';
+import { h05, PaginationQuery, UserDBType, UserUpdatesType } from '@/@types';
 // import * as usersRepository from '@/repository/users.repository';
 import { UserMongooseAdapter } from '@/adapters/mongoose/usersAdapter';
 
 const usersAdapter = new UserMongooseAdapter(User);
+
+export const findUserById = async (id: string) => {
+  return usersAdapter.findUserById(id);
+};
 
 export const createUser = async (
   userData: h05.UserInputModel
@@ -190,4 +194,16 @@ export const checkRecoveryCode = async (code: string) => {
   if (!dbUser || dbUser.passwordRecovery.code !== code) return null;
 
   return convertToUser(dbUser).id;
+};
+
+export const deleteAll = async () => {
+  return usersAdapter.deleteAll();
+};
+
+export const findUsersByQuery = async (query: PaginationQuery) => {
+  return usersAdapter.findUsersByQuery(query);
+};
+
+export const getUsersCount = async (query: Partial<PaginationQuery>) => {
+  return usersAdapter.getUsersCount(query);
 };
