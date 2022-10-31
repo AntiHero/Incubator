@@ -1,5 +1,4 @@
-import mongoose, { HydratedDocument } from 'mongoose';
-import { Types, ObjectId } from 'mongoose';
+import mongoose, { Types, ObjectId, HydratedDocument } from 'mongoose';
 
 import { UserFields } from '@/enums';
 import UserModel from '@/models/User';

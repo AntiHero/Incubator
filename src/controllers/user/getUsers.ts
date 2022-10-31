@@ -17,7 +17,7 @@ export const getUsers = [
       sortDirection,
       searchLoginTerm,
       searchEmailTerm,
-    } = (req.query as unknown) as PaginationQuery;
+    } = req.query as unknown as PaginationQuery;
 
     // const users = await usersRepository.findUsersByQuery(
     //   {
@@ -50,9 +50,6 @@ export const getUsers = [
       items
     );
 
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(result));
+    res.type('text/plain').status(200).send(JSON.stringify(result));
   },
 ];
