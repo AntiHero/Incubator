@@ -16,7 +16,7 @@ import {
   UserForToken,
   APIErrorResult,
   SecuirityDeviceInput,
-  User,
+  UserDBType,
 } from '@/@types';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 
@@ -49,7 +49,7 @@ export const login = [
 
     const ip = req.ip;
 
-    let dbUser: User | null;
+    let dbUser: UserDBType | null;
 
     try {
       rateLimit(ips, ip, constants.RATE_LIMIT, constants.MAX_TIMEOUT);

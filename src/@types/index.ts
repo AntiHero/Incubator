@@ -1,6 +1,7 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 import { SortDirection } from '@/enums';
+import UserModel from '@/models/User';
 
 declare global {
   namespace Express {
@@ -66,15 +67,23 @@ export type PasswordRecoveryType = {
   code: string | null;
 };
 
-export interface User {
-  _id: ObjectId;
-  login: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  confirmationInfo: UserConfirmationType;
-  passwordRecovery: PasswordRecoveryType;
-}
+// export interface UserDBType {
+//   _id: ObjectId;
+//   login: string;
+//   email: string;
+//   password: string;
+//   createdAt: Date;
+//   confirmationInfo: UserConfirmationType;
+//   passwordRecovery: PasswordRecoveryType;
+// }
+
+export type UserDBType = WithId<UserModel>;
+
+export type UserModelType = {
+  [Key in keyof UserDBType]: Key extends '_id' | 'createdAt'
+    ? string
+    : UserDBType[Key];
+};
 
 export interface Comment {
   _id: ObjectId;
@@ -189,6 +198,32 @@ export declare namespace h10 {
   }
 }
 
+export declare namespace h11 {
+  interface CommentViewModel {
+    id: string;
+    content: string;
+    userId: string;
+    createdAt: string;
+    likesInfo: LikesInfoViewModel;
+  }
+
+  interface LikesInfoViewModel {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: LikeStatus;
+  }
+
+  interface LikeInputModel {
+    likeStatus: LikeStatus;
+  }
+
+  enum LikeStatus {
+    None = 'None',
+    Like = 'Like',
+    Dislike = 'Dislike',
+  }
+}
+
 export interface SecuirityDeviceInput {
   ip: string;
   title: string;
@@ -220,7 +255,7 @@ type DotNestedKeys<T> = (
   ? Extract<D, string>
   : never;
 
-export type UserUpdatesType = DotNestedKeys<Omit<Partial<User>, '_id'>>;
+export type UserUpdatesType = DotNestedKeys<Omit<Partial<UserDBType>, '_id'>>;
 
 export interface Token {
   _id: ObjectId;

@@ -62,6 +62,9 @@ export const createUser = [
     const userData = new User(login, email, password);
     // const user = await usersRepository.createUser(userData);
     const user = await UsersService.createUser(userData);
-    res.type('text/plain').status(201).json(convertToUser(user));
+
+    if (user) {
+      res.type('text/plain').status(201).json(convertToUser(user));
+    }
   },
 ];

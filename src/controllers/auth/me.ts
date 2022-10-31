@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { h06, User } from '@/@types';
+import { h06, UserDBType } from '@/@types';
 import { convertToUser } from '@/utils/convertToUser';
 import * as usersService from '@/app/users.service';
 import { checkAuthorization } from '@/customValidators/bearerAuthValidator';
@@ -10,7 +10,7 @@ export const me = [
   async (req: Request, res: Response) => {
     const userId = req.userId;
 
-    const doc = (await usersService.getUser(userId)) as User;
+    const doc = (await usersService.getUser(userId)) as UserDBType;
 
     const user = convertToUser(doc);
     const userView: h06.MeViewModel = {

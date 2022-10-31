@@ -1,6 +1,8 @@
-import { h05, User } from '@/@types';
+import { h05, UserDBType } from '@/@types';
 
-export const convertToUser = <T extends User>(doc: T): h05.UserViewModel => ({
+export const convertToUser = <T extends UserDBType>(
+  doc: T
+): h05.UserViewModel => ({
   id: String(doc._id),
   login: doc.login,
   email: doc.email,

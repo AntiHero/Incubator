@@ -70,12 +70,14 @@ export const registration = [
       // const user = await usersRepository.createUser(userData);
       const user = await UsersService.createUser(userData);
 
-      await EmailManager.sendConfirmationEmail({
-        to: email as string,
-        code: user.confirmationInfo.code,
-      });
+      if (user) {
+        await EmailManager.sendConfirmationEmail({
+          to: email as string,
+          code: user.confirmationInfo.code,
+        });
 
-      res.sendStatus(204);
+        res.sendStatus(204);
+      }
     } catch (e) {
       res.sendStatus(429);
     }
