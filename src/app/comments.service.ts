@@ -12,12 +12,17 @@ export const addComment = async (
   userLogin: string,
   postId?: string
 ): Promise<CommentModelType | null> => {
-  const doc = await commentsAdapter.saveComment(
-    new Comment({ content, userId, userLogin }),
-    postId
-  );
+  try {
+    const doc = await commentsAdapter.saveComment(
+      new Comment({ content, userId, userLogin }),
+      postId
+    );
 
-  return doc;
+    console.log('comment');
+    return doc;
+  } catch (e) {
+    return null;
+  }
 };
 
 export const findCommentsByQuery = async (
