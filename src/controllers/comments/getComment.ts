@@ -13,6 +13,22 @@ export const getComment = [
 
     if (!comment) return res.sendStatus(404);
 
-    res.status(200).type('text/plain').json(convertToCommentViewModel(comment));
+    const userLikeStatus = await commentsService.getUserCommentLikeStatus(
+      comment.userId,
+      commentId
+    );
+
+    res
+      .status(200)
+      .type('text/plain')
+      .json(
+        convertToCommentViewModel({
+          ...comment,
+          likesInfo: {
+            ...comment.likesInfo,
+            myStatus: userLikeStatus ?? comment.likesInfo.myStatus,
+          },
+        })
+      );
   },
 ];

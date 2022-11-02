@@ -28,6 +28,25 @@ export class UserCommentLikeMongooseAdapter {
     return null;
   }
 
+  async getUserCommentLikeStatus(userId: string, commentId: string) {
+    try {
+      const userCommentLike = await this.Model.findOne<
+        HydratedDocument<UserCommentLikeDB>
+      >({
+        userId: new Types.ObjectId(userId),
+        commentId: new Types.ObjectId(commentId),
+      }).exec();
+
+      if (userCommentLike) {
+        return userCommentLike.likeStatus;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return null;
+  }
+
   async deleteUserCommentLikeById(id: string) {
     try {
       const removedId = await this.Model.findByIdAndDelete(id, {

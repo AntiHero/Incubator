@@ -32,7 +32,22 @@ export const addComment = async (
 export const findCommentsByQuery = async (
   query: PaginationQuery & { postId: string }
 ) => {
-  return commentsAdapter.findCommentsByQuery(query);
+  const comments = await commentsAdapter.findCommentsByQuery(query);
+
+  for (let i = 0; i < comments.length; i++) {
+    const userId = comments[i].userId;
+    const commentId = comments[i].id;
+
+    const likeStatus = await userCommentsLikeAdapter.getUserCommentLikeStatus(
+      userId,
+      commentId
+    );
+
+    comments[i].likesInfo.myStatus =
+      likeStatus ?? comments[i].likesInfo.myStatus;
+  }
+
+  return comments;
 };
 
 export const getCommentsCount = async (postId: string) => {
@@ -159,4 +174,11 @@ export const updateCommentLikeStatus = async (
   }
 
   return null;
+};
+
+export const getUserCommentLikeStatus = async (
+  userId: string,
+  commentId: string
+) => {
+  return userCommentsLikeAdapter.getUserCommentLikeStatus(userId, commentId);
 };
