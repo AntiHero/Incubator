@@ -10,6 +10,7 @@ import * as commentsService from '@/app/comments.service';
 import * as postRepository from '@/repository/posts.repository';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import { checkAuthorization as checkBearerAuth } from '@/customValidators/bearerAuthValidator';
+import { convertToCommentViewModel } from '@/utils/convertToCommentView';
 
 const MIN_LENGTH = 20;
 const MAX_LENGTH = 300;
@@ -58,7 +59,9 @@ export const postComment = [
         postId
       );
 
-      res.status(201).type('text/plain').json(comment);
+      if (comment) {
+        res.status(201).type('text/plain').json(convertToCommentViewModel(comment));
+      }
 
       return;
     }

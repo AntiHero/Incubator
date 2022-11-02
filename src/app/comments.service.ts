@@ -11,7 +11,7 @@ export const addComment = async (
   userId: string,
   userLogin: string,
   postId?: string
-): Promise<CommentModelType | null> => {
+): Promise<CommentModelType & { id: string } | null> => {
   try {
     const doc = await commentsAdapter.saveComment(
       new Comment({ content, userId, userLogin }),
