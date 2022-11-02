@@ -70,4 +70,20 @@ export class UserCommentLikeMongooseAdapter {
       return null;
     }
   }
+
+  async updateUserCommentLike(id: string, update: Omit<UserCommentLike, 'id'>) {
+    try {
+      return this.Model.findByIdAndUpdate(
+        new Types.ObjectId(id),
+        {
+          ...update,
+          userId: new Types.ObjectId(update.userId),
+          commentId: new Types.ObjectId(update.commentId),
+        },
+        { projection: { _id: 1 } }
+      );
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -1,8 +1,8 @@
 import Comment from '@/models/Comment';
 import { CommentModel } from '@/adapters/mongoose/commentsModel';
-import { CommentModelType, h06, LikeStatus, PaginationQuery } from '@/@types';
 import * as commentsRepository from '@/repository/comments.repository';
 import { CommentsMongooseAdapter } from '@/adapters/mongoose/commentsAdapter';
+import { CommentModelType, h06, LikeStatus, PaginationQuery } from '@/@types';
 import { UserCommentLikeModel } from '@/adapters/mongoose/userCommentLikeModel';
 import { UserCommentLikeMongooseAdapter } from '@/adapters/mongoose/userCommentLikeAdapter';
 
@@ -85,95 +85,223 @@ export const updateCommentLikeStatus = async (
 
   if (userCommentLike && userCommentLike.likeStatus === likeStatus) return null;
 
+  if (!userCommentLike) {
+    if (likeStatus === LikeStatus.None) return null;
+
+    if (likeStatus === LikeStatus.Like) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount + 1,
+          dislikesCount: comment.likesInfo.dislikesCount,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      await userCommentsLikeAdapter.createUserCommentLike({
+        userId: comment.userId,
+        commentId: comment.id,
+        likeStatus: LikeStatus.Like,
+      });
+    }
+
+    if (likeStatus === LikeStatus.Dislike) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount,
+          dislikesCount: comment.likesInfo.dislikesCount + 1,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      await userCommentsLikeAdapter.createUserCommentLike({
+        userId: comment.userId,
+        commentId: comment.id,
+        likeStatus: LikeStatus.Dislike,
+      });
+    }
+
+    return true;
+  }
+
   if (likeStatus === LikeStatus.None) {
-    if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
-      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+    if (userCommentLike.likeStatus === LikeStatus.Dislike) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
         likesInfo: {
           likesCount: comment.likesInfo.likesCount,
           dislikesCount: comment.likesInfo.dislikesCount - 1,
           myStatus: LikeStatus.None,
         },
       });
-
-      return result;
     }
 
-    if (userCommentLike?.likeStatus === LikeStatus.Like) {
-      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+    if (userCommentLike.likeStatus === LikeStatus.Like) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
         likesInfo: {
           likesCount: comment.likesInfo.likesCount - 1,
           dislikesCount: comment.likesInfo.dislikesCount,
           myStatus: LikeStatus.None,
         },
       });
-
-      return result;
     }
 
-    if (userCommentLike) {
-      await userCommentsLikeAdapter.deleteUserCommentLikeById(
-        userCommentLike.id
-      );
-    }
+    await userCommentsLikeAdapter.deleteUserCommentLikeById(userCommentLike.id);
+
+    return true;
   }
 
   if (likeStatus === LikeStatus.Like) {
-    if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
-      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+    if (userCommentLike.likeStatus === LikeStatus.None) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount + 1,
+          dislikesCount: comment.likesInfo.dislikesCount,
+          myStatus: LikeStatus.None,
+        },
+      });
+    }
+
+    if (userCommentLike.likeStatus === LikeStatus.Dislike) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
         likesInfo: {
           likesCount: comment.likesInfo.likesCount + 1,
           dislikesCount: comment.likesInfo.dislikesCount - 1,
           myStatus: LikeStatus.None,
         },
       });
-
-      return result;
     }
 
-    await commentsAdapter.findCommentByIdAndUpdate(commentId, {
-      likesInfo: {
-        likesCount: comment.likesInfo.likesCount + 1,
-        dislikesCount: comment.likesInfo.dislikesCount,
-        myStatus: LikeStatus.None,
-      },
-    });
-
-    await userCommentsLikeAdapter.createUserCommentLike({
+    await userCommentsLikeAdapter.updateUserCommentLike(userCommentLike.id, {
       userId: comment.userId,
       commentId: comment.id,
       likeStatus: LikeStatus.Like,
     });
+
+    return true;
   }
 
   if (likeStatus === LikeStatus.Dislike) {
-    if (userCommentLike?.likeStatus === LikeStatus.Like) {
-      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+    if (userCommentLike.likeStatus === LikeStatus.None) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount,
+          dislikesCount: comment.likesInfo.dislikesCount + 1,
+          myStatus: LikeStatus.None,
+        },
+      });
+    }
+
+    if (userCommentLike.likeStatus === LikeStatus.Like) {
+      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
         likesInfo: {
           likesCount: comment.likesInfo.likesCount - 1,
           dislikesCount: comment.likesInfo.dislikesCount + 1,
           myStatus: LikeStatus.None,
         },
       });
-
-      return result;
     }
 
-    await commentsAdapter.findCommentByIdAndUpdate(commentId, {
-      likesInfo: {
-        likesCount: comment.likesInfo.likesCount,
-        dislikesCount: comment.likesInfo.dislikesCount + 1,
-        myStatus: LikeStatus.None,
-      },
-    });
-
-    await userCommentsLikeAdapter.createUserCommentLike({
+    await userCommentsLikeAdapter.updateUserCommentLike(userCommentLike.id, {
       userId: comment.userId,
       commentId: comment.id,
       likeStatus: LikeStatus.Dislike,
     });
+
+    return true;
   }
 
   return null;
+
+  // ---------------------
+
+  // if (likeStatus === LikeStatus.None) {
+  //   if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
+  //     await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //       likesInfo: {
+  //         likesCount: comment.likesInfo.likesCount,
+  //         dislikesCount: comment.likesInfo.dislikesCount - 1,
+  //         myStatus: LikeStatus.None,
+  //       },
+  //     });
+
+  //     return result;
+  //   }
+
+  //   if (userCommentLike?.likeStatus === LikeStatus.Like) {
+  //     const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //       likesInfo: {
+  //         likesCount: comment.likesInfo.likesCount - 1,
+  //         dislikesCount: comment.likesInfo.dislikesCount,
+  //         myStatus: LikeStatus.None,
+  //       },
+  //     });
+
+  //     return result;
+  //   }
+
+  //   if (userCommentLike) {
+  //     await userCommentsLikeAdapter.deleteUserCommentLikeById(
+  //       userCommentLike.id
+  //     );
+  //   }
+  // }
+
+  // if (likeStatus === LikeStatus.Like) {
+  //   if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
+  //     const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //       likesInfo: {
+  //         likesCount: comment.likesInfo.likesCount + 1,
+  //         dislikesCount: comment.likesInfo.dislikesCount - 1,
+  //         myStatus: LikeStatus.None,
+  //       },
+  //     });
+
+  //     return result;
+  //   }
+
+  //   await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //     likesInfo: {
+  //       likesCount: comment.likesInfo.likesCount + 1,
+  //       dislikesCount: comment.likesInfo.dislikesCount,
+  //       myStatus: LikeStatus.None,
+  //     },
+  //   });
+
+  //   await userCommentsLikeAdapter.createUserCommentLike({
+  //     userId: comment.userId,
+  //     commentId: comment.id,
+  //     likeStatus: LikeStatus.Like,
+  //   });
+  // }
+
+  // if (likeStatus === LikeStatus.Dislike) {
+  //   if (userCommentLike?.likeStatus === LikeStatus.Like) {
+  //     const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //       likesInfo: {
+  //         likesCount: comment.likesInfo.likesCount - 1,
+  //         dislikesCount: comment.likesInfo.dislikesCount + 1,
+  //         myStatus: LikeStatus.None,
+  //       },
+  //     });
+
+  //     return result;
+  //   }
+
+  //   await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+  //     likesInfo: {
+  //       likesCount: comment.likesInfo.likesCount,
+  //       dislikesCount: comment.likesInfo.dislikesCount + 1,
+  //       myStatus: LikeStatus.None,
+  //     },
+  //   });
+
+  //   await userCommentsLikeAdapter.createUserCommentLike({
+  //     userId: comment.userId,
+  //     commentId: comment.id,
+  //     likeStatus: LikeStatus.Dislike,
+  //   });
+  // }
+
+  // return null;
 };
 
 export const getUserCommentLikeStatus = async (

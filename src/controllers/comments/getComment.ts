@@ -35,7 +35,7 @@ export const getComment = [
         .status(200)
         .type('text/plain')
         .json(convertToCommentViewModel(resultComment));
-      
+
       return;
     }
 
