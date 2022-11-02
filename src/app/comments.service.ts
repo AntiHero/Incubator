@@ -18,7 +18,6 @@ export const addComment = async (
       postId
     );
 
-    console.log('comment');
     return doc;
   } catch (e) {
     return null;

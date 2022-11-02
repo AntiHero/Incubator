@@ -225,12 +225,11 @@ export declare namespace h11 {
   interface LikeInputModel {
     likeStatus: LikeStatus;
   }
-
-  enum LikeStatus {
-    None = 'None',
-    Like = 'Like',
-    Dislike = 'Dislike',
-  }
+}
+export enum LikeStatus {
+  None = 'None',
+  Like = 'Like',
+  Dislike = 'Dislike',
 }
 
 export interface SecuirityDeviceInput {

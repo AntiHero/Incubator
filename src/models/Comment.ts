@@ -1,4 +1,4 @@
-import { CommentModelType, h06, h11 } from '@/@types';
+import { CommentModelType, LikeStatus, h06, h11 } from '@/@types';
 
 class Comment implements Omit<CommentModelType, 'createdAt'> {
   public content;
@@ -20,7 +20,7 @@ class Comment implements Omit<CommentModelType, 'createdAt'> {
     this.likesInfo = {
       likesCount: 0,
       dislikesCount: 0,
-      myStatus: h11.LikeStatus.None,
+      myStatus: LikeStatus.None,
     };
   }
 }
