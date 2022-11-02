@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { LikeStatus } from '@/@types';
 import * as commentsService from '@/app/comments.service';
 import { checkJWTAuth } from '@/middlewares/userAuthWithToken';
 import { validateObjectId } from '@/customValidators/objectIdValidator';
@@ -19,7 +20,7 @@ export const getComment = [
 
     if (userId) {
       const userLikeStatus = await commentsService.getUserCommentLikeStatus(
-        comment.userId,
+        userId,
         commentId
       );
 
@@ -27,7 +28,7 @@ export const getComment = [
         ...comment,
         likesInfo: {
           ...comment.likesInfo,
-          myStatus: userLikeStatus ?? comment.likesInfo.myStatus,
+          myStatus: userLikeStatus ?? LikeStatus.None,
         },
       };
 
