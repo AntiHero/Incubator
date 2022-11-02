@@ -31,22 +31,8 @@ export const addComment = async (
 
 export const findCommentsByQuery = async (
   query: PaginationQuery & { postId: string }
-) => {
+): Promise<(CommentModelType & { id: string})[]> => {
   const comments = await commentsAdapter.findCommentsByQuery(query);
-  console.log(comments);
-
-  for (let i = 0; i < comments.length; i++) {
-    const userId = comments[i].userId;
-    const commentId = comments[i].id;
-
-    const likeStatus = await userCommentsLikeAdapter.getUserCommentLikeStatus(
-      userId,
-      commentId
-    );
-
-    comments[i].likesInfo.myStatus =
-      likeStatus ?? comments[i].likesInfo.myStatus;
-  }
 
   return comments;
 };
