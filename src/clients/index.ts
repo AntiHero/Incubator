@@ -32,10 +32,9 @@ if (process.env.MODE === 'test') {
     .collection('tokensBlkLst');
 } else {
   client = new MongoClient(url);
-  // usersCollection = client.db(dbName).collection('users');
   blogsCollection = client.db(dbName).collection('blogs');
   postsCollection = client.db(dbName).collection('posts');
-  commentsCollection = client.db(dbName).collection('comments');
+  // commentsCollection = client.db(dbName).collection('comments');
   tokensBlackListCollection = client.db(dbName).collection('tokensBlkLst');
   deviceAuthSessions = client.db(dbName).collection('deviceAuthSessions');
 }
