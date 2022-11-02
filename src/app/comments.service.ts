@@ -84,33 +84,7 @@ export const updateCommentLikeStatus = async (
     commentId
   );
 
-  if (userCommentLike && userCommentLike.likeStatus === likeStatus) {
-    if (likeStatus === LikeStatus.Dislike) {
-      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
-        likesInfo: {
-          likesCount: comment.likesInfo.likesCount,
-          dislikesCount: comment.likesInfo.dislikesCount - 1,
-          myStatus: LikeStatus.None,
-        },
-      });
-    }
-
-    if (likeStatus === LikeStatus.Like) {
-      await commentsAdapter.findCommentByIdAndUpdate(commentId, {
-        likesInfo: {
-          likesCount: comment.likesInfo.likesCount - 1,
-          dislikesCount: comment.likesInfo.dislikesCount,
-          myStatus: LikeStatus.None,
-        },
-      });
-    }
-
-    await userCommentsLikeAdapter.updateUserCommentLike(userCommentLike.id, {
-      userId: comment.userId,
-      commentId: comment.id,
-      likeStatus: LikeStatus.None,
-    });
-  }
+  if (userCommentLike && userCommentLike.likeStatus === likeStatus) return null;
 
   if (!userCommentLike) {
     if (likeStatus === LikeStatus.None) return null;
