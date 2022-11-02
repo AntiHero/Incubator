@@ -43,7 +43,7 @@ export const getComments = [
         commentId
       );
 
-      console.log(likeStatus, req.userId, 'likeStatus')
+      console.log(likeStatus, req.userId, comments[i].userId, 'likeStatus')
       comments[i].likesInfo.myStatus = req.userId
         ? likeStatus ?? LikeStatus.None
         : LikeStatus.None;
