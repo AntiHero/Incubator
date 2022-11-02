@@ -104,4 +104,19 @@ export class CommentsMongooseAdapter {
 
     return null;
   }
+
+  async findCommentByIdAndUpdate(id: string, updates: Partial<CommentDBType>) {
+    try {
+      const result = await this.Model.findByIdAndUpdate(
+        new Types.ObjectId(id),
+        updates
+      ).exec();
+
+      if (result) return true;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return null;
+  }
 }

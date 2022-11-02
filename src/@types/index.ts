@@ -132,6 +132,13 @@ export declare namespace h04 {
   }
 }
 
+export interface UserCommentLike {
+  id: string;
+  userId: string;
+  commentId: string;
+  likeStatus: LikeStatus;
+}
+
 export declare namespace h05 {
   interface LoginInputModel {
     login: string;

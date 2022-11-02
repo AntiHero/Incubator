@@ -1,10 +1,15 @@
 import Comment from '@/models/Comment';
 import { CommentModel } from '@/adapters/mongoose/commentsModel';
-import { CommentModelType, h06, PaginationQuery } from '@/@types';
+import { CommentModelType, h06, LikeStatus, PaginationQuery } from '@/@types';
 import * as commentsRepository from '@/repository/comments.repository';
 import { CommentsMongooseAdapter } from '@/adapters/mongoose/commentsAdapter';
+import { UserCommentLikeModel } from '@/adapters/mongoose/userCommentLikeModel';
+import { UserCommentLikeMongooseAdapter } from '@/adapters/mongoose/userCommentLikeAdapter';
 
 const commentsAdapter = new CommentsMongooseAdapter(CommentModel);
+const userCommentsLikeAdapter = new UserCommentLikeMongooseAdapter(
+  UserCommentLikeModel
+);
 
 export const addComment = async (
   content: h06.CommentInputModel['content'],
@@ -47,4 +52,111 @@ export const updateComment = async (
   { content }: h06.CommentInputModel
 ) => {
   return await commentsRepository.updateCommentById(id, { content });
+};
+
+export const updateCommentLikeStatus = async (
+  userId: string,
+  commentId: string,
+  likeStatus: LikeStatus
+) => {
+  const comment = await commentsAdapter.findCommentById(commentId);
+
+  if (!comment) return null;
+
+  const userCommentLike = await userCommentsLikeAdapter.getUserCommentLike(
+    userId,
+    commentId
+  );
+
+  if (userCommentLike && userCommentLike.likeStatus === likeStatus) return null;
+
+  if (likeStatus === LikeStatus.None) {
+    if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
+      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount,
+          dislikesCount: comment.likesInfo.dislikesCount - 1,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      return result;
+    }
+
+    if (userCommentLike?.likeStatus === LikeStatus.Like) {
+      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount - 1,
+          dislikesCount: comment.likesInfo.dislikesCount,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      return result;
+    }
+
+    if (userCommentLike) {
+      await userCommentsLikeAdapter.deleteUserCommentLikeById(
+        userCommentLike.id
+      );
+    }
+  }
+
+  if (likeStatus === LikeStatus.Like) {
+    if (userCommentLike?.likeStatus === LikeStatus.Dislike) {
+      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount + 1,
+          dislikesCount: comment.likesInfo.dislikesCount - 1,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      return result;
+    }
+
+    await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+      likesInfo: {
+        likesCount: comment.likesInfo.likesCount + 1,
+        dislikesCount: comment.likesInfo.dislikesCount,
+        myStatus: LikeStatus.None,
+      },
+    });
+
+    await userCommentsLikeAdapter.createUserCommentLike({
+      userId: comment.userId,
+      commentId: comment.id,
+      likeStatus: LikeStatus.Like,
+    });
+  }
+
+  if (likeStatus === LikeStatus.Dislike) {
+    if (userCommentLike?.likeStatus === LikeStatus.Like) {
+      const result = await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount - 1,
+          dislikesCount: comment.likesInfo.dislikesCount + 1,
+          myStatus: LikeStatus.None,
+        },
+      });
+
+      return result;
+    }
+
+    await commentsAdapter.findCommentByIdAndUpdate(commentId, {
+      likesInfo: {
+        likesCount: comment.likesInfo.likesCount,
+        dislikesCount: comment.likesInfo.dislikesCount + 1,
+        myStatus: LikeStatus.None,
+      },
+    });
+
+    await userCommentsLikeAdapter.createUserCommentLike({
+      userId: comment.userId,
+      commentId: comment.id,
+      likeStatus: LikeStatus.Dislike,
+    });
+  }
+
+  return null;
 };

@@ -36,8 +36,17 @@ export const updateCommentsLikeStatus = [
 
     if (!comment) return res.sendStatus(404);
 
-    // TODO update like status
+    const userId = req.userId;
+    const likeStatus = req.body.likeStatus;
 
-    res.sendStatus(204);
+    const updateResult = await commentsService.updateCommentLikeStatus(
+      userId,
+      commentId,
+      likeStatus
+    );
+
+    if (updateResult) {
+      res.sendStatus(204);
+    }
   },
 ];
