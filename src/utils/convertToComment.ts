@@ -1,11 +1,15 @@
-import { h06, Comment } from '@/@types';
+import { HydratedDocument } from 'mongoose';
 
-export const convertToComment = <T extends Comment>(
+import { CommentDBType, CommentModelType } from '@/@types';
+
+export const convertToComment = <T extends HydratedDocument<CommentDBType>>(
   doc: T
-): h06.CommentViewModel => ({
-  id: String(doc._id),
+): CommentModelType & { id: string } => ({
+  id: doc.id,
   content: doc.content,
   userLogin: doc.userLogin,
   userId: String(doc.userId),
+  postId: String(doc.postId),
   createdAt: doc.createdAt.toISOString(),
+  likesInfo: { ...doc.likesInfo },
 });

@@ -67,17 +67,25 @@ export type PasswordRecoveryType = {
   code: string | null;
 };
 
-// export interface UserDBType {
-//   _id: ObjectId;
-//   login: string;
-//   email: string;
-//   password: string;
-//   createdAt: Date;
-//   confirmationInfo: UserConfirmationType;
-//   passwordRecovery: PasswordRecoveryType;
-// }
-
 export type UserDBType = WithId<UserModel>;
+
+export type CommentModelType = {
+  content: string;
+  userId: string;
+  postId?: string;
+  userLogin: string;
+  createdAt?: string;
+  likesInfo: h11.LikesInfoViewModel;
+};
+
+export type CommentDBType = {
+  content: string;
+  userId: ObjectId;
+  postId: ObjectId;
+  userLogin: string;
+  createdAt: Date;
+  likesInfo: h11.LikesInfoViewModel;
+};
 
 export type UserModelType = {
   [Key in keyof UserDBType]: Key extends '_id' | 'createdAt'
@@ -203,6 +211,7 @@ export declare namespace h11 {
     id: string;
     content: string;
     userId: string;
+    userLogin: string;
     createdAt: string;
     likesInfo: LikesInfoViewModel;
   }

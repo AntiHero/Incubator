@@ -1,15 +1,22 @@
 import { ObjectId } from 'mongodb';
 
 import CommentModel from '@/models/Comment';
-import { commentsCollection } from '@/clients';
-import { h06, Comment, PaginationQuery } from '@/@types';
-import { convertToComment } from '@/utils/convertToComment';
 import { countSkip } from '@/utils/countSkip';
+import { commentsCollection } from '@/clients';
+import { convertToComment } from '@/utils/convertToComment';
+import {
+  h06,
+  Comment,
+  PaginationQuery,
+  CommentModelType,
+  CommentDBType,
+} from '@/@types';
+import { HydratedDocument } from 'mongoose';
 
 export const getAllComments = async () => {
-  const cursor = commentsCollection.find<Comment>({});
+  const cursor = commentsCollection.find<HydratedDocument<CommentDBType>>({});
 
-  const comments: h06.CommentViewModel[] = [];
+  const comments: CommentModelType[] = [];
 
   await cursor.forEach((doc) => {
     const comment = convertToComment(doc);
@@ -20,9 +27,11 @@ export const getAllComments = async () => {
 };
 
 export const findCommentById = async (id: string | ObjectId) => {
-  const doc = await commentsCollection.findOne<Comment>({
-    _id: typeof id === 'string' ? new ObjectId(id) : id,
-  });
+  const doc = await commentsCollection.findOne<HydratedDocument<CommentDBType>>(
+    {
+      _id: typeof id === 'string' ? new ObjectId(id) : id,
+    }
+  );
 
   if (!doc) return null;
 
@@ -59,7 +68,7 @@ export const findCommentsByQuery = async (
   query: PaginationQuery & { postId: string }
 ) => {
   const posts = await commentsCollection
-    .aggregate<Comment>([
+    .aggregate<HydratedDocument<CommentDBType>>([
       {
         $match: { postId: new Object(query.postId) },
       },

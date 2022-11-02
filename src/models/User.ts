@@ -13,7 +13,7 @@ class UserModel implements h05.UserInputModel {
   constructor(
     public login: string,
     public email: string,
-    public password: string,
+    public password: string
   ) {
     this.login = login;
     this.email = email;

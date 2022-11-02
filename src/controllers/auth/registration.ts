@@ -67,7 +67,6 @@ export const registration = [
 
       const { login, email, password } = req.body;
       const userData = new User(login, email, password);
-      // const user = await usersRepository.createUser(userData);
       const user = await UsersService.createUser(userData);
 
       if (user) {

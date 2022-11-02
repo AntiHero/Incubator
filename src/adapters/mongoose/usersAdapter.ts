@@ -12,7 +12,7 @@ export class UserMongooseAdapter {
 
   async createUser(user: UserModel): Promise<UserDBType | null> {
     try {
-      const createdUser = this.Model.create(user);
+      const createdUser = await this.Model.create(user);
 
       return createdUser;
     } catch (e) {

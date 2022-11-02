@@ -10,7 +10,6 @@ import { HydratedDocument } from 'mongoose';
 export const createUser = async (userData: UserModel): Promise<UserDBType> => {
   await usersCollection.insertOne(userData);
 
-  // userData will be equal to created user (mutated during insertion process)
   return userData as unknown as UserDBType;
 };
 
@@ -28,12 +27,6 @@ export const findUserByIdAndUpdate = async (
   id: string,
   updates: Partial<{ [K in UserUpdatesType]: any }>
 ) => {
-  // const updateObj: Partial<{ [K in UserUpdatesType]: any }> = {};
-
-  // for (const key in updates) {
-  //   updateObj[key as UserUpdatesType] = updates[key as UserUpdatesType];
-  // }
-
   const result = await usersCollection.updateOne(
     { _id: new ObjectId(id) },
     { $set: updates }

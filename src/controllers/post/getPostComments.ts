@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 import { PaginationQuery } from '@/@types';
 import Paginator from '@/models/Paginator';
 import * as commentsService from '@/app/comments.service';
-import { convertToComment } from '@/utils/convertToComment';
 import * as postRepository from '@/repository/posts.repository';
+import { convertToCommentViewModel } from '@/utils/convertToCommentView';
 import { validatePaginationQuery } from '@/customValidators/paginationValidator';
 
 export const getComments = [
@@ -28,7 +28,7 @@ export const getComments = [
 
     const totalCount = await commentsService.getCommentsCount(postId);
 
-    const items = comments.map(convertToComment);
+    const items = comments.map(convertToCommentViewModel);
 
     const result = new Paginator(
       Math.ceil(totalCount / pageSize),

@@ -8,7 +8,6 @@ import * as usersService from '@/app/users.service';
 import { convertToUser } from '@/utils/convertToUser';
 import * as commentsService from '@/app/comments.service';
 import * as postRepository from '@/repository/posts.repository';
-// import * as usersRepository from '@/repository/users.repository';
 import { customValidationResult } from '@/customValidators/customValidationResults';
 import { checkAuthorization as checkBearerAuth } from '@/customValidators/bearerAuthValidator';
 
@@ -46,7 +45,6 @@ export const postComment = [
       return;
     }
 
-    // const doc = await usersRepository.findUserById(req.userId);
     const doc = await usersService.findUserById(req.userId);
 
     if (doc) {

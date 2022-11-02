@@ -1,4 +1,4 @@
-import { Paginator as PaginatorInterface, h04, h05, h06 } from '@/@types';
+import { Paginator as PaginatorInterface, h04, h05, h11 } from '@/@types';
 
 class Paginator
   implements
@@ -6,7 +6,7 @@ class Paginator
       | h04.BlogViewModel[]
       | h04.PostViewModel[]
       | h05.UserViewModel[]
-      | h06.CommentViewModel[]
+      | h11.CommentViewModel[]
     >
 {
   constructor(
@@ -18,7 +18,7 @@ class Paginator
       | h04.BlogViewModel[]
       | h04.PostViewModel[]
       | h05.UserViewModel[]
-      | h06.CommentViewModel[]
+      | h11.CommentViewModel[]
   ) {
     this.pagesCount = pagesCount;
     this.page = page;
