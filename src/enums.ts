@@ -63,3 +63,7 @@ export enum NewPasswordRequest {
   newPassword = 'newPassword',
   recoveryCode = 'recoveryCode',
 }
+
+export enum LikeStatusFields {
+  likeStatus = 'likeStatus',
+}

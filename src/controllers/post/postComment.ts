@@ -60,7 +60,10 @@ export const postComment = [
       );
 
       if (comment) {
-        res.status(201).type('text/plain').json(convertToCommentViewModel(comment));
+        res
+          .status(201)
+          .type('text/plain')
+          .json(convertToCommentViewModel(comment));
       }
 
       return;
