@@ -5,7 +5,7 @@ import { CommentDBType, CommentModelType } from '@/@types';
 export const convertToComment = <T extends HydratedDocument<CommentDBType>>(
   doc: T
 ): CommentModelType & { id: string } => ({
-  id: doc.id,
+  id: String(doc._id),
   content: doc.content,
   userLogin: doc.userLogin,
   userId: String(doc.userId),
