@@ -39,13 +39,11 @@ export const updateCommentsLikeStatus = [
     const userId = req.userId;
     const likeStatus = req.body.likeStatus;
 
-    const result = await commentsService.updateCommentLikeStatus(
+    await commentsService.updateCommentLikeStatus(
       userId,
       commentId,
       likeStatus
     );
-
-    console.log(result, 'updating like status result');
 
     res.sendStatus(204);
   },
