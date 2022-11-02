@@ -49,7 +49,7 @@ export class CommentsMongooseAdapter {
   async getCommentsCount(postId: string) {
     const cursor = await this.Model.aggregate<{ totalCount: number }>([
       {
-        $match: { postId: new Object(postId) },
+        $match: { postId: new Types.ObjectId(postId) },
       },
       {
         $count: 'totalCount',
