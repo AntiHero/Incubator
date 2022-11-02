@@ -33,7 +33,6 @@ export const findCommentsByQuery = async (
   query: PaginationQuery & { postId: string }
 ) => {
   const comments = await commentsAdapter.findCommentsByQuery(query);
-  console.log(comments, 'comments');
 
   for (let i = 0; i < comments.length; i++) {
     const userId = comments[i].userId;

@@ -64,7 +64,7 @@ export class CommentsMongooseAdapter {
       HydratedDocument<CommentDBType>
     >([
       {
-        $match: { postId: new Object(query.postId) },
+        $match: { postId: new Types.ObjectId(query.postId) },
       },
       {
         $sort: { [query.sortBy]: query.sortDirection },
