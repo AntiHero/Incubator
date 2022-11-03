@@ -119,4 +119,8 @@ export class CommentsMongooseAdapter {
 
     return null;
   }
+
+  async deleteAll() {
+    await this.Model.deleteMany({}).exec();
+  }
 }

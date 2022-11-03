@@ -31,7 +31,7 @@ export const addComment = async (
 
 export const findCommentsByQuery = async (
   query: PaginationQuery & { postId: string }
-): Promise<(CommentModelType & { id: string})[]> => {
+): Promise<(CommentModelType & { id: string })[]> => {
   const comments = await commentsAdapter.findCommentsByQuery(query);
 
   return comments;
@@ -204,4 +204,9 @@ export const getUserCommentLikeStatus = async (
   commentId: string
 ) => {
   return userCommentsLikeAdapter.getUserCommentLikeStatus(userId, commentId);
+};
+
+export const deleteAll = async () => {
+  await commentsAdapter.deleteAll();
+  await userCommentsLikeAdapter.deleteAll();
 };

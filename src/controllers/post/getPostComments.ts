@@ -17,12 +17,8 @@ export const getComments = [
 
     if (!post) return res.sendStatus(404);
 
-    const {
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-    } = (req.query as unknown) as PaginationQuery;
+    const { pageNumber, pageSize, sortBy, sortDirection } =
+      req.query as unknown as PaginationQuery;
 
     const comments = await commentsService.findCommentsByQuery({
       pageNumber,
@@ -33,7 +29,7 @@ export const getComments = [
     });
 
     const totalCount = await commentsService.getCommentsCount(postId);
-
+    console.log(comments);
     for (let i = 0; i < comments.length; i++) {
       const userId = comments[i].userId;
       const commentId = comments[i].id;
@@ -43,7 +39,7 @@ export const getComments = [
         commentId
       );
 
-      console.log(likeStatus, req.userId, comments[i].userId, 'likeStatus')
+      console.log(likeStatus, userId, commentId, 'likeStatus');
       comments[i].likesInfo.myStatus = req.userId
         ? likeStatus ?? LikeStatus.None
         : LikeStatus.None;
@@ -59,9 +55,6 @@ export const getComments = [
       items
     );
 
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(result));
+    res.type('text/plain').status(200).send(JSON.stringify(result));
   },
 ];

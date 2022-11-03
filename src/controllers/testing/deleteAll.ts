@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import * as usersService from '@/app/users.service';
+import * as commentsService from '@/app/comments.service';
 import * as blogsRepository from '@/repository/blogs.repository';
 import * as postsRepository from '@/repository/posts.repository';
 import securityDeviceRepository from '@/repository/security.repository';
@@ -10,6 +11,7 @@ export const deleteAll = async (_: Request, res: Response) => {
   await usersService.deleteAll();
   await blogsRepository.deleteAll();
   await postsRepository.deleteAll();
+  await commentsService.deleteAll();
   await securityDeviceRepository.deleteAll();
   await refreshTokenBlkLstRepository.deleteAll();
 
