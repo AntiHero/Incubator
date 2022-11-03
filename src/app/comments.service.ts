@@ -85,8 +85,10 @@ export const updateCommentLikeStatus = async (
       });
 
       await userCommentsLikeAdapter.createUserCommentLike({
-        userId: comment.userId,
-        commentId: comment.id,
+        // userId: comment.userId,
+        userId,
+        // commentId: comment.id,
+        commentId,
         likeStatus: LikeStatus.Like,
       });
     }
@@ -101,8 +103,10 @@ export const updateCommentLikeStatus = async (
       });
 
       await userCommentsLikeAdapter.createUserCommentLike({
-        userId: comment.userId,
-        commentId: comment.id,
+        // userId: comment.userId,
+        // commentId: comment.id,
+        userId,
+        commentId,
         likeStatus: LikeStatus.Dislike,
       });
     }
@@ -158,8 +162,10 @@ export const updateCommentLikeStatus = async (
     }
 
     await userCommentsLikeAdapter.updateUserCommentLike(userCommentLike.id, {
-      userId: comment.userId,
-      commentId: comment.id,
+      // userId: comment.userId,
+      // commentId: comment.id,
+      userId,
+      commentId,
       likeStatus: LikeStatus.Like,
     });
 
@@ -188,8 +194,10 @@ export const updateCommentLikeStatus = async (
     }
 
     await userCommentsLikeAdapter.updateUserCommentLike(userCommentLike.id, {
-      userId: comment.userId,
-      commentId: comment.id,
+      // userId: comment.userId,
+      // commentId: comment.id,
+      userId,
+      commentId,
       likeStatus: LikeStatus.Dislike,
     });
 
