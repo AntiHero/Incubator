@@ -1,4 +1,4 @@
-app = "global-nestjs"
+app = "it-incubator06"
 
 [[services]]
   http_checks = []
