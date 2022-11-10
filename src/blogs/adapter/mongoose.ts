@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
-import { toObjectId } from 'root/_common/utils/toObjectId';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import {
@@ -14,7 +13,7 @@ import {
   BlogDTO,
   BlogSchemaModel,
 } from '../types';
-import { PostDTO, PostSchemaModel } from 'root/posts/types';
+import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
 
 @Injectable()
 export class BlogsAdapter {
@@ -178,13 +177,15 @@ export class BlogsAdapter {
     }
   }
 
-  async addBlogPost(id: string, postToAddId: string) {
+  async addBlogPost(id: string, post: PostDomainModel) {
+    const createdPost = await this.postModel.create(post);
+
     const blog = await this.model.findByIdAndUpdate<BlogDatabaseModel>(id, {
-      $push: { posts: toObjectId(postToAddId) },
+      $push: { posts: createdPost._id },
     });
 
     if (!blog) return null;
 
-    return convertToBlogDTO(blog);
+    return convertToPostDTO(createdPost);
   }
 }

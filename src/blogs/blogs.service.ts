@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PostDomainModel } from 'root/posts/types';
 import { defaultPaginationQuery } from 'root/_common/constants';
 import { PaginationQuery } from 'root/_common/types';
 import { BlogsAdapter } from './adapter/mongoose';
@@ -45,7 +46,7 @@ export class BlogsService {
     await this.blogsRepository.deleteAllBlogs();
   }
 
-  async addBlogPost(id: string, postToAddId: string) {
-    return this.blogsRepository.addBlogPost(id, postToAddId);
+  async addBlogPost(id: string, post: PostDomainModel) {
+    return this.blogsRepository.addBlogPost(id, post);
   }
 }

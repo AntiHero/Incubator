@@ -16,7 +16,6 @@ import { BlogsService } from './blogs.service';
 import { PaginationQuery } from 'root/_common/types';
 import Paginator from 'root/_common/models/Paginator';
 import { BlogInputModel, BlogViewModel } from './types';
-import { PostsService } from 'root/posts/posts.service';
 import { SortDirections } from 'root/_common/types/enum';
 import { PostBody, PostViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
@@ -25,10 +24,7 @@ import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(
-    private blogsService: BlogsService,
-    private postsService: PostsService,
-  ) {}
+  constructor(private blogsService: BlogsService) {}
 
   @Post()
   async saveBlog(@Body() body: BlogInputModel, @Res() res: FastifyReply) {
@@ -188,9 +184,7 @@ export class BlogsController {
       blogName,
     });
 
-    const createdPost = await this.postsService.save(post);
-
-    await this.blogsService.addBlogPost(blogId, createdPost.id);
+    const createdPost = await this.blogsService.addBlogPost(blogId, post);
 
     res
       .type('text/plain')
