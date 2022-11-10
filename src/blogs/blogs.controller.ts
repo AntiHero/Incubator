@@ -118,7 +118,7 @@ export class BlogsController {
     @Res() res: FastifyReply,
   ) {
     const blog = await this.blogsService.findBlogById(id);
-    console.log(blog);
+
     if (!blog) {
       return res.status(404).send();
     }
@@ -192,7 +192,7 @@ export class BlogsController {
       .send(JSON.stringify(convertToPostViewModel(createdPost)));
   }
 
-  @Delete()
+  @Delete(':id')
   async deleteBlog(@Param('id') id, @Res() res: FastifyReply) {
     const blog = this.blogsService.findBlogByIdAndDelete(id);
 

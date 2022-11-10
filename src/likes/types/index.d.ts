@@ -39,3 +39,10 @@ export type LikeViewModel = {
   login: string;
   addedAt: string;
 };
+
+type ExtendedLikesInfoViewModel = {
+  likesCount: number;
+  dislikesCount: number;
+  myStatus: LikeStatus;
+  newestLikes: LikeViewModel[];
+};

@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 import { LikeSchemaModel } from '../types';
 import { LikeStatuses } from 'root/_common/types/enum';
 
-const likeSchema = new mongoose.Schema<LikeSchemaModel>(
+export const likeSchema = new mongoose.Schema<LikeSchemaModel>(
   {
     entityId: {
       type: Schema.Types.ObjectId,

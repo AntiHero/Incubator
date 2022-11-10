@@ -3,6 +3,7 @@ import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 import { WithId } from 'root/_common/types/utility';
 import { LikesInfoViewModel } from 'root/_common/types';
 import { LikeDatabaseModel, LikeDTO } from 'root/likes/types';
+import { LikeStatuses } from 'root/_common/types/enum';
 
 export type CommentSchemaModel = {
   content: string;
@@ -46,4 +47,16 @@ export type CommentViewModel = {
   userLogin: string;
   createdAt: string;
   likesInfo: LikesInfoViewModel;
+};
+
+export type CommentExtendedLikesDTO = {
+  id: string;
+  content: string;
+  userId: string;
+  entityId: string;
+  userLogin: string;
+  createdAt: string;
+  likesCount: number;
+  dislikesCount: number;
+  userStatus: LikeStatuses;
 };

@@ -1,4 +1,5 @@
 import { PostDTO, PostLeanModel } from '../types';
+import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
 
 export const convertToPostDTO = <T extends PostLeanModel>(
@@ -14,5 +15,6 @@ export const convertToPostDTO = <T extends PostLeanModel>(
   comments: populate
     ? doc.comments.map((comment) => convertToCommentDTO(comment, true))
     : [],
+  likes: populate ? doc.likes.map(convertToLikeDTO) : [],
   createdAt: doc.createdAt.toISOString(),
 });

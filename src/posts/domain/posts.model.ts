@@ -1,5 +1,6 @@
 import { PostDomainModel } from '../types';
 import { Comment } from 'root/comments/domain/comments.model';
+import { Like } from 'root/likes/domain/likes.model';
 
 type PostModelType = {
   title: string;
@@ -21,6 +22,8 @@ export class Post implements PostDomainModel {
   public blogName: string;
 
   public comments: Comment[] = [];
+
+  public likes: Like[] = [];
 
   constructor({
     title,

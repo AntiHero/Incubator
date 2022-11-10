@@ -1,14 +1,12 @@
 import { PaginatorType } from '../types';
-import { BlogViewModel } from 'root/blogs/types';
-import { PostViewModel } from 'root/posts/types';
 
-class Paginator implements PaginatorType<BlogViewModel[] | PostViewModel[]> {
+class Paginator<T> implements PaginatorType<T> {
   constructor(
     public pagesCount: number,
     public page: number,
     public pageSize: number,
     public totalCount: number,
-    public items: BlogViewModel[] | PostViewModel[],
+    public items: T,
   ) {
     this.pagesCount = pagesCount;
     this.page = page;

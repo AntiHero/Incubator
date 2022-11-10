@@ -6,6 +6,13 @@ import {
   CommentDomainModel,
   CommentDTO,
 } from 'root/comments/types';
+import {
+  ExtendedLikesInfoViewModel,
+  LikeDatabaseModel,
+  LikeDomainModel,
+  LikeDTO,
+} from 'root/likes/types';
+import { LikeStatuses } from 'root/_common/types/enum';
 
 export type PostSchemaModel = {
   title: string;
@@ -14,6 +21,7 @@ export type PostSchemaModel = {
   blogId: Schema.Types.ObjectId;
   blogName: string;
   comments: CommentDatabaseModel[];
+  likes: LikeDatabaseModel[];
   createdAt: Date;
 };
 
@@ -28,6 +36,7 @@ export type PostDomainModel = {
   blogId: string;
   blogName: string;
   comments: CommentDomainModel[];
+  likes: LikeDomainModel[];
 };
 
 export type PostDTO = {
@@ -38,7 +47,22 @@ export type PostDTO = {
   blogId: string;
   blogName: string;
   comments: CommentDTO[];
+  likes: LikeDTO[];
   createdAt: string;
+};
+
+export type PostExtendedLikesDTO = {
+  id: string;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: string;
+  likesCount: number;
+  dislikesCount: number;
+  userStatus: LikeStatuses;
+  newestLikes: LikeDTO[];
 };
 
 export type PostDomainModelWithId = WithId<PostDomainModel>;
@@ -64,4 +88,15 @@ export type PostBody = {
   title: string;
   shortDescription: string;
   content: string;
+};
+
+export type PostExtendedViewModel = {
+  id: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  createdAt: string;
+  title: string;
+  extendedLikesInfo: ExtendedLikesInfoViewModel;
 };

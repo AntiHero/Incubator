@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,12 +14,18 @@ import {
   BlogSchemaModel,
 } from '../types';
 import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
+import { toObjectId } from 'root/_common/utils/toObjectId';
+import { CommentSchemaModel } from 'root/comments/types';
+import { LikeSchemaModel } from 'root/likes/types';
 
 @Injectable()
 export class BlogsAdapter {
   constructor(
     @InjectModel('blog') private model: mongoose.Model<BlogSchemaModel>,
     @InjectModel('post') private postModel: mongoose.Model<PostSchemaModel>,
+    @InjectModel('comment')
+    private commentModel: mongoose.Model<CommentSchemaModel>,
+    @InjectModel('like') private likeModel: mongoose.Model<LikeSchemaModel>,
   ) {}
 
   async getAllBlogs() {
@@ -55,7 +61,9 @@ export class BlogsAdapter {
   }
 
   async findBlogByIdAndUpdate(id: string, updates: Partial<BlogDomainModel>) {
-    const blog = await this.model.findByIdAndUpdate(id, updates).lean();
+    const blog = await this.model
+      .findByIdAndUpdate(id, updates, { new: true })
+      .lean();
 
     if (!blog) return null;
 
@@ -63,32 +71,30 @@ export class BlogsAdapter {
   }
 
   async findBlogByIdAndDelete(id: string) {
+    await this.likeModel.deleteMany({ entityId: toObjectId(id) }).exec();
+    await this.commentModel.deleteMany({ entityId: toObjectId(id) }).exec();
+    await this.postModel.deleteMany({ blogId: toObjectId(id) });
+
     return this.model.findByIdAndRemove(id).lean();
   }
 
   async deleteAllBlogs() {
-    await this.postModel.deleteMany({});
-    await this.model.deleteMany({});
+    await this.likeModel.deleteMany({}).exec();
+    await this.postModel.deleteMany({}).exec();
+    await this.postModel.deleteMany({}).exec();
+    await this.model.deleteMany({}).exec();
   }
 
   async countBlogPosts(id: string) {
     const blog = await this.model
       .findById<BlogDatabaseModel>(id)
-      .populate('post')
+      .populate('posts')
       .lean();
 
     if (!blog) return null;
 
     return blog.posts.length;
   }
-
-  // async countBlogsByQuery (query: Partial<PaginationQuery>) {
-  //   const count = await this.model
-  //     .find({ name: { $regex: query.searchNameTerm } })
-  //     .count();
-
-  //   return count;
-  // }
 
   async findBlogPostsByQuery(
     id: string,
@@ -100,7 +106,7 @@ export class BlogsAdapter {
 
       const posts = await this.model
         .aggregate([
-          { $match: { _id: new Types.ObjectId(id) } },
+          { $match: { _id: toObjectId(id) } },
           {
             $lookup: {
               from: 'posts',
@@ -168,7 +174,6 @@ export class BlogsAdapter {
         ])
         .exec();
 
-      console.log(blogs);
       if (!blogs) return null;
 
       return [blogs.map((blog) => convertToBlogDTO(blog)), count];

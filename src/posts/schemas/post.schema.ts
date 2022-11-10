@@ -19,10 +19,13 @@ export const postSchema = new mongoose.Schema<PostDatabaseModel>(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    comments: {
-      type: [Schema.Types.ObjectId],
-      ref: 'comment',
-    },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'comment' }],
+    likes: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'like',
+      },
+    ],
     blogName: {
       type: String,
       required: true,

@@ -5,5 +5,7 @@ export const convertToPostViewModel = (post: PostDTO): PostViewModel => {
 
   delete view.comments;
 
+  delete view.likes;
+
   return view;
 };

@@ -17,9 +17,7 @@ export class BlogsService {
     id: string,
     query: PaginationQuery = defaultPaginationQuery,
   ) {
-    const posts = await this.blogsRepository.findBlogPostsByQuery(id, query);
-
-    return posts;
+    return this.blogsRepository.findBlogPostsByQuery(id, query);
   }
 
   async findBlogsByQuery(query: PaginationQuery = defaultPaginationQuery) {

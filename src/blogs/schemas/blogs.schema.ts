@@ -15,19 +15,14 @@ export const blogsSchema = new mongoose.Schema<BlogDatabaseModel>(
       validate:
         /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
     },
-    posts: {
-      type: [Schema.Types.ObjectId],
-      ref: 'post',
-      default: [],
-    },
+    posts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'post',
+      },
+    ],
   },
   { timestamps: { createdAt: true, updatedAt: false } },
 );
-
-blogsSchema.post('remove', removeLinkedDocuments);
-
-async function removeLinkedDocuments(doc: BlogDatabaseModel) {
-  for (const post of doc.posts) await post.remove();
-}
 
 export const BlogsModel = mongoose.model('blog', blogsSchema);
