@@ -1,16 +1,26 @@
-import { Response } from 'express';
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Res,
+} from '@nestjs/common';
 
 import Blog from './domain/blogs.model';
-import { BlogInputModel, BlogViewModel } from './types';
 import { BlogsService } from './blogs.service';
-import { PostBody, PostViewModel } from 'root/posts/types';
-import { PostsService } from 'root/posts/posts.service';
-import { Post as PostModel } from 'root/posts/domain/posts.model';
-import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { PaginationQuery } from 'root/_common/types';
 import Paginator from 'root/_common/models/Paginator';
+import { BlogInputModel, BlogViewModel } from './types';
+import { PostsService } from 'root/posts/posts.service';
 import { SortDirections } from 'root/_common/types/enum';
+import { PostBody, PostViewModel } from 'root/posts/types';
+import { Post as PostModel } from 'root/posts/domain/posts.model';
+import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 
 @Controller('blogs')
@@ -21,7 +31,7 @@ export class BlogsController {
   ) {}
 
   @Post()
-  async saveBlog(@Body() body: BlogInputModel, @Res() res: Response) {
+  async saveBlog(@Body() body: BlogInputModel, @Res() res: FastifyReply) {
     const { name, youtubeUrl }: BlogInputModel = body;
 
     const blog = new Blog(name, youtubeUrl);
@@ -35,7 +45,7 @@ export class BlogsController {
   }
 
   @Get()
-  async getAllBlogs(@Query() query: PaginationQuery, @Res() res: Response) {
+  async getAllBlogs(@Query() query: PaginationQuery, @Res() res: FastifyReply) {
     const {
       pageNumber = 1,
       pageSize = 10,
@@ -71,25 +81,50 @@ export class BlogsController {
   }
 
   @Get(':id')
-  async getBlog(@Param('id') id, @Res() res: Response) {
+  async getBlog(@Param('id') id, @Res() res: FastifyReply) {
     const blog = await this.blogsService.findBlogById(id);
 
-    if (blog) {
-      res
-        .type('text/plain')
-        .status(200)
-        .send(JSON.stringify(convertToBlogViewModel(blog)));
-    } else {
-      res.sendStatus(404);
+    if (!blog) {
+      return res.status(404).send();
     }
+    res
+      .type('text/plain')
+      .status(200)
+      .send(JSON.stringify(convertToBlogViewModel(blog)));
+  }
+
+  @Put(':id')
+  async updateBlog(
+    @Param('id') id,
+    @Body() body: BlogInputModel,
+    @Res() res: FastifyReply,
+  ) {
+    const { name, youtubeUrl } = body;
+
+    const updates = { name, youtubeUrl };
+
+    const blog = await this.blogsService.findBlogByIdAndUpate(id, updates);
+
+    if (!blog) {
+      return res.status(404).send();
+    }
+
+    res
+      .type('text/plain')
+      .status(200)
+      .send(JSON.stringify(convertToBlogViewModel(blog)));
   }
 
   @Get(':id/posts')
-  async getBlogPosts(@Param('id') id, @Query() query, @Res() res: Response) {
+  async getBlogPosts(
+    @Param('id') id,
+    @Query() query,
+    @Res() res: FastifyReply,
+  ) {
     const blog = await this.blogsService.findBlogById(id);
     console.log(blog);
     if (!blog) {
-      res.sendStatus(404);
+      return res.status(404).send();
     }
 
     const {
@@ -133,14 +168,14 @@ export class BlogsController {
   async saveBlogPost(
     @Param('id') id,
     @Body() body: PostBody,
-    @Res() res: Response,
+    @Res() res: FastifyReply,
   ) {
     const { title, shortDescription, content } = body;
 
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
-      res.sendStatus(404);
+      return res.status(404).send();
     }
 
     const [blogId, blogName] = [blog.id, blog.name];
@@ -158,5 +193,14 @@ export class BlogsController {
     await this.blogsService.addBlogPost(blogId, createdPost.id);
 
     res.type('text/plain').status(201).send(JSON.stringify(createdPost));
+  }
+
+  @Delete()
+  async deleteBlog(@Param('id') id, @Res() res: FastifyReply) {
+    const blog = this.blogsService.findBlogByIdAndDelete(id);
+
+    if (!blog) return res.status(404).send();
+
+    res.status(204).send();
   }
 }

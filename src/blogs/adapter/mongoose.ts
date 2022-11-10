@@ -55,15 +55,15 @@ export class BlogsAdapter {
   }
 
   async findBlogByIdAndUpdate(id: string, updates: Partial<BlogDomainModel>) {
-    const blog = await this.model
-      .findByIdAndUpdate(toObjectId(id), updates)
-      .lean();
+    const blog = await this.model.findByIdAndUpdate(id, updates).lean();
+
+    if (!blog) return null;
 
     return convertToBlogDTO(blog);
   }
 
   async findBlogByIdAndDelete(id: string) {
-    return this.model.findByIdAndDelete(toObjectId(id)).lean();
+    return this.model.findByIdAndRemove(id).lean();
   }
 
   async deleteAllBlogs() {
@@ -142,7 +142,6 @@ export class BlogsAdapter {
         ])
         .exec();
 
-      console.log(posts);
       if (!posts) return null;
 
       return [posts.map((post) => convertToPostDTO(post)), count];
@@ -155,11 +154,9 @@ export class BlogsAdapter {
 
   async findBlogsByQuery(query: PaginationQuery): Promise<[BlogDTO[], number]> {
     try {
-      console.log(query, 'query');
       const filter = { name: { $regex: query.searchNameTerm } };
 
       const count = await this.model.find(filter).count();
-      console.log(count, query);
 
       const blogs = await this.model
         .aggregate<BlogDatabaseModel>([
@@ -188,12 +185,9 @@ export class BlogsAdapter {
   }
 
   async addBlogPost(id: string, postToAddId: string) {
-    const blog = await this.model.findByIdAndUpdate<BlogDatabaseModel>(
-      toObjectId(id),
-      {
-        $pull: { posts: toObjectId(postToAddId) },
-      },
-    );
+    const blog = await this.model.findByIdAndUpdate<BlogDatabaseModel>(id, {
+      $push: { posts: toObjectId(postToAddId) },
+    });
 
     if (!blog) return null;
 

@@ -34,6 +34,7 @@
     "@types/mongoose": "^5.11.97",
     "@types/node": "^16.0.0",
     "dotenv": "^16.0.3",
+    "fastify": "^4.9.2",
     "husky": "^8.0.2",
     "module-alias": "^2.2.2",
     "mongoose": "^6.7.2",
