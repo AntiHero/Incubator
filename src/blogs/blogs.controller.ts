@@ -1,0 +1,162 @@
+import { Response } from 'express';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+
+import Blog from './domain/blogs.model';
+import { BlogInputModel, BlogViewModel } from './types';
+import { BlogsService } from './blogs.service';
+import { PostBody, PostViewModel } from 'root/posts/types';
+import { PostsService } from 'root/posts/posts.service';
+import { Post as PostModel } from 'root/posts/domain/posts.model';
+import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
+import { PaginationQuery } from 'root/_common/types';
+import Paginator from 'root/_common/models/Paginator';
+import { SortDirections } from 'root/_common/types/enum';
+import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
+
+@Controller('blogs')
+export class BlogsController {
+  constructor(
+    private blogsService: BlogsService,
+    private postsService: PostsService,
+  ) {}
+
+  @Post()
+  async saveBlog(@Body() body: BlogInputModel, @Res() res: Response) {
+    const { name, youtubeUrl }: BlogInputModel = body;
+
+    const blog = new Blog(name, youtubeUrl);
+
+    const savedBlog = await this.blogsService.saveBlog(blog);
+
+    res
+      .type('text/plain')
+      .status(201)
+      .send(JSON.stringify(convertToBlogViewModel(savedBlog)));
+  }
+
+  @Get()
+  async getAllBlogs(@Query() query: PaginationQuery, @Res() res: Response) {
+    const {
+      pageNumber = 1,
+      pageSize = 10,
+      sortBy = 'createdAt',
+      sortDirection = SortDirections.desc,
+    } = query;
+
+    let { searchNameTerm = null } = query;
+
+    searchNameTerm = Boolean(searchNameTerm)
+      ? new RegExp(searchNameTerm, 'i')
+      : /.*/i;
+
+    const [blogs, totalCount] = await this.blogsService.findBlogsByQuery({
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+      searchNameTerm,
+    });
+
+    const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
+
+    const result = new Paginator(
+      Math.ceil(totalCount / pageSize),
+      pageNumber,
+      pageSize,
+      totalCount,
+      items,
+    );
+
+    res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Get(':id')
+  async getBlog(@Param('id') id, @Res() res: Response) {
+    const blog = await this.blogsService.findBlogById(id);
+
+    if (blog) {
+      res
+        .type('text/plain')
+        .status(200)
+        .send(JSON.stringify(convertToBlogViewModel(blog)));
+    } else {
+      res.sendStatus(404);
+    }
+  }
+
+  @Get(':id/posts')
+  async getBlogPosts(@Param('id') id, @Query() query, @Res() res: Response) {
+    const blog = await this.blogsService.findBlogById(id);
+    console.log(blog);
+    if (!blog) {
+      res.sendStatus(404);
+    }
+
+    const {
+      pageNumber = 1,
+      pageSize = 10,
+      sortBy = 'createdAt',
+      sortDirection = SortDirections.desc,
+    } = query;
+
+    let { searchNameTerm = null } = query;
+
+    searchNameTerm = Boolean(searchNameTerm)
+      ? new RegExp(searchNameTerm, 'i')
+      : /.*/i;
+
+    const [posts, totalCount] = await this.blogsService.findBlogPostsByQuery(
+      id,
+      {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        searchNameTerm,
+      },
+    );
+
+    const items: PostViewModel[] = posts.map(convertToPostViewModel);
+
+    const result = new Paginator(
+      Math.ceil(totalCount / pageSize),
+      pageNumber,
+      pageSize,
+      totalCount,
+      items,
+    );
+
+    res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Post(':id/posts')
+  async saveBlogPost(
+    @Param('id') id,
+    @Body() body: PostBody,
+    @Res() res: Response,
+  ) {
+    const { title, shortDescription, content } = body;
+
+    const blog = await this.blogsService.findBlogById(id);
+
+    if (!blog) {
+      res.sendStatus(404);
+    }
+
+    const [blogId, blogName] = [blog.id, blog.name];
+
+    const post = new PostModel({
+      title,
+      shortDescription,
+      content,
+      blogId,
+      blogName,
+    });
+
+    const createdPost = await this.postsService.save(post);
+
+    await this.blogsService.addBlogPost(blogId, createdPost.id);
+
+    res.type('text/plain').status(201).send(JSON.stringify(createdPost));
+  }
+}
