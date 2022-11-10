@@ -14,12 +14,13 @@ import {
   BlogDTO,
   BlogSchemaModel,
 } from '../types';
-import { PostDTO } from 'root/posts/types';
+import { PostDTO, PostSchemaModel } from 'root/posts/types';
 
 @Injectable()
 export class BlogsAdapter {
   constructor(
     @InjectModel('blog') private model: mongoose.Model<BlogSchemaModel>,
+    @InjectModel('post') private postModel: mongoose.Model<PostSchemaModel>,
   ) {}
 
   async getAllBlogs() {
@@ -67,20 +68,13 @@ export class BlogsAdapter {
   }
 
   async deleteAllBlogs() {
-    const blogs = await this.model.find<BlogDatabaseModel>({});
-
-    for (const blog of blogs) {
-      for (const post of blog.posts) {
-        await post.remove();
-      }
-    }
-
+    await this.postModel.deleteMany({});
     await this.model.deleteMany({});
   }
 
   async countBlogPosts(id: string) {
     const blog = await this.model
-      .findById<BlogDatabaseModel>(toObjectId(id))
+      .findById<BlogDatabaseModel>(id)
       .populate('post')
       .lean();
 
