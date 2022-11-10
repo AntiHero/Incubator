@@ -192,7 +192,10 @@ export class BlogsController {
 
     await this.blogsService.addBlogPost(blogId, createdPost.id);
 
-    res.type('text/plain').status(201).send(JSON.stringify(createdPost));
+    res
+      .type('text/plain')
+      .status(201)
+      .send(JSON.stringify(convertToPostViewModel(createdPost)));
   }
 
   @Delete()
