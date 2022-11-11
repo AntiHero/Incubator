@@ -123,7 +123,10 @@ export class BlogsController {
     const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
     const pageSize = query.pageSize ? Number(query.pageSize) : 10;
     const sortBy = query.sortBy || 'createdAt';
-    const sortDirection = query.sortDirection || SortDirections.desc;
+    const sortDirection =
+      query.sortDirection === SortDirectionKeys.asc
+        ? SortDirections.asc
+        : SortDirections.desc;
     const searchNameTerm = query.searchNameTerm
       ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;
