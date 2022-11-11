@@ -78,13 +78,19 @@ export class PostsAdapter {
   ) {
     const update = { content, title, shortDescription, blogId };
 
-    const updatedPost = await this.model
-      .findByIdAndUpdate<PostDatabaseModel>(id, update, {
-        new: true,
-      })
-      .lean();
+    try {
+      const updatedPost = await this.model
+        .findByIdAndUpdate<PostDatabaseModel>(id, update, {
+          new: true,
+        })
+        .lean();
 
-    return updatedPost ? convertToPostDTO(updatedPost) : null;
+      return updatedPost ? convertToPostDTO(updatedPost) : null;
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
   }
 
   async findPostByIdAndDelete(id: string) {

@@ -67,8 +67,8 @@ export class BlogsAdapter {
         .findByIdAndUpdate(id, updates, { new: true })
         .lean();
 
-      if (!blog) return null;
       console.log(blog, 'blog');
+      if (!blog) return null;
       return convertToBlogDTO(blog);
     } catch (e) {
       console.error(e);

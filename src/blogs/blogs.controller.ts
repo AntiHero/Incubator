@@ -97,7 +97,7 @@ export class BlogsController {
     const updates = { name, youtubeUrl };
 
     const blog = await this.blogsService.findBlogByIdAndUpate(id, updates);
-
+    console.log('after update');
     if (!blog) {
       return res.status(404).send();
     }

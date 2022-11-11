@@ -30,17 +30,15 @@ export class PostsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getPosts(@Query() query, @Res() res: FastifyReply) {
-    const {
-      pageNumber = 1,
-      pageSize = 10,
-      sortBy = 'createdAt',
-      sortDirection = SortDirections.desc,
-    } = query;
-
-    let { searchNameTerm = null } = query;
-
-    searchNameTerm = Boolean(searchNameTerm)
-      ? new RegExp(searchNameTerm, 'i')
+    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    const sortBy = query.sortBy || 'createdAt';
+    const sortDirection =
+      query.sortDirection === SortDirectionKeys.asc
+        ? SortDirections.asc
+        : SortDirections.desc;
+    const searchNameTerm = query.searchNameTerm
+      ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;
 
     const [posts, totalCount] =
