@@ -13,13 +13,12 @@ import {
 
 import Blog from './domain/blogs.model';
 import { BlogsService } from './blogs.service';
-import { PaginationQuery } from 'root/_common/types';
 import Paginator from 'root/_common/models/Paginator';
 import { BlogInputModel, BlogViewModel } from './types';
-import { SortDirections } from 'root/_common/types/enum';
 import { PostBody, PostViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
+import { SortDirectionKeys, SortDirections } from 'root/_common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 
 @Controller('blogs')
@@ -41,11 +40,14 @@ export class BlogsController {
   }
 
   @Get()
-  async getAllBlogs(@Query() query: PaginationQuery, @Res() res: FastifyReply) {
+  async getAllBlogs(@Query() query, @Res() res: FastifyReply) {
     const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
     const pageSize = query.pageSize ? Number(query.pageSize) : 10;
     const sortBy = query.sortBy || 'createdAt';
-    const sortDirection = query.sortDirection || SortDirections.desc;
+    const sortDirection =
+      query.sortDirection === SortDirectionKeys.asc
+        ? SortDirections.asc
+        : SortDirections.desc;
     const searchNameTerm = query.searchNameTerm
       ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;

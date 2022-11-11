@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { PostDomainModel } from './types';
 import { PaginationQuery } from 'root/_common/types';
 import { PostsAdapter } from './adapter/mongooose';
-import { defaultPaginationQuery } from 'root/_common/constants';
 
 @Injectable()
 export class PostsService {
@@ -37,10 +36,7 @@ export class PostsService {
     return this.postsRepository.findPostCommentsByQuery(id, query, userId);
   }
 
-  async findPostsByQuery(
-    query: PaginationQuery = defaultPaginationQuery,
-    filter: any = {},
-  ) {
+  async findPostsByQuery(query: PaginationQuery, filter: any = {}) {
     return this.postsRepository.findPostsByQuery(query, filter, true);
   }
 

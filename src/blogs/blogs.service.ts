@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PostDomainModel } from 'root/posts/types';
-import { defaultPaginationQuery } from 'root/_common/constants';
-import { PaginationQuery } from 'root/_common/types';
-import { BlogsAdapter } from './adapter/mongoose';
+
 import { BlogDomainModel } from './types';
+import { BlogsAdapter } from './adapter/mongoose';
+import { PostDomainModel } from 'root/posts/types';
+import { PaginationQuery } from 'root/_common/types';
 
 @Injectable()
 export class BlogsService {
@@ -13,10 +13,7 @@ export class BlogsService {
     return this.blogsRepository.addBlog(blog);
   }
 
-  async findBlogPostsByQuery(
-    id: string,
-    query: PaginationQuery = defaultPaginationQuery,
-  ) {
+  async findBlogPostsByQuery(id: string, query: PaginationQuery) {
     return this.blogsRepository.findBlogPostsByQuery(id, query);
   }
 
