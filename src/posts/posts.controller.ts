@@ -95,10 +95,15 @@ export class PostsController {
     if (!post) {
       return res.status(404).send();
     }
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(convertToExtendedViewPostModel(post)));
+
+    const convertedPost = convertToExtendedViewPostModel(post);
+
+    delete convertedPost.extendedLikesInfo;
+    // res
+    //   .type('text/plain')
+    //   .status(200)
+    //   .send(JSON.stringify(convertToExtendedViewPostModel(post)));
+    res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 
   @Put(':id')
@@ -119,7 +124,7 @@ export class PostsController {
 
     res
       .type('text/plain')
-      .status(200)
+      .status(204)
       .send(JSON.stringify(convertToPostViewModel(post)));
   }
 
