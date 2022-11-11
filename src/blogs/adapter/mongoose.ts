@@ -123,7 +123,7 @@ export class BlogsAdapter {
           },
           {
             $replaceRoot: {
-              newRoot: { $mergeObjects: ['$blogPosts', '$$ROOT'] },
+              newRoot: { $mergeObjects: ['$$ROOT', '$blogPosts'] },
             },
           },
           {
@@ -162,6 +162,7 @@ export class BlogsAdapter {
         typeof query.pageNumber,
         typeof query.pageSize,
       );
+
       const blogs = await this.model
         .aggregate<BlogDatabaseModel>([
           {
@@ -179,6 +180,7 @@ export class BlogsAdapter {
         ])
         .exec();
 
+      console.log(blogs);
       if (!blogs) return null;
       return [blogs.map((blog) => convertToBlogDTO(blog)), count];
     } catch (e) {
