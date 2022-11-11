@@ -166,16 +166,16 @@ export class BlogsAdapter {
             $sort: { [query.sortBy]: query.sortDirection },
           },
           {
-            $skip: countSkip(query.pageSize, query.pageNumber),
+            $skip: countSkip(Number(query.pageSize), Number(query.pageNumber)),
           },
           {
-            $limit: query.pageSize,
+            $limit: Number(query.pageSize),
           },
         ])
         .exec();
 
-      if (!blogs) return null;
       console.log(blogs, 'blogs');
+      if (!blogs) return null;
       return [blogs.map((blog) => convertToBlogDTO(blog)), count];
     } catch (e) {
       return null;
