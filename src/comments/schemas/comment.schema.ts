@@ -6,8 +6,8 @@ export const commentSchema = new mongoose.Schema<CommentSchemaModel>(
   {
     content: {
       type: String,
-      min: 20,
-      max: 300,
+      // min: 20,
+      // max: 300,
       required: true,
     },
     userId: {

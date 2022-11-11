@@ -194,7 +194,7 @@ export class BlogsController {
 
   @Delete(':id')
   async deleteBlog(@Param('id') id, @Res() res: FastifyReply) {
-    const blog = this.blogsService.findBlogByIdAndDelete(id);
+    const blog = await this.blogsService.findBlogByIdAndDelete(id);
 
     if (!blog) return res.status(404).send();
 

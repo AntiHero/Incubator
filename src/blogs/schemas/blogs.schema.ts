@@ -6,14 +6,14 @@ export const blogsSchema = new mongoose.Schema<BlogDatabaseModel>(
     name: {
       type: String,
       required: true,
-      max: 15,
+      // max: 15,
     },
     youtubeUrl: {
       type: String,
       required: true,
-      max: 100,
-      validate:
-        /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
+      // max: 100,
+      // validate:
+      //   /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
     },
     posts: [
       {

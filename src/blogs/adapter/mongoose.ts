@@ -13,10 +13,10 @@ import {
   BlogDTO,
   BlogSchemaModel,
 } from '../types';
-import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
-import { toObjectId } from 'root/_common/utils/toObjectId';
-import { CommentSchemaModel } from 'root/comments/types';
 import { LikeSchemaModel } from 'root/likes/types';
+import { CommentSchemaModel } from 'root/comments/types';
+import { toObjectId } from 'root/_common/utils/toObjectId';
+import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
 
 @Injectable()
 export class BlogsAdapter {
@@ -75,7 +75,7 @@ export class BlogsAdapter {
     await this.commentModel.deleteMany({ entityId: toObjectId(id) }).exec();
     await this.postModel.deleteMany({ blogId: toObjectId(id) });
 
-    return this.model.findByIdAndRemove(id).lean();
+    return this.model.findByIdAndDelete(id).lean();
   }
 
   async deleteAllBlogs() {
