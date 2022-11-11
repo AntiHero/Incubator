@@ -61,14 +61,13 @@ export class BlogsAdapter {
   }
 
   async findBlogByIdAndUpdate(id: string, updates: Partial<BlogDomainModel>) {
-    console.log(id, updates);
     try {
       const blog = await this.model
         .findByIdAndUpdate(id, updates, { new: true })
         .lean();
 
-      console.log(blog, 'blog');
       if (!blog) return null;
+
       return convertToBlogDTO(blog);
     } catch (e) {
       console.error(e);

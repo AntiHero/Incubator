@@ -9,6 +9,8 @@ export const convertToBlogDTO = <T extends BlogLeanModel>(
   id: String(doc._id),
   name: doc.name,
   youtubeUrl: doc.youtubeUrl,
-  posts: populate ? doc.posts.map((post) => convertToPostDTO(post, false)) : [],
+  posts: populate
+    ? doc.posts.map((post) => convertToPostDTO(post, populate))
+    : [],
   createdAt: doc.createdAt.toISOString(),
 });
