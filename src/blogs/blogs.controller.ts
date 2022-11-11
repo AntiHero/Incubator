@@ -107,7 +107,7 @@ export class BlogsController {
 
     res
       .type('text/plain')
-      .status(200)
+      .status(204)
       .send(JSON.stringify(convertToBlogViewModel(blog)));
   }
 
