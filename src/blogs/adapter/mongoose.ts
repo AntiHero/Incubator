@@ -1,22 +1,22 @@
-import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import mongoose from 'mongoose';
 
 import { InjectModel } from '@nestjs/mongoose';
 
+import { CommentSchemaModel } from 'root/comments/types';
+import { LikeSchemaModel } from 'root/likes/types';
+import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
+import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
-import { convertToBlogDTO } from '../utils/convertToBlogDTO';
-import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
+import { toObjectId } from 'root/_common/utils/toObjectId';
 import {
   BlogDatabaseModel,
   BlogDomainModel,
   BlogDTO,
   BlogSchemaModel,
 } from '../types';
-import { LikeSchemaModel } from 'root/likes/types';
-import { CommentSchemaModel } from 'root/comments/types';
-import { toObjectId } from 'root/_common/utils/toObjectId';
-import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
+import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 
 @Injectable()
 export class BlogsAdapter {
@@ -61,13 +61,19 @@ export class BlogsAdapter {
   }
 
   async findBlogByIdAndUpdate(id: string, updates: Partial<BlogDomainModel>) {
-    const blog = await this.model
-      .findByIdAndUpdate(id, updates, { new: true })
-      .lean();
+    console.log(id, updates);
+    try {
+      const blog = await this.model
+        .findByIdAndUpdate(id, updates, { new: true })
+        .lean();
+      console.log(blog, 'blog');
+      return convertToBlogDTO(blog);
+      if (!blog) return null;
+    } catch (e) {
+      console.error(e);
 
-    if (!blog) return null;
-
-    return convertToBlogDTO(blog);
+      return null;
+    }
   }
 
   async findBlogByIdAndDelete(id: string) {
