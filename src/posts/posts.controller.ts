@@ -135,7 +135,7 @@ export class PostsController {
 
   @Delete(':id')
   async deletePost(@Param('id') id, @Res() res: FastifyReply) {
-    const post = this.postsService.findPostByIdAndDelete(id);
+    const post = await this.postsService.findPostByIdAndDelete(id);
 
     if (!post) return res.status(404).send();
 

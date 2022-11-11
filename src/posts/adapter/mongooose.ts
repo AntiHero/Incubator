@@ -90,6 +90,7 @@ export class PostsAdapter {
   async findPostByIdAndDelete(id: string) {
     await this.commentModel.deleteMany({ entityId: toObjectId(id) }).exec();
     await this.likeModel.deleteMany({ entityId: toObjectId(id) }).exec();
+
     return this.model.findByIdAndRemove(id).lean();
   }
 
