@@ -66,9 +66,10 @@ export class BlogsAdapter {
       const blog = await this.model
         .findByIdAndUpdate(id, updates, { new: true })
         .lean();
+
+      if (!blog) return null;
       console.log(blog, 'blog');
       return convertToBlogDTO(blog);
-      if (!blog) return null;
     } catch (e) {
       console.error(e);
 

@@ -7,6 +7,7 @@ import { PostsModule } from './posts/posts.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { TestingModule } from './testing/testing.module';
 import { CommentsModule } from './comments/comments.module';
+import { UsersController } from './users/users.controller';
 
 dotenv.config();
 
@@ -23,5 +24,6 @@ if (!connectionURI) throw new Error('Provide a Mongo connection string');
     LikesModule,
     MongooseModule.forRoot(connectionURI),
   ],
+  controllers: [UsersController],
 })
 export class AppModule {}

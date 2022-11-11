@@ -18,7 +18,7 @@ import { PostsService } from './posts.service';
 import Paginator from 'root/_common/models/Paginator';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
-import { SortDirections } from 'root/_common/types/enum';
+import { SortDirectionKeys, SortDirections } from 'root/_common/types/enum';
 import { convertToPostViewModel } from './utils/covertToPostViewModel';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
@@ -117,6 +117,7 @@ export class PostsController {
     @Body() body: PostInputModel,
     @Res() res: FastifyReply,
   ) {
+    console.log(body, 'PUT post/:id');
     const { title, shortDescription, blogId, content } = body;
 
     const updates = { title, shortDescription, blogId, content };
@@ -154,17 +155,15 @@ export class PostsController {
       return res.status(404).send();
     }
 
-    const {
-      pageNumber = 1,
-      pageSize = 10,
-      sortBy = 'createdAt',
-      sortDirection = SortDirections.desc,
-    } = query;
-
-    let { searchNameTerm = null } = query;
-
-    searchNameTerm = Boolean(searchNameTerm)
-      ? new RegExp(searchNameTerm, 'i')
+    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    const sortBy = query.sortBy || 'createdAt';
+    const sortDirection =
+      query.sortDirection === SortDirectionKeys.asc
+        ? SortDirections.asc
+        : SortDirections.desc;
+    const searchNameTerm = query.searchNameTerm
+      ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;
 
     const [comments, totalCount] =
