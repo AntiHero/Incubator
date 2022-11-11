@@ -97,17 +97,12 @@ export class BlogsController {
     const updates = { name, youtubeUrl };
 
     const blog = await this.blogsService.findBlogByIdAndUpate(id, updates);
-    console.log(blog, 'after update');
+
     if (!blog) {
-      console.log(404);
       return res.status(404).send();
     }
 
-    console.log(204);
-    res
-      .type('text/plain')
-      .status(204)
-      .send(JSON.stringify(convertToBlogViewModel(blog)));
+    res.type('text/plain').status(204).send();
   }
 
   @Get(':id/posts')

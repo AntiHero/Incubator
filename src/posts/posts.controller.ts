@@ -115,7 +115,6 @@ export class PostsController {
     @Body() body: PostInputModel,
     @Res() res: FastifyReply,
   ) {
-    console.log(body, 'PUT post/:id');
     const { title, shortDescription, blogId, content } = body;
 
     const updates = { title, shortDescription, blogId, content };
@@ -126,10 +125,7 @@ export class PostsController {
       return res.status(404).send();
     }
 
-    res
-      .type('text/plain')
-      .status(204)
-      .send(JSON.stringify(convertToPostViewModel(post)));
+    res.type('text/plain').status(204).send();
   }
 
   @Delete(':id')
