@@ -48,7 +48,7 @@ export class BlogsController {
       sortBy = 'createdAt',
       sortDirection = SortDirections.desc,
     } = query;
-    console.log(query);
+    console.log(query, 'query');
 
     let { searchNameTerm = null } = query;
 
