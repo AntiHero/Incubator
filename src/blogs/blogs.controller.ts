@@ -42,18 +42,12 @@ export class BlogsController {
 
   @Get()
   async getAllBlogs(@Query() query: PaginationQuery, @Res() res: FastifyReply) {
-    const {
-      pageNumber = 1,
-      pageSize = 10,
-      sortBy = 'createdAt',
-      sortDirection = SortDirections.desc,
-    } = query;
-    console.log(query, 'query');
-
-    let { searchNameTerm = null } = query;
-
-    searchNameTerm = Boolean(searchNameTerm)
-      ? new RegExp(searchNameTerm, 'i')
+    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    const sortBy = query.sortBy || 'createdAt';
+    const sortDirection = query.sortDirection || SortDirections.desc;
+    const searchNameTerm = query.searchNameTerm
+      ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;
 
     const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery({
@@ -124,17 +118,12 @@ export class BlogsController {
       return res.status(404).send();
     }
 
-    const {
-      pageNumber = 1,
-      pageSize = 10,
-      sortBy = 'createdAt',
-      sortDirection = SortDirections.desc,
-    } = query;
-
-    let { searchNameTerm = null } = query;
-
-    searchNameTerm = Boolean(searchNameTerm)
-      ? new RegExp(searchNameTerm, 'i')
+    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    const sortBy = query.sortBy || 'createdAt';
+    const sortDirection = query.sortDirection || SortDirections.desc;
+    const searchNameTerm = query.searchNameTerm
+      ? new RegExp(query.searchNameTerm, 'i')
       : /.*/i;
 
     const [posts, totalCount] = await this.blogsService.findBlogPostsByQuery(
