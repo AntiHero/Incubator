@@ -56,7 +56,7 @@ export class BlogsController {
       ? new RegExp(searchNameTerm, 'i')
       : /.*/i;
 
-    const [blogs, totalCount] = await this.blogsService.findBlogsByQuery({
+    const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery({
       pageNumber,
       pageSize,
       sortBy,

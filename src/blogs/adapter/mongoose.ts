@@ -175,7 +175,7 @@ export class BlogsAdapter {
         .exec();
 
       if (!blogs) return null;
-
+      console.log(blogs, 'blogs');
       return [blogs.map((blog) => convertToBlogDTO(blog)), count];
     } catch (e) {
       return null;
