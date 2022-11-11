@@ -47,7 +47,6 @@ export class UsersAdapter {
   }
 
   async findUsersByQuery(query: PaginationQuery): Promise<[UserDTO[], number]> {
-    console.log(query, query.searchEmailTerm, query.searchLoginTerm);
     const count = await this.model
       .find({
         $or: [

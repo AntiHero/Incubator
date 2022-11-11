@@ -45,10 +45,10 @@ export class UsersController {
         ? SortDirections.asc
         : SortDirections.desc;
     const searchLoginTerm = query.searchLoginTerm
-      ? new RegExp(query.searchNameTerm, 'i')
+      ? new RegExp(query.searchLoginTerm, 'i')
       : /.*/i;
     const searchEmailTerm = query.searchEmailTerm
-      ? new RegExp(query.searchNameTerm, 'i')
+      ? new RegExp(query.searchEmailTerm, 'i')
       : /.*/i;
 
     const [users, totalCount] = await this.usersService.findUsersByQuery({
