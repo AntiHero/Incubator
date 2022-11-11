@@ -154,9 +154,9 @@ export class BlogsAdapter {
   async findBlogsByQuery(query: PaginationQuery): Promise<[BlogDTO[], number]> {
     try {
       const filter = { name: { $regex: query.searchNameTerm } };
-
+      console.log(query, filter, 'query filter');
       const count = await this.model.find(filter).count();
-
+      console.log(count);
       const blogs = await this.model
         .aggregate<BlogDatabaseModel>([
           {

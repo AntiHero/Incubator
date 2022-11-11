@@ -20,7 +20,7 @@ export class BlogsService {
     return this.blogsRepository.findBlogPostsByQuery(id, query);
   }
 
-  async findBlogsByQuery(query: PaginationQuery = defaultPaginationQuery) {
+  async findBlogsByQuery(query: PaginationQuery) {
     return this.blogsRepository.findBlogsByQuery(query);
   }
 
