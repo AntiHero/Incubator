@@ -5,10 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LikesModule } from './likes/likes.module';
 import { PostsModule } from './posts/posts.module';
 import { BlogsModule } from './blogs/blogs.module';
+import { UsersModule } from './users/users.module';
 import { TestingModule } from './testing/testing.module';
 import { CommentsModule } from './comments/comments.module';
-import { UsersController } from './users/users.controller';
-import { UsersModule } from './users/users.module';
 
 dotenv.config();
 
@@ -23,9 +22,8 @@ if (!connectionURI) throw new Error('Provide a Mongo connection string');
     PostsModule,
     CommentsModule,
     LikesModule,
-    MongooseModule.forRoot(connectionURI),
     UsersModule,
+    MongooseModule.forRoot(connectionURI),
   ],
-  controllers: [UsersController],
 })
 export class AppModule {}
