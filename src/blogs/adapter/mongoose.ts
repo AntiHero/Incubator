@@ -155,6 +155,13 @@ export class BlogsAdapter {
     try {
       const filter = { name: { $regex: query.searchNameTerm } };
       const count = await this.model.find(filter).count();
+      console.log(
+        filter,
+        query,
+        count,
+        typeof query.pageNumber,
+        typeof query.pageSize,
+      );
       const blogs = await this.model
         .aggregate<BlogDatabaseModel>([
           {
