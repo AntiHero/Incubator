@@ -1,14 +1,19 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 
 import { CommentsService } from './comments.service';
 import { CommentsAdapter } from './adapter/mongoose';
 import { CommentsController } from './comments.controller';
-import { likeSchema } from 'root/likes/schemas/likes.schema';
+import { TypegooseModule } from 'nestjs-typegoose';
+import { CommentModel } from './schemas/comment.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'comment', schema: likeSchema }]),
+    TypegooseModule.forFeature([
+      {
+        typegooseClass: CommentModel,
+        schemaOptions: { collection: 'comment' },
+      },
+    ]),
   ],
   controllers: [CommentsController],
   providers: [CommentsService, CommentsAdapter],

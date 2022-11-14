@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import mongoose from 'mongoose';
 
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from 'nestjs-typegoose';
+import { CommentModel } from 'root/comments/schemas/comment.schema';
 
 import { CommentSchemaModel } from 'root/comments/types';
+import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { LikeSchemaModel } from 'root/likes/types';
+import { PostModel } from 'root/posts/schemas/post.schema';
 import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
 import { toObjectId } from 'root/_common/utils/toObjectId';
+import { BlogModel } from '../schemas/blogs.schema';
 import {
   BlogDatabaseModel,
   BlogDomainModel,
@@ -21,17 +25,19 @@ import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 @Injectable()
 export class BlogsAdapter {
   constructor(
-    @InjectModel('blog') private model: mongoose.Model<BlogSchemaModel>,
-    @InjectModel('post') private postModel: mongoose.Model<PostSchemaModel>,
-    @InjectModel('comment')
+    @InjectModel(BlogModel)
+    private model: mongoose.Model<BlogSchemaModel>,
+    @InjectModel(PostModel)
+    private postModel: mongoose.Model<PostSchemaModel>,
+    @InjectModel(CommentModel)
     private commentModel: mongoose.Model<CommentSchemaModel>,
-    @InjectModel('like') private likeModel: mongoose.Model<LikeSchemaModel>,
+    @InjectModel(LikeModel)
+    private likeModel: mongoose.Model<LikeSchemaModel>,
   ) {}
 
   async getAllBlogs() {
     try {
       const blogs = await this.model.find<BlogDatabaseModel>({}).lean();
-
       return blogs.map((blog) => convertToBlogDTO(blog, false));
     } catch (e) {
       return null;
@@ -41,7 +47,6 @@ export class BlogsAdapter {
   async addBlog(blog: BlogDomainModel) {
     try {
       const createdBlog = await this.model.create(blog);
-
       return convertToBlogDTO(createdBlog);
     } catch (e) {
       console.error(e);
@@ -161,11 +166,10 @@ export class BlogsAdapter {
     try {
       const filter = { name: { $regex: query.searchNameTerm } };
       const count = await this.model.find(filter).count();
-
       const blogs = await this.model
         .aggregate<BlogDatabaseModel>([
           {
-            $match: filter,
+            $match: {},
           },
           {
             $sort: { [query.sortBy]: query.sortDirection },
@@ -180,6 +184,7 @@ export class BlogsAdapter {
         .exec();
 
       if (!blogs) return null;
+
       return [blogs.map((blog) => convertToBlogDTO(blog)), count];
     } catch (e) {
       return null;

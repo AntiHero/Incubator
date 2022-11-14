@@ -11,13 +11,15 @@ import {
   CommentLeanModel,
   CommentSchemaModel,
 } from '../types';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from 'nestjs-typegoose';
 import { LikeStatuses } from 'root/_common/types/enum';
+import { CommentModel } from '../schemas/comment.schema';
 
 @Injectable()
 export class CommentsAdapter {
   constructor(
-    @InjectModel('comment') private model: mongoose.Model<CommentSchemaModel>,
+    @InjectModel(CommentModel)
+    private model: mongoose.Model<CommentSchemaModel>,
   ) {}
 
   async getAllComments() {

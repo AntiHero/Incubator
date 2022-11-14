@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from 'nestjs-typegoose';
 
 import {
   UserDomainModel,
@@ -8,6 +8,7 @@ import {
   UserLeanModel,
   UserSchemaModel,
 } from '../types';
+import { UserModel } from '../schema/users.schema';
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
 import { convertToUserDTO } from '../utils/convertToUserDTO';
@@ -15,7 +16,7 @@ import { convertToUserDTO } from '../utils/convertToUserDTO';
 @Injectable()
 export class UsersAdapter {
   constructor(
-    @InjectModel('user') private model: mongoose.Model<UserSchemaModel>,
+    @InjectModel(UserModel) private model: mongoose.Model<UserSchemaModel>,
   ) {}
 
   async getAllUsers() {

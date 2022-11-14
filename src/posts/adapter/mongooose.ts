@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from 'nestjs-typegoose';
 
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
@@ -24,15 +24,22 @@ import { toObjectId } from 'root/_common/utils/toObjectId';
 import { BlogLeanModel, BlogSchemaModel } from 'root/blogs/types';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
+import { PostModel } from '../schemas/post.schema';
+import { BlogModel } from 'root/blogs/schemas/blogs.schema';
+import { CommentModel } from 'root/comments/schemas/comment.schema';
+import { LikeModel } from 'root/likes/schemas/likes.schema';
 
 @Injectable()
 export class PostsAdapter {
   constructor(
-    @InjectModel('post') private model: mongoose.Model<PostSchemaModel>,
-    @InjectModel('blog') private blogModel: mongoose.Model<BlogSchemaModel>,
-    @InjectModel('comment')
+    @InjectModel(PostModel)
+    private model: mongoose.Model<PostSchemaModel>,
+    @InjectModel(BlogModel)
+    private blogModel: mongoose.Model<BlogSchemaModel>,
+    @InjectModel(CommentModel)
     private commentModel: mongoose.Model<CommentSchemaModel>,
-    @InjectModel('like') private likeModel: mongoose.Model<LikeSchemaModel>,
+    @InjectModel(LikeModel)
+    private likeModel: mongoose.Model<LikeSchemaModel>,
   ) {}
 
   async getAllPosts() {
