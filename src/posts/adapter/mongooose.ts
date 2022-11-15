@@ -112,13 +112,13 @@ export class PostsAdapter {
       if (!post) return null;
 
       const likesCount = post.likes.filter((like) => {
-        if (like instanceof Types.ObjectId) throw new Error('Not a document');
+        if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
         return like.likeStatus === LikeStatuses.Like;
       }).length;
 
       const dislikesCount = post.likes.filter((like) => {
-        if (like instanceof Types.ObjectId) throw new Error('Not a document');
+        if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
         return like.likeStatus === LikeStatuses.Dislike;
       }).length;
@@ -126,7 +126,7 @@ export class PostsAdapter {
       let userStatus: LikeStatuses;
 
       const status = post.likes.find((like) => {
-        if (like instanceof Types.ObjectId) throw new Error('Not a document');
+        if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
         return String(like.userId) === userId;
       });
@@ -144,9 +144,11 @@ export class PostsAdapter {
 
       const newestLikes = post.likes.sort((a, b) => {
         if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
-          throw new Error('Not a document');
+          throw new Error('Not populated');
 
-        return a.addedAt.toISOString().localeCompare(b.addedAt.toISOString());
+        return a.createdAt
+          .toISOString()
+          .localeCompare(b.createdAt.toISOString());
       });
 
       const extendedPost: PostExtendedLikesDTO = {
@@ -185,13 +187,13 @@ export class PostsAdapter {
 
       for (const post of posts) {
         const likesCount = post.likes.filter((like) => {
-          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
           return like.likeStatus === LikeStatuses.Like;
         }).length;
 
         const dislikesCount = post.likes.filter((like) => {
-          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
           return like.likeStatus === LikeStatuses.Dislike;
         }).length;
@@ -199,7 +201,7 @@ export class PostsAdapter {
         let userStatus: LikeStatuses;
 
         const status = post.likes.find((like) => {
-          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
           return String(like.userId) === userId;
         });
@@ -217,9 +219,11 @@ export class PostsAdapter {
 
         const newestLikes = post.likes.sort((a, b) => {
           if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
-            throw new Error('Not a document');
+            throw new Error('Not populated');
 
-          return a.addedAt.toISOString().localeCompare(b.addedAt.toISOString());
+          return a.createdAt
+            .toISOString()
+            .localeCompare(b.createdAt.toISOString());
         });
 
         const extendedPost: PostExtendedLikesDTO = {

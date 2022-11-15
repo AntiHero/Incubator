@@ -62,13 +62,13 @@ export class CommentsAdapter {
     if (!comment) return null;
 
     const likesCount = comment.likes.filter((like) => {
-      if (like instanceof Types.ObjectId) throw new Error('Not a document');
+      if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
       return like.likeStatus === LikeStatuses.Like;
     }).length;
 
     const dislikesCount = comment.likes.filter((like) => {
-      if (like instanceof Types.ObjectId) throw new Error('Not a document');
+      if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
       return like.likeStatus === LikeStatuses.Dislike;
     }).length;
@@ -76,7 +76,7 @@ export class CommentsAdapter {
     let userStatus: LikeStatuses;
 
     const status = comment.likes.find((like) => {
-      if (like instanceof Types.ObjectId) throw new Error('Not a document');
+      if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
       return String(like.userId) === userId;
     });

@@ -17,21 +17,17 @@ export class UsersAdapter {
   async getAllUsers() {
     const users = await this.model.find({}).lean();
 
-    return users.map((user) => convertToUserDTO(user));
+    return users.map(convertToUserDTO);
   }
 
   async addUser(user: UserDomainModel) {
-    const createdUser = await this.model.create({ ...user });
-
+    const createdUser = await this.model.create(user);
+    console.log(createdUser);
     return convertToUserDTO(createdUser);
   }
 
   async findUserById(id: string) {
-    const doc = await this.model
-      .findById(id)
-      .lean()
-      .populate('comments')
-      .populate('likes');
+    const doc = await this.model.findById(id).lean();
 
     if (!doc) return null;
 

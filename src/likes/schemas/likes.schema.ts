@@ -2,8 +2,10 @@ import { Types } from 'mongoose';
 import { prop } from '@typegoose/typegoose';
 
 import { LikeStatuses } from 'root/_common/types/enum';
+import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
-export class LikeModel {
+export interface LikeModel extends Base {}
+export class LikeModel extends TimeStamps {
   @prop()
   entityId: Types.ObjectId;
 
@@ -15,7 +17,4 @@ export class LikeModel {
 
   @prop({ enum: LikeStatuses, default: LikeStatuses.None })
   likeStatus: LikeStatuses;
-
-  @prop()
-  addedAt: Date;
 }

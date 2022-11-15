@@ -23,7 +23,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async saveBlog(@Body() body: UserInputModel, @Res() res: FastifyReply) {
+  async saveUser(@Body() body: UserInputModel, @Res() res: FastifyReply) {
     const { login, email } = body;
 
     const savedUser = await this.usersService.saveUser({ login, email });
@@ -36,7 +36,7 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getPosts(@Query() query, @Res() res: FastifyReply) {
+  async getUsers(@Query() query, @Res() res: FastifyReply) {
     const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
     const pageSize = query.pageSize ? Number(query.pageSize) : 10;
     const sortBy = query.sortBy || 'createdAt';

@@ -1,8 +1,10 @@
 import { Types } from 'mongoose';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { prop, Ref } from '@typegoose/typegoose';
+import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
-export class CommentModel {
+export interface CommentModel extends Base {}
+export class CommentModel extends TimeStamps {
   @prop()
   content: string;
 
@@ -17,7 +19,4 @@ export class CommentModel {
 
   @prop({ ref: () => LikeModel, default: [] })
   likes: Ref<LikeModel>[];
-
-  @prop()
-  createdAt: Date;
 }

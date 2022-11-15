@@ -1,8 +1,10 @@
 import { prop, Ref } from '@typegoose/typegoose';
+import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 import { PostModel } from 'root/posts/schemas/post.schema';
 
-export class BlogModel {
+export interface BlogModel extends Base {}
+export class BlogModel extends TimeStamps {
   @prop()
   name: string;
 
@@ -11,7 +13,4 @@ export class BlogModel {
 
   @prop({ ref: () => PostModel, default: [] })
   posts: Ref<PostModel>[];
-
-  @prop()
-  createdAt: Date;
 }

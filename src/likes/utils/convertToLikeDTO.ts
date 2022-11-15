@@ -13,5 +13,5 @@ export const convertToLikeDTO = <
   entityId: String(doc.entityId),
   likeStatus: doc.likeStatus,
   login: doc.login,
-  addedAt: doc.addedAt.toISOString(),
+  addedAt: doc.createdAt.toISOString(),
 });
