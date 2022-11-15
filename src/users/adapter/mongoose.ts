@@ -2,12 +2,7 @@ import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
-import {
-  UserDomainModel,
-  UserDTO,
-  UserLeanModel,
-  UserSchemaModel,
-} from '../types';
+import { UserDomainModel, UserDTO } from '../types';
 import { UserModel } from '../schema/users.schema';
 import { PaginationQuery } from 'root/_common/types';
 import { countSkip } from 'root/_common/utils/countSkip';
@@ -16,11 +11,11 @@ import { convertToUserDTO } from '../utils/convertToUserDTO';
 @Injectable()
 export class UsersAdapter {
   constructor(
-    @InjectModel(UserModel) private model: mongoose.Model<UserSchemaModel>,
+    @InjectModel(UserModel) private model: mongoose.Model<UserModel>,
   ) {}
 
   async getAllUsers() {
-    const users = await this.model.find<UserLeanModel>({}).lean();
+    const users = await this.model.find({}).lean();
 
     return users.map((user) => convertToUserDTO(user));
   }
@@ -33,7 +28,7 @@ export class UsersAdapter {
 
   async findUserById(id: string) {
     const doc = await this.model
-      .findById<UserLeanModel>(id)
+      .findById(id)
       .lean()
       .populate('comments')
       .populate('likes');

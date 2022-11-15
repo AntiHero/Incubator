@@ -1,36 +1,30 @@
 import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
-import { PaginationQuery } from 'root/_common/types';
-import { countSkip } from 'root/_common/utils/countSkip';
-import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import {
-  CommentDatabaseModel,
-  CommentDomainModel,
-  CommentExtendedLikesDTO,
-  CommentLeanModel,
-  CommentSchemaModel,
-} from '../types';
 import { InjectModel } from 'nestjs-typegoose';
+import { PaginationQuery } from 'root/_common/types';
 import { LikeStatuses } from 'root/_common/types/enum';
 import { CommentModel } from '../schemas/comment.schema';
+import { countSkip } from 'root/_common/utils/countSkip';
+import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
+import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
 
 @Injectable()
 export class CommentsAdapter {
   constructor(
     @InjectModel(CommentModel)
-    private model: mongoose.Model<CommentSchemaModel>,
+    private model: mongoose.Model<CommentModel>,
   ) {}
 
   async getAllComments() {
-    const docs = await this.model.find<CommentDatabaseModel>({}).lean();
+    const docs = await this.model.find({}).lean();
 
     return docs.map((doc) => convertToCommentDTO(doc));
   }
 
   async findCommentById(id: string | Types.ObjectId) {
     const doc = await this.model
-      .findOne<CommentDatabaseModel>({
+      .findOne({
         _id: typeof id === 'string' ? new Types.ObjectId(id) : id,
       })
       .lean();
@@ -63,24 +57,35 @@ export class CommentsAdapter {
   }
 
   async getExtendedCommentInfo(id: string, userId = '') {
-    const comment = await this.model
-      .findById<CommentLeanModel>(id)
-      .lean()
-      .populate('likes');
+    const comment = await this.model.findById(id).lean().populate('likes');
 
     if (!comment) return null;
 
-    const likesCount = comment.likes.filter(
-      (like) => like.likeStatus === LikeStatuses.Like,
-    ).length;
+    const likesCount = comment.likes.filter((like) => {
+      if (like instanceof Types.ObjectId) throw new Error('Not a document');
 
-    const dislikesCount = comment.likes.filter(
-      (like) => like.likeStatus === LikeStatuses.Dislike,
-    ).length;
+      return like.likeStatus === LikeStatuses.Like;
+    }).length;
 
-    const userStatus =
-      comment.likes.find((like) => String(like.userId) === userId)
-        ?.likeStatus || LikeStatuses.None;
+    const dislikesCount = comment.likes.filter((like) => {
+      if (like instanceof Types.ObjectId) throw new Error('Not a document');
+
+      return like.likeStatus === LikeStatuses.Dislike;
+    }).length;
+
+    let userStatus: LikeStatuses;
+
+    const status = comment.likes.find((like) => {
+      if (like instanceof Types.ObjectId) throw new Error('Not a document');
+
+      return String(like.userId) === userId;
+    });
+
+    if ('likeStatus' in status) {
+      userStatus = status.likeStatus;
+    } else {
+      userStatus = LikeStatuses.None;
+    }
 
     const convertedComment = convertToCommentDTO(comment);
 
@@ -105,7 +110,7 @@ export class CommentsAdapter {
       .lean()
       .populate('likes');
 
-    return comments.map((comment) => convertToCommentDTO(comment));
+    return comments.map(convertToCommentDTO);
   }
 
   async findCommentByIdAndDelete(id: string) {

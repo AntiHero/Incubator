@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
@@ -12,34 +12,28 @@ import {
   PostDTO,
   PostExtendedLikesDTO,
   PostLeanModel,
-  PostSchemaModel,
 } from '../types';
-import { LikeSchemaModel } from 'root/likes/types';
+import { PostModel } from '../schemas/post.schema';
 import { LikeStatuses } from 'root/_common/types/enum';
-import {
-  CommentExtendedLikesDTO,
-  CommentSchemaModel,
-} from 'root/comments/types';
 import { toObjectId } from 'root/_common/utils/toObjectId';
-import { BlogLeanModel, BlogSchemaModel } from 'root/blogs/types';
+import { BlogModel } from 'root/blogs/schemas/blogs.schema';
+import { LikeModel } from 'root/likes/schemas/likes.schema';
+import { CommentExtendedLikesDTO } from 'root/comments/types';
+import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { PostModel } from '../schemas/post.schema';
-import { BlogModel } from 'root/blogs/schemas/blogs.schema';
-import { CommentModel } from 'root/comments/schemas/comment.schema';
-import { LikeModel } from 'root/likes/schemas/likes.schema';
 
 @Injectable()
 export class PostsAdapter {
   constructor(
     @InjectModel(PostModel)
-    private model: mongoose.Model<PostSchemaModel>,
+    private model: mongoose.Model<PostModel>,
     @InjectModel(BlogModel)
-    private blogModel: mongoose.Model<BlogSchemaModel>,
+    private blogModel: mongoose.Model<BlogModel>,
     @InjectModel(CommentModel)
-    private commentModel: mongoose.Model<CommentSchemaModel>,
+    private commentModel: mongoose.Model<CommentModel>,
     @InjectModel(LikeModel)
-    private likeModel: mongoose.Model<LikeSchemaModel>,
+    private likeModel: mongoose.Model<LikeModel>,
   ) {}
 
   async getAllPosts() {
@@ -48,13 +42,11 @@ export class PostsAdapter {
       .populate('comments')
       .lean();
 
-    return posts.map((post) => convertToPostDTO(post, true));
+    return posts.map(convertToPostDTO);
   }
 
   async addPost(post: PostDomainModel) {
-    const blog = await this.blogModel
-      .findById<BlogLeanModel>(post.blogId)
-      .lean();
+    const blog = await this.blogModel.findById(post.blogId).lean();
 
     if (!blog) return null;
 
@@ -69,14 +61,14 @@ export class PostsAdapter {
 
   async findPostById(postId: string) {
     const doc = await this.model
-      .findById<PostDatabaseModel>(postId)
+      .findById(postId)
       .lean()
       .populate('comments')
       .populate('likes');
 
     if (!doc) return null;
 
-    return convertToPostDTO(doc, true);
+    return convertToPostDTO(doc);
   }
 
   async findPostByIdAndUpdate(
@@ -87,7 +79,7 @@ export class PostsAdapter {
 
     try {
       const updatedPost = await this.model
-        .findByIdAndUpdate<PostDatabaseModel>(id, update, {
+        .findByIdAndUpdate(id, update, {
           new: true,
         })
         .lean();
@@ -114,80 +106,48 @@ export class PostsAdapter {
   }
 
   async getExtendedPostInfo(id: string, userId = '') {
-    const post = await this.model.findById(id).lean().populate('likes');
+    try {
+      const post = await this.model.findById(id).lean().populate('likes');
 
-    if (!post) return null;
+      if (!post) return null;
 
-    const likesCount = post.likes.filter(
-      (like) => like.likeStatus === LikeStatuses.Like,
-    ).length;
+      const likesCount = post.likes.filter((like) => {
+        if (like instanceof Types.ObjectId) throw new Error('Not a document');
 
-    const dislikesCount = post.likes.filter(
-      (like) => like.likeStatus === LikeStatuses.Dislike,
-    ).length;
+        return like.likeStatus === LikeStatuses.Like;
+      }).length;
 
-    const userStatus =
-      post.likes.find((like) => String(like.userId) === userId)?.likeStatus ||
-      LikeStatuses.None;
+      const dislikesCount = post.likes.filter((like) => {
+        if (like instanceof Types.ObjectId) throw new Error('Not a document');
 
-    const convertedPost = convertToPostDTO(post);
+        return like.likeStatus === LikeStatuses.Dislike;
+      }).length;
 
-    delete convertedPost.likes;
-    delete convertedPost.comments;
+      let userStatus: LikeStatuses;
 
-    const newestLikes = post.likes.sort((a, b) =>
-      a.addedAt.toISOString().localeCompare(b.addedAt.toISOString()),
-    );
+      const status = post.likes.find((like) => {
+        if (like instanceof Types.ObjectId) throw new Error('Not a document');
 
-    const extendedPost: PostExtendedLikesDTO = {
-      ...convertedPost,
-      likesCount,
-      dislikesCount,
-      userStatus,
-      newestLikes: newestLikes.map(convertToLikeDTO),
-    };
+        return String(like.userId) === userId;
+      });
 
-    return extendedPost;
-  }
-
-  async getExtendedPostsInfoByQuery(
-    query: PaginationQuery,
-    filter: any,
-    userId = '',
-  ): Promise<[PostExtendedLikesDTO[], number]> {
-    const count = await this.model.find({ ...filter }).count();
-
-    const posts = await this.model
-      .find<PostLeanModel>({ ...filter })
-      .sort({ [query.sortBy]: query.sortDirection })
-      .skip(countSkip(query.pageSize, query.pageNumber))
-      .limit(query.pageSize)
-      .lean()
-      .populate('likes');
-
-    const result: PostExtendedLikesDTO[] = [];
-
-    for (const post of posts) {
-      const likesCount = post.likes.filter(
-        (like) => like.likeStatus === LikeStatuses.Like,
-      ).length;
-
-      const dislikesCount = post.likes.filter(
-        (like) => like.likeStatus === LikeStatuses.Dislike,
-      ).length;
-
-      const userStatus =
-        post.likes.find((like) => String(like.userId) === userId)?.likeStatus ||
-        LikeStatuses.None;
+      if ('likeStatus' in status) {
+        userStatus = status.likeStatus;
+      } else {
+        userStatus = LikeStatuses.None;
+      }
 
       const convertedPost = convertToPostDTO(post);
 
       delete convertedPost.likes;
       delete convertedPost.comments;
 
-      const newestLikes = post.likes.sort((a, b) =>
-        a.addedAt.toISOString().localeCompare(b.addedAt.toISOString()),
-      );
+      const newestLikes = post.likes.sort((a, b) => {
+        if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
+          throw new Error('Not a document');
+
+        return a.addedAt.toISOString().localeCompare(b.addedAt.toISOString());
+      });
 
       const extendedPost: PostExtendedLikesDTO = {
         ...convertedPost,
@@ -196,16 +156,94 @@ export class PostsAdapter {
         userStatus,
         newestLikes: newestLikes.map(convertToLikeDTO),
       };
-      result.push(extendedPost);
-    }
 
-    return [result, count];
+      return extendedPost;
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
+  }
+
+  async getExtendedPostsInfoByQuery(
+    query: PaginationQuery,
+    filter: any,
+    userId = '',
+  ): Promise<[PostExtendedLikesDTO[], number]> {
+    try {
+      const count = await this.model.find({ ...filter }).count();
+
+      const posts = await this.model
+        .find<PostLeanModel>({ ...filter })
+        .sort({ [query.sortBy]: query.sortDirection })
+        .skip(countSkip(query.pageSize, query.pageNumber))
+        .limit(query.pageSize)
+        .lean()
+        .populate('likes');
+
+      const result: PostExtendedLikesDTO[] = [];
+
+      for (const post of posts) {
+        const likesCount = post.likes.filter((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+
+          return like.likeStatus === LikeStatuses.Like;
+        }).length;
+
+        const dislikesCount = post.likes.filter((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+
+          return like.likeStatus === LikeStatuses.Dislike;
+        }).length;
+
+        let userStatus: LikeStatuses;
+
+        const status = post.likes.find((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not a document');
+
+          return String(like.userId) === userId;
+        });
+
+        if ('likeStatus' in status) {
+          userStatus = status.likeStatus;
+        } else {
+          userStatus = LikeStatuses.None;
+        }
+
+        const convertedPost = convertToPostDTO(post);
+
+        delete convertedPost.likes;
+        delete convertedPost.comments;
+
+        const newestLikes = post.likes.sort((a, b) => {
+          if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
+            throw new Error('Not a document');
+
+          return a.addedAt.toISOString().localeCompare(b.addedAt.toISOString());
+        });
+
+        const extendedPost: PostExtendedLikesDTO = {
+          ...convertedPost,
+          likesCount,
+          dislikesCount,
+          userStatus,
+          newestLikes: newestLikes.map(convertToLikeDTO),
+        };
+
+        result.push(extendedPost);
+      }
+
+      return [result, count];
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
   }
 
   async findPostsByQuery(
     query: PaginationQuery,
     filter: any = {},
-    populate = false,
   ): Promise<[PostDTO[], number]> {
     const count = await this.model.find(...filter).count();
 
@@ -218,7 +256,7 @@ export class PostsAdapter {
       .populate('likes')
       .lean();
 
-    return [posts.map((post) => convertToPostDTO(post, populate)), count];
+    return [posts.map(convertToPostDTO), count];
   }
 
   async deleteAllPosts() {

@@ -1,9 +1,7 @@
-import { modelOptions, prop, Ref } from '@typegoose/typegoose';
+import { prop, Ref } from '@typegoose/typegoose';
+
 import { PostModel } from 'root/posts/schemas/post.schema';
 
-import { createdAt } from 'root/_common';
-
-@modelOptions({ schemaOptions: createdAt })
 export class BlogModel {
   @prop()
   name: string;
@@ -13,32 +11,7 @@ export class BlogModel {
 
   @prop({ ref: () => PostModel, default: [] })
   posts: Ref<PostModel>[];
+
+  @prop()
+  createdAt: Date;
 }
-// import mongoose, { Schema } from 'mongoose';
-// import { BlogDatabaseModel } from 'root/blogs/types';
-
-// export const blogsSchema = new mongoose.Schema<BlogDatabaseModel>(
-//   {
-//     name: {
-//       type: String,
-//       required: true,
-//       // max: 15,
-//     },
-//     youtubeUrl: {
-//       type: String,
-//       required: true,
-//       // max: 100,
-//       // validate:
-//       //   /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/,
-//     },
-//     posts: [
-//       {
-//         type: Schema.Types.ObjectId,
-//         ref: 'post',
-//       },
-//     ],
-//   },
-//   { timestamps: { createdAt: true, updatedAt: false } },
-// );
-
-// export const BlogsModel = mongoose.model('blog', blogsSchema);

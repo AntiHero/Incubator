@@ -37,7 +37,7 @@ export class PostsService {
   }
 
   async findPostsByQuery(query: PaginationQuery, filter: any = {}) {
-    return this.postsRepository.findPostsByQuery(query, filter, true);
+    return this.postsRepository.findPostsByQuery(query, filter);
   }
 
   async getAllPosts() {

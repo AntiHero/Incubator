@@ -1,16 +1,12 @@
 import mongoose, { Types } from 'mongoose';
-import { SortDirections } from 'root/_common/types/enum';
 
-import {
-  LikeDatabaseModel,
-  LikeDomainModel,
-  LikeLeanModel,
-  LikeSchemaModel,
-} from '../types';
+import { LikeModel } from '../schemas/likes.schema';
+import { SortDirections } from 'root/_common/types/enum';
 import { convertToLikeDTO } from '../utils/convertToLikeDTO';
+import { LikeDatabaseModel, LikeDomainModel } from '../types';
 
 export class PostLikeAdapter {
-  constructor(private model: mongoose.Model<LikeSchemaModel>) {
+  constructor(private model: mongoose.Model<LikeModel>) {
     this.model = model;
   }
 
@@ -39,19 +35,15 @@ export class PostLikeAdapter {
       filter.userId = new Types.ObjectId(query.userId);
     }
 
-    const doc = await this.model.findOne<LikeLeanModel>(filter).lean();
+    const doc = await this.model.findOne(filter).lean();
 
     return doc ? convertToLikeDTO(doc) : null;
   }
 
   async updateLikeById(id: string, update: Partial<LikeDatabaseModel>) {
-    const doc = await this.model.findByIdAndUpdate<LikeDatabaseModel>(
-      id,
-      update,
-      {
-        new: true,
-      },
-    );
+    const doc = await this.model.findByIdAndUpdate(id, update, {
+      new: true,
+    });
 
     return doc ? convertToLikeDTO(doc) : null;
   }

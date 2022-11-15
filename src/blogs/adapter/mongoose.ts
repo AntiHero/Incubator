@@ -1,44 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
-import { CommentSchemaModel } from 'root/comments/types';
-import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { LikeSchemaModel } from 'root/likes/types';
-import { PostModel } from 'root/posts/schemas/post.schema';
-import { PostDomainModel, PostDTO, PostSchemaModel } from 'root/posts/types';
-import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
+import { BlogModel } from '../schemas/blogs.schema';
 import { PaginationQuery } from 'root/_common/types';
+import { BlogDomainModel, BlogDTO } from '../types';
 import { countSkip } from 'root/_common/utils/countSkip';
 import { toObjectId } from 'root/_common/utils/toObjectId';
-import { BlogModel } from '../schemas/blogs.schema';
-import {
-  BlogDatabaseModel,
-  BlogDomainModel,
-  BlogDTO,
-  BlogSchemaModel,
-} from '../types';
+import { PostModel } from 'root/posts/schemas/post.schema';
+import { PostDomainModel, PostDTO } from 'root/posts/types';
+import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
+import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 
 @Injectable()
 export class BlogsAdapter {
   constructor(
     @InjectModel(BlogModel)
-    private model: mongoose.Model<BlogSchemaModel>,
+    private model: mongoose.Model<BlogModel>,
     @InjectModel(PostModel)
-    private postModel: mongoose.Model<PostSchemaModel>,
+    private postModel: mongoose.Model<PostModel>,
     @InjectModel(CommentModel)
-    private commentModel: mongoose.Model<CommentSchemaModel>,
+    private commentModel: mongoose.Model<CommentModel>,
     @InjectModel(LikeModel)
-    private likeModel: mongoose.Model<LikeSchemaModel>,
+    private likeModel: mongoose.Model<LikeModel>,
   ) {}
 
   async getAllBlogs() {
     try {
-      const blogs = await this.model.find<BlogDatabaseModel>({}).lean();
-      return blogs.map((blog) => convertToBlogDTO(blog, false));
+      const blogs = await this.model.find({}).lean();
+      return blogs.map(convertToBlogDTO);
     } catch (e) {
       return null;
     }
@@ -57,7 +50,7 @@ export class BlogsAdapter {
 
   async findBlogById(id: string) {
     try {
-      const blog = await this.model.findById<BlogDatabaseModel>(id).lean();
+      const blog = await this.model.findById(id).lean();
 
       return convertToBlogDTO(blog);
     } catch (e) {
@@ -97,10 +90,7 @@ export class BlogsAdapter {
   }
 
   async countBlogPosts(id: string) {
-    const blog = await this.model
-      .findById<BlogDatabaseModel>(id)
-      .populate('posts')
-      .lean();
+    const blog = await this.model.findById(id).populate('posts').lean();
 
     if (!blog) return null;
 
@@ -112,8 +102,7 @@ export class BlogsAdapter {
     query: PaginationQuery,
   ): Promise<[PostDTO[], number]> {
     try {
-      const count =
-        (await this.model.findById<BlogDatabaseModel>(id))?.posts.length ?? 0;
+      const count = (await this.model.findById(id))?.posts.length ?? 0;
 
       const posts = await this.model
         .aggregate([
@@ -154,7 +143,7 @@ export class BlogsAdapter {
 
       if (!posts) return null;
 
-      return [posts.map((post) => convertToPostDTO(post)), count];
+      return [posts.map(convertToPostDTO), count];
     } catch (e) {
       console.error(e);
 
@@ -167,7 +156,7 @@ export class BlogsAdapter {
       const filter = { name: { $regex: query.searchNameTerm } };
       const count = await this.model.find(filter).count();
       const blogs = await this.model
-        .aggregate<BlogDatabaseModel>([
+        .aggregate([
           {
             $match: {},
           },
@@ -185,16 +174,19 @@ export class BlogsAdapter {
 
       if (!blogs) return null;
 
-      return [blogs.map((blog) => convertToBlogDTO(blog)), count];
+      return [blogs.map(convertToBlogDTO), count];
     } catch (e) {
       return null;
     }
   }
 
   async addBlogPost(id: string, post: PostDomainModel) {
-    const createdPost = await this.postModel.create(post);
+    const createdPost = await this.postModel.create({
+      ...post,
+      blogId: new Types.ObjectId(post.blogId),
+    });
 
-    const blog = await this.model.findByIdAndUpdate<BlogDatabaseModel>(id, {
+    const blog = await this.model.findByIdAndUpdate(id, {
       $push: { posts: createdPost._id },
     });
 
