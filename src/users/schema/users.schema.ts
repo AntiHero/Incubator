@@ -14,10 +14,10 @@ class BanInfo {
 
 export interface UserModel extends Base {}
 export class UserModel extends TimeStamps {
-  @prop({ required: true })
+  @prop()
   login: string;
 
-  @prop({ required: true })
+  @prop()
   email: string;
 
   @prop({ default: new BanInfo(), _id: false })
