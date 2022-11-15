@@ -17,10 +17,17 @@ export type UserDomainModel = {
   email: string;
 };
 
+export type BanInfo = {
+  banDate: string | null;
+  banReason: string | null;
+  isBanned: boolean;
+};
+
 export type UserDTO = {
   id: string;
   login: string;
   email: string;
+  banInfo: BanInfo;
   createdAt: string;
 };
 

@@ -15,5 +15,10 @@ export const convertToUserDTO = <
   id: String(doc._id),
   login: doc.login,
   email: doc.email,
+  banInfo: {
+    banDate: doc.banInfo.banDate ? doc.banInfo.banDate.toISOString() : null,
+    banReason: doc.banInfo.banReason,
+    isBanned: doc.banInfo.isBanned,
+  },
   createdAt: doc.createdAt?.toISOString(),
 });
