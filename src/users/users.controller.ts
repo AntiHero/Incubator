@@ -13,10 +13,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { UserInputModel } from './types';
 import { UsersService } from './users.service';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
+import { CreateUserDto } from './dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
@@ -27,7 +27,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async saveUser(@Body() body: UserInputModel, @Res() res: Response) {
+  async saveUser(@Body() body: CreateUserDto, @Res() res: Response) {
     const { login, email, password } = body;
 
     const savedUser = await this.usersService.saveUser({
@@ -56,20 +56,6 @@ export class UsersController {
       searchEmailTerm,
       searchLoginTerm,
     } = query;
-
-    // const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    // const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    // const sortBy = query.sortBy || 'createdAt';
-    // const sortDirection =
-    //   query.sortDirection === SortDirectionKeys.asc
-    //     ? SortDirections.asc
-    //     : SortDirections.desc;
-    // const searchLoginTerm = query.searchLoginTerm
-    //   ? new RegExp(query.searchLoginTerm, 'i')
-    //   : /.*/i;
-    // const searchEmailTerm = query.searchEmailTerm
-    //   ? new RegExp(query.searchEmailTerm, 'i')
-    //   : /.*/i;
 
     const [users, totalCount] = await this.usersService.findUsersByQuery({
       pageNumber,
