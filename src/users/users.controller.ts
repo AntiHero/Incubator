@@ -19,15 +19,14 @@ import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-// import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
 
 @Controller('users')
+@UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  @UseGuards(BasicAuthGuard)
   async saveUser(@Body() body: UserInputModel, @Res() res: Response) {
     const { login, email, password } = body;
 
