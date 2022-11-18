@@ -4,8 +4,8 @@ import { InjectModel } from 'nestjs-typegoose';
 
 import { UserDomainModel, UserDTO } from '../types';
 import { UserModel } from '../schema/users.schema';
-import { PaginationQuery } from 'root/_common/types';
-import { countSkip } from 'root/_common/utils/countSkip';
+import { PaginationQuery } from 'root/@common/types';
+import { countSkip } from 'root/@common/utils/countSkip';
 import { convertToUserDTO } from '../utils/convertToUserDTO';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class UsersAdapter {
 
   async addUser(user: UserDomainModel) {
     const createdUser = await this.model.create(user);
-    console.log(createdUser);
+
     return convertToUserDTO(createdUser);
   }
 
@@ -61,6 +61,16 @@ export class UsersAdapter {
       .lean();
 
     return [users.map(convertToUserDTO), count];
+  }
+
+  async findUserByLoginOrEmail(login: string, email: string) {
+    const user = await this.model.findOne({
+      $or: [{ login }, { email }],
+    });
+
+    if (!user) return null;
+
+    return convertToUserDTO(user);
   }
 
   async deleteAllUsers() {

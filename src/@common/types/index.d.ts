@@ -1,3 +1,4 @@
+import 'fastify';
 import { LikeStatuses, SortDirections } from './enum';
 
 export type LikesInfoViewModel = {
@@ -23,3 +24,27 @@ export type PaginatorType<T> = {
   totalCount: number;
   items: T;
 };
+
+export type IpsType = { [key: string]: { [key: string]: RateLimiter } };
+
+interface RateLimiter {
+  count: number;
+}
+
+declare module 'fastify' {
+  export interface FastifyRequest {
+    login: string;
+    userId: string;
+    expDate: number;
+    deviceId: string;
+  }
+}
+
+export interface FieldError {
+  message: string | null;
+  field: string | null;
+}
+
+export interface APIErrorResult {
+  errorsMessages: FieldError[];
+}

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PostDomainModel } from './types';
-import { PaginationQuery } from 'root/_common/types';
+import { PaginationQuery } from 'root/@common/types';
 import { PostsAdapter } from './adapter/mongooose';
 
 @Injectable()

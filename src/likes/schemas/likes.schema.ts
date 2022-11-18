@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import { prop } from '@typegoose/typegoose';
 
-import { LikeStatuses } from 'root/_common/types/enum';
+import { LikeStatuses } from 'root/@common/types/enum';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 export interface LikeModel extends Base {}

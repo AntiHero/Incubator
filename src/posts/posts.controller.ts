@@ -15,13 +15,16 @@ import {
 import { FastifyReply } from 'fastify';
 import { PostInputModel } from './types';
 import { PostsService } from './posts.service';
-import Paginator from 'root/_common/models/Paginator';
+import { PaginationQuery } from 'root/@common/types';
+import Paginator from 'root/@common/models/Paginator';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
-import { SortDirectionKeys, SortDirections } from 'root/_common/types/enum';
+// import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from './utils/covertToPostViewModel';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
+import { IdValidationPipe } from 'root/@common/pipes/id.validation.pipe';
 
 @Controller('posts')
 export class PostsController {
@@ -29,17 +32,23 @@ export class PostsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getPosts(@Query() query, @Res() res: FastifyReply) {
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    const sortBy = query.sortBy || 'createdAt';
-    const sortDirection =
-      query.sortDirection === SortDirectionKeys.asc
-        ? SortDirections.asc
-        : SortDirections.desc;
-    const searchNameTerm = query.searchNameTerm
-      ? new RegExp(query.searchNameTerm, 'i')
-      : /.*/i;
+  async getPosts(
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Res() res: FastifyReply,
+  ) {
+    // const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    //   const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    //   const sortBy = query.sortBy || 'createdAt';
+    //   const sortDirection =
+    //     query.sortDirection === SortDirectionKeys.asc
+    //       ? SortDirections.asc
+    //       : SortDirections.desc;
+    //   const searchNameTerm = query.searchNameTerm
+    //     ? new RegExp(query.searchNameTerm, 'i')
+    //     : /.*/i;
+
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      query;
 
     const [posts, totalCount] =
       await this.postsService.getExtendedPostsInfoByQuery(
@@ -140,7 +149,7 @@ export class PostsController {
   @Get(':id/comments')
   async getPostComments(
     @Param('id') id,
-    @Query() query,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: FastifyReply,
   ) {
     const post = await this.postsService.findPostById(id);
@@ -149,16 +158,19 @@ export class PostsController {
       return res.status(404).send();
     }
 
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    const sortBy = query.sortBy || 'createdAt';
-    const sortDirection =
-      query.sortDirection === SortDirectionKeys.asc
-        ? SortDirections.asc
-        : SortDirections.desc;
-    const searchNameTerm = query.searchNameTerm
-      ? new RegExp(query.searchNameTerm, 'i')
-      : /.*/i;
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      query;
+
+    // const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    // const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    // const sortBy = query.sortBy || 'createdAt';
+    // const sortDirection =
+    //   query.sortDirection === SortDirectionKeys.asc
+    //     ? SortDirections.asc
+    //     : SortDirections.desc;
+    // const searchNameTerm = query.searchNameTerm
+    //   ? new RegExp(query.searchNameTerm, 'i')
+    //   : /.*/i;
 
     const [comments, totalCount] =
       await this.postsService.findPostCommentsByQuery(id, {

@@ -20,5 +20,14 @@ export const convertToUserDTO = <
     banReason: doc.banInfo.banReason,
     isBanned: doc.banInfo.isBanned,
   },
+  password: doc.password,
+  confirmationInfo: {
+    isConfirmed: doc.confirmationInfo.isConfirmed,
+    code: doc.confirmationInfo.code,
+    expDate: doc.confirmationInfo.expDate,
+  },
+  passwordRecover: {
+    code: doc.passwordRecover.code,
+  },
   createdAt: doc.createdAt?.toISOString(),
 });

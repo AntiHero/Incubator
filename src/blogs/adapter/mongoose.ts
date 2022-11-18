@@ -5,10 +5,10 @@ import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
 import { BlogModel } from '../schemas/blogs.schema';
-import { PaginationQuery } from 'root/_common/types';
+import { PaginationQuery } from 'root/@common/types';
 import { BlogDomainModel, BlogDTO } from '../types';
-import { countSkip } from 'root/_common/utils/countSkip';
-import { toObjectId } from 'root/_common/utils/toObjectId';
+import { countSkip } from 'root/@common/utils/countSkip';
+import { toObjectId } from 'root/@common/utils/toObjectId';
 import { PostModel } from 'root/posts/schemas/post.schema';
 import { PostDomainModel, PostDTO } from 'root/posts/types';
 import { LikeModel } from 'root/likes/schemas/likes.schema';

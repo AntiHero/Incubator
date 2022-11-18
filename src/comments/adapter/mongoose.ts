@@ -2,10 +2,10 @@ import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from 'nestjs-typegoose';
-import { PaginationQuery } from 'root/_common/types';
-import { LikeStatuses } from 'root/_common/types/enum';
+import { PaginationQuery } from 'root/@common/types';
+import { LikeStatuses } from 'root/@common/types/enum';
 import { CommentModel } from '../schemas/comment.schema';
-import { countSkip } from 'root/_common/utils/countSkip';
+import { countSkip } from 'root/@common/utils/countSkip';
 import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
 

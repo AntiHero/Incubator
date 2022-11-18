@@ -2,9 +2,9 @@ import { BlogDTO } from '../types';
 
 import { LeanDocument, Types } from 'mongoose';
 
+import { PostDTO } from 'root/posts/types';
 import { BlogModel } from '../schemas/blogs.schema';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
-import { PostDTO } from 'root/posts/types';
 
 export const convertToBlogDTO = <
   T extends LeanDocument<BlogModel & { _id: Types.ObjectId }>,

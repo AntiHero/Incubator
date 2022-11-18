@@ -1,7 +1,7 @@
 import mongoose, { Types } from 'mongoose';
 
 import { LikeModel } from '../schemas/likes.schema';
-import { SortDirections } from 'root/_common/types/enum';
+import { SortDirections } from 'root/@common/types/enum';
 import { convertToLikeDTO } from '../utils/convertToLikeDTO';
 import { LikeDatabaseModel, LikeDomainModel } from '../types';
 

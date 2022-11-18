@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { BlogDomainModel } from './types';
 import { BlogsAdapter } from './adapter/mongoose';
 import { PostDomainModel } from 'root/posts/types';
-import { PaginationQuery } from 'root/_common/types';
+import { PaginationQuery } from 'root/@common/types';
 
 @Injectable()
 export class BlogsService {

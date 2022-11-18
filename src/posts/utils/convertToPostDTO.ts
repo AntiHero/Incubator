@@ -1,11 +1,11 @@
 import { LeanDocument, Types } from 'mongoose';
 
 import { PostDTO } from '../types';
+import { LikeDTO } from 'root/likes/types';
+import { CommentDTO } from 'root/comments/types';
 import { PostModel } from '../schemas/post.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { CommentDTO } from 'root/comments/types';
-import { LikeDTO } from 'root/likes/types';
 
 export const convertToPostDTO = <
   T extends LeanDocument<PostModel & { _id: Types.ObjectId }>,

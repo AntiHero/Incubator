@@ -1,5 +1,5 @@
 import { LikeViewModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/_common/types/enum';
+import { LikeStatuses } from 'root/@common/types/enum';
 import { PostDTO, PostExtendedLikesDTO, PostExtendedViewModel } from '../types';
 
 export const convertToExtendedViewPostModel = (

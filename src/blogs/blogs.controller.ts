@@ -13,12 +13,12 @@ import {
 
 import Blog from './domain/blogs.model';
 import { BlogsService } from './blogs.service';
-import Paginator from 'root/_common/models/Paginator';
+import Paginator from 'root/@common/models/Paginator';
 import { BlogInputModel, BlogViewModel } from './types';
 import { PostBody, PostViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
-import { SortDirectionKeys, SortDirections } from 'root/_common/types/enum';
+import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 
 @Controller('blogs')

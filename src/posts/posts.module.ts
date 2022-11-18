@@ -14,25 +14,25 @@ import { CommentModel } from 'root/comments/schemas/comment.schema';
     TypegooseModule.forFeature([
       {
         typegooseClass: PostModel,
-        schemaOptions: { collection: 'post' },
+        schemaOptions: { collection: 'posts' },
       },
     ]),
     TypegooseModule.forFeature([
       {
         typegooseClass: BlogModel,
-        schemaOptions: { collection: 'blog' },
+        schemaOptions: { collection: 'blogs' },
       },
     ]),
     TypegooseModule.forFeature([
       {
         typegooseClass: LikeModel,
-        schemaOptions: { collection: 'like' },
+        schemaOptions: { collection: 'likes' },
       },
     ]),
     TypegooseModule.forFeature([
       {
         typegooseClass: CommentModel,
-        schemaOptions: { collection: 'comment' },
+        schemaOptions: { collection: 'comments' },
       },
     ]),
   ],

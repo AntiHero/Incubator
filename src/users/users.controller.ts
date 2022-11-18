@@ -9,24 +9,33 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
+import { Response } from 'express';
 
 import { UserInputModel } from './types';
 import { UsersService } from './users.service';
-import Paginator from 'root/_common/models/Paginator';
+import { PaginationQuery } from 'root/@common/types';
+import Paginator from 'root/@common/models/Paginator';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import { SortDirectionKeys, SortDirections } from 'root/_common/types/enum';
+// import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async saveUser(@Body() body: UserInputModel, @Res() res: FastifyReply) {
-    const { login, email } = body;
+  @UseGuards(BasicAuthGuard)
+  async saveUser(@Body() body: UserInputModel, @Res() res: Response) {
+    const { login, email, password } = body;
 
-    const savedUser = await this.usersService.saveUser({ login, email });
+    const savedUser = await this.usersService.saveUser({
+      login,
+      email,
+      password,
+    });
 
     res
       .type('text/plain')
@@ -36,20 +45,32 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getUsers(@Query() query, @Res() res: FastifyReply) {
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    const sortBy = query.sortBy || 'createdAt';
-    const sortDirection =
-      query.sortDirection === SortDirectionKeys.asc
-        ? SortDirections.asc
-        : SortDirections.desc;
-    const searchLoginTerm = query.searchLoginTerm
-      ? new RegExp(query.searchLoginTerm, 'i')
-      : /.*/i;
-    const searchEmailTerm = query.searchEmailTerm
-      ? new RegExp(query.searchEmailTerm, 'i')
-      : /.*/i;
+  async getUsers(
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Res() res: Response,
+  ) {
+    const {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+      searchEmailTerm,
+      searchLoginTerm,
+    } = query;
+
+    // const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
+    // const pageSize = query.pageSize ? Number(query.pageSize) : 10;
+    // const sortBy = query.sortBy || 'createdAt';
+    // const sortDirection =
+    //   query.sortDirection === SortDirectionKeys.asc
+    //     ? SortDirections.asc
+    //     : SortDirections.desc;
+    // const searchLoginTerm = query.searchLoginTerm
+    //   ? new RegExp(query.searchLoginTerm, 'i')
+    //   : /.*/i;
+    // const searchEmailTerm = query.searchEmailTerm
+    //   ? new RegExp(query.searchEmailTerm, 'i')
+    //   : /.*/i;
 
     const [users, totalCount] = await this.usersService.findUsersByQuery({
       pageNumber,
@@ -74,7 +95,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async deleteUser(@Param('id') id, @Res() res: FastifyReply) {
+  async deleteUser(@Param('id') id, @Res() res: Response) {
     const user = await this.usersService.findUserByIdAndDelete(id);
 
     if (!user) return res.status(404).send();

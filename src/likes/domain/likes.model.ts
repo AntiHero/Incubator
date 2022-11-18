@@ -1,4 +1,4 @@
-import { LikeStatuses } from 'root/_common/types/enum';
+import { LikeStatuses } from 'root/@common/types/enum';
 import { LikeDomainModel } from '../types';
 
 export class Like implements LikeDomainModel {

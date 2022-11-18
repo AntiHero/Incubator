@@ -1,18 +1,7 @@
-import { HydratedDocument, LeanDocument } from 'mongoose';
-
-import { WithId } from 'root/_common/types/utility';
-
-export type UserSchemaModel = {
-  login: string;
-  email: string;
-  createdAt: Date;
-};
-
-export type UserDatabaseModel = HydratedDocument<UserSchemaModel>;
-
-export type UserLeanModel = LeanDocument<UserDatabaseModel>;
+import { WithId } from 'root/@common/types/utility';
 
 export type UserDomainModel = {
+  password: string;
   login: string;
   email: string;
 };
@@ -23,17 +12,31 @@ export type BanInfo = {
   isBanned: boolean;
 };
 
+export type ConfirmationInfo = {
+  isConfirmed: boolean;
+  code: string;
+  expDate: number;
+};
+
+export type PasswordRecovery = {
+  code: string | null;
+};
+
 export type UserDTO = {
   id: string;
   login: string;
   email: string;
+  password: string;
   banInfo: BanInfo;
+  confirmationInfo: ConfirmationInfo;
+  passwordRecover: PasswordRecovery;
   createdAt: string;
 };
 
 export type UserDomainModelWithId = WithId<UserDomainModel>;
 
 export type UserInputModel = {
+  password: string;
   login: string;
   email: string;
 };
@@ -43,4 +46,5 @@ export type UserViewModel = {
   login: string;
   email: string;
   createdAt: string;
+  banInfo: BanInfo;
 };

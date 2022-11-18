@@ -5,15 +5,17 @@ import { UsersAdapter } from './adapter/mongoose';
 import { UserModel } from './schema/users.schema';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { UsersController } from './users.controller';
+import { EmailManagerModule } from 'root/email-manager/email-manager.module';
 
 @Module({
   imports: [
     TypegooseModule.forFeature([
       {
         typegooseClass: UserModel,
-        schemaOptions: { collection: 'user' },
+        schemaOptions: { collection: 'users' },
       },
     ]),
+    EmailManagerModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, UsersAdapter],

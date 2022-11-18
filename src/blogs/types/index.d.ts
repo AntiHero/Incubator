@@ -1,7 +1,7 @@
 import { HydratedDocument, LeanDocument } from 'mongoose';
 import { PostDatabaseModel, PostDomainModel, PostDTO } from 'root/posts/types';
 
-import { WithId } from 'root/_common/types/utility';
+import { WithId } from 'root/@common/types/utility';
 
 export type BlogSchemaModel = {
   name: string;

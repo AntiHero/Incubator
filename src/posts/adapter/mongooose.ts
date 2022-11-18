@@ -3,8 +3,8 @@ import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
-import { PaginationQuery } from 'root/_common/types';
-import { countSkip } from 'root/_common/utils/countSkip';
+import { PaginationQuery } from 'root/@common/types';
+import { countSkip } from 'root/@common/utils/countSkip';
 import { convertToPostDTO } from '../utils/convertToPostDTO';
 import {
   PostDatabaseModel,
@@ -14,8 +14,8 @@ import {
   PostLeanModel,
 } from '../types';
 import { PostModel } from '../schemas/post.schema';
-import { LikeStatuses } from 'root/_common/types/enum';
-import { toObjectId } from 'root/_common/utils/toObjectId';
+import { LikeStatuses } from 'root/@common/types/enum';
+import { toObjectId } from 'root/@common/utils/toObjectId';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentExtendedLikesDTO } from 'root/comments/types';
