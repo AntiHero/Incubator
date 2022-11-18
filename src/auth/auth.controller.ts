@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { Body, Controller, Get, Post, Req, Res, Scope } from '@nestjs/common';
 
@@ -6,7 +7,6 @@ import { UsersService } from 'root/users/users.service';
 import { rateLimit } from 'root/@common/utils/rateLimit';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
-import { Response } from 'express';
 
 const ips: IpsType = {};
 
@@ -15,7 +15,7 @@ export class AuthController {
   constructor(private usersService: UsersService) {}
   @Post('password-recovery')
   async passwordRecovery(@Res() res: Response) {
-    res.status(201).send.send();
+    res.status(201).send();
   }
 
   @Post('new-password')
