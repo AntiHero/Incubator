@@ -158,7 +158,7 @@ export class BlogsAdapter {
       const blogs = await this.model
         .aggregate([
           {
-            $match: {},
+            $match: filter,
           },
           {
             $sort: { [query.sortBy]: query.sortDirection },

@@ -20,6 +20,7 @@ import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('blogs')
 export class BlogsController {
@@ -40,17 +41,12 @@ export class BlogsController {
   }
 
   @Get()
-  async getAllBlogs(@Query() query, @Res() res: FastifyReply) {
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    const sortBy = query.sortBy || 'createdAt';
-    const sortDirection =
-      query.sortDirection === SortDirectionKeys.asc
-        ? SortDirections.asc
-        : SortDirections.desc;
-    const searchNameTerm = query.searchNameTerm
-      ? new RegExp(query.searchNameTerm, 'i')
-      : /.*/i;
+  async getAllBlogs(
+    @Query(PaginationQuerySanitizerPipe) query,
+    @Res() res: FastifyReply,
+  ) {
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      query;
 
     const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery({
       pageNumber,
