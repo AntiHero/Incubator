@@ -20,13 +20,13 @@ export class UsersService {
       data.login || data.email,
     );
 
-    if (!user) return null;
+    if (!user) return false;
 
     const passwordCorrect = await bcrypt.compare(data.password, user.password);
 
-    if (!passwordCorrect) return null;
+    if (!passwordCorrect) return false;
 
-    return user;
+    return true;
   }
 
   async saveUser(data: UserDomainModel) {
@@ -80,7 +80,7 @@ export class UsersService {
     return this.generateTokens(userForToken);
   }
 
-  async findUserByLoginOrEmail(login: string, email: string) {
+  async findUserByLoginOrEmail(login: string, email?: string) {
     return this.usersRepository.findUserByLoginOrEmail(login, email);
   }
 

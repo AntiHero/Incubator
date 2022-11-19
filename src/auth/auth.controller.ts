@@ -12,17 +12,17 @@ import {
 } from '@nestjs/common';
 
 // import { UserDTO } from 'root/users/types';
-import { IpsType } from 'root/@common/types';
+// import { IpsType } from 'root/@common/types';
 import { UsersService } from 'root/users/users.service';
-import { rateLimit } from 'root/@common/utils/rateLimit';
+// import { rateLimit } from 'root/@common/utils/rateLimit';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
 import { LoginSuccessViewModel, UserForToken } from './types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
-import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
+// import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
 import { SecurityDeviceInput } from 'root/security-devices/types';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 
-const ips: IpsType = {};
+// const ips: IpsType = {};
 
 @Controller({ path: 'auth', scope: Scope.REQUEST })
 export class AuthController {
@@ -49,7 +49,7 @@ export class AuthController {
   ) {
     const ip = req.ip;
     // const url = req.url;
-    const { login, password } = body;
+    const { login } = body;
 
     // let user: UserDTO;
 
@@ -65,12 +65,9 @@ export class AuthController {
     // } catch (e) {
     //   return res.status(429).send();
     // }
-    const user = await this.usersService.authenticateUser({
-      login,
-      password,
-    });
+    const user = await this.usersService.findUserByLoginOrEmail(login);
 
-    if (!user) return res.status(401).send();
+    if (!user) res.status(503).send();
 
     const userId = user.id;
 
@@ -117,22 +114,22 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    try {
-      const ip = req.ip;
-      const url = req.url;
+    // try {
+    //   const ip = req.ip;
+    //   const url = req.url;
 
-      rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
+    //   rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
 
-      const { login, email, password } = body;
+    const { login, email, password } = body;
 
-      const user = await this.usersService.saveUser({ login, email, password });
+    const user = await this.usersService.saveUser({ login, email, password });
 
-      if (user) {
-        res.status(204).send();
-      }
-    } catch (e) {
-      res.status(429).send();
+    if (user) {
+      return res.status(204).send();
     }
+    // } catch (e) {
+    //   res.status(429).send();
+    // }
 
     res.status(503).send();
   }
