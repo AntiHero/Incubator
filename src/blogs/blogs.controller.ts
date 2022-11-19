@@ -16,7 +16,7 @@ import Blog from './domain/blogs.model';
 import { BlogsService } from './blogs.service';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';
-import { BlogInputModel, BlogViewModel } from './types';
+import { BlogViewModel } from './types';
 import { PostBody, PostViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
@@ -90,7 +90,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   async updateBlog(
     @Param('id') id,
-    @Body() body: BlogInputModel,
+    @Body() body: CreateBlogDTO,
     @Res() res: Response,
   ) {
     const { name, websiteUrl, description } = body;
