@@ -20,10 +20,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (typeof exceptionRes === 'object') {
       errorsResponse.errorsMessages.push(exceptionRes as FieldError);
-    } else {
-      errorsResponse.errorsMessages.push(
-        JSON.parse(exceptionRes) as FieldError,
-      );
     }
 
     response.status(status).send(errorsResponse);
