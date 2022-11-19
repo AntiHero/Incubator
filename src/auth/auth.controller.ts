@@ -24,6 +24,7 @@ import { SecurityDevicesService } from 'root/security-devices/security-devices.s
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
+import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 
 // const ips: IpsType = {};
 
@@ -107,6 +108,7 @@ export class AuthController {
   }
 
   @Post('registration-confirmation')
+  @UsePipes(RegistrationCodeValidationPipe)
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
     const user = await this.usersService.findUserByQuery({
       'confirmationInfo.code': body.code,

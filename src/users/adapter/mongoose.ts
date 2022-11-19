@@ -39,7 +39,11 @@ export class UsersAdapter {
   }
 
   async findUserByQuery(query: any) {
-    return this.model.findOne(query).exec();
+    const user = await this.model.findOne(query).exec();
+
+    if (!user) return null;
+
+    return convertToUserDTO(user);
   }
 
   async findUsersByQuery(query: PaginationQuery): Promise<[UserDTO[], number]> {

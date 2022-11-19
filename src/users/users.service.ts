@@ -106,6 +106,21 @@ export class UsersService {
     return passwordCorrect;
   }
 
+  async checkUsersConfirmation(code: string) {
+    const user = await this.usersRepository.findUserByQuery({
+      'confirmationInfo.code': code,
+    });
+
+    if (
+      !user ||
+      user.confirmationInfo.isConfirmed ||
+      user.confirmationInfo.expDate < Date.now()
+    )
+      return null;
+
+    return true;
+  }
+
   async findUserByQuery(query: any) {
     return this.usersRepository.findUserByQuery(query);
   }
