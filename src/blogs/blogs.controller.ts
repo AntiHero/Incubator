@@ -1,4 +1,3 @@
-import { FastifyReply } from 'fastify';
 import {
   Body,
   Controller,
@@ -11,18 +10,20 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 
 import Blog from './domain/blogs.model';
 import { BlogsService } from './blogs.service';
 import Paginator from 'root/@common/models/Paginator';
+import { CreateBlogDTO } from './dto/create-blog.dto';
 import { BlogInputModel, BlogViewModel } from './types';
 import { PostBody, PostViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -30,8 +31,8 @@ export class BlogsController {
 
   @Post()
   @UseGuards(BasicAuthGuard)
-  async saveBlog(@Body() body: BlogInputModel, @Res() res: FastifyReply) {
-    const { name, description, websiteUrl }: BlogInputModel = body;
+  async saveBlog(@Body() body: CreateBlogDTO, @Res() res: Response) {
+    const { name, description, websiteUrl } = body;
 
     const blog = new Blog(name, description, websiteUrl);
 
@@ -46,7 +47,7 @@ export class BlogsController {
   @Get()
   async getAllBlogs(
     @Query(PaginationQuerySanitizerPipe) query,
-    @Res() res: FastifyReply,
+    @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
@@ -73,7 +74,7 @@ export class BlogsController {
   }
 
   @Get(':id')
-  async getBlog(@Param('id') id, @Res() res: FastifyReply) {
+  async getBlog(@Param('id') id, @Res() res: Response) {
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
@@ -90,7 +91,7 @@ export class BlogsController {
   async updateBlog(
     @Param('id') id,
     @Body() body: BlogInputModel,
-    @Res() res: FastifyReply,
+    @Res() res: Response,
   ) {
     const { name, websiteUrl, description } = body;
 
@@ -106,11 +107,7 @@ export class BlogsController {
   }
 
   @Get(':id/posts')
-  async getBlogPosts(
-    @Param('id') id,
-    @Query() query,
-    @Res() res: FastifyReply,
-  ) {
+  async getBlogPosts(@Param('id') id, @Query() query, @Res() res: Response) {
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
@@ -157,7 +154,7 @@ export class BlogsController {
   async saveBlogPost(
     @Param('id') id,
     @Body() body: PostBody,
-    @Res() res: FastifyReply,
+    @Res() res: Response,
   ) {
     const { title, shortDescription, content } = body;
 
@@ -187,7 +184,7 @@ export class BlogsController {
 
   @Delete(':id')
   @UseGuards(BasicAuthGuard)
-  async deleteBlog(@Param('id') id, @Res() res: FastifyReply) {
+  async deleteBlog(@Param('id') id, @Res() res: Response) {
     const blog = await this.blogsService.findBlogByIdAndDelete(id);
 
     if (!blog) return res.status(404).send();
