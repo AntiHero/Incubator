@@ -98,11 +98,10 @@ export class PostsController {
 
     delete convertedPost.extendedLikesInfo;
 
-    // res
-    //   .type('text/plain')
-    //   .status(200)
-    //   .send(JSON.stringify(convertToExtendedViewPostModel(post)));
-    res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
+    res
+      .type('text/plain')
+      .status(200)
+      .send(JSON.stringify(convertToExtendedViewPostModel(post)));
   }
 
   @Put(':id')
