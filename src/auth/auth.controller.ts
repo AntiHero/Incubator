@@ -54,7 +54,7 @@ export class AuthController {
   ) {
     const ip = req.ip;
     // const url = req.url;
-    const { login } = body;
+    const { loginOrEmail } = body;
 
     // let user: UserDTO;
 
@@ -70,7 +70,7 @@ export class AuthController {
     // } catch (e) {
     //   return res.status(429).send();
     // }
-    const user = await this.usersService.findUserByLoginOrEmail(login);
+    const user = await this.usersService.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) res.status(503).send();
 
@@ -83,6 +83,8 @@ export class AuthController {
       title: userAgent || 'unknown',
       userId,
     };
+
+    const login = user.login;
 
     const existingDeviceId =
       await this.securityDevicesService.createDeviceIfNotExists(newDevice);

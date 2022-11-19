@@ -17,14 +17,14 @@ export class UsersService {
     private emailManager: EmailManager,
   ) {}
 
-  async authenticateUser(data: Partial<UserDomainModel>) {
+  async authenticateUser(loginOrEmail: string, password: string) {
     const user = await this.usersRepository.findUserByLoginOrEmail(
-      data.login || data.email,
+      loginOrEmail,
     );
 
     if (!user) return false;
 
-    const passwordCorrect = await bcrypt.compare(data.password, user.password);
+    const passwordCorrect = await bcrypt.compare(password, user.password);
 
     if (!passwordCorrect) return false;
 
