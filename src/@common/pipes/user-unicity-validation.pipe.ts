@@ -18,10 +18,17 @@ export class UserUnicityValidationPipe implements PipeTransform {
 
     const { login, email } = value;
 
-    const user = await this.usersService.findUserByLoginOrEmail(login, email);
+    const userByLogin = await this.usersService.findUserByLoginOrEmail(login);
+    const userByEmail = await this.usersService.findUserByLoginOrEmail(email);
 
-    if (user)
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    if (userByLogin || userByEmail)
+      throw new HttpException(
+        {
+          message: 'User already exists',
+          filed: userByLogin ? 'login' : 'email',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
 
     return value;
   }

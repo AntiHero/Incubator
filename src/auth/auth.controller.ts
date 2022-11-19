@@ -7,8 +7,8 @@ import {
   Post,
   Req,
   Res,
-  Scope,
   Headers,
+  UsePipes,
 } from '@nestjs/common';
 
 // import { UserDTO } from 'root/users/types';
@@ -21,10 +21,11 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 // import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
 import { SecurityDeviceInput } from 'root/security-devices/types';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
+import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 
 // const ips: IpsType = {};
 
-@Controller({ path: 'auth', scope: Scope.REQUEST })
+@Controller('auth')
 export class AuthController {
   constructor(
     private readonly usersService: UsersService,
@@ -109,6 +110,7 @@ export class AuthController {
   }
 
   @Post('registration')
+  @UsePipes(UserUnicityValidationPipe)
   async registration(
     @Body() body: CreateUserDto,
     @Req() req: Request,

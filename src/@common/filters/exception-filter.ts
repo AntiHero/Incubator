@@ -5,6 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { APIErrorResult, FieldError } from '../types';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -13,6 +14,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    response.status(status).send(exception.getResponse());
+    const errorsResponse: APIErrorResult = { errorsMessages: [] };
+
+    const exceptionRes = exception.getResponse();
+
+    if (typeof exceptionRes === 'object') {
+      errorsResponse.errorsMessages.push(exceptionRes as FieldError);
+    } else {
+      errorsResponse.errorsMessages.push(
+        JSON.parse(exceptionRes) as FieldError,
+      );
+    }
+
+    response.status(status).send(errorsResponse);
   }
 }
