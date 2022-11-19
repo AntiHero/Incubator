@@ -1,9 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
+
 import { APIErrorResult, FieldError } from '../types';
 
+export class ErrorsResponse implements APIErrorResult {
+  errorsMessages: FieldError[];
+}
+
 export const exceptionFactory = (errors: ValidationError[]) => {
-  const errorsResponse: APIErrorResult = { errorsMessages: [] };
+  const errorsResponse = new ErrorsResponse();
 
   errors.forEach((error) => {
     const errorMessage: FieldError = {

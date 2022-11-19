@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { APIErrorResult, FieldError } from '../types';
+import { ErrorsResponse } from '../utils/customExceptionFactory';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -14,16 +15,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    const errorsResponse: APIErrorResult = { errorsMessages: [] };
+    let errorsResponse: APIErrorResult = { errorsMessages: [] };
 
     const exceptionRes = exception.getResponse();
 
-    console.log(exceptionRes, 'exceptionRes');
     if (typeof exceptionRes === 'object') {
-      errorsResponse.errorsMessages.push(exceptionRes as FieldError);
+      if (exceptionRes instanceof ErrorsResponse) {
+        errorsResponse = exceptionRes;
+      } else {
+        errorsResponse.errorsMessages.push(exceptionRes as FieldError);
+      }
     }
 
-    // response.status(status).send(errorsResponse);
-    response.status(status).send(exception.getResponse());
+    response.status(status).send(errorsResponse);
+    // response.status(status).send(exception.getResponse());
   }
 }
