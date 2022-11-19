@@ -4,7 +4,7 @@ import { ValidationError } from 'class-validator';
 import { APIErrorResult, FieldError } from '../types';
 
 export class ErrorsResponse implements APIErrorResult {
-  errorsMessages: FieldError[];
+  errorsMessages: FieldError[] = [];
 }
 
 export const exceptionFactory = (errors: ValidationError[]) => {

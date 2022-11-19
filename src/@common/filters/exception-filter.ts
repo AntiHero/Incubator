@@ -27,7 +27,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
-    response.status(status).send(errorsResponse);
+    response
+      .status(status)
+      .type('text/plain')
+      .send(JSON.stringify(errorsResponse));
     // response.status(status).send(exception.getResponse());
   }
 }
