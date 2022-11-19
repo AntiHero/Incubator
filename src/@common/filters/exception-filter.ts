@@ -22,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       errorsResponse.errorsMessages.push(exceptionRes as FieldError);
     }
 
-    response.status(status).send(errorsResponse);
+    // response.status(status).send(errorsResponse);
+    response.status(status).send(exception.getResponse());
   }
 }
