@@ -1,18 +1,35 @@
-import { Response } from 'express';
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { Body, Controller, Get, Post, Req, Res, Scope } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
+import { Request, Response } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  Scope,
+  Headers,
+} from '@nestjs/common';
 
+import { UserDTO } from 'root/users/types';
 import { IpsType } from 'root/@common/types';
 import { UsersService } from 'root/users/users.service';
 import { rateLimit } from 'root/@common/utils/rateLimit';
+import { LoginUserDTO } from 'root/users/dto/login-user.dto';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
+import { SecurityDeviceInput } from 'root/security-devices/types';
+import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
+import { LoginSuccessViewModel, UserForToken } from './types';
 
 const ips: IpsType = {};
 
 @Controller({ path: 'auth', scope: Scope.REQUEST })
 export class AuthController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly securityDevicesService: SecurityDevicesService,
+  ) {}
   @Post('password-recovery')
   async passwordRecovery(@Res() res: Response) {
     res.status(201).send();
@@ -24,8 +41,58 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Res() res: Response) {
-    res.status(201).send();
+  async login(
+    @Body() body: LoginUserDTO,
+    @Req() req: Request,
+    @Res() res: Response,
+    @Headers('user-agent') userAgent: string,
+  ) {
+    const ip = req.ip;
+    const url = req.url;
+    const { login, password } = body;
+
+    let user: UserDTO;
+
+    try {
+      rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
+
+      user = await this.usersService.authenticateUser({
+        login,
+        password,
+      });
+
+      if (!user) return res.status(401).send();
+    } catch (e) {
+      return res.status(429).send();
+    }
+
+    const userId = user.id;
+
+    const newDeviceId = uuid();
+
+    const newDevice: SecurityDeviceInput = {
+      ip,
+      title: userAgent || 'unknown',
+      userId,
+    };
+
+    const existingDeviceId =
+      await this.securityDevicesService.createDeviceIfNotExists(newDevice);
+
+    const userForToken: UserForToken = {
+      login,
+      userId,
+      deviceId: existingDeviceId ?? newDeviceId,
+    };
+
+    const [token, refreshToken] = await this.usersService.createTokensPair(
+      userForToken,
+    );
+
+    const payload: LoginSuccessViewModel = { accessToken: token };
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    res.status(200).type('text/plain').send(payload);
   }
 
   @Post('refresh-token')
@@ -39,11 +106,10 @@ export class AuthController {
   }
 
   @Post('registration')
-  // @UsePipes(UserUnicityValidationPipe)
   async registration(
     @Body() body: CreateUserDto,
-    @Req() req: FastifyRequest,
-    @Res() res: FastifyReply,
+    @Req() req: Request,
+    @Res() res: Response,
   ) {
     try {
       const ip = req.ip;

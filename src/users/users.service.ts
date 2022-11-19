@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 
 import { UserDomainModel } from './types';
+import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
 import { EmailManager } from 'root/email-manager/email-manager';
@@ -13,8 +15,23 @@ export class UsersService {
     private emailManager: EmailManager,
   ) {}
 
+  async authenticateUser(data: Partial<UserDomainModel>) {
+    const user = await this.usersRepository.findUserByLoginOrEmail(
+      data.login || data.email,
+    );
+
+    if (!user) return null;
+
+    const passwordCorrect = await bcrypt.compare(data.password, user.password);
+
+    if (!passwordCorrect) return null;
+
+    return user;
+  }
+
   async saveUser(data: UserDomainModel) {
     const saltRounds = 10;
+
     const { login, password, email } = data;
 
     const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -33,6 +50,34 @@ export class UsersService {
     });
 
     return user;
+  }
+
+  private async generateTokens(userForToken: Record<string, string>) {
+    const token = jwt.sign(
+      userForToken,
+      process.env.SECRET ?? 'simple_secret',
+      {
+        expiresIn: 600,
+      },
+    );
+
+    const refreshToken = jwt.sign(
+      userForToken,
+      process.env.SECRET ?? 'simple_secret',
+      { expiresIn: 1200 },
+    );
+
+    return [token, refreshToken];
+  }
+
+  async createTokensPair({ login, userId, deviceId }: UserForToken) {
+    const userForToken = {
+      username: login,
+      id: userId,
+      deviceId,
+    };
+
+    return this.generateTokens(userForToken);
   }
 
   async findUserByLoginOrEmail(login: string, email: string) {

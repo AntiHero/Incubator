@@ -11,7 +11,9 @@ import { UsersModule } from './users/users.module';
 import { getMongoConfig } from './configs/mongo.config';
 import { TestingModule } from './testing/testing.module';
 import { CommentsModule } from './comments/comments.module';
+import { TokensListModule } from './tokens-list/tokens-list.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
+import { SecurityDevicesModule } from './security-devices/security-devices.module';
 
 @Module({
   imports: [
@@ -28,7 +30,9 @@ import { EmailManagerModule } from './email-manager/email-manager.module';
     UsersModule,
     TestingModule,
     CommentsModule,
+    TokensListModule,
     EmailManagerModule,
+    SecurityDevicesModule,
   ],
 })
 export class AppModule {}

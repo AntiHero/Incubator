@@ -23,8 +23,8 @@ import { Post as PostModel } from './domain/posts.model';
 import { convertToPostViewModel } from './utils/covertToPostViewModel';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
-import { IdValidationPipe } from 'root/@common/pipes/id.validation.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 
 @Controller('posts')
 export class PostsController {

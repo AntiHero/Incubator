@@ -48,3 +48,8 @@ export type UserViewModel = {
   createdAt: string;
   banInfo: BanInfo;
 };
+
+export type UserLoginType = {
+  login: string;
+  password: string;
+};

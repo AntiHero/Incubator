@@ -19,7 +19,7 @@ import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination.query.sanitizer.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)

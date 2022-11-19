@@ -1,24 +1,12 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from 'root/users/users.module';
-import { UserUnicityMiddleware } from 'root/@common/middlewares/user.unictiy.middleware';
+import { SecurityDevicesModule } from 'root/security-devices/security-devices.module';
 
 @Module({
-  imports: [UsersModule],
-  providers: [AuthService],
+  imports: [UsersModule, SecurityDevicesModule],
   controllers: [AuthController],
+  providers: [AuthService],
 })
-export class AuthModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(UserUnicityMiddleware).forRoutes({
-    //   path: 'auth/registration',
-    //   method: RequestMethod.POST,
-    // });
-  }
-}
+export class AuthModule {}

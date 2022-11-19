@@ -1,12 +1,15 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
+
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'src/blogs/blogs.service';
+import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 
 @Controller('testing')
 export class TestingController {
   constructor(
-    private blogsService: BlogsService,
-    private usersSevice: UsersService,
+    private readonly blogsService: BlogsService,
+    private readonly usersSevice: UsersService,
+    private readonly securityDevicesService: SecurityDevicesService,
   ) {}
 
   @Delete('all-data')
@@ -14,5 +17,6 @@ export class TestingController {
   async removeAllData() {
     await this.blogsService.deleteAllBlogs();
     await this.usersSevice.deleteAllUsers();
+    await this.securityDevicesService.deleteAllDevices();
   }
 }
