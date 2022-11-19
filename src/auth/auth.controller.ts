@@ -25,6 +25,7 @@ import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-valid
 import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
+import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
 
 // const ips: IpsType = {};
 
@@ -143,6 +144,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
+  @UsePipes(ConfirmationStatusValidationPipe)
   async registrationEmailResending(
     @Res() res: Response,
     @Body() body: EmailDTO,
