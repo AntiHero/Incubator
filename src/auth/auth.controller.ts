@@ -22,6 +22,7 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { SecurityDeviceInput } from 'root/security-devices/types';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
+import { EmailDTO } from './dto/email.dto';
 
 // const ips: IpsType = {};
 
@@ -111,11 +112,7 @@ export class AuthController {
 
   @Post('registration')
   @UsePipes(UserUnicityValidationPipe)
-  async registration(
-    @Body() body: CreateUserDto,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async registration(@Body() body: CreateUserDto, @Res() res: Response) {
     // try {
     //   const ip = req.ip;
     //   const url = req.url;
@@ -137,8 +134,21 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
-  async registrationEmailResending(@Res() res) {
-    res.status(201).send();
+  async registrationEmailResending(
+    @Res() res: Response,
+    @Body() body: EmailDTO,
+  ) {
+    const { email } = body;
+
+    const user = await this.usersService.findUserByLoginOrEmail(email);
+
+    if (!user) return res.sendStatus(404);
+
+    const userId = user.id;
+
+    await this.usersService.resendConfirmationEmail(userId, email);
+
+    res.status(204).send();
   }
 
   @Post('logout')

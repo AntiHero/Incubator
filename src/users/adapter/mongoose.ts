@@ -73,6 +73,22 @@ export class UsersAdapter {
     return convertToUserDTO(user);
   }
 
+  async findUserByIdAndUpdate(id: string, updates: any) {
+    try {
+      const updatedUser = await this.model
+        .findByIdAndUpdate(id, updates, {
+          projection: '_id',
+        })
+        .exec();
+
+      return updatedUser && true;
+    } catch (e) {
+      console.log(e);
+
+      return null;
+    }
+  }
+
   async deleteAllUsers() {
     await this.model.deleteMany({}).exec();
   }

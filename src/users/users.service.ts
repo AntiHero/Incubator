@@ -1,11 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
 import { UserDomainModel } from './types';
 import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
+import { fiveMinInMs } from 'root/@common/constants';
 import { EmailManager } from 'root/email-manager/email-manager';
 
 @Injectable()
@@ -116,5 +118,19 @@ export class UsersService {
 
   async deleteAllUsers() {
     await this.usersRepository.deleteAllUsers();
+  }
+
+  async resendConfirmationEmail(id: string, email: string) {
+    const newCode = uuidv4();
+
+    await this.usersRepository.findUserByIdAndUpdate(id, {
+      'confirmationInfo.expDate': Date.now() + fiveMinInMs,
+      'confirmationInfo.code': newCode,
+    });
+
+    await this.emailManager.sendConfirmationEmail({
+      to: email as string,
+      code: newCode,
+    });
   }
 }
