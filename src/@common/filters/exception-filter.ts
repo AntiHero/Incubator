@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { APIErrorResult, FieldError } from '../types';
+import { FieldError } from '../types';
 import { ErrorsResponse } from '../utils/customExceptionFactory';
 
 @Catch(HttpException)
@@ -31,6 +31,5 @@ export class HttpExceptionFilter implements ExceptionFilter {
       .type('text/plain')
       .status(status)
       .send(JSON.stringify(errorsResponse));
-    // response.status(status).send(exception.getResponse());
   }
 }

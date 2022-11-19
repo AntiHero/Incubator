@@ -25,7 +25,7 @@ export class UserUnicityValidationPipe implements PipeTransform {
       throw new HttpException(
         {
           message: 'User already exists',
-          filed: userByLogin ? 'login' : 'email',
+          field: userByLogin ? 'login' : 'email',
         },
         HttpStatus.BAD_REQUEST,
       );
