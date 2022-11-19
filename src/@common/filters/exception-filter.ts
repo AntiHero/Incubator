@@ -17,19 +17,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let errorsResponse = new ErrorsResponse();
 
-    const exceptionRes = exception.getResponse();
+    const exceptionResponse = exception.getResponse();
 
-    if (typeof exceptionRes === 'object') {
-      if (exceptionRes instanceof ErrorsResponse) {
-        errorsResponse = exceptionRes;
+    if (typeof exceptionResponse === 'object') {
+      if (exceptionResponse instanceof ErrorsResponse) {
+        errorsResponse = exceptionResponse;
       } else {
-        errorsResponse.errorsMessages.push(exceptionRes as FieldError);
+        errorsResponse.errorsMessages.push(exceptionResponse as FieldError);
       }
     }
 
     response
       .type('text/plain')
       .status(status)
-      .send(JSON.stringify(errorsResponse));
+      .send(
+        typeof errorsResponse === 'string'
+          ? exceptionResponse
+          : JSON.stringify(errorsResponse),
+      );
   }
 }
