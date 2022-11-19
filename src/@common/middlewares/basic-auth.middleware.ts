@@ -6,14 +6,13 @@ import {
   NestMiddleware,
 } from '@nestjs/common';
 
-import { UsersService } from 'root/users/users.service';
 const AUTHENTICATION_SCHEME = 'Basic';
 const LOGIN = 'admin';
 const PASSWORD = 'qwerty';
 
 @Injectable()
 export class BasicAuthMiddleware implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _res: Response, next: NextFunction) {
     const authHeader = req.get('Authorization');
 
     const [scheme, encodedLoginPassword] = authHeader.split(/\s+/);

@@ -38,6 +38,10 @@ export class UsersAdapter {
     return this.model.findByIdAndRemove(id).lean();
   }
 
+  async findUserByQuery(query: any) {
+    return this.model.findOne(query).exec();
+  }
+
   async findUsersByQuery(query: PaginationQuery): Promise<[UserDTO[], number]> {
     const count = await this.model
       .find({

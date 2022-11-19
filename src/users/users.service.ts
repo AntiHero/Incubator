@@ -72,6 +72,12 @@ export class UsersService {
     return [token, refreshToken];
   }
 
+  async confirmUser(id: string) {
+    return this.usersRepository.findUserByIdAndUpdate(id, {
+      'confirmationInfo.isConfirmed': true,
+    });
+  }
+
   async createTokensPair({ login, userId, deviceId }: UserForToken) {
     const userForToken = {
       username: login,
@@ -98,6 +104,10 @@ export class UsersService {
         : await bcrypt.compare(data.password, user.password);
 
     return passwordCorrect;
+  }
+
+  async findUserByQuery(query: any) {
+    return this.usersRepository.findUserByQuery(query);
   }
 
   async findUsersByQuery(query: PaginationQuery) {
