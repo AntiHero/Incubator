@@ -23,6 +23,7 @@ import { convertToPostViewModel } from './utils/covertToPostViewModel';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { Response } from 'express';
 
 @Controller('posts')
 export class PostsController {
@@ -87,7 +88,7 @@ export class PostsController {
   }
 
   @Get(':id')
-  async getPost(@Param('id') id, @Res() res: FastifyReply) {
+  async getPost(@Param('id') id, @Res() res: Response) {
     const post = await this.postsService.getExtendedPostInfo(id);
 
     if (!post) {
@@ -96,12 +97,9 @@ export class PostsController {
 
     const convertedPost = convertToExtendedViewPostModel(post);
 
-    delete convertedPost.extendedLikesInfo;
+    // delete convertedPost.extendedLikesInfo;
 
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(convertToExtendedViewPostModel(post)));
+    res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 
   @Put(':id')

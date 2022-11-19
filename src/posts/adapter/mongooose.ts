@@ -131,7 +131,7 @@ export class PostsAdapter {
         return String(like.userId) === userId;
       });
 
-      if ('likeStatus' in status) {
+      if (status && 'likeStatus' in status) {
         userStatus = status.likeStatus;
       } else {
         userStatus = LikeStatuses.None;
