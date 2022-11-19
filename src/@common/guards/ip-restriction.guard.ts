@@ -21,7 +21,7 @@ export class IpRestrictionGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const ip = request.ip;
     const url = request.url;
-    console.log(ip, url);
+
     try {
       rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
     } catch (e) {

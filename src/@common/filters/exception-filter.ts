@@ -18,6 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const exceptionRes = exception.getResponse();
 
+    console.log(exceptionRes, 'exceptionRes');
     if (typeof exceptionRes === 'object') {
       errorsResponse.errorsMessages.push(exceptionRes as FieldError);
     }
