@@ -27,9 +27,9 @@ export class BlogsController {
 
   @Post()
   async saveBlog(@Body() body: BlogInputModel, @Res() res: FastifyReply) {
-    const { name, youtubeUrl }: BlogInputModel = body;
+    const { name, description, websiteUrl }: BlogInputModel = body;
 
-    const blog = new Blog(name, youtubeUrl);
+    const blog = new Blog(name, description, websiteUrl);
 
     const savedBlog = await this.blogsService.saveBlog(blog);
 
@@ -92,9 +92,9 @@ export class BlogsController {
     @Body() body: BlogInputModel,
     @Res() res: FastifyReply,
   ) {
-    const { name, youtubeUrl } = body;
+    const { name, websiteUrl, description } = body;
 
-    const updates = { name, youtubeUrl };
+    const updates = { name, websiteUrl, description };
 
     const blog = await this.blogsService.findBlogByIdAndUpate(id, updates);
 

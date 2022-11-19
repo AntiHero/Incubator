@@ -5,7 +5,8 @@ import { WithId } from 'root/@common/types/utility';
 
 export type BlogSchemaModel = {
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   posts: PostDatabaseModel[];
   createdAt: Date;
 };
@@ -16,14 +17,16 @@ export type BlogLeanModel = LeanDocument<BlogDatabaseModel>;
 
 export type BlogDomainModel = {
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   posts: PostDomainModel[];
 };
 
 export type BlogDTO = {
   id: string;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   posts: PostDTO[];
   createdAt: string;
 };
@@ -32,12 +35,14 @@ export type BlogDomainModelWithId = WithId<BlogDomainModel>;
 
 export type BlogInputModel = {
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
 };
 
 export type BlogViewModel = {
   readonly id: string;
   name: string;
-  youtubeUrl: string;
+  websiteUrl: string;
+  description: string;
   createdAt: string;
 };

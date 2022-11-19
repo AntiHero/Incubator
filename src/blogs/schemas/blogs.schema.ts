@@ -9,7 +9,10 @@ export class BlogModel extends TimeStamps {
   name: string;
 
   @prop()
-  youtubeUrl: string;
+  description: string;
+
+  @prop()
+  websiteUrl: string;
 
   @prop({ ref: () => PostModel, default: [] })
   posts: Ref<PostModel>[];

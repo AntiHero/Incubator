@@ -20,7 +20,8 @@ export const convertToBlogDTO = <
   return {
     id: String(doc._id),
     name: doc.name,
-    youtubeUrl: doc.youtubeUrl,
+    websiteUrl: doc.websiteUrl,
+    description: doc.description,
     posts,
     createdAt: doc.createdAt.toISOString(),
   };
