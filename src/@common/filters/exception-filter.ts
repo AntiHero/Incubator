@@ -15,7 +15,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();
 
-    let errorsResponse: APIErrorResult = { errorsMessages: [] };
+    let errorsResponse = new ErrorsResponse();
 
     const exceptionRes = exception.getResponse();
 
@@ -28,8 +28,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     response
-      .status(status)
       .type('text/plain')
+      .status(status)
       .send(JSON.stringify(errorsResponse));
     // response.status(status).send(exception.getResponse());
   }
