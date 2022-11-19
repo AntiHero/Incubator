@@ -206,7 +206,7 @@ export class PostsAdapter {
           return String(like.userId) === userId;
         });
 
-        if ('likeStatus' in status) {
+        if (status && 'likeStatus' in status) {
           userStatus = status.likeStatus;
         } else {
           userStatus = LikeStatuses.None;
@@ -225,6 +225,8 @@ export class PostsAdapter {
             .toISOString()
             .localeCompare(b.createdAt.toISOString());
         });
+
+        // newestLikes.length = 3;
 
         const extendedPost: PostExtendedLikesDTO = {
           ...convertedPost,

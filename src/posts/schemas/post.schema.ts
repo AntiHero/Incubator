@@ -9,7 +9,7 @@ export class PostModel extends TimeStamps {
   @prop({ required: true })
   title: string;
 
-  @prop({ required: true })
+  @prop()
   shortDescription: string;
 
   @prop()
