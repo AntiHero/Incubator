@@ -11,16 +11,16 @@ import {
   Headers,
 } from '@nestjs/common';
 
-import { UserDTO } from 'root/users/types';
+// import { UserDTO } from 'root/users/types';
 import { IpsType } from 'root/@common/types';
 import { UsersService } from 'root/users/users.service';
 import { rateLimit } from 'root/@common/utils/rateLimit';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
+import { LoginSuccessViewModel, UserForToken } from './types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
 import { SecurityDeviceInput } from 'root/security-devices/types';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
-import { LoginSuccessViewModel, UserForToken } from './types';
 
 const ips: IpsType = {};
 
@@ -48,23 +48,29 @@ export class AuthController {
     @Headers('user-agent') userAgent: string,
   ) {
     const ip = req.ip;
-    const url = req.url;
+    // const url = req.url;
     const { login, password } = body;
 
-    let user: UserDTO;
+    // let user: UserDTO;
 
-    try {
-      rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
+    // try {
+    //   rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
 
-      user = await this.usersService.authenticateUser({
-        login,
-        password,
-      });
+    //   user = await this.usersService.authenticateUser({
+    //     login,
+    //     password,
+    //   });
 
-      if (!user) return res.status(401).send();
-    } catch (e) {
-      return res.status(429).send();
-    }
+    //   if (!user) return res.status(401).send();
+    // } catch (e) {
+    //   return res.status(429).send();
+    // }
+    const user = await this.usersService.authenticateUser({
+      login,
+      password,
+    });
+
+    if (!user) return res.status(401).send();
 
     const userId = user.id;
 
