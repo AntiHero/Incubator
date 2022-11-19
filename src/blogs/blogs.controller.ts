@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 
 import Blog from './domain/blogs.model';
@@ -21,12 +22,14 @@ import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(private blogsService: BlogsService) {}
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   async saveBlog(@Body() body: BlogInputModel, @Res() res: FastifyReply) {
     const { name, description, websiteUrl }: BlogInputModel = body;
 
@@ -83,6 +86,7 @@ export class BlogsController {
   }
 
   @Put(':id')
+  @UseGuards(BasicAuthGuard)
   async updateBlog(
     @Param('id') id,
     @Body() body: BlogInputModel,
@@ -149,6 +153,7 @@ export class BlogsController {
   }
 
   @Post(':id/posts')
+  @UseGuards(BasicAuthGuard)
   async saveBlogPost(
     @Param('id') id,
     @Body() body: PostBody,
@@ -181,6 +186,7 @@ export class BlogsController {
   }
 
   @Delete(':id')
+  @UseGuards(BasicAuthGuard)
   async deleteBlog(@Param('id') id, @Res() res: FastifyReply) {
     const blog = await this.blogsService.findBlogByIdAndDelete(id);
 
