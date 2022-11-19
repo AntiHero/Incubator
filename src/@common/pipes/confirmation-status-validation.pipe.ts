@@ -18,20 +18,11 @@ export class ConfirmationStatusValidationPipe implements PipeTransform {
 
     const user = await this.usersService.findUserByLoginOrEmail(value.email);
 
-    if (!user)
+    if (!user || user.confirmationInfo.isConfirmed)
       throw new HttpException(
         {
-          message: "User doesn't exist",
+          message: 'Confirmatin code error',
           field: 'email',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-
-    if (user.confirmationInfo.isConfirmed)
-      throw new HttpException(
-        {
-          message: 'Invalid confirmation code',
-          field: 'code',
         },
         HttpStatus.BAD_REQUEST,
       );
