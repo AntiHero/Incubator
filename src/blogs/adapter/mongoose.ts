@@ -10,15 +10,12 @@ import { BlogDomainModel, BlogDTO } from '../types';
 import { countSkip } from 'root/@common/utils/countSkip';
 import { toObjectId } from 'root/@common/utils/toObjectId';
 import { PostModel } from 'root/posts/schemas/post.schema';
-import {
-  PostDomainModel,
-  PostDTO,
-  PostExtendedLikesDTO,
-} from 'root/posts/types';
+import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { LikeStatuses } from 'root/@common/types/enum';
+import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 
 @Injectable()
 export class BlogsAdapter {
@@ -105,9 +102,12 @@ export class BlogsAdapter {
   async findBlogPostsByQuery(
     id: string,
     query: PaginationQuery,
-  ): Promise<[PostDTO[], number]> {
+    userId = '',
+  ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
       const count = (await this.model.findById(id))?.posts.length ?? 0;
+
+      const LIKES_LIMIT = 3;
 
       const posts = await this.model
         .aggregate([
@@ -148,12 +148,81 @@ export class BlogsAdapter {
 
       if (!posts) return null;
 
-      return [posts.map(convertToPostDTO), count];
+      await this.likeModel.populate(posts, { path: 'likes' });
+
+      const result: PostExtendedLikesDTO[] = [];
+
+      for (const post of posts) {
+        const likesCount = post.likes.filter((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
+
+          return like.likeStatus === LikeStatuses.Like;
+        }).length;
+
+        const dislikesCount = post.likes.filter((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
+
+          return like.likeStatus === LikeStatuses.Dislike;
+        }).length;
+
+        let userStatus: LikeStatuses;
+
+        const status = post.likes.find((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
+
+          return String(like.userId) === userId;
+        });
+
+        if (status && 'likeStatus' in status) {
+          userStatus = status.likeStatus;
+        } else {
+          userStatus = LikeStatuses.None;
+        }
+
+        const convertedPost = convertToPostDTO(post);
+
+        const newestLikes = post.likes
+          .filter((like) => {
+            if (like instanceof Types.ObjectId)
+              throw new Error('Not populated');
+
+            return like.likeStatus === LikeStatuses.Like;
+          })
+          .sort((a, b) => {
+            if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
+              throw new Error('Not populated');
+
+            return (
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+          });
+
+        newestLikes.splice(LIKES_LIMIT);
+
+        const extendedPost: PostExtendedLikesDTO = {
+          ...convertedPost,
+          likesCount,
+          dislikesCount,
+          userStatus,
+          newestLikes: newestLikes.map(convertToLikeDTO),
+        };
+
+        result.push(extendedPost);
+      }
+
+      return [result, count];
     } catch (e) {
       console.error(e);
 
       return null;
     }
+
+    //   return [posts.map(convertToPostDTO), count];
+    // } catch (e) {
+    //   console.error(e);
+
+    //   return null;
+    // }
   }
 
   async findBlogsByQuery(query: PaginationQuery): Promise<[BlogDTO[], number]> {

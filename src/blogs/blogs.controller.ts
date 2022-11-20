@@ -13,19 +13,17 @@ import {
 import { Response } from 'express';
 
 import Blog from './domain/blogs.model';
+import { BlogViewModel } from './types';
 import { BlogsService } from './blogs.service';
+import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';
-import { BlogViewModel } from './types';
-import { PostBody, PostViewModel } from 'root/posts/types';
+import { PostBody, PostExtendedViewModel } from 'root/posts/types';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
-import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
-import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/conveertToExtendedPostViewModel';
-import { PaginationQuery } from 'root/@common/types';
 
 @Controller('blogs')
 export class BlogsController {
@@ -134,7 +132,9 @@ export class BlogsController {
       },
     );
 
-    const items: PostViewModel[] = posts.map(convertToPostViewModel);
+    const items: PostExtendedViewModel[] = posts.map(
+      convertToExtendedViewPostModel,
+    );
 
     const result = new Paginator(
       Math.ceil(totalCount / pageSize),

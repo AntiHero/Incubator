@@ -18,11 +18,12 @@ import {
 import { Response, Request } from 'express';
 
 import { FastifyReply } from 'fastify';
-import { PostInputModel } from './types';
 import { PostsService } from './posts.service';
 import { LikePostDTO } from './dto/like-post.dto';
 import { PaginationQuery } from 'root/@common/types';
+import { CreatePostDTO } from './dto/create-post.dto';
 import Paginator from 'root/@common/models/Paginator';
+import { UpdatePostDTO } from './dto/update-post.dto';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
@@ -79,7 +80,7 @@ export class PostsController {
 
   @Post()
   @UseGuards(BasicAuthGuard)
-  async savePost(@Body() body: PostInputModel, @Res() res: FastifyReply) {
+  async savePost(@Body() body: CreatePostDTO, @Res() res: Response) {
     const { title, shortDescription, content, blogId } = body;
 
     const post = new PostModel({
@@ -150,7 +151,7 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   async updatePost(
     @Param('id') id,
-    @Body() body: PostInputModel,
+    @Body() body: UpdatePostDTO,
     @Res() res: FastifyReply,
   ) {
     const { title, shortDescription, blogId, content } = body;

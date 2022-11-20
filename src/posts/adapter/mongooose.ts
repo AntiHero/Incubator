@@ -280,9 +280,6 @@ export class PostsAdapter {
 
         const convertedPost = convertToPostDTO(post);
 
-        delete convertedPost.likes;
-        delete convertedPost.comments;
-
         const newestLikes = post.likes
           .filter((like) => {
             if (like instanceof Types.ObjectId)
