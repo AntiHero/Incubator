@@ -16,6 +16,7 @@ import {
 import { PostModel } from '../schemas/post.schema';
 import { LikeDomainModel } from 'root/likes/types';
 import { Like } from 'root/likes/domain/likes.model';
+import { LIKES_LIMIT } from 'root/@common/constants';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { toObjectId } from 'root/@common/utils/toObjectId';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
@@ -124,22 +125,37 @@ export class PostsAdapter {
       const like = await this.likeModel.findOne(filter).exec();
 
       if (!like) {
-        const {
-          login,
-          entityId = id,
-          likeStatus = LikeStatuses.None,
-          userId,
-        } = data;
+        const { login, likeStatus, userId } = data;
 
         if (likeStatus === LikeStatuses.None) return true;
 
-        const newLike = new Like({ login, entityId, likeStatus, userId });
+        const newLike = new Like({ login, entityId: id, likeStatus, userId });
 
         const createdLike = await this.likeModel.create(newLike);
 
         await this.model.findByIdAndUpdate(id, {
           $push: { likes: createdLike._id },
         });
+
+        const likesCount = (await this.likeModel.find({}).exec()).filter(
+          (like) => like.likeStatus === LikeStatuses.Like,
+        ).length;
+        const dislikesCount = (await this.likeModel.find({}).exec()).filter(
+          (like) => like.likeStatus === LikeStatuses.Dislike,
+        ).length;
+        console.log(
+          'new like',
+          id,
+          'postId',
+          userId,
+          'userId',
+          data.likeStatus,
+          'likeStatus',
+          likesCount,
+          'likesCount',
+          dislikesCount,
+          'dislikesCount',
+        );
 
         return true;
       } else {
@@ -154,10 +170,30 @@ export class PostsAdapter {
         } else {
           await this.likeModel.updateOne({ _id: like._id }, data).exec();
         }
+        const likesCount = (await this.likeModel.find({}).exec()).filter(
+          (like) => like.likeStatus === LikeStatuses.Like,
+        ).length;
+        const dislikesCount = (await this.likeModel.find({}).exec()).filter(
+          (like) => like.likeStatus === LikeStatuses.Dislike,
+        ).length;
+        console.log(
+          'updated Likes',
+          id,
+          'postId',
+          data.userId,
+          'userId',
+          data.likeStatus,
+          'likeStatus',
+          likesCount,
+          'likesCount',
+          dislikesCount,
+          'dislikesCount',
+        );
 
         return true;
       }
     } catch (e) {
+      console.log(e, 'error like post');
       return null;
     }
   }
@@ -236,8 +272,6 @@ export class PostsAdapter {
     filter: any,
     userId = '',
   ): Promise<[PostExtendedLikesDTO[], number]> {
-    const LIKES_LIMIT = 3;
-
     try {
       const count = await this.model.find({ ...filter }).count();
 

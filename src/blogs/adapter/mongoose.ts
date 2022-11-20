@@ -16,6 +16,7 @@ import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
+import { LIKES_LIMIT } from 'root/@common/constants';
 
 @Injectable()
 export class BlogsAdapter {
@@ -106,8 +107,6 @@ export class BlogsAdapter {
   ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
       const count = (await this.model.findById(id))?.posts.length ?? 0;
-
-      const LIKES_LIMIT = 3;
 
       const posts = await this.model
         .aggregate([
@@ -216,13 +215,6 @@ export class BlogsAdapter {
 
       return null;
     }
-
-    //   return [posts.map(convertToPostDTO), count];
-    // } catch (e) {
-    //   console.error(e);
-
-    //   return null;
-    // }
   }
 
   async findBlogsByQuery(query: PaginationQuery): Promise<[BlogDTO[], number]> {
