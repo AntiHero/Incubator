@@ -25,6 +25,7 @@ import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/conveertToExtendedPostViewModel';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('blogs')
 export class BlogsController {
@@ -109,7 +110,8 @@ export class BlogsController {
 
   @Get(':id/posts')
   async getBlogPosts(
-    @Param('id') id,
+    @UserId() userId: string,
+    @Param('id') id: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: Response,
   ) {
@@ -131,6 +133,7 @@ export class BlogsController {
         sortDirection,
         searchNameTerm,
       },
+      userId,
     );
 
     const items: PostExtendedViewModel[] = posts.map(

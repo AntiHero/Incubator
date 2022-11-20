@@ -13,8 +13,12 @@ export class BlogsService {
     return this.blogsRepository.addBlog(blog);
   }
 
-  async findBlogPostsByQuery(id: string, query: PaginationQuery) {
-    return this.blogsRepository.findBlogPostsByQuery(id, query);
+  async findBlogPostsByQuery(
+    id: string,
+    query: PaginationQuery,
+    userId?: string,
+  ) {
+    return this.blogsRepository.findBlogPostsByQuery(id, query, userId);
   }
 
   async findBlogsByQuery(query: PaginationQuery) {
