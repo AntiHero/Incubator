@@ -30,9 +30,12 @@ import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
+import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { CreateCommentDTO } from './dto/create-comment.dto';
+import { UserLogin } from 'root/@common/decorators/user-login.decorator';
+import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {
@@ -175,7 +178,7 @@ export class PostsController {
 
   @Get(':id/comments')
   async getPostComments(
-    @Param('id') id,
+    @Param('id') id: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: FastifyReply,
   ) {
@@ -208,5 +211,32 @@ export class PostsController {
     );
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Post(':id/comments')
+  @UseGuards(BearerAuthGuard)
+  async createComment(
+    @UserId() userId: string,
+    @UserLogin() userLogin: string,
+    @Param('id') id: string,
+    @Body() body: CreateCommentDTO,
+    @Res() res: Response,
+  ) {
+    const { content } = body;
+
+    const comment = await this.postsService.addComment(id, {
+      content,
+      userId,
+      userLogin,
+    });
+
+    if (!comment) return res.status(404).send();
+
+    const extendedCommentView = convertToExtendedViewCommentModel(comment);
+
+    res
+      .status(201)
+      .type('text/plain')
+      .send(JSON.stringify(extendedCommentView));
   }
 }

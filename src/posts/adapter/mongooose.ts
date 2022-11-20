@@ -21,7 +21,7 @@ import { LikeStatuses } from 'root/@common/types/enum';
 import { toObjectId } from 'root/@common/utils/toObjectId';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { CommentExtendedLikesDTO } from 'root/comments/types';
+import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
@@ -424,5 +424,31 @@ export class PostsAdapter {
 
       return null;
     }
+  }
+
+  async addComment(
+    id: string,
+    data: Pick<CommentDTO, 'content' | 'userId' | 'userLogin'>,
+  ) {
+    const post = await this.model.findById(id).lean().exec();
+
+    if (!post) return null;
+
+    const { content, userId, userLogin } = data;
+
+    const comment = await this.commentModel.create({
+      userId,
+      entityId: post.id,
+      content,
+      userLogin,
+    });
+
+    await this.model.findByIdAndUpdate(id, {
+      $push: { comments: comment._id },
+    });
+
+    await comment.populate('likes');
+
+    return convertToCommentDTO(comment);
   }
 }

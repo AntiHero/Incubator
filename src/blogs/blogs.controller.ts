@@ -24,7 +24,7 @@ import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { convertToExtendedViewPostModel } from 'root/posts/utils/conveertToExtendedPostViewModel';
+import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('blogs')
