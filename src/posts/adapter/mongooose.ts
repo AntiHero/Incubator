@@ -117,13 +117,14 @@ export class PostsAdapter {
 
       if (!isValidPostId) throw new Error('Not valid post id');
 
-      const filter: any = { entityId: new Types.ObjectId(id) };
-
-      if (data.userId) {
-        filter.userId = new Types.ObjectId(data.userId);
-      }
+      const filter = {
+        entityId: new Types.ObjectId(id),
+        userId: new Types.ObjectId(data.userId),
+      };
 
       const like = await this.likeModel.findOne(filter).exec();
+
+      console.log(data.likeStatus);
 
       if (!like) {
         const {
@@ -132,6 +133,7 @@ export class PostsAdapter {
           likeStatus = LikeStatuses.None,
           userId,
         } = data;
+
         if (likeStatus === LikeStatuses.None) return true;
 
         const newLike = new Like({ login, entityId, likeStatus, userId });
@@ -142,12 +144,16 @@ export class PostsAdapter {
           $push: { likes: createdLike._id },
         });
 
+        console.log('here');
+
         return true;
       } else {
         if (data.likeStatus === LikeStatuses.None) {
           await this.model.findByIdAndUpdate(id, {
             $pull: { likes: like._id },
           });
+
+          await this.likeModel.findByIdAndDelete(like._id);
         } else {
           await this.likeModel.updateOne({ _id: like._id }, data).exec();
         }
@@ -282,14 +288,21 @@ export class PostsAdapter {
         delete convertedPost.likes;
         delete convertedPost.comments;
 
-        const newestLikes = post.likes.sort((a, b) => {
-          if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
-            throw new Error('Not populated');
+        const newestLikes = post.likes
+          .filter((like) => {
+            if (like instanceof Types.ObjectId)
+              throw new Error('Not populated');
 
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        });
+            return like.likeStatus === LikeStatuses.Like;
+          })
+          .sort((a, b) => {
+            if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
+              throw new Error('Not populated');
+
+            return (
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+          });
 
         newestLikes.splice(2);
 

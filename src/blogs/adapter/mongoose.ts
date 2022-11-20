@@ -89,7 +89,7 @@ export class BlogsAdapter {
 
   async deleteAllBlogs() {
     await this.likeModel.deleteMany({}).exec();
-    await this.postModel.deleteMany({}).exec();
+    await this.commentModel.deleteMany({}).exec();
     await this.postModel.deleteMany({}).exec();
     await this.model.deleteMany({}).exec();
   }
