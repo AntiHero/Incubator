@@ -137,43 +137,6 @@ export class PostsAdapter {
           $push: { likes: createdLike._id },
         });
 
-        const likesCount = (
-          await this.likeModel.find({ entityId: new Types.ObjectId(id) }).exec()
-        ).filter((like) => like.likeStatus === LikeStatuses.Like).length;
-        const dislikesCount = (
-          await this.likeModel.find({ entityId: new Types.ObjectId(id) }).exec()
-        ).filter(
-          (like: LikeModel) => like.likeStatus === LikeStatuses.Dislike,
-        ).length;
-
-        const likesCountInPost = (
-          await this.model.findById(id).populate('likes').exec()
-        ).likes.filter(
-          (like: LikeModel) => like.likeStatus === LikeStatuses.Like,
-        ).length;
-        const dislikesCountInPost = (
-          await this.model.findById(id).populate('likes').exec()
-        ).likes.filter(
-          (like: LikeModel) => like.likeStatus === LikeStatuses.Dislike,
-        ).length;
-        console.log(
-          'new like',
-          id,
-          'postId',
-          login,
-          'login',
-          data.likeStatus,
-          'likeStatus',
-          likesCount,
-          'likesCount',
-          likesCountInPost === likesCount,
-          'likes equality ',
-          dislikesCount,
-          'dislikesCount',
-          dislikesCountInPost === dislikesCount,
-          'dislikes equality ',
-        );
-
         return true;
       } else {
         if (data.likeStatus === LikeStatuses.None) {
@@ -187,40 +150,6 @@ export class PostsAdapter {
         } else {
           await this.likeModel.updateOne({ _id: like._id }, data).exec();
         }
-        const likesCount = (
-          await this.likeModel.find({ entityId: new Types.ObjectId(id) }).exec()
-        )?.filter((like) => like.likeStatus === LikeStatuses.Like).length;
-        const likesCountInPost = (
-          await this.model.findById(id).populate('likes').exec()
-        ).likes.filter(
-          (like: LikeModel) => like.likeStatus === LikeStatuses.Like,
-        ).length;
-        const dislikesCountInPost = (
-          await this.model.findById(id).populate('likes').exec()
-        ).likes.filter(
-          (like: LikeModel) => like.likeStatus === LikeStatuses.Dislike,
-        ).length;
-
-        const dislikesCount = (
-          await this.likeModel.find({ entityId: new Types.ObjectId(id) }).exec()
-        )?.filter((like) => like.likeStatus === LikeStatuses.Dislike).length;
-        console.log(
-          'updated Likes',
-          id,
-          'postId',
-          data.login,
-          'login',
-          data.likeStatus,
-          'likeStatus',
-          likesCount,
-          'likesCount',
-          likesCountInPost === likesCount,
-          'likes equality',
-          dislikesCount,
-          'dislikesCount',
-          dislikesCountInPost === dislikesCount,
-          'dlikes equality',
-        );
 
         return true;
       }
@@ -241,6 +170,8 @@ export class PostsAdapter {
       const post = await this.model.findById(id).lean().populate('likes');
 
       if (!post) return null;
+
+      console.log(post, 'post');
 
       const likesCount = post.likes.filter((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
@@ -268,8 +199,6 @@ export class PostsAdapter {
         userStatus = LikeStatuses.None;
       }
 
-      const convertedPost = convertToPostDTO(post);
-
       const newestLikes = post.likes
         .filter((like) => {
           if (like instanceof Types.ObjectId) throw new Error('Not populated');
@@ -284,6 +213,10 @@ export class PostsAdapter {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         });
+
+      const convertedPost = convertToPostDTO(post);
+
+      newestLikes.splice(LIKES_LIMIT);
 
       const extendedPost: PostExtendedLikesDTO = {
         ...convertedPost,
