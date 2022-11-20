@@ -56,7 +56,17 @@ export class PostsAdapter {
       blogId: new ObjectId(post.blogId),
     });
 
-    return convertToPostDTO(createdPost);
+    const convertedPost = convertToPostDTO(createdPost);
+
+    const extendedPost: PostExtendedLikesDTO = {
+      ...convertedPost,
+      likesCount: 0,
+      dislikesCount: 0,
+      userStatus: LikeStatuses.None,
+      newestLikes: [],
+    };
+
+    return extendedPost;
   }
 
   async findPostById(postId: string) {

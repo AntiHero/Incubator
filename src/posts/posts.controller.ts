@@ -11,6 +11,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 
 import { FastifyReply } from 'fastify';
 import { PostInputModel } from './types';
@@ -19,11 +20,10 @@ import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
-import { convertToPostViewModel } from './utils/covertToPostViewModel';
+// import { convertToPostViewModel } from './utils/covertToPostViewModel';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { Response } from 'express';
 
 @Controller('posts')
 export class PostsController {
@@ -84,7 +84,7 @@ export class PostsController {
     res
       .type('text/plain')
       .status(201)
-      .send(JSON.stringify(convertToPostViewModel(savedPost)));
+      .send(JSON.stringify(convertToExtendedViewPostModel(savedPost)));
   }
 
   @Get(':id')
