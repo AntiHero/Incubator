@@ -211,7 +211,9 @@ export class PostsAdapter {
           if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
             throw new Error('Not populated');
 
-          return a.createdAt.toISOString() > b.createdAt.toISOString() ? -1 : 1;
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         });
 
       const extendedPost: PostExtendedLikesDTO = {
@@ -284,9 +286,9 @@ export class PostsAdapter {
           if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
             throw new Error('Not populated');
 
-          return a.createdAt
-            .toISOString()
-            .localeCompare(b.createdAt.toISOString());
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         });
 
         newestLikes.splice(2);
