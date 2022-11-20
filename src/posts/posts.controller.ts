@@ -30,6 +30,7 @@ import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentV
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { LikePostDTO } from './dto/like-post.dto';
 import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -95,8 +96,12 @@ export class PostsController {
   }
 
   @Get(':id')
-  async getPost(@Param('id') id, @Res() res: Response) {
-    const post = await this.postsService.getExtendedPostInfo(id);
+  async getPost(
+    @UserId() userId: string,
+    @Param('id') id,
+    @Res() res: Response,
+  ) {
+    const post = await this.postsService.getExtendedPostInfo(id, userId);
 
     if (!post) {
       return res.status(404).send();
@@ -182,17 +187,6 @@ export class PostsController {
 
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
-
-    // const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    // const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    // const sortBy = query.sortBy || 'createdAt';
-    // const sortDirection =
-    //   query.sortDirection === SortDirectionKeys.asc
-    //     ? SortDirections.asc
-    //     : SortDirections.desc;
-    // const searchNameTerm = query.searchNameTerm
-    //   ? new RegExp(query.searchNameTerm, 'i')
-    //   : /.*/i;
 
     const [comments, totalCount] =
       await this.postsService.findPostCommentsByQuery(id, {

@@ -1,5 +1,5 @@
-import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
@@ -14,6 +14,8 @@ import {
   PostLeanModel,
 } from '../types';
 import { PostModel } from '../schemas/post.schema';
+import { LikeDomainModel } from 'root/likes/types';
+import { Like } from 'root/likes/domain/likes.model';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { toObjectId } from 'root/@common/utils/toObjectId';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
@@ -22,8 +24,6 @@ import { CommentExtendedLikesDTO } from 'root/comments/types';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { LikeDomainModel } from 'root/likes/types';
-import { Like } from 'root/likes/domain/likes.model';
 
 @Injectable()
 export class PostsAdapter {
@@ -185,7 +185,6 @@ export class PostsAdapter {
 
       const status = post.likes.find((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
-
         return String(like.userId) === userId;
       });
 
@@ -246,7 +245,6 @@ export class PostsAdapter {
         .limit(query.pageSize)
         .lean()
         .populate('likes');
-      console.log(posts, 'posts');
       const result: PostExtendedLikesDTO[] = [];
 
       for (const post of posts) {

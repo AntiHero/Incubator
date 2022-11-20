@@ -33,8 +33,6 @@ export class BearerAuthGuard implements CanActivate {
       );
     }
 
-    console.log(process.env.SECRET, 'env secret');
-
     try {
       const decodedToken = jwt.verify(
         token,

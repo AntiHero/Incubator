@@ -1,6 +1,7 @@
 import { LikeViewModel } from 'root/likes/types';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { PostDTO, PostExtendedLikesDTO, PostExtendedViewModel } from '../types';
+import { convertToLikeViewModel } from 'root/likes/utils/convertToLikeViewModel';
 
 export const convertToExtendedViewPostModel = (
   post: PostExtendedLikesDTO | PostDTO,
@@ -37,7 +38,7 @@ export const convertToExtendedViewPostModel = (
     extendedLikesInfo: {
       likesCount,
       dislikesCount,
-      newestLikes,
+      newestLikes: newestLikes.map(convertToLikeViewModel),
       myStatus,
     },
   };
