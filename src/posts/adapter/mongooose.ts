@@ -113,6 +113,7 @@ export class PostsAdapter {
 
   async likePost(id: string, data: Partial<LikeDomainModel>) {
     console.log(data, 'data');
+    console.log(id, 'postId');
     try {
       const isValidPostId = ObjectId.isValid(id);
 
@@ -146,6 +147,7 @@ export class PostsAdapter {
         });
 
         console.log('create like', data.userId);
+        console.log(await this.likeModel.find({}));
 
         return true;
       } else {
