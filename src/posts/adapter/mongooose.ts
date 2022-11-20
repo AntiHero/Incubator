@@ -117,11 +117,13 @@ export class PostsAdapter {
 
       if (!isValidPostId) throw new Error('Not valid post id');
 
-      const like = await this.likeModel
-        .findOne({
-          entityId: new Types.ObjectId(id),
-        })
-        .exec();
+      const filter: any = { entityId: new Types.ObjectId(id) };
+
+      if (data.userId) {
+        filter.userId = new Types.ObjectId(data.userId);
+      }
+
+      const like = await this.likeModel.findOne(filter).exec();
 
       if (!like) {
         const {

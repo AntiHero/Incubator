@@ -12,6 +12,7 @@ import {
   Query,
   Req,
   Res,
+  Scope,
   UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
@@ -19,20 +20,20 @@ import { Response, Request } from 'express';
 import { FastifyReply } from 'fastify';
 import { PostInputModel } from './types';
 import { PostsService } from './posts.service';
+import { LikePostDTO } from './dto/like-post.dto';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { LikePostDTO } from './dto/like-post.dto';
-import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
 
-@Controller('posts')
+@Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {
   constructor(private postsService: PostsService) {}
 

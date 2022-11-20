@@ -1,10 +1,7 @@
 import { LikeDTO, LikeViewModel } from '../types';
 
 export const convertToLikeViewModel = (like: LikeDTO): LikeViewModel => {
-  const view = { ...like };
-  delete view.entityId;
-  delete view.id;
-  delete view.likeStatus;
+  const { login, addedAt, userId } = like;
 
-  return like;
+  return { login, addedAt, userId };
 };
