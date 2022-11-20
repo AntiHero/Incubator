@@ -77,20 +77,34 @@ export class CommentsController {
     const userId = req.userId;
     const { likeStatus } = body;
 
-    const isLikeUpdated = await this.commentsService.likeComment(id, {
+    const comment = await this.commentsService.findCommentById(id);
+
+    if (!comment) return res.status(404).send();
+
+    await this.commentsService.likeComment(id, {
       login,
       userId,
       likeStatus,
     });
-
-    if (!isLikeUpdated) return res.status(404).send();
 
     res.status(204).send();
   }
 
   @Delete(':id')
   @UseGuards(BearerAuthGuard)
-  async deleteComment(@Param('id') id: string, @Res() res: Response) {
+  async deleteComment(
+    @Param('id') id: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    const userId = req.userId;
+
+    const comment = await this.commentsService.findCommentById(id);
+
+    if (!comment) return res.status(404).send();
+
+    if (comment.userId !== userId) return res.status(403).send();
+
     await this.commentsService.deleteComment(id);
 
     res.status(204).send();
