@@ -112,10 +112,6 @@ export class PostsController {
 
     const convertedPost = convertToExtendedViewPostModel(post);
 
-    console.log(
-      convertedPost.extendedLikesInfo.newestLikes,
-      'liked GET post/id',
-    );
     res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 

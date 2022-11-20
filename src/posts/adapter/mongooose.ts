@@ -112,12 +112,9 @@ export class PostsAdapter {
   }
 
   async likePost(id: string, data: Partial<LikeDomainModel>) {
-    console.log(data, 'data');
-    console.log(id, 'postId');
     try {
-      const isValidPostId = ObjectId.isValid(id);
-
-      if (!isValidPostId) throw new Error('Not valid post id');
+      if (!ObjectId.isValid(id) || !ObjectId.isValid(data.userId))
+        throw new Error('Not valid post id');
 
       const filter = {
         entityId: new Types.ObjectId(id),
@@ -125,8 +122,6 @@ export class PostsAdapter {
       };
 
       const like = await this.likeModel.findOne(filter).exec();
-
-      console.log(data.likeStatus);
 
       if (!like) {
         const {
@@ -146,9 +141,6 @@ export class PostsAdapter {
           $push: { likes: createdLike._id },
         });
 
-        console.log('create like', data.userId);
-        console.log(await this.likeModel.find({}));
-
         return true;
       } else {
         if (data.likeStatus === LikeStatuses.None) {
@@ -159,17 +151,13 @@ export class PostsAdapter {
             .exec();
 
           await this.likeModel.findByIdAndDelete(like._id).exec();
-          console.log('remove like', data.userId);
         } else {
           await this.likeModel.updateOne({ _id: like._id }, data).exec();
-          console.log('update like', data.userId);
         }
 
-        console.log(await this.likeModel.find({}));
         return true;
       }
     } catch (e) {
-      console.log(e, 'error in like post');
       return null;
     }
   }
@@ -202,6 +190,7 @@ export class PostsAdapter {
 
       const status = post.likes.find((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
+
         return String(like.userId) === userId;
       });
 
@@ -212,9 +201,6 @@ export class PostsAdapter {
       }
 
       const convertedPost = convertToPostDTO(post);
-
-      delete convertedPost.likes;
-      delete convertedPost.comments;
 
       const newestLikes = post.likes
         .filter((like) => {
@@ -241,8 +227,6 @@ export class PostsAdapter {
 
       return extendedPost;
     } catch (e) {
-      console.error(e, 'extendedPost');
-
       return null;
     }
   }
@@ -252,6 +236,8 @@ export class PostsAdapter {
     filter: any,
     userId = '',
   ): Promise<[PostExtendedLikesDTO[], number]> {
+    const LIKES_LIMIT = 3;
+
     try {
       const count = await this.model.find({ ...filter }).count();
 
@@ -313,7 +299,7 @@ export class PostsAdapter {
             );
           });
 
-        newestLikes.splice(2);
+        newestLikes.splice(LIKES_LIMIT);
 
         const extendedPost: PostExtendedLikesDTO = {
           ...convertedPost,
