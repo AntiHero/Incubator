@@ -40,6 +40,7 @@ export class PostsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getPosts(
+    @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: FastifyReply,
   ) {
@@ -56,13 +57,14 @@ export class PostsController {
           searchNameTerm,
         },
         {},
+        userId,
       );
 
     const items = posts.map(convertToExtendedViewPostModel);
 
-    for (const item of items) {
-      delete item.extendedLikesInfo;
-    }
+    // for (const item of items) {
+    //   delete item.extendedLikesInfo;
+    // }
 
     const result = new Paginator(
       Math.ceil(totalCount / pageSize),
