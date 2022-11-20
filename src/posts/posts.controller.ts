@@ -108,7 +108,11 @@ export class PostsController {
 
   @Put(':id/like-status')
   @UseGuards(BearerAuthGuard)
-  async likePost(@Res() res: Response) {
+  async likePost(@Param('id') id, @Res() res: Response) {
+    const post = await this.postsService.findPostById(id);
+
+    if (!post) return res.status(404).send();
+
     res.status(204).send();
   }
 

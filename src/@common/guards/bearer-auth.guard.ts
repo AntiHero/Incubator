@@ -27,7 +27,10 @@ export class BearerAuthGuard implements CanActivate {
     const [scheme, token] = authHeader.split(/\s+/);
 
     if (scheme !== AUTHENTICATION_SCHEME) {
-      throw new Error('Invalid authentication scheme');
+      throw new HttpException(
+        'Invalid authentication scheme',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     console.log(process.env.SECRET, 'env secret');

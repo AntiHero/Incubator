@@ -31,7 +31,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       .type('text/plain')
       .status(status)
       .send(
-        typeof errorsResponse === 'string'
+        typeof exceptionResponse === 'string'
           ? exceptionResponse
           : JSON.stringify(errorsResponse),
       );
