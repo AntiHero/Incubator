@@ -18,7 +18,8 @@ import { BlogsService } from './blogs.service';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';
-import { PostBody, PostExtendedViewModel } from 'root/posts/types';
+import { PostExtendedViewModel } from 'root/posts/types';
+import { CreateBlogPostDTO } from './dto/create-blog-post.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
@@ -151,7 +152,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   async saveBlogPost(
     @Param('id') id,
-    @Body() body: PostBody,
+    @Body() body: CreateBlogPostDTO,
     @Res() res: Response,
   ) {
     const { title, shortDescription, content } = body;

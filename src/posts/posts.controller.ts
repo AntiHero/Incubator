@@ -63,10 +63,6 @@ export class PostsController {
 
     const items = posts.map(convertToExtendedViewPostModel);
 
-    // for (const item of items) {
-    //   delete item.extendedLikesInfo;
-    // }
-
     const result = new Paginator(
       Math.ceil(totalCount / pageSize),
       pageNumber,

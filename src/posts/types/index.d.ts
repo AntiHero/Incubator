@@ -84,12 +84,6 @@ export type PostViewModel = {
   createdAt: string;
 };
 
-export type PostBody = {
-  title: string;
-  shortDescription: string;
-  content: string;
-};
-
 export type PostExtendedViewModel = {
   id: string;
   shortDescription: string;
