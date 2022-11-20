@@ -22,6 +22,8 @@ import { CommentExtendedLikesDTO } from 'root/comments/types';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
+import { LikeDomainModel } from 'root/likes/types';
+import { Like } from 'root/likes/domain/likes.model';
 
 @Injectable()
 export class PostsAdapter {
@@ -107,6 +109,44 @@ export class PostsAdapter {
     await this.likeModel.deleteMany({ entityId: toObjectId(id) }).exec();
 
     return this.model.findByIdAndRemove(id).lean();
+  }
+
+  async likePost(id: string, data: Partial<LikeDomainModel>) {
+    try {
+      const isValidPostId = ObjectId.isValid(id);
+
+      if (!isValidPostId) throw new Error('Not valid post id');
+
+      const like = await this.likeModel
+        .findOne({
+          entityId: new Types.ObjectId(id),
+        })
+        .exec();
+
+      if (!like) {
+        const {
+          login,
+          entityId = id,
+          likeStatus = LikeStatuses.None,
+          userId,
+        } = data;
+        const newLike = new Like({ login, entityId, likeStatus, userId });
+
+        await this.likeModel.create(newLike);
+
+        return true;
+      } else {
+        const updatedLike = await this.likeModel
+          .updateOne({ _id: like._id }, data, {
+            new: true,
+          })
+          .exec();
+
+        return updatedLike.modifiedCount === 1 ? true : null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
   async countPosts() {
@@ -236,7 +276,7 @@ export class PostsAdapter {
             .localeCompare(b.createdAt.toISOString());
         });
 
-        // newestLikes.length = 3;
+        newestLikes.splice(2);
 
         const extendedPost: PostExtendedLikesDTO = {
           ...convertedPost,

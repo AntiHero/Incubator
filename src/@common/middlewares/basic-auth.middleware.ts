@@ -18,7 +18,10 @@ export class BasicAuthMiddleware implements NestMiddleware {
     const [scheme, encodedLoginPassword] = authHeader.split(/\s+/);
 
     if (scheme !== AUTHENTICATION_SCHEME) {
-      throw new Error('Invalid authentication scheme');
+      throw new HttpException(
+        'Invalid authentication scheme',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const decodedLoginPassowrd = Buffer.from(

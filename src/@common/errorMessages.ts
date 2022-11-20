@@ -12,3 +12,7 @@ export const EMPTY_STRING_ERROR =
   'Field should not be empty or consists of spaces';
 
 export const NOT_EMAIL = 'Field is not email';
+
+export const WRONG_VALUE = 'Field contains wrong value';
+
+export const OPERATION_COMPLITION_ERROR = 'Operation cannot be completed';

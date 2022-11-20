@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { PostDomainModel } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import { PostsAdapter } from './adapter/mongooose';
+import { LikeDomainModel } from 'root/likes/types';
 
 @Injectable()
 export class PostsService {
@@ -38,6 +39,10 @@ export class PostsService {
 
   async findPostsByQuery(query: PaginationQuery, filter: any = {}) {
     return this.postsRepository.findPostsByQuery(query, filter);
+  }
+
+  async likePost(id: string, data: Partial<LikeDomainModel>) {
+    return this.postsRepository.likePost(id, data);
   }
 
   async getAllPosts() {

@@ -4,15 +4,17 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Put,
   Query,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import { FastifyReply } from 'fastify';
 import { PostInputModel } from './types';
@@ -21,12 +23,13 @@ import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
-// import { convertToPostViewModel } from './utils/covertToPostViewModel';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { LikePostDTO } from './dto/like-post.dto';
+import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
 
 @Controller('posts')
 export class PostsController {
@@ -101,17 +104,36 @@ export class PostsController {
 
     const convertedPost = convertToExtendedViewPostModel(post);
 
-    // delete convertedPost.extendedLikesInfo;
-
     res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 
   @Put(':id/like-status')
   @UseGuards(BearerAuthGuard)
-  async likePost(@Param('id') id, @Res() res: Response) {
+  async likePost(
+    @Body() body: LikePostDTO,
+    @Param('id') id,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     const post = await this.postsService.findPostById(id);
 
     if (!post) return res.status(404).send();
+
+    const login = req.login;
+    const userId = req.userId;
+    const likeStatus = body.likeStatus;
+
+    const likePost = await this.postsService.likePost(id, {
+      login,
+      userId,
+      likeStatus,
+    });
+
+    if (!likePost)
+      throw new HttpException(
+        OPERATION_COMPLITION_ERROR,
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
 
     res.status(204).send();
   }
