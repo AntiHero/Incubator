@@ -2,6 +2,7 @@ import 'module-alias/register';
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
@@ -18,6 +19,7 @@ async function bootstrap() {
       exceptionFactory,
     }),
   );
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
   await app.listen(PORT || 9000, '0.0.0.0');

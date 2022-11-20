@@ -8,6 +8,7 @@ import { PostModel } from './schemas/post.schema';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
+import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
 
 @Module({
   imports: [
@@ -37,7 +38,7 @@ import { CommentModel } from 'root/comments/schemas/comment.schema';
     ]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsAdapter],
+  providers: [PostsService, PostsAdapter, IsBlogExist],
   exports: [PostsService],
 })
 export class PostsModule {}

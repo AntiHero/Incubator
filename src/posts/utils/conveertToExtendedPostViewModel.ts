@@ -11,19 +11,19 @@ export const convertToExtendedViewPostModel = (
   let newestLikes: LikeViewModel[] = [];
   let myStatus: LikeStatuses = LikeStatuses.None;
 
-  if ('likesCount' in post) {
+  if (post && 'likesCount' in post) {
     likesCount = post.likesCount;
   }
 
-  if ('userStatus' in post) {
+  if (post && 'userStatus' in post) {
     myStatus = post.userStatus;
   }
 
-  if ('dislikesCount' in post) {
+  if (post && 'dislikesCount' in post) {
     dislikesCount = post.dislikesCount;
   }
 
-  if ('newestLikes' in post) {
+  if (post && 'newestLikes' in post) {
     newestLikes = post.newestLikes;
   }
 
