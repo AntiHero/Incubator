@@ -33,7 +33,7 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { CreateCommentDTO } from './dto/create-comment.dto';
+import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
 import { UserLogin } from 'root/@common/decorators/user-login.decorator';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
 

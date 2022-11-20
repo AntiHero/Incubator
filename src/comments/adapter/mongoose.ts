@@ -1,11 +1,15 @@
 import mongoose, { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 
+import { LikeDTO } from 'root/likes/types';
 import { InjectModel } from 'nestjs-typegoose';
 import { PaginationQuery } from 'root/@common/types';
+import { Like } from 'root/likes/domain/likes.model';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { CommentModel } from '../schemas/comment.schema';
 import { countSkip } from 'root/@common/utils/countSkip';
+import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
 
@@ -14,12 +18,61 @@ export class CommentsAdapter {
   constructor(
     @InjectModel(CommentModel)
     private model: mongoose.Model<CommentModel>,
+    @InjectModel(LikeModel)
+    private likeModel: mongoose.Model<LikeModel>,
   ) {}
 
   async getAllComments() {
     const docs = await this.model.find({}).lean();
 
     return docs.map((doc) => convertToCommentDTO(doc));
+  }
+
+  async likeComment(id: string, data: Partial<LikeDTO>) {
+    try {
+      if (!ObjectId.isValid(id) || !ObjectId.isValid(data.userId))
+        throw new Error('Not valid post id');
+
+      const filter = {
+        entityId: new Types.ObjectId(id),
+        userId: new Types.ObjectId(data.userId),
+      };
+
+      const like = await this.likeModel.findOne(filter).exec();
+
+      if (!like) {
+        const { login, likeStatus, userId } = data;
+
+        if (likeStatus === LikeStatuses.None) return true;
+
+        const newLike = new Like({ login, entityId: id, likeStatus, userId });
+
+        const createdLike = await this.likeModel.create(newLike);
+
+        await this.model.findByIdAndUpdate(id, {
+          $push: { likes: createdLike._id },
+        });
+
+        return true;
+      } else {
+        if (data.likeStatus === LikeStatuses.None) {
+          await this.model
+            .findByIdAndUpdate(id, {
+              $pull: { likes: like._id },
+            })
+            .exec();
+
+          await this.likeModel.findByIdAndDelete(like._id).exec();
+        } else {
+          await this.likeModel.updateOne({ _id: like._id }, data).exec();
+        }
+
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
   async findCommentById(id: string | Types.ObjectId) {
