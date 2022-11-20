@@ -10,10 +10,15 @@ import { BlogDomainModel, BlogDTO } from '../types';
 import { countSkip } from 'root/@common/utils/countSkip';
 import { toObjectId } from 'root/@common/utils/toObjectId';
 import { PostModel } from 'root/posts/schemas/post.schema';
-import { PostDomainModel, PostDTO } from 'root/posts/types';
+import {
+  PostDomainModel,
+  PostDTO,
+  PostExtendedLikesDTO,
+} from 'root/posts/types';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
+import { LikeStatuses } from 'root/@common/types/enum';
 
 @Injectable()
 export class BlogsAdapter {
@@ -192,6 +197,16 @@ export class BlogsAdapter {
 
     if (!blog) return null;
 
-    return convertToPostDTO(createdPost);
+    const convertedPost = convertToPostDTO(createdPost);
+
+    const extendedPost: PostExtendedLikesDTO = {
+      ...convertedPost,
+      likesCount: 0,
+      dislikesCount: 0,
+      userStatus: LikeStatuses.None,
+      newestLikes: [],
+    };
+
+    return extendedPost;
   }
 }

@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -24,6 +25,8 @@ import { Post as PostModel } from './domain/posts.model';
 import { convertToExtendedViewPostModel } from './utils/conveertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -68,6 +71,7 @@ export class PostsController {
   }
 
   @Post()
+  @UseGuards(BasicAuthGuard)
   async savePost(@Body() body: PostInputModel, @Res() res: FastifyReply) {
     const { title, shortDescription, content, blogId } = body;
 
@@ -102,7 +106,14 @@ export class PostsController {
     res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 
+  @Post(':id/likes-status')
+  @UseGuards(BearerAuthGuard)
+  async likePost(@Res() res: Response) {
+    res.status(204).send();
+  }
+
   @Put(':id')
+  @UseGuards(BasicAuthGuard)
   async updatePost(
     @Param('id') id,
     @Body() body: PostInputModel,
@@ -122,6 +133,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @UseGuards(BasicAuthGuard)
   async deletePost(@Param('id') id, @Res() res: FastifyReply) {
     const post = await this.postsService.findPostByIdAndDelete(id);
 

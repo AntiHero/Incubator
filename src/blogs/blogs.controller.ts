@@ -24,6 +24,7 @@ import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { convertToExtendedViewPostModel } from 'root/posts/utils/conveertToExtendedPostViewModel';
 
 @Controller('blogs')
 export class BlogsController {
@@ -179,7 +180,7 @@ export class BlogsController {
     res
       .type('text/plain')
       .status(201)
-      .send(JSON.stringify(convertToPostViewModel(createdPost)));
+      .send(JSON.stringify(convertToExtendedViewPostModel(createdPost)));
   }
 
   @Delete(':id')

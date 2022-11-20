@@ -48,3 +48,14 @@ export interface FieldError {
 export interface APIErrorResult {
   errorsMessages: FieldError[];
 }
+
+declare global {
+  namespace Express {
+    export interface Request {
+      login: string;
+      userId: string;
+      expDate: number;
+      deviceId: string;
+    }
+  }
+}
