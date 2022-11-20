@@ -106,7 +106,7 @@ export class PostsController {
     res.type('text/plain').status(200).send(JSON.stringify(convertedPost));
   }
 
-  @Post(':id/likes-status')
+  @Put(':id/like-status')
   @UseGuards(BearerAuthGuard)
   async likePost(@Res() res: Response) {
     res.status(204).send();
