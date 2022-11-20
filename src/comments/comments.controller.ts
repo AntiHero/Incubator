@@ -16,14 +16,22 @@ import { CommentsService } from './comments.service';
 import { UpdateCommentDTO } from './dto/update.comment.dto';
 import { LikeCommentDTO } from './dto/like-comment-like.dto';
 import { convertToCommentViewModel } from './utils/convertToCommentViewModel';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private commentsService: CommentsService) {}
 
   @Get(':id')
-  async getComments(@Param('id') id, @Res() res: Response) {
-    const comment = await this.commentsService.getExtendedCommentInfo(id);
+  async getComments(
+    @UserId() userId: string,
+    @Param('id') id,
+    @Res() res: Response,
+  ) {
+    const comment = await this.commentsService.getExtendedCommentInfo(
+      id,
+      userId,
+    );
 
     if (!comment) {
       return res.status(404).send();

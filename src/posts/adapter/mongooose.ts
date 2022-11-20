@@ -154,7 +154,7 @@ export class PostsAdapter {
         return true;
       }
     } catch (e) {
-      console.log(e, 'error like post');
+      console.log(e);
       return null;
     }
   }
@@ -170,8 +170,6 @@ export class PostsAdapter {
       const post = await this.model.findById(id).lean().populate('likes');
 
       if (!post) return null;
-
-      console.log(post, 'post');
 
       const likesCount = post.likes.filter((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
