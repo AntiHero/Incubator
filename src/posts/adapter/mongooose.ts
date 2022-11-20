@@ -130,19 +130,27 @@ export class PostsAdapter {
           likeStatus = LikeStatuses.None,
           userId,
         } = data;
+        if (likeStatus === LikeStatuses.None) return true;
+
         const newLike = new Like({ login, entityId, likeStatus, userId });
 
-        await this.likeModel.create(newLike);
+        const createdLike = await this.likeModel.create(newLike);
+
+        await this.model.findByIdAndUpdate(id, {
+          $push: { likes: createdLike._id },
+        });
 
         return true;
       } else {
-        const updatedLike = await this.likeModel
-          .updateOne({ _id: like._id }, data, {
-            new: true,
-          })
-          .exec();
+        if (data.likeStatus === LikeStatuses.None) {
+          await this.model.findByIdAndUpdate(id, {
+            $pull: { likes: like._id },
+          });
+        } else {
+          await this.likeModel.updateOne({ _id: like._id }, data).exec();
+        }
 
-        return updatedLike.modifiedCount === 1 ? true : null;
+        return true;
       }
     } catch (e) {
       return null;
@@ -192,14 +200,20 @@ export class PostsAdapter {
       delete convertedPost.likes;
       delete convertedPost.comments;
 
-      const newestLikes = post.likes.sort((a, b) => {
-        if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
-          throw new Error('Not populated');
+      const newestLikes = post.likes
+        .filter((like) => {
+          if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-        return a.createdAt
-          .toISOString()
-          .localeCompare(b.createdAt.toISOString());
-      });
+          return like.likeStatus === LikeStatuses.Like;
+        })
+        .sort((a, b) => {
+          if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)
+            throw new Error('Not populated');
+
+          return a.createdAt
+            .toISOString()
+            .localeCompare(b.createdAt.toISOString());
+        });
 
       const extendedPost: PostExtendedLikesDTO = {
         ...convertedPost,
@@ -232,7 +246,7 @@ export class PostsAdapter {
         .limit(query.pageSize)
         .lean()
         .populate('likes');
-
+      console.log(posts, 'posts');
       const result: PostExtendedLikesDTO[] = [];
 
       for (const post of posts) {
