@@ -25,6 +25,7 @@ import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 import { convertToPostViewModel } from 'root/posts/utils/covertToPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/conveertToExtendedPostViewModel';
+import { PaginationQuery } from 'root/@common/types';
 
 @Controller('blogs')
 export class BlogsController {
@@ -108,23 +109,19 @@ export class BlogsController {
   }
 
   @Get(':id/posts')
-  async getBlogPosts(@Param('id') id, @Query() query, @Res() res: Response) {
+  async getBlogPosts(
+    @Param('id') id,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Res() res: Response,
+  ) {
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
       return res.status(404).send();
     }
 
-    const pageNumber = query.pageNumber ? Number(query.pageNumber) : 1;
-    const pageSize = query.pageSize ? Number(query.pageSize) : 10;
-    const sortBy = query.sortBy || 'createdAt';
-    const sortDirection =
-      query.sortDirection === SortDirectionKeys.asc
-        ? SortDirections.asc
-        : SortDirections.desc;
-    const searchNameTerm = query.searchNameTerm
-      ? new RegExp(query.searchNameTerm, 'i')
-      : /.*/i;
+    const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
+      query;
 
     const [posts, totalCount] = await this.blogsService.findBlogPostsByQuery(
       id,
