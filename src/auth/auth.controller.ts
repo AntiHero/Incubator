@@ -80,7 +80,9 @@ export class AuthController {
     const newDeviceId = uuid();
 
     const newDevice: SecurityDeviceInput = {
+      deviceId: newDeviceId,
       ip,
+      lastActiveDate: new Date().toString(),
       title: userAgent || 'unknown',
       userId,
     };

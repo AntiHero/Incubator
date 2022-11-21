@@ -27,16 +27,17 @@ export class SecurityDevicesController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    const deviceId = req.params.id;
-
-    const device = await this.securityDevicesService.getDevice({ deviceId });
+    const device = await this.securityDevicesService.getDevice({
+      deviceId: id,
+    });
 
     if (!device) return res.sendStatus(404);
 
     if (req.userId !== device.userId) return res.sendStatus(403);
 
-    await this.securityDevicesService.deleteDeviceByQuery({ deviceId }),
-      res.status(204).send();
+    await this.securityDevicesService.deleteDeviceByQuery({ deviceId: id });
+
+    res.status(204).send();
   }
 
   @Delete()
