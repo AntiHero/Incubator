@@ -13,7 +13,6 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
   constructor(private readonly tokensService: TokensService) {}
   async use(req: Request, _res: Response, next: NextFunction) {
     const { refreshToken } = req.cookies;
-    console.log(refreshToken, 'rt');
 
     if (!refreshToken)
       throw new HttpException('Not authorized', HttpStatus.UNAUTHORIZED);
