@@ -59,14 +59,14 @@ export class UsersService {
       userForToken,
       process.env.SECRET ?? 'simple_secret',
       {
-        expiresIn: 10,
+        expiresIn: 600,
       },
     );
 
     const refreshToken = jwt.sign(
       userForToken,
       process.env.SECRET ?? 'simple_secret',
-      { expiresIn: 20 },
+      { expiresIn: 1000 },
     );
 
     return [token, refreshToken];
