@@ -24,7 +24,7 @@ export class CommentsService {
     return this.commentsRepository.findCommentByIdAndUpdate(id, data);
   }
 
-  async getExtendedCommentInfo(id: string, userId = '') {
+  async getExtendedCommentInfo(id: string, userId?: string) {
     return this.commentsRepository.getExtendedCommentInfo(id, userId);
   }
 }

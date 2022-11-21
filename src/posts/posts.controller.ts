@@ -179,6 +179,7 @@ export class PostsController {
   @Get(':id/comments')
   async getPostComments(
     @Param('id') id: string,
+    @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: FastifyReply,
   ) {
@@ -192,13 +193,17 @@ export class PostsController {
       query;
 
     const [comments, totalCount] =
-      await this.postsService.findPostCommentsByQuery(id, {
-        pageNumber,
-        pageSize,
-        sortBy,
-        sortDirection,
-        searchNameTerm,
-      });
+      await this.postsService.findPostCommentsByQuery(
+        id,
+        {
+          pageNumber,
+          pageSize,
+          sortBy,
+          sortDirection,
+          searchNameTerm,
+        },
+        userId,
+      );
 
     const items: CommentViewModel[] = comments.map(convertToCommentViewModel);
 

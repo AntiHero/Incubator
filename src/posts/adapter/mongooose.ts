@@ -367,7 +367,7 @@ export class PostsAdapter {
           },
           {
             $replaceRoot: {
-              newRoot: { $mergeObjects: ['$postComments', '$$ROOT'] },
+              newRoot: { $mergeObjects: ['$$ROOT', '$postComments'] },
             },
           },
           {
@@ -390,6 +390,7 @@ export class PostsAdapter {
       const result: CommentExtendedLikesDTO[] = [];
 
       for (const comment of comments) {
+        console.log(comment.likes);
         const likesCount = comment.likes.filter(
           (like) => like.likeStatus === LikeStatuses.Like,
         ).length;
@@ -436,7 +437,7 @@ export class PostsAdapter {
 
     const comment = await this.commentModel.create({
       userId,
-      entityId: post.id,
+      entityId: id,
       content,
       userLogin,
     });

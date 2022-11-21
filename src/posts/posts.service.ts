@@ -33,7 +33,7 @@ export class PostsService {
   async findPostCommentsByQuery(
     id: string,
     query: PaginationQuery,
-    userId = '',
+    userId?: string,
   ) {
     return this.postsRepository.findPostCommentsByQuery(id, query, userId);
   }
