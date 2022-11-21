@@ -28,7 +28,11 @@ export class AuthModule implements NestModule {
           method: RequestMethod.POST,
         },
         {
-          path: 'auth/auth/registration-email-resending',
+          path: 'auth/registration-confirmation',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'auth/registration-email-resending',
           method: RequestMethod.POST,
         },
         { path: 'auth/login', method: RequestMethod.POST },
