@@ -22,6 +22,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
+  app.set('trust proxy', 1);
   await app.listen(PORT || 9000, '0.0.0.0');
 }
 bootstrap();
