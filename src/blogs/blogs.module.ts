@@ -3,11 +3,11 @@ import { TypegooseModule } from 'nestjs-typegoose';
 
 import { BlogsService } from './blogs.service';
 import { BlogsAdapter } from './adapter/mongoose';
-import { BlogsController } from './blogs.controller';
 import { BlogModel } from './schemas/blogs.schema';
+import { BlogsController } from './blogs.controller';
 import { PostModel } from 'root/posts/schemas/post.schema';
-import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
+import { CommentModel } from 'root/comments/schemas/comment.schema';
 
 @Module({
   imports: [

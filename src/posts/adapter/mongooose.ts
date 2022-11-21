@@ -389,8 +389,9 @@ export class PostsAdapter {
 
       const result: CommentExtendedLikesDTO[] = [];
 
+      await this.likeModel.populate(comments, { path: 'likes' });
+
       for (const comment of comments) {
-        console.log(comment.likes);
         const likesCount = comment.likes.filter(
           (like) => like.likeStatus === LikeStatuses.Like,
         ).length;
