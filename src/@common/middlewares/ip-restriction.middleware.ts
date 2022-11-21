@@ -18,6 +18,7 @@ export class IpRestrictionMiddleware implements NestMiddleware {
     const ip = req.ip;
     const url = req.url;
 
+    console.log(ip, url);
     try {
       rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
     } catch (e) {
