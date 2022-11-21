@@ -11,6 +11,7 @@ import { TokensModule } from 'root/tokens/tokens.module';
 import { SecurityDevicesModule } from 'root/security-devices/security-devices.module';
 import { PasswordAuthorizationMiddleware } from 'root/@common/middlewares/password-authorization.middleware';
 import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refresh-token.validation.middleware';
+import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
 
 @Module({
   imports: [UsersModule, SecurityDevicesModule, TokensModule],
@@ -20,9 +21,21 @@ import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refre
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply(IpRestrictionMiddleware)
+      .forRoutes(
+        {
+          path: 'auth/registration',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'auth/auth/registration-email-resending',
+          method: RequestMethod.POST,
+        },
+        { path: 'auth/login', method: RequestMethod.POST },
+      )
       .apply(PasswordAuthorizationMiddleware)
       .forRoutes({
-        path: '/auth/login',
+        path: 'auth/login',
         method: RequestMethod.POST,
       })
       .apply(RefreshTokenValidationMiddleware)

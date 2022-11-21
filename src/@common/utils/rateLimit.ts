@@ -25,19 +25,3 @@ export const rateLimit = (
     }, timeout);
   }
 };
-// if (ips[url]) {
-//   if (ips[url][ip]) {
-//     ips[url][ip].count += 1;
-
-//     if (ips[url][ip].count > limit) {
-//       throw new Error('Rate limit exceeded');
-//     }
-//   }
-// } else {
-//   ips[ip] = { count: 1 };
-
-//   setTimeout(() => {
-//     delete ips[ip];
-//   }, timeout);
-// }
-// };

@@ -48,34 +48,3 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
     next();
   }
 }
-
-[
-  {
-    deviceId: '7b9facbf-9ee6-4f39-8b8b-d3b7f3d62097',
-    ip: '10.1.41.24',
-    lastActiveDate: '2022-11-21T20:44:50.498Z',
-    title:
-      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
-  },
-  {
-    deviceId: '7b9facbf-9ee6-4f39-8b8b-d3b7f3d62097',
-    ip: '10.1.52.197',
-    lastActiveDate: '2022-11-21T20:44:50.498Z',
-    title:
-      'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/103.0',
-  },
-  {
-    deviceId: '7b9facbf-9ee6-4f39-8b8b-d3b7f3d62097',
-    ip: '10.1.43.219',
-    lastActiveDate: '2022-11-21T20:44:50.498Z',
-    title:
-      'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',
-  },
-  {
-    deviceId: '7b9facbf-9ee6-4f39-8b8b-d3b7f3d62097',
-    ip: '10.1.48.173',
-    lastActiveDate: '2022-11-21T20:44:50.498Z',
-    title:
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Safari/605.1.15',
-  },
-];
