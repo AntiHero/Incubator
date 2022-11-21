@@ -12,22 +12,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-// import { UserDTO } from 'root/users/types';
-// import { IpsType } from 'root/@common/types';
+import { EmailDTO } from './dto/email.dto';
+import { CodeDTO } from './dto/code.dto';
 import { UsersService } from 'root/users/users.service';
-// import { rateLimit } from 'root/@common/utils/rateLimit';
+import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
 import { LoginSuccessViewModel, UserForToken } from './types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
-// import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
 import { SecurityDeviceInput } from 'root/security-devices/types';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
-import { EmailDTO } from './dto/email.dto';
-import { CodeDTO } from './dto/code.dto';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { UserInfoType } from 'root/users/types';
 
 // const ips: IpsType = {};
 
@@ -36,6 +34,7 @@ export class AuthController {
   constructor(
     private readonly usersService: UsersService,
     private readonly securityDevicesService: SecurityDevicesService,
+    private readonly tokensService: TokensService,
   ) {}
   @Post('password-recovery')
   async passwordRecovery(@Res() res: Response) {
@@ -108,8 +107,36 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  async refreshToken(@Res() res: Response) {
-    res.status(201).send();
+  async refreshToken(@Res() res: Response, @Req() req: Request) {
+    const user = await this.usersService.findUserById(req.userId);
+
+    if (!user) return res.status(404).send();
+
+    const userForToken: UserForToken = {
+      login: user.login,
+      userId: req.userId,
+      deviceId: req.deviceId,
+    };
+
+    const [token, refreshToken] = await this.usersService.createTokensPair(
+      userForToken,
+    );
+
+    const payload = { accessToken: token };
+
+    await this.tokensService.saveToken({
+      token: req.cookies.refreshToken,
+      expDate: String(req.expDate),
+    });
+
+    await this.securityDevicesService.updateDevice(
+      { deviceId: req.deviceId },
+      { lastActiveDate: new Date() },
+    );
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    res.status(200).type('text/plain').send(payload);
   }
 
   @Post('registration-confirmation')
@@ -167,13 +194,36 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Res() res) {
-    res.status(201).send();
+  async logout(@Res() res: Response, @Req() req: Request) {
+    await this.securityDevicesService.deleteDeviceByQuery({
+      deviceId: req.deviceId,
+    });
+
+    await this.tokensService.saveToken({
+      token: req.cookies.refreshToken,
+      expDate: String(req.expDate),
+    });
+
+    res.clearCookie('refreshToken');
+
+    res.status(204).send();
   }
 
   @Get('me')
   @UseGuards(BearerAuthGuard)
-  async me(@Res() res) {
-    res.status(201).send();
+  async me(@Res() res: Response, @Req() req: Request) {
+    const userId = req.userId;
+
+    const user = await this.usersService.findUserById(userId);
+
+    if (!user) res.status(404).send();
+
+    const userView: UserInfoType = {
+      email: user.email,
+      login: user.login,
+      userId: user.id,
+    };
+
+    res.status(200).type('text/plain').send(userView);
   }
 }

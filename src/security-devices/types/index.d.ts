@@ -8,3 +8,10 @@ export type SecurityDeviceDTO = {
 };
 
 export type SecurityDeviceInput = Partial<Omit<SecurityDeviceDTO, 'id'>>;
+
+export type SecurityDeviceViewModel = {
+  ip: string;
+  title: string;
+  lastActiveDate: string;
+  deviceId: string;
+};

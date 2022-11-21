@@ -3,12 +3,14 @@ import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'src/blogs/blogs.service';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
+import { TokensService } from 'root/tokens/tokens.service';
 
 @Controller('testing')
 export class TestingController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly usersSevice: UsersService,
+    private readonly tokensService: TokensService,
     private readonly securityDevicesService: SecurityDevicesService,
   ) {}
 
@@ -18,5 +20,6 @@ export class TestingController {
     await this.blogsService.deleteAllBlogs();
     await this.usersSevice.deleteAllUsers();
     await this.securityDevicesService.deleteAllDevices();
+    await this.tokensService.deleteAllTokens();
   }
 }
