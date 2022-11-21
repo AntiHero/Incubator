@@ -9,6 +9,7 @@ import {
   Res,
   Headers,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 
 // import { UserDTO } from 'root/users/types';
@@ -26,6 +27,7 @@ import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 
 // const ips: IpsType = {};
 
@@ -170,6 +172,7 @@ export class AuthController {
   }
 
   @Get('me')
+  @UseGuards(BearerAuthGuard)
   async me(@Res() res) {
     res.status(201).send();
   }
