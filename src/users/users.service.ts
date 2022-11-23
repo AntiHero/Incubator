@@ -9,6 +9,7 @@ import { UsersAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
 import { fiveMinInMs } from 'root/@common/constants';
 import { EmailManager } from 'root/email-manager/email-manager';
+import { Roles } from './types/roles';
 
 @Injectable()
 export class UsersService {
@@ -31,10 +32,10 @@ export class UsersService {
     return true;
   }
 
-  async saveUser(data: UserDomainModel) {
+  async createUser(data: UserDomainModel) {
     const saltRounds = 10;
 
-    const { login, password, email } = data;
+    const { login, password, email, role } = data;
 
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -42,6 +43,7 @@ export class UsersService {
       login,
       email,
       password: passwordHash,
+      role,
     });
 
     if (!user) return null;

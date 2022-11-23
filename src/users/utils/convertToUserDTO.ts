@@ -20,6 +20,7 @@ export const convertToUserDTO = <
     banReason: doc.banInfo.banReason,
     isBanned: doc.banInfo.isBanned,
   },
+  role: doc.role,
   password: doc.password,
   confirmationInfo: {
     isConfirmed: doc.confirmationInfo.isConfirmed,

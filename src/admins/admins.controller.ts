@@ -1,42 +1,41 @@
+import { Response } from 'express';
+
+import { Roles } from 'root/users/types/roles';
+import { UsersService } from 'root/users/users.service';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
 
-import { UsersService } from './users.service';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { convertToUserViewModel } from './utils/convertToUserViewModel';
+import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { User } from './entity/user.entity';
 
-@Controller('users')
+@Controller('sa/users')
 @UseGuards(BasicAuthGuard)
-export class UsersController {
+export class AdminsController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async saveUser(@Body() body: CreateUserDto, @Res() res: Response) {
+  async createAdmin(@Body() body: CreateUserDto, @Res() res: Response) {
     const { login, email, password } = body;
 
-    const user = new User({
+    const savedUser = await this.usersService.createUser({
       login,
       email,
       password,
+      role: Roles.SUPER_ADMIN,
     });
-    const savedUser = await this.usersService.createUser(user);
 
     res
       .type('text/plain')
@@ -79,14 +78,5 @@ export class UsersController {
     );
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
-  }
-
-  @Delete(':id')
-  async deleteUser(@Param('id') id, @Res() res: Response) {
-    const user = await this.usersService.findUserByIdAndDelete(id);
-
-    if (!user) return res.status(404).send();
-
-    res.status(204).send();
   }
 }

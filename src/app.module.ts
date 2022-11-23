@@ -14,6 +14,7 @@ import { TestingModule } from './testing/testing.module';
 import { CommentsModule } from './comments/comments.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { AdminsModule } from './admins/admins.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
     CommentsModule,
     EmailManagerModule,
     SecurityDevicesModule,
+    AdminsModule,
   ],
 })
 export class AppModule {}

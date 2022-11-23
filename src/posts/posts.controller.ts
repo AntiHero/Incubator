@@ -28,13 +28,13 @@ import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
 import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { UserLogin } from 'root/@common/decorators/user-login.decorator';
 import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
-import { UserLogin } from 'root/@common/decorators/user-login.decorator';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })

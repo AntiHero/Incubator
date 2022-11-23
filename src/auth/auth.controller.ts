@@ -14,6 +14,7 @@ import {
 
 import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
+import { UserInfoType } from 'root/users/types';
 import { UsersService } from 'root/users/users.service';
 import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
@@ -25,7 +26,7 @@ import { SecurityDevicesService } from 'root/security-devices/security-devices.s
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
-import { UserInfoType } from 'root/users/types';
+import { User } from 'root/users/entity/user.entity';
 
 // const ips: IpsType = {};
 
@@ -54,23 +55,8 @@ export class AuthController {
     @Headers('user-agent') userAgent: string,
   ) {
     const ip = req.ip;
-    // const url = req.url;
     const { loginOrEmail } = body;
 
-    // let user: UserDTO;
-
-    // try {
-    //   rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
-
-    //   user = await this.usersService.authenticateUser({
-    //     login,
-    //     password,
-    //   });
-
-    //   if (!user) return res.status(401).send();
-    // } catch (e) {
-    //   return res.status(429).send();
-    // }
     const user = await this.usersService.findUserByLoginOrEmail(loginOrEmail);
 
     if (!user) res.status(503).send();
@@ -156,22 +142,14 @@ export class AuthController {
   @Post('registration')
   @UsePipes(UserUnicityValidationPipe)
   async registration(@Body() body: CreateUserDto, @Res() res: Response) {
-    // try {
-    //   const ip = req.ip;
-    //   const url = req.url;
-
-    //   rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
-
     const { login, email, password } = body;
 
-    const user = await this.usersService.saveUser({ login, email, password });
+    const userEntity = new User({ login, email, password });
+    const user = await this.usersService.createUser(userEntity);
 
     if (user) {
       return res.status(204).send();
     }
-    // } catch (e) {
-    //   res.status(429).send();
-    // }
 
     res.status(503).send();
   }

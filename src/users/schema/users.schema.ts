@@ -3,6 +3,7 @@ import { prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 import { fiveMinInMs } from 'root/@common/constants';
+import { Roles } from '../types/roles';
 
 class BanInfo {
   @prop({ default: null })
@@ -50,4 +51,7 @@ export class UserModel extends TimeStamps {
 
   @prop({ default: new PasswordRecovery(), _id: false })
   passwordRecover: PasswordRecovery;
+
+  @prop({ enum: Roles, addNullToEnum: true, default: null })
+  role: Roles;
 }

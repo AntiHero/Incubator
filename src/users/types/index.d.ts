@@ -1,9 +1,11 @@
 import { WithId } from 'root/@common/types/utility';
+import { Roles } from './roles';
 
 export type UserDomainModel = {
   password: string;
   login: string;
   email: string;
+  role: Roles | null;
 };
 
 export type BanInfo = {
@@ -31,6 +33,7 @@ export type UserDTO = {
   confirmationInfo: ConfirmationInfo;
   passwordRecover: PasswordRecovery;
   createdAt: string;
+  role: Roles | null;
 };
 
 export type UserDomainModelWithId = WithId<UserDomainModel>;
