@@ -24,6 +24,7 @@ import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { BanDTO } from './dto/bad.dto';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
@@ -86,7 +87,7 @@ export class AdminsController {
 
   @Put(':id/ban')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async banUser(@Param('id') id, @Body() body: BanDTO) {
+  async banUser(@Param('id', IdValidationPipe) id, @Body() body: BanDTO) {
     await this.usersService.banUser(id, body);
 
     // res.status(204).send();

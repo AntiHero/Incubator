@@ -113,7 +113,6 @@ export class UsersAdapter {
       .findByIdAndUpdate(id, {
         banInfo,
       })
-      .projection('_id')
       .lean()
       .exec();
 
