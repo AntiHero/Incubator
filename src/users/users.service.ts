@@ -3,13 +3,13 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
-import { UserDomainModel } from './types';
+import { BanInfo, UserDomainModel } from './types';
 import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
 import { fiveMinInMs } from 'root/@common/constants';
+import { OptionalKey } from 'root/@common/types/utility';
 import { EmailManager } from 'root/email-manager/email-manager';
-import { Roles } from './types/roles';
 
 @Injectable()
 export class UsersService {
@@ -159,5 +159,17 @@ export class UsersService {
       to: email as string,
       code: newCode,
     });
+  }
+
+  async banUser(id: string, data: Omit<BanInfo, 'banDate'>) {
+    let banInfo: OptionalKey<BanInfo, 'banDate'>;
+
+    if (data.isBanned) {
+      banInfo = { ...data, banDate: new Date().toISOString() };
+    } else {
+      banInfo = { ...data };
+    }
+
+    return this.usersRepository.banUser(id, banInfo);
   }
 }

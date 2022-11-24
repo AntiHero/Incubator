@@ -2,11 +2,12 @@ import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
-import { UserDomainModel, UserDTO } from '../types';
 import { UserModel } from '../schema/users.schema';
 import { PaginationQuery } from 'root/@common/types';
 import { countSkip } from 'root/@common/utils/countSkip';
+import { OptionalKey } from 'root/@common/types/utility';
 import { convertToUserDTO } from '../utils/convertToUserDTO';
+import { BanInfo, UserDomainModel, UserDTO } from '../types';
 
 @Injectable()
 export class UsersAdapter {
@@ -99,5 +100,26 @@ export class UsersAdapter {
 
   async deleteAllUsers() {
     await this.model.deleteMany({}).exec();
+  }
+
+  async banUser(id: string, data: OptionalKey<BanInfo, 'banDate'>) {
+    const banInfo: BanInfo = {
+      isBanned: data.isBanned,
+      banReason: data.isBanned ? data.banReason : null,
+      banDate: data.isBanned ? data.banDate : null,
+    };
+
+    const user = await this.model
+      .findByIdAndUpdate(id, {
+        banInfo,
+      })
+      .projection('_id')
+      .lean()
+      .exec();
+
+    console.log(user, 'user');
+    if (!user) return null;
+
+    return true;
   }
 }

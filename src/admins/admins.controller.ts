@@ -11,6 +11,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Res,
   UseGuards,
@@ -80,6 +81,11 @@ export class AdminsController {
     );
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Put(':id')
+  async banUser(@Body() BanDTO, @Res() res: Response) {
+    res.status(204).send();
   }
 
   @Delete(':id')
