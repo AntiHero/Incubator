@@ -23,6 +23,7 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { BanDTO } from './dto/bad.dto';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
@@ -83,17 +84,21 @@ export class AdminsController {
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }
 
-  @Put(':id')
-  async banUser(@Body() BanDTO, @Res() res: Response) {
-    res.status(204).send();
+  @Put(':id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUser(@Param('id') id, @Body() body: BanDTO) {
+    await this.usersService.banUser(id, body);
+
+    // res.status(204).send();
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') id, @Res() res: Response) {
     const user = await this.usersService.findUserByIdAndDelete(id);
 
     if (!user) return res.status(404).send();
 
-    res.status(204).send();
+    // res.status(204).send();
   }
 }

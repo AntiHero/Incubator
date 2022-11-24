@@ -15,6 +15,7 @@ import {
 import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
 import { UserInfoType } from 'root/users/types';
+import { User } from 'root/users/entity/user.entity';
 import { UsersService } from 'root/users/users.service';
 import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
@@ -26,7 +27,6 @@ import { SecurityDevicesService } from 'root/security-devices/security-devices.s
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
-import { User } from 'root/users/entity/user.entity';
 
 // const ips: IpsType = {};
 
