@@ -5,9 +5,11 @@ import { UsersService } from 'root/users/users.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
   Res,
@@ -78,5 +80,14 @@ export class AdminsController {
     );
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id') id, @Res() res: Response) {
+    const user = await this.usersService.findUserByIdAndDelete(id);
+
+    if (!user) return res.status(404).send();
+
+    res.status(204).send();
   }
 }
