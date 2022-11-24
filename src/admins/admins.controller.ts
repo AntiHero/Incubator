@@ -87,10 +87,17 @@ export class AdminsController {
 
   @Put(':id/ban')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async banUser(@Param('id', IdValidationPipe) id, @Body() body: BanDTO) {
-    await this.usersService.banUser(id, body);
+  async banUser(
+    @Param('id', IdValidationPipe) id,
+    @Body() body: BanDTO,
+    @Res() res: Response,
+  ) {
+    const user = await this.usersService.banUser(id, body);
+
+    if (!user) return res.status(404).send();
 
     // res.status(204).send();
+    return 'User was banned';
   }
 
   @Delete(':id')
@@ -101,5 +108,6 @@ export class AdminsController {
     if (!user) return res.status(404).send();
 
     // res.status(204).send();
+    return 'User was deleted';
   }
 }
