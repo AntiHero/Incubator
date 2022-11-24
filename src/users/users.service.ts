@@ -90,8 +90,8 @@ export class UsersService {
     return this.generateTokens(userForToken);
   }
 
-  async findUserByLoginOrEmail(login: string, email?: string) {
-    return this.usersRepository.findUserByLoginOrEmail(login, email);
+  async findUserByLoginOrEmail(loginOrEmail: string, email?: string) {
+    return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, email);
   }
 
   async validateUser(data: UserDomainModel) {

@@ -27,6 +27,7 @@ import { SecurityDevicesService } from 'root/security-devices/security-devices.s
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
+import { BanGuard } from 'root/@common/guards/banned-user.guard';
 
 // const ips: IpsType = {};
 
@@ -48,6 +49,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UseGuards(BanGuard)
   async login(
     @Body() body: LoginUserDTO,
     @Req() req: Request,

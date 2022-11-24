@@ -72,9 +72,9 @@ export class UsersAdapter {
     return [users.map(convertToUserDTO), count];
   }
 
-  async findUserByLoginOrEmail(login: string, email?: string) {
+  async findUserByLoginOrEmail(loginOrEmail: string, email?: string) {
     const user = await this.model.findOne({
-      $or: [{ login: login }, { email: email || login }],
+      $or: [{ login: loginOrEmail }, { email: email || loginOrEmail }],
     });
 
     if (!user) return null;
