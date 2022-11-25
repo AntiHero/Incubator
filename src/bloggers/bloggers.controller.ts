@@ -201,6 +201,7 @@ export class BloggersController {
   @Put(':id/posts/:postId')
   async updateBlogPost(
     @UserId() userId: string,
+    @Param('id') id: string,
     @Param('postId') postId: string,
     @Body() body: UpdateBlogPostDTO,
     @Res() res: Response,
@@ -211,11 +212,12 @@ export class BloggersController {
 
     if (!post) return res.status(404).send();
 
-    const blog = await this.blogsService.findBlogById(post.blogId);
+    const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) return res.status(404).send();
 
-    if (blog.userId !== userId) return res.status(403).send();
+    if (blog.userId !== userId || post.blogId !== blog.id)
+      return res.status(403).send();
 
     const updates = { title, shortDescription, content };
 
