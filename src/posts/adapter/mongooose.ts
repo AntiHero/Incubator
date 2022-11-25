@@ -109,7 +109,11 @@ export class PostsAdapter {
     await this.commentModel.deleteMany({ entityId: toObjectId(id) }).exec();
     await this.likeModel.deleteMany({ entityId: toObjectId(id) }).exec();
 
-    return this.model.findByIdAndRemove(id).lean();
+    const post = await this.model.findByIdAndRemove(id).lean();
+
+    if (!post) return null;
+
+    return convertToPostDTO(post);
   }
 
   async likePost(id: string, data: Partial<LikeDomainModel>) {

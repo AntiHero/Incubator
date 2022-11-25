@@ -231,7 +231,7 @@ export class BloggersController {
     @Param('id') id: string,
     @Res() res: Response,
   ) {
-    const blog = await this.blogsService.findBlogByIdAndDelete(id);
+    const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) return res.status(404).send();
 
@@ -239,7 +239,7 @@ export class BloggersController {
       return res.status(403).send();
     }
 
-    const post = await this.postsService.findPostById(postId);
+    const post = await this.postsService.findPostByIdAndDelete(postId);
 
     if (!post) return res.status(404).send();
 
