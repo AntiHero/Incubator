@@ -5,5 +5,7 @@ export const convertToBlogViewModel = (blog: BlogDTO): BlogViewModel => {
 
   delete view.posts;
 
+  delete view.userId;
+
   return view;
 };
