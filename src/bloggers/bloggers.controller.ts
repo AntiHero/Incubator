@@ -26,11 +26,17 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
+import { UpdatePostDTO } from 'root/posts/dto/update-post.dto';
+import { PostsService } from 'root/posts/posts.service';
+import { post } from '@typegoose/typegoose';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
 export class BloggersController {
-  constructor(private blogsService: BlogsService) {}
+  constructor(
+    private readonly blogsService: BlogsService,
+    private readonly postsService: PostsService,
+  ) {}
 
   @Post()
   async saveBlog(
@@ -193,6 +199,59 @@ export class BloggersController {
       .send(JSON.stringify(convertToExtendedViewPostModel(createdPost)));
   }
 
+  @Put(':id/posts/:postId')
+  async updateBlogPost(
+    @UserId() userId: string,
+    @Param('id') id: string,
+    @Param('postId') postId: string,
+    @Body() body: UpdatePostDTO,
+    @Res() res: Response,
+  ) {
+    const { title, shortDescription, blogId, content } = body;
+
+    const post = await this.postsService.findPostById(postId);
+
+    if (!post) return res.status(404).send();
+
+    const blog = await this.blogsService.findBlogById(post.blogId);
+
+    if (!blog) return res.status(404).send();
+
+    if (blog.userId !== userId) return res.status(403).send();
+
+    const updates = { title, shortDescription, blogId, content };
+
+    await this.postsService.findPostByIdAndUpate(postId, updates);
+
+    res.type('text/plain').status(204).send();
+  }
+
+  @Delete(':id/posts/:postId')
+  async deleteBlogPost(
+    @UserId() userId: string,
+    @Param('postId') postId: string,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    const blog = await this.blogsService.findBlogByIdAndDelete(id);
+
+    if (!blog) return res.status(404).send();
+
+    if (blog.userId !== userId) {
+      return res.status(403).send();
+    }
+
+    const post = await this.postsService.findPostById(postId);
+
+    if (!post) return res.status(404).send();
+
+    if (post.blogId !== blog.id) {
+      return res.status(403).send();
+    }
+
+    res.status(204).send();
+  }
+
   @Delete(':id')
   async deleteBlog(
     @UserId() userId: string,
@@ -206,7 +265,6 @@ export class BloggersController {
     if (blog.userId !== userId) {
       return res.status(403).send();
     }
-
     res.status(204).send();
   }
 }

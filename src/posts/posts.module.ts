@@ -39,6 +39,6 @@ import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
   ],
   controllers: [PostsController],
   providers: [PostsService, PostsAdapter, IsBlogExist],
-  // exports: [PostsService],
+  exports: [PostsService],
 })
 export class PostsModule {}

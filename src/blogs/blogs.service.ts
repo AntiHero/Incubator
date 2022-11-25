@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { BlogDomainModel } from './types';
 import { BlogsAdapter } from './adapter/mongoose';
-import { PostDomainModel } from 'root/posts/types';
 import { PaginationQuery } from 'root/@common/types';
+import { PostDomainModel } from 'root/posts/types';
 
 @Injectable()
 export class BlogsService {
