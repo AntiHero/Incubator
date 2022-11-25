@@ -15,6 +15,7 @@ import { CommentsModule } from './comments/comments.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 import { AdminsModule } from './admins/admins.module';
+import { BloggersModule } from './bloggers/bloggers.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AdminsModule } from './admins/admins.module';
     EmailManagerModule,
     SecurityDevicesModule,
     AdminsModule,
+    BloggersModule,
   ],
 })
 export class AppModule {}

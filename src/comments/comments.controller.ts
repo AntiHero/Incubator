@@ -15,8 +15,8 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { CommentsService } from './comments.service';
 import { UpdateCommentDTO } from './dto/update.comment.dto';
 import { LikeCommentDTO } from './dto/like-comment-like.dto';
-import { convertToCommentViewModel } from './utils/convertToCommentViewModel';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { convertToCommentViewModel } from './utils/convertToCommentViewModel';
 
 @Controller('comments')
 export class CommentsController {
