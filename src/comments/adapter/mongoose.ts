@@ -12,6 +12,7 @@ import { countSkip } from 'root/@common/utils/countSkip';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
+import { UserDTO } from 'root/users/types';
 
 @Injectable()
 export class CommentsAdapter {
@@ -189,6 +190,13 @@ export class CommentsAdapter {
     }
 
     return null;
+  }
+
+  async updateComments(userId: string, update: Partial<UserDTO>) {
+    return this.model.updateMany(
+      { userId: new Types.ObjectId(userId) },
+      update,
+    );
   }
 
   async deleteAllComments() {

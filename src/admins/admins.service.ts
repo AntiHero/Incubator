@@ -23,6 +23,19 @@ export class AdminsService {
       banInfo = { ...data };
     }
 
+    try {
+      await this.commentsService.updateUserComments(id, {
+        isBanned: banInfo.isBanned,
+      });
+      await this.likesService.updateUserLikes(id, {
+        isBanned: banInfo.isBanned,
+      });
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
+
     return this.usersRepository.banUser(id, banInfo);
   }
 }

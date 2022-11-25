@@ -13,5 +13,6 @@ export const convertToLikeDTO = <
   entityId: String(doc.entityId),
   likeStatus: doc.likeStatus,
   login: doc.login,
+  isBanned: doc.isBanned,
   addedAt: doc.createdAt.toISOString(),
 });

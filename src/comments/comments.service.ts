@@ -12,6 +12,10 @@ export class CommentsService {
     return this.commentsRepository.findCommentById(id);
   }
 
+  async updateUserComments(userId: string, update: Partial<CommentDTO>) {
+    return this.commentsRepository.updateComments(userId, update);
+  }
+
   async deleteComment(id: string) {
     return this.commentsRepository.findCommentByIdAndDelete(id);
   }

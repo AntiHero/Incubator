@@ -22,6 +22,7 @@ export const convertToCommentDTO = <
     userLogin: doc.userLogin,
     userId: String(doc.userId),
     likes,
+    isBanned: doc.isBanned,
     entityId: String(doc.entityId),
     createdAt: doc.createdAt.toISOString(),
   };

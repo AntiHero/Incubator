@@ -15,6 +15,7 @@ export type LikeDTO = {
   userId: string;
   entityId: string;
   likeStatus: LikeStatuses;
+  isBanned: boolean;
   login: string;
   addedAt: string;
 };

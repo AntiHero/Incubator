@@ -1,12 +1,14 @@
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
 
+import { InjectModel } from 'nestjs-typegoose';
 import { LikeModel } from '../schemas/likes.schema';
 import { SortDirections } from 'root/@common/types/enum';
+import { ModelType } from '@typegoose/typegoose/lib/types';
 import { convertToLikeDTO } from '../utils/convertToLikeDTO';
-import { LikeDatabaseModel, LikeDomainModel } from '../types';
+import { LikeDatabaseModel, LikeDomainModel, LikeDTO } from '../types';
 
 export class LikesAdapter {
-  constructor(private model: mongoose.Model<LikeModel>) {
+  constructor(@InjectModel(LikeModel) private model: ModelType<LikeModel>) {
     this.model = model;
   }
 
@@ -70,6 +72,13 @@ export class LikesAdapter {
       .lean();
 
     return docs.map(convertToLikeDTO);
+  }
+
+  async updateLikes(userId: string, update: Partial<LikeDTO>) {
+    return this.model.updateMany(
+      { userId: new Types.ObjectId(userId) },
+      update,
+    );
   }
 
   async removeById(id: string) {

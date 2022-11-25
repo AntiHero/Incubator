@@ -30,6 +30,7 @@ export type CommentDTO = {
   userId: string;
   entityId: string;
   likes: LikeDTO[];
+  isBanned: boolean;
   userLogin: string;
   createdAt: string;
 };
