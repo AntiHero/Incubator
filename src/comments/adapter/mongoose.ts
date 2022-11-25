@@ -112,7 +112,7 @@ export class CommentsAdapter {
   async getExtendedCommentInfo(id: string, userId = '') {
     const comment = await this.model.findById(id).lean().populate('likes');
 
-    if (!comment) return null;
+    if (!comment || comment.isBanned) return null;
 
     const likesCount = comment.likes.filter((like) => {
       if (like instanceof Types.ObjectId) throw new Error('Not populated');

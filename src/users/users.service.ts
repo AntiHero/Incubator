@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
-import { BanInfo, UserDomainModel } from './types';
 import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
+import { BanInfo, UserDomainModel } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import { fiveMinInMs } from 'root/@common/constants';
 import { OptionalKey } from 'root/@common/types/utility';

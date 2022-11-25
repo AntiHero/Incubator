@@ -13,6 +13,7 @@ import { Response, Request } from 'express';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 
 import { CommentsService } from './comments.service';
+import { UsersService } from 'root/users/users.service';
 import { UpdateCommentDTO } from './dto/update.comment.dto';
 import { LikeCommentDTO } from './dto/like-comment-like.dto';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
@@ -20,7 +21,7 @@ import { convertToCommentViewModel } from './utils/convertToCommentViewModel';
 
 @Controller('comments')
 export class CommentsController {
-  constructor(private commentsService: CommentsService) {}
+  constructor(private readonly commentsService: CommentsService) {}
 
   @Get(':id')
   async getComments(

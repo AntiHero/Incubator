@@ -17,4 +17,7 @@ export class LikeModel extends TimeStamps {
 
   @prop({ enum: LikeStatuses, default: LikeStatuses.None })
   likeStatus: LikeStatuses;
+
+  @prop({ default: false })
+  isBanned?: boolean;
 }

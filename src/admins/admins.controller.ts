@@ -25,11 +25,15 @@ import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel'
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { BanDTO } from './dto/bad.dto';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { AdminsService } from './admins.service';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
 export class AdminsController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly adminsService: AdminsService,
+  ) {}
 
   @Post()
   async createAdmin(@Body() body: CreateUserDto, @Res() res: Response) {
@@ -91,7 +95,7 @@ export class AdminsController {
     @Body() body: BanDTO,
     @Res() res: Response,
   ) {
-    const user = await this.usersService.banUser(id, body);
+    const user = await this.adminsService.banUser(id, body);
 
     if (!user) return res.status(404).send();
 

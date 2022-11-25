@@ -19,4 +19,7 @@ export class CommentModel extends TimeStamps {
 
   @prop({ ref: () => LikeModel, default: [] })
   likes: Ref<LikeModel>[];
+
+  @prop({ default: false })
+  isBanned?: boolean;
 }

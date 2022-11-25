@@ -5,7 +5,7 @@ import { SortDirections } from 'root/@common/types/enum';
 import { convertToLikeDTO } from '../utils/convertToLikeDTO';
 import { LikeDatabaseModel, LikeDomainModel } from '../types';
 
-export class PostLikeAdapter {
+export class LikesAdapter {
   constructor(private model: mongoose.Model<LikeModel>) {
     this.model = model;
   }
