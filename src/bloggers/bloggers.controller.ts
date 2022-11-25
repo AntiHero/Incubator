@@ -19,8 +19,8 @@ import Paginator from 'root/@common/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { PostExtendedViewModel } from 'root/posts/types';
+import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
-import { UpdatePostDTO } from 'root/posts/dto/update-post.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
@@ -28,7 +28,6 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
-import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
