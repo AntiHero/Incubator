@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ModelType } from '@typegoose/typegoose/lib/types';
 
 import { LikeDTO } from './types';
 import { LikesAdapter } from './adapter/mongoose';
@@ -8,7 +7,7 @@ import { LikesAdapter } from './adapter/mongoose';
 export class LikesService {
   constructor(private readonly likeRepository: LikesAdapter) {}
 
-  async updateUserLikes(id: string, updates: Partial<LikeDTO>) {
-    return this.likeRepository.updateLikes(id, { isBanned: true });
+  async updateUserLikes(id: string, update: Partial<LikeDTO>) {
+    return this.likeRepository.updateLikes(id, update);
   }
 }
