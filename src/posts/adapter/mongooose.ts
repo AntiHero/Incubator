@@ -174,13 +174,13 @@ export class PostsAdapter {
       const likesCount = post.likes.filter((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-        return like.likeStatus === LikeStatuses.Like;
+        return like.likeStatus === LikeStatuses.Like && !like.isBanned;
       }).length;
 
       const dislikesCount = post.likes.filter((like) => {
         if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-        return like.likeStatus === LikeStatuses.Dislike;
+        return like.likeStatus === LikeStatuses.Dislike && !like.isBanned;
       }).length;
 
       let userStatus: LikeStatuses;
@@ -201,7 +201,7 @@ export class PostsAdapter {
         .filter((like) => {
           if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-          return like.likeStatus === LikeStatuses.Like;
+          return like.likeStatus === LikeStatuses.Like && !like.isBanned;
         })
         .sort((a, b) => {
           if (a instanceof Types.ObjectId || b instanceof Types.ObjectId)

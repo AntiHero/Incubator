@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   HttpException,
   HttpStatus,
   Param,
@@ -42,7 +41,6 @@ export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Get()
-  @HttpCode(HttpStatus.OK)
   async getPosts(
     @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
