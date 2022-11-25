@@ -96,6 +96,7 @@ export class BloggersController {
 
   @Put(':id')
   async updateBlog(
+    @UserId() userId: string,
     @Param('id') id,
     @Body() body: CreateBlogDTO,
     @Res() res: Response,
@@ -108,6 +109,10 @@ export class BloggersController {
 
     if (!blog) {
       return res.status(404).send();
+    }
+
+    if (blog.userId !== userId) {
+      return res.status(403).send();
     }
 
     res.type('text/plain').status(204).send();
@@ -189,10 +194,18 @@ export class BloggersController {
   }
 
   @Delete(':id')
-  async deleteBlog(@Param('id') id, @Res() res: Response) {
+  async deleteBlog(
+    @UserId() userId: string,
+    @Param('id') id,
+    @Res() res: Response,
+  ) {
     const blog = await this.blogsService.findBlogByIdAndDelete(id);
 
     if (!blog) return res.status(404).send();
+
+    if (blog.userId !== userId) {
+      return res.status(403).send();
+    }
 
     res.status(204).send();
   }

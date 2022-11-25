@@ -82,7 +82,11 @@ export class BlogsAdapter {
     await this.commentModel.deleteMany({ entityId: toObjectId(id) }).exec();
     await this.postModel.deleteMany({ blogId: toObjectId(id) });
 
-    return this.model.findByIdAndDelete(id).lean();
+    const blog = await this.model.findByIdAndDelete(id).lean().exec();
+
+    if (!blog) return null;
+
+    return convertToBlogDTO(blog);
   }
 
   async deleteAllBlogs() {
