@@ -168,6 +168,7 @@ export class BloggersController {
 
   @Post(':id/posts')
   async saveBlogPost(
+    @UserId() userId: string,
     @Param('id') id,
     @Body() body: CreateBlogPostDTO,
     @Res() res: Response,
@@ -179,6 +180,8 @@ export class BloggersController {
     if (!blog) {
       return res.status(404).send();
     }
+
+    if (blog.userId !== userId) return res.status(403).send();
 
     const [blogId, blogName] = [blog.id, blog.name];
 
