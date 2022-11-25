@@ -17,19 +17,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { BanDTO } from './dto/bad.dto';
+import { AdminsService } from './admins.service';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { BanDTO } from './dto/bad.dto';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { AdminsService } from './admins.service';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
-export class AdminsController {
+export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly adminsService: AdminsService,
