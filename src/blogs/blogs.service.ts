@@ -21,6 +21,10 @@ export class BlogsService {
     return this.blogsRepository.findBlogPostsByQuery(id, query, userId);
   }
 
+  async findUserBlogsByQuery(userId: string, query: PaginationQuery) {
+    return this.blogsRepository.findUserBlogsByQuery(userId, query);
+  }
+
   async findBlogsByQuery(query: PaginationQuery) {
     return this.blogsRepository.findBlogsByQuery(query);
   }

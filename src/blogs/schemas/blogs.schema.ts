@@ -1,5 +1,6 @@
 import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { Types } from 'mongoose';
 
 import { PostModel } from 'root/posts/schemas/post.schema';
 
@@ -16,4 +17,7 @@ export class BlogModel extends TimeStamps {
 
   @prop({ ref: () => PostModel, default: [] })
   posts: Ref<PostModel>[];
+
+  @prop({ default: null })
+  userId: Types.ObjectId | null;
 }

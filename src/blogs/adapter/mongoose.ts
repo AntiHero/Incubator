@@ -246,6 +246,41 @@ export class BlogsAdapter {
     }
   }
 
+  async findUserBlogsByQuery(
+    userId: string,
+    query: PaginationQuery,
+  ): Promise<[BlogDTO[], number]> {
+    try {
+      const filter = {
+        name: { $regex: query.searchNameTerm },
+        userId: new Types.ObjectId(userId),
+      };
+      const count = await this.model.find(filter).count();
+      const blogs = await this.model
+        .aggregate([
+          {
+            $match: filter,
+          },
+          {
+            $sort: { [query.sortBy]: query.sortDirection },
+          },
+          {
+            $skip: countSkip(query.pageSize, query.pageNumber),
+          },
+          {
+            $limit: query.pageSize,
+          },
+        ])
+        .exec();
+
+      if (!blogs) return null;
+
+      return [blogs.map(convertToBlogDTO), count];
+    } catch (e) {
+      return null;
+    }
+  }
+
   async addBlogPost(id: string, post: PostDomainModel) {
     const createdPost = await this.postModel.create({
       ...post,

@@ -8,10 +8,12 @@ class Blog implements BlogDomainModel {
     public name: string,
     public description: string,
     public websiteUrl: string,
+    public userId: string | null = null,
   ) {
     this.name = name;
     this.websiteUrl = websiteUrl;
     this.description = description;
+    this.userId = userId;
   }
 }
 

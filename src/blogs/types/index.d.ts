@@ -19,6 +19,7 @@ export type BlogDomainModel = {
   name: string;
   description: string;
   websiteUrl: string;
+  userId: string | null;
   posts: PostDomainModel[];
 };
 
@@ -27,6 +28,7 @@ export type BlogDTO = {
   name: string;
   description: string;
   websiteUrl: string;
+  userId: string | null;
   posts: PostDTO[];
   createdAt: string;
 };

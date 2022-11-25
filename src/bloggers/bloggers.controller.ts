@@ -33,10 +33,14 @@ export class BloggersController {
   constructor(private blogsService: BlogsService) {}
 
   @Post()
-  async saveBlog(@Body() body: CreateBlogDTO, @Res() res: Response) {
+  async saveBlog(
+    @UserId() userId: string,
+    @Body() body: CreateBlogDTO,
+    @Res() res: Response,
+  ) {
     const { name, description, websiteUrl } = body;
 
-    const blog = new Blog(name, description, websiteUrl);
+    const blog = new Blog(name, description, websiteUrl, userId);
 
     const savedBlog = await this.blogsService.saveBlog(blog);
 
@@ -48,19 +52,21 @@ export class BloggersController {
 
   @Get()
   async getAllBlogs(
+    @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 
-    const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery({
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-      searchNameTerm,
-    });
+    const [blogs = [], totalCount] =
+      await this.blogsService.findUserBlogsByQuery(userId, {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        searchNameTerm,
+      });
 
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
 

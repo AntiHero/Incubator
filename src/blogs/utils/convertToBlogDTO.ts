@@ -23,6 +23,7 @@ export const convertToBlogDTO = <
     websiteUrl: doc.websiteUrl,
     description: doc.description,
     posts,
+    userId: String(doc.userId),
     createdAt: doc.createdAt.toISOString(),
   };
 };
