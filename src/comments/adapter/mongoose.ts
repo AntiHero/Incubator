@@ -118,13 +118,13 @@ export class CommentsAdapter {
     const likesCount = comment.likes.filter((like) => {
       if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-      return like.likeStatus === LikeStatuses.Like;
+      return like.likeStatus === LikeStatuses.Like && !like.isBanned;
     }).length;
 
     const dislikesCount = comment.likes.filter((like) => {
       if (like instanceof Types.ObjectId) throw new Error('Not populated');
 
-      return like.likeStatus === LikeStatuses.Dislike;
+      return like.likeStatus === LikeStatuses.Dislike && !like.isBanned;
     }).length;
 
     let userStatus: LikeStatuses;
