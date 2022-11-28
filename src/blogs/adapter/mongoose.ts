@@ -17,6 +17,7 @@ import { toObjectId } from 'root/@common/utils/to-object-id';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
+import { Roles } from 'root/users/types/roles';
 
 @Injectable()
 export class BlogsAdapter {
@@ -223,14 +224,23 @@ export class BlogsAdapter {
 
   async findBlogsByQuery(
     query: PaginationQuery,
-    filter?: Record<string, any>,
+    forRole?: Roles,
   ): Promise<[BlogDTO[], number]> {
     try {
-      const filterWithName = {
-        name: { $regex: query.searchNameTerm },
-        ...filter,
-      };
-      const count = await this.model.find(filterWithName).count();
+      let filter = {};
+
+      if (forRole === Roles.USER) {
+        filter = {
+          name: { $regex: query.searchNameTerm },
+          'banInfo.isBanned': false,
+        };
+      } else {
+        filter = {
+          name: { $regex: query.searchNameTerm },
+        };
+      }
+
+      const count = await this.model.find(filter).count();
       const blogs = await this.model
         .aggregate([
           {

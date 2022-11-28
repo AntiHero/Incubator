@@ -26,6 +26,7 @@ import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { Roles } from 'root/users/types/roles';
 
 @Controller('blogs')
 export class BlogsController {
@@ -62,7 +63,7 @@ export class BlogsController {
         sortDirection,
         searchNameTerm,
       },
-      { 'banInfo.isBanned': false },
+      Roles.USER,
     );
 
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
