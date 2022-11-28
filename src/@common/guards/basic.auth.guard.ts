@@ -19,11 +19,9 @@ export class BasicAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
 
     const authHeader = request.get('authorization');
-    console.log(authHeader, 'authHeader');
 
     if (!authHeader) {
-      console.log('no auth header', request.url);
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized1', HttpStatus.UNAUTHORIZED);
     }
 
     const [scheme, encodedLoginPassword] = authHeader.split(/\s+/);
@@ -37,8 +35,7 @@ export class BasicAuthGuard implements CanActivate {
       scheme !== AUTHENTICATION_SCHEME ||
       decodedLoginPassowrd !== [LOGIN, PASSWORD].join(':')
     ) {
-      console.log('wrong scheme or pass', request.url);
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized2', HttpStatus.UNAUTHORIZED);
     }
 
     return true;

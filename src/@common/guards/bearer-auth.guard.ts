@@ -21,7 +21,7 @@ export class BearerAuthGuard implements CanActivate {
     const authHeader = request.get('authorization');
 
     if (!authHeader) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized3', HttpStatus.UNAUTHORIZED);
     }
 
     const [scheme, token] = authHeader.split(/\s+/);
@@ -49,7 +49,7 @@ export class BearerAuthGuard implements CanActivate {
         request.login = username;
       }
     } catch (e) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Unauthorized4', HttpStatus.UNAUTHORIZED);
     }
 
     return true;
