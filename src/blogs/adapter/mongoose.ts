@@ -42,9 +42,7 @@ export class BlogsAdapter {
 
   async addBlog(blog: BlogDomainModel) {
     try {
-      console.log(blog, 'blog');
       const createdBlog = await this.model.create(blog);
-      console.log(createdBlog);
       return convertToBlogDTO(createdBlog);
     } catch (e) {
       console.error(e);
