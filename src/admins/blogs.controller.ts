@@ -26,7 +26,6 @@ import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/blogs')
-@UseGuards(BasicAuthGuard)
 export class BlogsController {
   constructor(
     private readonly blogsService: BlogsService,
@@ -85,6 +84,7 @@ export class BlogsController {
   }
 
   @Put(':id/ban')
+  @UseGuards(BasicAuthGuard)
   async banBlgo(
     @Param('id', IdValidationPipe) id: string,
     @Body() body: BanDTO,
@@ -98,6 +98,7 @@ export class BlogsController {
   }
 
   @Put(':id/bind-with-user/:userId')
+  @UseGuards(BasicAuthGuard)
   async banUser(
     @Param('id', IdValidationPipe) id: string,
     @Param('userId', IdValidationPipe) userId: string,
