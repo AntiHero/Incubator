@@ -6,7 +6,7 @@ import {
   NOT_STRING_ERROR,
 } from 'root/@common/error-messages';
 
-export class BanDTO {
+export class BanUserDTO {
   @IsString({ message: NOT_STRING_ERROR })
   @Transform(({ value }) => typeof value === 'string' && value.trim())
   @IsNotEmpty()

@@ -17,7 +17,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { BanDTO } from './dto/bad.dto';
+import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
@@ -92,7 +92,7 @@ export class UsersController {
   @Put(':id/ban')
   async banUser(
     @Param('id', IdValidationPipe) id,
-    @Body() body: BanDTO,
+    @Body() body: BanUserDTO,
     @Res() res: Response,
   ) {
     const user = await this.adminsService.banUser(id, body);

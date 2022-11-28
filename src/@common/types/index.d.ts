@@ -59,3 +59,8 @@ declare global {
     }
   }
 }
+
+export type BanType = {
+  isBanned: boolean;
+  banDate: string;
+};

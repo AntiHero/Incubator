@@ -4,19 +4,19 @@ import mongoose, { Types } from 'mongoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
-import { BlogModel } from '../schemas/blogs.schema';
-import { PaginationQuery } from 'root/@common/types';
 import { BlogDomainModel, BlogDTO } from '../types';
+import { BlogModel } from '../schemas/blogs.schema';
+import { LIKES_LIMIT } from 'root/@common/constants';
+import { PaginationQuery } from 'root/@common/types';
+import { LikeStatuses } from 'root/@common/types/enum';
 import { countSkip } from 'root/@common/utils/count-skip';
-import { toObjectId } from 'root/@common/utils/to-object-id';
 import { PostModel } from 'root/posts/schemas/post.schema';
-import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
-import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { toObjectId } from 'root/@common/utils/to-object-id';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
-import { LIKES_LIMIT } from 'root/@common/constants';
+import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
+import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
 
 @Injectable()
 export class BlogsAdapter {
@@ -308,5 +308,18 @@ export class BlogsAdapter {
     };
 
     return extendedPost;
+  }
+
+  async banBlog(id: string, banStatus: boolean) {
+    try {
+      return this.model.findByIdAndUpdate(id, {
+        'banInfo.isBanned': banStatus,
+        'banInfo.banDate': banStatus ? new Date() : null,
+      });
+    } catch (error) {
+      console.error(error);
+
+      return null;
+    }
   }
 }

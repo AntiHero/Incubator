@@ -1,8 +1,16 @@
+import { Types } from 'mongoose';
 import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { Types } from 'mongoose';
 
 import { PostModel } from 'root/posts/schemas/post.schema';
+
+class BanInfo {
+  @prop({ default: null })
+  banDate: Date | null;
+
+  @prop({ default: false })
+  isBanned: boolean;
+}
 
 export interface BlogModel extends Base {}
 export class BlogModel extends TimeStamps {
@@ -20,4 +28,7 @@ export class BlogModel extends TimeStamps {
 
   @prop({ default: null })
   userId: Types.ObjectId | null;
+
+  @prop({ default: new BanInfo(), _id: false })
+  banInfo: BanInfo;
 }

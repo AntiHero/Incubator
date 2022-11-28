@@ -2,6 +2,7 @@ import { HydratedDocument, LeanDocument } from 'mongoose';
 import { PostDatabaseModel, PostDomainModel, PostDTO } from 'root/posts/types';
 
 import { WithId } from 'root/@common/types/utility';
+import { BanType } from 'root/@common/types';
 
 export type BlogSchemaModel = {
   name: string;
@@ -31,6 +32,7 @@ export type BlogDTO = {
   userId: string | null;
   posts: PostDTO[];
   createdAt: string;
+  banInfo: BanType;
 };
 
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;

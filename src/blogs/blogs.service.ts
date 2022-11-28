@@ -52,4 +52,8 @@ export class BlogsService {
   async addBlogPost(id: string, post: PostDomainModel) {
     return this.blogsRepository.addBlogPost(id, post);
   }
+
+  async banBlog(id: string, banStatus: boolean) {
+    return this.blogsRepository.banBlog(id, banStatus);
+  }
 }

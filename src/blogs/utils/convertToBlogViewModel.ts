@@ -1,11 +1,7 @@
 import { BlogDTO, BlogViewModel } from '../types';
 
 export const convertToBlogViewModel = (blog: BlogDTO): BlogViewModel => {
-  const view = { ...blog };
+  const { id, name, websiteUrl, description, createdAt } = blog;
 
-  delete view.posts;
-
-  delete view.userId;
-
-  return view;
+  return { id, name, websiteUrl, description, createdAt };
 };

@@ -25,5 +25,9 @@ export const convertToBlogDTO = <
     posts,
     userId: String(doc.userId),
     createdAt: doc.createdAt.toISOString(),
+    banInfo: {
+      banDate: doc.banInfo.banDate ? doc.banInfo.banDate.toISOString() : null,
+      isBanned: doc.banInfo.isBanned,
+    },
   };
 };
