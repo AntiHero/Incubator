@@ -6,16 +6,17 @@ import { TypegooseModule } from 'nestjs-typegoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 import { BlogsModule } from './blogs/blogs.module';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
+import { AdminsModule } from './admins/admins.module';
 import { getMongoConfig } from './configs/mongo.config';
 import { TestingModule } from './testing/testing.module';
+import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
-import { AdminsModule } from './admins/admins.module';
-import { BloggersModule } from './bloggers/bloggers.module';
 
 @Module({
   imports: [
@@ -38,5 +39,6 @@ import { BloggersModule } from './bloggers/bloggers.module';
     AdminsModule,
     BloggersModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

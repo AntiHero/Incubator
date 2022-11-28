@@ -1,4 +1,4 @@
-import 'module-alias/register';
+// import 'module-alias/register';
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -12,7 +12,9 @@ import { exceptionFactory } from './@common/utils/customExceptionFactory';
 const PORT = process.env.PORT;
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: true,
@@ -20,10 +22,9 @@ async function bootstrap() {
     }),
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.enableCors();
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
   app.set('trust proxy', 1);
-  await app.listen(PORT || 9000, '0.0.0.0');
+  await app.listen(PORT || 8000, '0.0.0.0');
 }
 bootstrap();
