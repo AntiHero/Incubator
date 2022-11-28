@@ -31,7 +31,7 @@ import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-quer
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
-export class BloggersController {
+export class BloggersBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,

@@ -178,9 +178,9 @@ export class PostsAdapter {
         .populate('likes');
 
       if (forRole === Roles.USER) {
-        const isBlogBanned = await this.blogModel.findById(post.blogId);
+        const blog = await this.blogModel.findById(post.blogId).lean().exec();
 
-        if (isBlogBanned) {
+        if (blog.banInfo.isBanned) {
           return null;
         }
       }
