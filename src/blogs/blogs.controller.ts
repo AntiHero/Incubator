@@ -54,13 +54,16 @@ export class BlogsController {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 
-    const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery({
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-      searchNameTerm,
-    });
+    const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery(
+      {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        searchNameTerm,
+      },
+      { 'banInfo.isBanned': false },
+    );
 
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
 

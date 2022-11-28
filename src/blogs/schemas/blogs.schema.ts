@@ -4,7 +4,7 @@ import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 import { PostModel } from 'root/posts/schemas/post.schema';
 
-class BanInfo {
+class BlogBanInfo {
   @prop({ default: null })
   banDate: Date | null;
 
@@ -29,6 +29,6 @@ export class BlogModel extends TimeStamps {
   @prop({ default: null })
   userId: Types.ObjectId | null;
 
-  @prop({ default: new BanInfo(), _id: false })
-  banInfo: BanInfo;
+  @prop({ default: new BlogBanInfo(), _id: false })
+  banInfo: BlogBanInfo;
 }
