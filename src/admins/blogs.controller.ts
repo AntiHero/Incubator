@@ -35,7 +35,6 @@ export class BlogsController {
   ) {}
 
   @Get()
-  @HttpCode(HttpStatus.OK)
   async getBlogs(
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: Response,

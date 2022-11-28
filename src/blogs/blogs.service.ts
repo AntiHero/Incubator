@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BlogDomainModel } from './types';
+import { BlogDomainModel, BlogDTO } from './types';
 import { BlogsAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
 import { PostDomainModel } from 'root/posts/types';
@@ -25,8 +25,8 @@ export class BlogsService {
     return this.blogsRepository.findUserBlogsByQuery(userId, query);
   }
 
-  async findBlogsByQuery(query: PaginationQuery) {
-    return this.blogsRepository.findBlogsByQuery(query);
+  async findBlogsByQuery(query: PaginationQuery, filter?: Record<string, any>) {
+    return this.blogsRepository.findBlogsByQuery(query, filter);
   }
 
   async getAllBlogs() {
