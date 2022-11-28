@@ -110,7 +110,7 @@ export class PostsController {
     );
 
     if (!post) {
-      return res.status(402).send();
+      return res.status(404).end();
     }
 
     const convertedPost = convertToExtendedViewPostModel(post);
