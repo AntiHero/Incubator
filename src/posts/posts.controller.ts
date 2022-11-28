@@ -28,7 +28,7 @@ import { Post as PostModel } from './domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
-import { OPERATION_COMPLITION_ERROR } from 'root/@common/errorMessages';
+import { OPERATION_COMPLITION_ERROR } from 'root/@common/error-messages';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { UserLogin } from 'root/@common/decorators/user-login.decorator';
 import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';

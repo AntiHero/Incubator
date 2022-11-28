@@ -7,7 +7,7 @@ import {
 import { Request, Response, NextFunction } from 'express';
 
 import { IpsType } from '../types';
-import { rateLimit } from '../utils/rateLimit';
+import { rateLimit } from '../utils/rate-limit';
 import { MAX_TIMEOUT, RATE_LIMIT } from '../constants';
 
 const ips: IpsType = {};

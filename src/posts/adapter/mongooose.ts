@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
 import { PaginationQuery } from 'root/@common/types';
-import { countSkip } from 'root/@common/utils/countSkip';
+import { countSkip } from 'root/@common/utils/count-skip';
 import { convertToPostDTO } from '../utils/convertToPostDTO';
 import {
   PostDatabaseModel,
@@ -18,7 +18,7 @@ import { LikeDomainModel } from 'root/likes/types';
 import { Like } from 'root/likes/domain/likes.model';
 import { LIKES_LIMIT } from 'root/@common/constants';
 import { LikeStatuses } from 'root/@common/types/enum';
-import { toObjectId } from 'root/@common/utils/toObjectId';
+import { toObjectId } from 'root/@common/utils/to-object-id';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';

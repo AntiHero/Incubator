@@ -1,7 +1,10 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-import { MIN_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@common/errorMessages';
+import {
+  MIN_LENGTH_ERROR,
+  NOT_STRING_ERROR,
+} from 'root/@common/error-messages';
 
 export class BanDTO {
   @IsString({ message: NOT_STRING_ERROR })

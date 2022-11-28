@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 
 import { LikeStatuses } from 'root/@common/types/enum';
-import { NOT_STRING_ERROR, WRONG_VALUE } from 'root/@common/errorMessages';
+import { NOT_STRING_ERROR, WRONG_VALUE } from 'root/@common/error-messages';
 
 export class LikeCommentDTO {
   @IsString({ message: NOT_STRING_ERROR })

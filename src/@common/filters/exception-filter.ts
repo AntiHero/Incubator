@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FieldError } from '../types';
-import { ErrorsResponse } from '../utils/customExceptionFactory';
+import { ErrorsResponse } from '../utils/custom-exception-factory';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

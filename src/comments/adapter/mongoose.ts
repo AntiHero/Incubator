@@ -8,7 +8,7 @@ import { PaginationQuery } from 'root/@common/types';
 import { Like } from 'root/likes/domain/likes.model';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { CommentModel } from '../schemas/comment.schema';
-import { countSkip } from 'root/@common/utils/countSkip';
+import { countSkip } from 'root/@common/utils/count-skip';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';

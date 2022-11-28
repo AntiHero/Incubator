@@ -1,4 +1,4 @@
-// import 'module-alias/register';
+import 'module-alias/register';
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './@common/filters/exception-filter';
-import { exceptionFactory } from './@common/utils/customExceptionFactory';
+import { exceptionFactory } from './@common/utils/custom-exception-factory';
 
 const PORT = process.env.PORT;
 

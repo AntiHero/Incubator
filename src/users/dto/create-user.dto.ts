@@ -6,7 +6,7 @@ import {
   MIN_LENGTH_ERROR,
   NOT_STRING_ERROR,
   WRONG_PATTERN_ERROR,
-} from 'root/@common/errorMessages';
+} from 'root/@common/error-messages';
 
 const MIN_PASSWORD_LEN = 6;
 const MAX_PASSWORD_LEN = 20;

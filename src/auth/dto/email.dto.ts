@@ -4,7 +4,7 @@ import { IsString, Matches } from 'class-validator';
 import {
   NOT_STRING_ERROR,
   WRONG_PATTERN_ERROR,
-} from 'root/@common/errorMessages';
+} from 'root/@common/error-messages';
 
 export class EmailDTO {
   @IsString({ message: NOT_STRING_ERROR })

@@ -3,7 +3,10 @@ import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
 import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
 import { ObjectId } from 'root/@common/decorators/object-id-validator.decorator';
 
-import { MAX_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@common/errorMessages';
+import {
+  MAX_LENGTH_ERROR,
+  NOT_STRING_ERROR,
+} from 'root/@common/error-messages';
 
 export class CreatePostDTO {
   @IsString({ message: NOT_STRING_ERROR })
