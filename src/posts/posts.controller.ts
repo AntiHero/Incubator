@@ -102,7 +102,11 @@ export class PostsController {
     @Param('id') id,
     @Res() res: Response,
   ) {
-    const post = await this.postsService.getExtendedPostInfo(id, userId);
+    const post = await this.postsService.getExtendedPostInfo(id, userId, {
+      banInfo: {
+        isBanned: false,
+      },
+    });
 
     if (!post) {
       return res.status(404).send();

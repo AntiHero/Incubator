@@ -169,9 +169,16 @@ export class PostsAdapter {
     return count;
   }
 
-  async getExtendedPostInfo(id: string, userId = '') {
+  async getExtendedPostInfo(
+    id: string,
+    userId = '',
+    filter?: Record<string, any>,
+  ) {
     try {
-      const post = await this.model.findById(id).lean().populate('likes');
+      const post = await this.model
+        .findOne({ _id: new Types.ObjectId(id), ...filter })
+        .lean()
+        .populate('likes');
 
       if (!post) return null;
 

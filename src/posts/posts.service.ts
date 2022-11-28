@@ -26,8 +26,12 @@ export class PostsService {
     );
   }
 
-  async getExtendedPostInfo(id: string, userId?: string) {
-    return this.postsRepository.getExtendedPostInfo(id, userId);
+  async getExtendedPostInfo(
+    id: string,
+    userId?: string,
+    filter?: Record<string, any>,
+  ) {
+    return this.postsRepository.getExtendedPostInfo(id, userId, filter);
   }
 
   async findPostCommentsByQuery(
