@@ -14,6 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
 import { PaginationQuery } from 'root/@common/types';
@@ -23,7 +24,6 @@ import { BlogWithBanInfo, BlogWithExtendedOwnerInfoType } from './types';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { BanDTO } from './dto/ban.dto';
 
 @Controller('sa/blogs')
 @UseGuards(BasicAuthGuard)
@@ -93,7 +93,7 @@ export class BlogsController {
   ) {
     const banRes = await this.blogsService.banBlog(id, body.isBanned);
 
-    if (!banRes) return res.status(HttpStatus.NOT_FOUND).send();
+    if (!banRes) return res.status(HttpStatus.SERVICE_UNAVAILABLE).send();
 
     res.status(HttpStatus.NO_CONTENT).send();
   }
