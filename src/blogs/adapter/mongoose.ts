@@ -223,10 +223,7 @@ export class BlogsAdapter {
 
   async findBlogsByQuery(query: PaginationQuery): Promise<[BlogDTO[], number]> {
     try {
-      const filter = {
-        name: { $regex: query.searchNameTerm },
-        'banInfo.isBanned': false,
-      };
+      const filter = { name: { $regex: query.searchNameTerm } };
       const count = await this.model.find(filter).count();
       const blogs = await this.model
         .aggregate([
