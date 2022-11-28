@@ -178,7 +178,7 @@ export class BloggersController {
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
-      return res.status(404).send();
+      return res.status(402).send();
     }
 
     if (blog.userId !== userId) return res.status(403).send();
