@@ -35,6 +35,7 @@ import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostVie
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
+import { Roles } from 'root/users/types/roles';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {
@@ -102,11 +103,11 @@ export class PostsController {
     @Param('id') id,
     @Res() res: Response,
   ) {
-    const post = await this.postsService.getExtendedPostInfo(id, userId, {
-      banInfo: {
-        isBanned: false,
-      },
-    });
+    const post = await this.postsService.getExtendedPostInfo(
+      id,
+      userId,
+      Roles.USER,
+    );
 
     if (!post) {
       return res.status(404).send();

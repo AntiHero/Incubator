@@ -25,6 +25,7 @@ import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
+import { Roles } from 'root/users/types/roles';
 
 @Injectable()
 export class PostsAdapter {
@@ -169,16 +170,20 @@ export class PostsAdapter {
     return count;
   }
 
-  async getExtendedPostInfo(
-    id: string,
-    userId = '',
-    filter?: Record<string, any>,
-  ) {
+  async getExtendedPostInfo(id: string, userId = '', forRole?: Roles) {
     try {
       const post = await this.model
-        .findOne({ _id: new Types.ObjectId(id), ...filter })
+        .findOne({ _id: new Types.ObjectId(id) })
         .lean()
         .populate('likes');
+
+      if (forRole === Roles.USER) {
+        const isBlogBanned = await this.blogModel.findById(post.blogId);
+
+        if (isBlogBanned) {
+          return null;
+        }
+      }
 
       if (!post) return null;
 

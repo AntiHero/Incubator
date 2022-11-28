@@ -5,6 +5,7 @@ import { PaginationQuery } from 'root/@common/types';
 import { PostsAdapter } from './adapter/mongooose';
 import { LikeDomainModel } from 'root/likes/types';
 import { CommentDTO } from 'root/comments/types';
+import { Roles } from 'root/users/types/roles';
 
 @Injectable()
 export class PostsService {
@@ -26,12 +27,8 @@ export class PostsService {
     );
   }
 
-  async getExtendedPostInfo(
-    id: string,
-    userId?: string,
-    filter?: Record<string, any>,
-  ) {
-    return this.postsRepository.getExtendedPostInfo(id, userId, filter);
+  async getExtendedPostInfo(id: string, userId?: string, forRole?: Roles) {
+    return this.postsRepository.getExtendedPostInfo(id, userId, forRole);
   }
 
   async findPostCommentsByQuery(
