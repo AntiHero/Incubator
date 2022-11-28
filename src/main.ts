@@ -20,6 +20,7 @@ async function bootstrap() {
     }),
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.enableCors();
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
   app.set('trust proxy', 1);
