@@ -29,5 +29,10 @@ export const convertToBlogDTO = <
       banDate: doc.banInfo.banDate ? doc.banInfo.banDate.toISOString() : null,
       isBanned: doc.banInfo.isBanned,
     },
+    bannedUsers: doc.bannedUsers.map((user) => ({
+      userId: user.userId && String(user.userId),
+      banReason: user.banReason,
+      isBanned: user.isBanned,
+    })),
   };
 };

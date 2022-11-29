@@ -12,6 +12,17 @@ class BlogBanInfo {
   isBanned: boolean;
 }
 
+class BlogBannedUser {
+  @prop({ default: null })
+  userId: Types.ObjectId | null;
+
+  @prop({ default: null })
+  banReason: string | null;
+
+  @prop({ default: false })
+  isBanned: boolean;
+}
+
 export interface BlogModel extends Base {}
 export class BlogModel extends TimeStamps {
   @prop()
@@ -31,4 +42,7 @@ export class BlogModel extends TimeStamps {
 
   @prop({ default: new BlogBanInfo(), _id: false })
   banInfo: BlogBanInfo;
+
+  @prop({ type: () => [BlogBannedUser], _id: false })
+  bannedUsers: BlogBannedUser[];
 }
