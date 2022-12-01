@@ -1,4 +1,5 @@
 import 'fastify';
+
 import { LikeStatuses, SortDirections } from './enum';
 
 export type LikesInfoViewModel = {

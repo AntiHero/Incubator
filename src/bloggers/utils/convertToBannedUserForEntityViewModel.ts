@@ -4,7 +4,7 @@ export const convertToBannedUserForEntityViewModel = (
   bannedUser: BannedUserForEntityDTO,
 ): BannedUserForEntityViewModel => {
   return {
-    id: bannedUser.id,
+    id: bannedUser.userId,
     login: bannedUser.login,
     banInfo: {
       isBanned: bannedUser.isBanned,

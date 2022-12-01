@@ -22,7 +22,7 @@ import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-quer
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
 
 @Controller('blogger/users')
-// @UseGuards(BearerAuthGuard)
+@UseGuards(BearerAuthGuard)
 export class BloggersUsersController {
   constructor(private readonly banUserService: BanUsersForBlogService) {}
 
@@ -35,6 +35,7 @@ export class BloggersUsersController {
     const { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm } =
       query;
 
+    console.log(sortBy, 'sortBy');
     const [bannedUsers, totalCount] =
       await this.banUserService.findBannedUsersByQuery(blogId, {
         pageNumber,

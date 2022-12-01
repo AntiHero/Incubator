@@ -10,6 +10,7 @@ import { UserModel } from 'root/users/schema/users.schema';
 import { BannedUserEntity } from './entity/banned-user.entity';
 import { convertToBannedUserDTO } from './utils/convertToBannedUserDTO';
 import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
+import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 
 @Injectable()
 export class BanUsersForBlogService {
@@ -93,15 +94,19 @@ export class BanUsersForBlogService {
       .find({
         entityId: new Types.ObjectId(blogId),
       })
-      .populate({
-        path: 'user',
-        match: { login: { $regex: query.searchLoginTerm } },
-        options: {
-          sort: { [query.sortBy]: query.sortDirection },
-          skip: countSkip(query.pageSize, query.pageNumber),
-          limit: query.pageSize,
+      .populate([
+        {
+          path: 'user',
+          match: { login: { $regex: query.searchLoginTerm } },
+          options: {
+            sort: {
+              [query.sortBy]: query.sortDirection,
+            },
+            skip: countSkip(query.pageSize, query.pageNumber),
+            limit: query.pageSize,
+          },
         },
-      })
+      ])
       .lean()
       .exec();
 
