@@ -32,7 +32,7 @@ import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-quer
 import { CommentViewModel } from 'root/comments/types';
 
 @Controller('blogger/blogs')
-// @UseGuards(BearerAuthGuard)
+@UseGuards(BearerAuthGuard)
 export class BloggersBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
