@@ -1,14 +1,15 @@
 import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
+
+import { BannedUserForEntityDTO } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import { countSkip } from 'root/@common/utils/count-skip';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { UserModel } from 'root/users/schema/users.schema';
 import { BannedUserEntity } from './entity/banned-user.entity';
-import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
 import { convertToBannedUserDTO } from './utils/convertToBannedUserDTO';
-import { BannedUserForEntityDTO } from './types';
+import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
 
 @Injectable()
 export class BanUsersForBlogService {
@@ -95,9 +96,7 @@ export class BanUsersForBlogService {
       .lean()
       .populate({
         path: 'user',
-        match: {
-          match: { login: { $regex: query.searchLoginTerm } },
-        },
+        match: { login: { $regex: query.searchLoginTerm } },
       })
       .sort({ [query.sortBy]: query.sortDirection })
       .skip(countSkip(query.pageSize, query.pageNumber))
