@@ -93,16 +93,32 @@ export class BanUsersForBlogService {
       .find({
         entityId: new Types.ObjectId(blogId),
       })
-      .lean()
       .populate({
         path: 'user',
         match: { login: { $regex: query.searchLoginTerm } },
+        options: {
+          sort: { [query.sortBy]: query.sortDirection },
+          skip: countSkip(query.pageSize, query.pageNumber),
+          limit: query.pageSize,
+        },
       })
-      .sort({ [`user.${query.sortBy}`]: query.sortDirection })
-      .skip(countSkip(query.pageSize, query.pageNumber))
-      .limit(query.pageSize)
       .lean()
       .exec();
+
+    // .find({
+    //   entityId: new Types.ObjectId(blogId),
+    // })
+    // .lean()
+    // .populate({
+    //   path: 'user',
+    //   match: { login: { $regex: query.searchLoginTerm } },
+    // })
+    // .projection('user')
+    // .sort({ [`user.${query.sortBy}`]: query.sortDirection })
+    // .skip(countSkip(query.pageSize, query.pageNumber))
+    // .limit(query.pageSize)
+    // .lean()
+    // .exec();
 
     return [bannedUsers.map(convertToBannedUserDTO), count];
   }
