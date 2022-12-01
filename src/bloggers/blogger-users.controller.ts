@@ -22,7 +22,7 @@ import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-quer
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
 
 @Controller('blogger/users')
-// @UseGuards(BearerAuthGuard)
+@UseGuards(BearerAuthGuard)
 export class BloggersUsersController {
   constructor(private readonly banUserService: BanUsersForBlogService) {}
 

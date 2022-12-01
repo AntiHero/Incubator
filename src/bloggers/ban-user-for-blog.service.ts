@@ -96,12 +96,12 @@ export class BanUsersForBlogService {
       .populate({
         path: 'user',
         match: { login: { $regex: query.searchLoginTerm } },
-        options: {
-          sort: { [query.sortBy]: query.sortDirection },
-          skip: countSkip(query.pageSize, query.pageNumber),
-          limit: query.pageSize,
-        },
       })
+      .sort({
+        [`user.${query.sortBy}`]: query.sortDirection,
+      })
+      .skip(countSkip(query.pageSize, query.pageNumber))
+      .limit(query.pageSize)
       .lean()
       .exec();
 
