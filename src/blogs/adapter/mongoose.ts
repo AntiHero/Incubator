@@ -44,7 +44,6 @@ export class BlogsAdapter {
   async addBlog(blog: BlogDomainModel) {
     try {
       const createdBlog = await this.model.create(blog);
-      console.log(createdBlog, 'createdBlog');
       return convertToBlogDTO(createdBlog);
     } catch (e) {
       console.error(e);
@@ -348,16 +347,13 @@ export class BlogsAdapter {
 
   async getAllComments(query: PaginationQuery) {
     let count = 0;
-    // console.log(await this.postModel.findById("6385f8ce85fd8c1db0ea740b"));
     (await this.model.find().populate('posts')).forEach((blog) => {
       blog.posts.forEach((post) => {
         if (!(post instanceof Types.ObjectId)) {
-          console.log(post, 'post');
           count += post.comments.length;
         }
       });
     });
-    console.log(count, 'posts');
 
     const comments = await this.model
       .aggregate([

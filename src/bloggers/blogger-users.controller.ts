@@ -20,11 +20,15 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
+import { BlogsService } from 'root/blogs/blogs.service';
 
 @Controller('blogger/users')
-@UseGuards(BearerAuthGuard)
+// @UseGuards(BearerAuthGuard)
 export class BloggersUsersController {
-  constructor(private readonly banUserService: BanUsersForBlogService) {}
+  constructor(
+    private readonly banUserService: BanUsersForBlogService,
+    private readonly blogsService: BlogsService,
+  ) {}
 
   @Get('blog/:id')
   async getBannedUsersForBlog(
@@ -35,7 +39,10 @@ export class BloggersUsersController {
     const { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm } =
       query;
 
-    console.log(sortBy, 'sortBy');
+    const blog = await this.blogsService.findBlogById(blogId);
+
+    if (!blog) return res.status(HttpStatus.NOT_FOUND).end();
+
     const [bannedUsers, totalCount] =
       await this.banUserService.findBannedUsersByQuery(blogId, {
         pageNumber,

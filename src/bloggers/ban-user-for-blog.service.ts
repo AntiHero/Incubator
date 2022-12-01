@@ -91,24 +91,81 @@ export class BanUsersForBlogService {
       .count();
 
     const bannedUsers = await this.bannedUserForEntityModel
-      .find({
-        entityId: new Types.ObjectId(blogId),
-      })
-      .populate([
+      .aggregate([
         {
-          path: 'user',
-          match: { login: { $regex: query.searchLoginTerm } },
-          options: {
-            sort: {
-              [query.sortBy]: query.sortDirection,
-            },
-            skip: countSkip(query.pageSize, query.pageNumber),
-            limit: query.pageSize,
+          $match: {
+            entityId: new Types.ObjectId(blogId),
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'user',
+            foreignField: '_id',
+            as: 'bannedUsers',
+          },
+        },
+
+        {
+          $unwind: '$bannedUsers',
+        },
+        {
+          $project: {
+            bannedUsers: 1,
+            entityId: 1,
+            banDate: 1,
+            banReason: 1,
+            isBanned: 1,
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: { $mergeObjects: ['$$ROOT', '$bannedUsers'] },
+          },
+        },
+        {
+          $project: { bannedUsers: 0 },
+        },
+        {
+          $match: { login: { $regex: query.searchLoginTerm } },
+        },
+        {
+          $sort: { [query.sortBy]: query.sortDirection },
+        },
+        {
+          $skip: countSkip(query.pageSize, query.pageNumber),
+        },
+        {
+          $limit: query.pageSize,
+        },
+        {
+          $project: {
+            banDate: 1,
+            banReason: 1,
+            isBanned: 1,
+            entityId: 1,
+            login: 1,
+            _id: 1,
           },
         },
       ])
-      .lean()
       .exec();
+    // .find({
+    //   entityId: new Types.ObjectId(blogId),
+    // })
+    // .populate({
+    //   path: 'user',
+    //   match: { login: { $regex: query.searchLoginTerm } },
+    //   options: {
+    //     sort: {
+    //       [query.sortBy]: 1,
+    //     },
+    //     skip: countSkip(query.pageSize, query.pageNumber),
+    //     limit: query.pageSize,
+    //   },
+    // })
+    // .lean()
+    // .exec();
 
     // .find({
     //   entityId: new Types.ObjectId(blogId),
