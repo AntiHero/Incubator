@@ -40,7 +40,7 @@ export class BloggersBlogsController {
 
   @Post()
   async saveBlog(
-    @UserId() userId: string,
+    @UserId() userId,
     @Body() body: CreateBlogDTO,
     @Res() res: Response,
   ) {

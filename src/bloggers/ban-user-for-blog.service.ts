@@ -107,4 +107,8 @@ export class BanUsersForBlogService {
 
     return [bannedUsers.map(convertToBannedUserDTO), count];
   }
+
+  async deleteAll() {
+    await this.bannedUserForEntityModel.deleteMany({});
+  }
 }

@@ -44,6 +44,7 @@ export class BlogsAdapter {
   async addBlog(blog: BlogDomainModel) {
     try {
       const createdBlog = await this.model.create(blog);
+      console.log(createdBlog, 'createdBlog');
       return convertToBlogDTO(createdBlog);
     } catch (e) {
       console.error(e);
@@ -52,9 +53,13 @@ export class BlogsAdapter {
     }
   }
 
-  async findBlogById(id: string) {
+  async findBlogById(id: string, forUser?: Roles) {
     try {
       const blog = await this.model.findById(id).lean();
+
+      if (forUser === Roles.USER) {
+        if (blog.banInfo.isBanned) return null;
+      }
 
       return convertToBlogDTO(blog);
     } catch (e) {

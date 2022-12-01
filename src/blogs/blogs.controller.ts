@@ -55,7 +55,7 @@ export class BlogsController {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 
-    const [blogs = [], totalCount] = await this.blogsService.findBlogsByQuery(
+    const [blogs, totalCount] = await this.blogsService.findBlogsByQuery(
       {
         pageNumber,
         pageSize,
@@ -81,7 +81,7 @@ export class BlogsController {
 
   @Get(':id')
   async getBlog(@Param('id') id, @Res() res: Response) {
-    const blog = await this.blogsService.findBlogById(id);
+    const blog = await this.blogsService.findBlogById(id, Roles.USER);
 
     if (!blog) {
       return res.status(404).send();

@@ -37,5 +37,6 @@ import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schem
   ],
   controllers: [BloggersBlogsController, BloggersUsersController],
   providers: [BanUsersForBlogService],
+  exports: [BanUsersForBlogService],
 })
 export class BloggersModule {}

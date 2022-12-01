@@ -34,8 +34,8 @@ export class BlogsService {
     return this.blogsRepository.getAllBlogs();
   }
 
-  async findBlogById(id: string) {
-    return this.blogsRepository.findBlogById(id);
+  async findBlogById(id: string, forUser?: Roles) {
+    return this.blogsRepository.findBlogById(id, forUser);
   }
 
   async findBlogByIdAndUpate(id: string, update: Partial<BlogDomainModel>) {
