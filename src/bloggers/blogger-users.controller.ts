@@ -14,16 +14,16 @@ import { Response } from 'express';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BannedUserForEntityViewModel } from './types';
+import { BlogsService } from 'root/blogs/blogs.service';
 import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
 import { BanUsersForBlogService } from './ban-user-for-blog.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
-import { BlogsService } from 'root/blogs/blogs.service';
 
 @Controller('blogger/users')
-// @UseGuards(BearerAuthGuard)
+@UseGuards(BearerAuthGuard)
 export class BloggersUsersController {
   constructor(
     private readonly banUserService: BanUsersForBlogService,

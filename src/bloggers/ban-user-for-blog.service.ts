@@ -109,15 +109,15 @@ export class BanUsersForBlogService {
         {
           $unwind: '$bannedUsers',
         },
-        {
-          $project: {
-            bannedUsers: 1,
-            entityId: 1,
-            banDate: 1,
-            banReason: 1,
-            isBanned: 1,
-          },
-        },
+        // {
+        //   $project: {
+        //     bannedUsers: 1,
+        //     entityId: 1,
+        //     banDate: 1,
+        //     banReason: 1,
+        //     isBanned: 1,
+        //   },
+        // },
         {
           $replaceRoot: {
             newRoot: { $mergeObjects: ['$$ROOT', '$bannedUsers'] },
@@ -150,37 +150,6 @@ export class BanUsersForBlogService {
         },
       ])
       .exec();
-    // .find({
-    //   entityId: new Types.ObjectId(blogId),
-    // })
-    // .populate({
-    //   path: 'user',
-    //   match: { login: { $regex: query.searchLoginTerm } },
-    //   options: {
-    //     sort: {
-    //       [query.sortBy]: 1,
-    //     },
-    //     skip: countSkip(query.pageSize, query.pageNumber),
-    //     limit: query.pageSize,
-    //   },
-    // })
-    // .lean()
-    // .exec();
-
-    // .find({
-    //   entityId: new Types.ObjectId(blogId),
-    // })
-    // .lean()
-    // .populate({
-    //   path: 'user',
-    //   match: { login: { $regex: query.searchLoginTerm } },
-    // })
-    // .projection('user')
-    // .sort({ [`user.${query.sortBy}`]: query.sortDirection })
-    // .skip(countSkip(query.pageSize, query.pageNumber))
-    // .limit(query.pageSize)
-    // .lean()
-    // .exec();
 
     return [bannedUsers.map(convertToBannedUserDTO), count];
   }
