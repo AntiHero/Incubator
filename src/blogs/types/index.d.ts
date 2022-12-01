@@ -39,7 +39,6 @@ export type BlogDTO = {
   posts: PostDTO[];
   createdAt: string;
   banInfo: BanType;
-  bannedUsers: BlogBannedUser[];
 };
 
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;

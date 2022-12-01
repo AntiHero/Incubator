@@ -42,7 +42,4 @@ export class BlogModel extends TimeStamps {
 
   @prop({ default: new BlogBanInfo(), _id: false })
   banInfo: BlogBanInfo;
-
-  @prop({ type: () => [BlogBannedUser], _id: false })
-  bannedUsers: BlogBannedUser[];
 }

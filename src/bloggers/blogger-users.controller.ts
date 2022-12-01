@@ -74,7 +74,7 @@ export class BloggersUsersController {
       banReason,
     );
 
-    if (!banUserRes) return res.status(HttpStatus.NOT_FOUND).end();
+    if (!banUserRes) return res.status(503).end();
 
     res.status(HttpStatus.NO_CONTENT).end();
   }

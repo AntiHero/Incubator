@@ -29,7 +29,6 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { CommentViewModel } from 'root/comments/types';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
