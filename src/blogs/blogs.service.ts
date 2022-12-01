@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BlogDomainModel, BlogDTO } from './types';
+import { BlogDomainModel } from './types';
 import { BlogsAdapter } from './adapter/mongoose';
 import { PaginationQuery } from 'root/@common/types';
 import { PostDomainModel } from 'root/posts/types';
@@ -56,5 +56,9 @@ export class BlogsService {
 
   async banBlog(id: string, banStatus: boolean) {
     return this.blogsRepository.banBlog(id, banStatus);
+  }
+
+  async getAllComments(query: PaginationQuery) {
+    return this.blogsRepository.getAllComments(query);
   }
 }

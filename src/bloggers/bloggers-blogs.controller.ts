@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -19,7 +20,7 @@ import Paginator from 'root/@common/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { PostExtendedViewModel } from 'root/posts/types';
-import { UpdateBlogPostDTO } from './update-blog-post.dto';
+import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
@@ -28,9 +29,10 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { CommentViewModel } from 'root/comments/types';
 
 @Controller('blogger/blogs')
-@UseGuards(BearerAuthGuard)
+// @UseGuards(BearerAuthGuard)
 export class BloggersBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
@@ -64,14 +66,16 @@ export class BloggersBlogsController {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 
-    const [blogs = [], totalCount] =
-      await this.blogsService.findUserBlogsByQuery(userId, {
+    const [blogs, totalCount] = await this.blogsService.findUserBlogsByQuery(
+      userId,
+      {
         pageNumber,
         pageSize,
         sortBy,
         sortDirection,
         searchNameTerm,
-      });
+      },
+    );
 
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
 
@@ -84,6 +88,36 @@ export class BloggersBlogsController {
     );
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
+  }
+
+  @Get('comments')
+  async getComments(
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Res() res: Response,
+  ) {
+    const { pageNumber, pageSize, sortBy, sortDirection } = query;
+
+    // const [comments, count] = await this.blogsService.getAllComments({
+    //   pageNumber,
+    //   pageSize,
+    //   sortBy,
+    //   sortDirection,
+    // });
+
+    // const items: CommentViewModel[] = bannedUsers.map(
+    //   convertToBannedUserForEntityViewModel,
+    // );
+
+    // const result = new Paginator(
+    //   Math.ceil(totalCount / pageSize),
+    //   pageNumber,
+    //   pageSize,
+    //   totalCount,
+    //   items,
+    // );
+
+    // res.type('text/plain').status(HttpStatus.OK).send(JSON.stringify(result));
+    res.status(200).end();
   }
 
   @Get(':id')

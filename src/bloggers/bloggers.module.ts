@@ -6,9 +6,10 @@ import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
 import { UserModel } from 'root/users/schema/users.schema';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
-import { BanUsersForBlogService } from './ban-user.service';
-import { BloggersUseresController } from './blogger-users.controller';
+import { BanUsersForBlogService } from './ban-user-for-blog.service';
+import { BloggersUsersController } from './blogger-users.controller';
 import { BloggersBlogsController } from './bloggers-blogs.controller';
+import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
 
 @Module({
   imports: [
@@ -24,11 +25,17 @@ import { BloggersBlogsController } from './bloggers-blogs.controller';
         schemaOptions: { collection: 'users' },
       },
     ]),
+    TypegooseModule.forFeature([
+      {
+        typegooseClass: BannedUserForEntityModel,
+        schemaOptions: { collection: 'banned-users-for-entity' },
+      },
+    ]),
     BlogsModule,
     PostsModule,
     UsersModule,
   ],
-  controllers: [BloggersBlogsController, BloggersUseresController],
+  controllers: [BloggersBlogsController, BloggersUsersController],
   providers: [BanUsersForBlogService],
 })
 export class BloggersModule {}

@@ -4,6 +4,7 @@ import mongoose, { Types } from 'mongoose';
 import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
+import { Roles } from 'root/users/types/roles';
 import { BlogDomainModel, BlogDTO } from '../types';
 import { BlogModel } from '../schemas/blogs.schema';
 import { LIKES_LIMIT } from 'root/@common/constants';
@@ -17,7 +18,6 @@ import { toObjectId } from 'root/@common/utils/to-object-id';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
-import { Roles } from 'root/users/types/roles';
 
 @Injectable()
 export class BlogsAdapter {
@@ -271,6 +271,8 @@ export class BlogsAdapter {
     query: PaginationQuery,
   ): Promise<[BlogDTO[], number]> {
     try {
+      if (!userId) return [[], 0];
+
       const filter = {
         name: { $regex: query.searchNameTerm },
         userId: new Types.ObjectId(userId),
@@ -297,7 +299,7 @@ export class BlogsAdapter {
 
       return [blogs.map(convertToBlogDTO), count];
     } catch (e) {
-      return null;
+      return [[], 0];
     }
   }
 
@@ -337,5 +339,80 @@ export class BlogsAdapter {
 
       return null;
     }
+  }
+
+  async getAllComments(query: PaginationQuery) {
+    let count = 0;
+    // console.log(await this.postModel.findById("6385f8ce85fd8c1db0ea740b"));
+    (await this.model.find().populate('posts')).forEach((blog) => {
+      blog.posts.forEach((post) => {
+        if (!(post instanceof Types.ObjectId)) {
+          console.log(post, 'post');
+          count += post.comments.length;
+        }
+      });
+    });
+    console.log(count, 'posts');
+
+    const comments = await this.model
+      .aggregate([
+        {
+          $match: {},
+        },
+
+        {
+          $lookup: {
+            from: 'posts',
+            localField: 'posts',
+            foreignField: '_id',
+            as: 'blogPosts',
+          },
+        },
+        {
+          $project: { blogPosts: 1 },
+        },
+        {
+          $unwind: '$blogPosts',
+        },
+        {
+          $replaceRoot: {
+            newRoot: { $mergeObjects: ['$$ROOT', '$blogPosts'] },
+          },
+        },
+        {
+          $lookup: {
+            from: 'comments',
+            localField: 'comments',
+            foreignField: '_id',
+            as: 'postsComments',
+          },
+        },
+        {
+          $project: { postsComments: 1 },
+        },
+        {
+          $unwind: '$postsComments',
+        },
+        {
+          $replaceRoot: {
+            newRoot: { $mergeObjects: ['$$ROOT', '$postsComments'] },
+          },
+        },
+        {
+          $project: { postsComments: 0 },
+        },
+        {
+          $sort: { [query.sortBy]: query.sortDirection },
+        },
+        {
+          $skip: countSkip(query.pageSize, query.pageNumber),
+        },
+        {
+          $limit: query.pageSize,
+        },
+      ])
+      .exec();
+
+    console.log(comments);
   }
 }
