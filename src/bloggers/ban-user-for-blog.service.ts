@@ -98,7 +98,7 @@ export class BanUsersForBlogService {
         path: 'user',
         match: { login: { $regex: query.searchLoginTerm } },
       })
-      .sort({ [query.sortBy]: query.sortDirection })
+      .sort({ [`user.${query.sortBy}`]: query.sortDirection })
       .skip(countSkip(query.pageSize, query.pageNumber))
       .limit(query.pageSize)
       .lean()
