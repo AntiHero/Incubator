@@ -15,10 +15,10 @@ import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 @Injectable()
 export class BanUsersForBlogService {
   constructor(
-    @InjectModel(BlogModel)
-    private readonly model: mongoose.Model<BlogModel>,
-    @InjectModel(UserModel)
-    private readonly userModel: mongoose.Model<UserModel>,
+    // @InjectModel(BlogModel)
+    // private readonly model: mongoose.Model<BlogModel>,
+    // @InjectModel(UserModel)
+    // private readonly userModel: mongoose.Model<UserModel>,
     @InjectModel(BannedUserForEntityModel)
     private readonly bannedUserForEntityModel: mongoose.Model<BannedUserForEntityModel>,
   ) {}
@@ -69,6 +69,16 @@ export class BanUsersForBlogService {
     }
 
     return true;
+  }
+
+  async findBannedUser(id: string, entityId: string) {
+    return this.bannedUserForEntityModel
+      .findOne({
+        entityId: new Types.ObjectId(entityId),
+        user: new Types.ObjectId(id),
+      })
+      .lean()
+      .exec();
   }
 
   async findBannedUsersByQuery(

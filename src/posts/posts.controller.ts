@@ -36,6 +36,7 @@ import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostVie
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
+import { PostCommentsGuard } from 'root/@common/guards/post-comments.guard';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {
@@ -222,7 +223,7 @@ export class PostsController {
   }
 
   @Post(':id/comments')
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BearerAuthGuard, PostCommentsGuard)
   async createComment(
     @UserId() userId: string,
     @UserLogin() userLogin: string,

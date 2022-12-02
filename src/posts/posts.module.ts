@@ -9,6 +9,8 @@ import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
+import { BanUsersForBlogService } from 'root/bloggers/ban-user-for-blog.service';
+import { BannedUserForEntityModel } from 'root/bloggers/schemas/banned-user-for-entity.schema';
 
 @Module({
   imports: [
@@ -36,9 +38,15 @@ import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
         schemaOptions: { collection: 'comments' },
       },
     ]),
+    TypegooseModule.forFeature([
+      {
+        typegooseClass: BannedUserForEntityModel,
+        schemaOptions: { collection: 'banned-users-for-entity' },
+      },
+    ]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsAdapter, IsBlogExist],
+  providers: [PostsService, PostsAdapter, IsBlogExist, BanUsersForBlogService],
   exports: [PostsService],
 })
 export class PostsModule {}
