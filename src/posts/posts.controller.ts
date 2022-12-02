@@ -17,6 +17,7 @@ import {
 import { Response, Request } from 'express';
 
 import { FastifyReply } from 'fastify';
+import { Roles } from 'root/users/types/roles';
 import { PostsService } from './posts.service';
 import { LikePostDTO } from './dto/like-post.dto';
 import { PaginationQuery } from 'root/@common/types';
@@ -35,7 +36,6 @@ import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostVie
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
-import { Roles } from 'root/users/types/roles';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {

@@ -29,11 +29,6 @@ export class BanUsersForBlogService {
     isBanned: boolean,
     banReason: string | null,
   ) {
-    const user = await this.userModel.findById(userId).exec();
-    const blog = await this.model.findById(blogId).exec();
-
-    if (!user || !blog) return null;
-
     if (isBanned) {
       try {
         await this.bannedUserForEntityModel
@@ -109,15 +104,6 @@ export class BanUsersForBlogService {
         {
           $unwind: '$bannedUsers',
         },
-        // {
-        //   $project: {
-        //     bannedUsers: 1,
-        //     entityId: 1,
-        //     banDate: 1,
-        //     banReason: 1,
-        //     isBanned: 1,
-        //   },
-        // },
         {
           $replaceRoot: {
             newRoot: { $mergeObjects: ['$$ROOT', '$bannedUsers'] },

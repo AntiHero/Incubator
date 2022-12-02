@@ -21,6 +21,7 @@ import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('blogger/users')
 @UseGuards(BearerAuthGuard)
@@ -69,20 +70,20 @@ export class BloggersUsersController {
 
   @Put(':id/ban')
   async banUserForBlog(
+    @UserId() ownerId: string,
     @Param('id', IdValidationPipe) userId: string,
     @Body() body: BanUserForBlogDTO,
     @Res() res: Response,
   ) {
     const { blogId, isBanned, banReason } = body;
 
-    const banUserRes = await this.banUserService.banUser(
-      userId,
-      blogId,
-      isBanned,
-      banReason,
-    );
+    const blog = await this.blogsService.findBlogById(blogId);
 
-    if (!banUserRes) return res.status(HttpStatus.NOT_FOUND).end();
+    if (!blog) return res.status(HttpStatus.NOT_FOUND).end();
+
+    if (blog.userId !== ownerId) return res.status(HttpStatus.FORBIDDEN).end();
+
+    await this.banUserService.banUser(userId, blogId, isBanned, banReason);
 
     res.status(HttpStatus.NO_CONTENT).end();
   }
