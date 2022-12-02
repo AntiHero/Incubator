@@ -1,3 +1,6 @@
+import { LikeDTO } from 'root/likes/types';
+import { LikesInfoViewModel } from 'root/@common/types';
+
 export type BannedUserForEntity = {
   entityId: string;
   user: string;
@@ -26,6 +29,33 @@ export type BannedUserForEntityViewModel = {
   };
 };
 
-// export type BloggerCommentsViewModel = {
+export type BloggerCommentsViewModel = {
+  id: string;
+  content: string;
+  createdAt: string;
+  likesInfo: LikesInfoViewModel;
+  commentatorInfo: {
+    userId: string;
+    userLogin: string;
+  };
+  postInfo: {
+    id: string;
+    title: string;
+    blogId: string;
+    blogName: string;
+  };
+};
 
-// }
+export type BloggerCommentDTO = {
+  id: string;
+  content: string;
+  userId: string;
+  likes: LikeDTO[];
+  isBanned: boolean;
+  userLogin: string;
+  createdAt: string;
+  blogName: string;
+  blogId: string;
+  postId: string;
+  title: string;
+};

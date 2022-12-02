@@ -15,6 +15,7 @@ import { Response } from 'express';
 
 import Blog from 'root/blogs/domain/blogs.model';
 import { BlogViewModel } from 'root/blogs/types';
+import { BloggerCommentsViewModel } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
@@ -27,6 +28,7 @@ import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
+import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
@@ -91,32 +93,35 @@ export class BloggersBlogsController {
 
   @Get('comments')
   async getComments(
+    @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
 
-    // const [comments, count] = await this.blogsService.getAllComments({
-    //   pageNumber,
-    //   pageSize,
-    //   sortBy,
-    //   sortDirection,
-    // });
+    const [comments, totalCount] = await this.blogsService.getAllComments(
+      userId,
+      {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+      },
+    );
 
-    // const items: CommentViewModel[] = bannedUsers.map(
-    //   convertToBannedUserForEntityViewModel,
-    // );
+    const items: BloggerCommentsViewModel[] = comments.map((comment) =>
+      convertToBloggerCommentViewModel(comment, userId),
+    );
 
-    // const result = new Paginator(
-    //   Math.ceil(totalCount / pageSize),
-    //   pageNumber,
-    //   pageSize,
-    //   totalCount,
-    //   items,
-    // );
+    const result = new Paginator(
+      Math.ceil(totalCount / pageSize),
+      pageNumber,
+      pageSize,
+      totalCount,
+      items,
+    );
 
-    // res.type('text/plain').status(HttpStatus.OK).send(JSON.stringify(result));
-    res.status(200).end();
+    res.type('text/plain').status(HttpStatus.OK).send(JSON.stringify(result));
   }
 
   @Get(':id')

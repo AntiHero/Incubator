@@ -58,7 +58,7 @@ export class BlogsService {
     return this.blogsRepository.banBlog(id, banStatus);
   }
 
-  async getAllComments(query: PaginationQuery) {
-    return this.blogsRepository.getAllComments(query);
+  async getAllComments(userId: string, query: PaginationQuery) {
+    return this.blogsRepository.getAllComments(userId, query);
   }
 }

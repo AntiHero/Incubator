@@ -5,6 +5,7 @@ import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
 import { Roles } from 'root/users/types/roles';
+import { CommentDTO } from 'root/comments/types';
 import { BlogDomainModel, BlogDTO } from '../types';
 import { BlogModel } from '../schemas/blogs.schema';
 import { LIKES_LIMIT } from 'root/@common/constants';
@@ -18,6 +19,9 @@ import { toObjectId } from 'root/@common/utils/to-object-id';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
+import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
+import { BloggerCommentDTO } from 'root/bloggers/types';
+import { convertToBloggerCommentDTO } from 'root/bloggers/utils/convertToBloggerCommentDTO';
 
 @Injectable()
 export class BlogsAdapter {
@@ -345,9 +349,17 @@ export class BlogsAdapter {
     }
   }
 
-  async getAllComments(query: PaginationQuery) {
+  async getAllComments(
+    userId: string,
+    query: PaginationQuery,
+  ): Promise<[BloggerCommentDTO[], number]> {
     let count = 0;
-    (await this.model.find().populate('posts')).forEach((blog) => {
+
+    (
+      await this.model
+        .find({ userId: new Types.ObjectId(userId) })
+        .populate('posts')
+    ).forEach((blog) => {
       blog.posts.forEach((post) => {
         if (!(post instanceof Types.ObjectId)) {
           count += post.comments.length;
@@ -358,9 +370,10 @@ export class BlogsAdapter {
     const comments = await this.model
       .aggregate([
         {
-          $match: {},
+          $match: {
+            userId: new Types.ObjectId(userId),
+          },
         },
-
         {
           $lookup: {
             from: 'posts',
@@ -389,7 +402,13 @@ export class BlogsAdapter {
           },
         },
         {
-          $project: { postsComments: 1 },
+          $project: {
+            postsComments: 1,
+            blogId: 1,
+            blogName: 1,
+            postId: '$_id',
+            title: 1,
+          },
         },
         {
           $unwind: '$postsComments',
@@ -411,9 +430,17 @@ export class BlogsAdapter {
         {
           $limit: query.pageSize,
         },
+        {
+          $lookup: {
+            from: 'likes',
+            localField: 'likes',
+            foreignField: '_id',
+            as: 'commentsLikes',
+          },
+        },
       ])
       .exec();
 
-    console.log(comments);
+    return [comments.map(convertToBloggerCommentDTO), count];
   }
 }
