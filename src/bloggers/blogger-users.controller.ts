@@ -14,14 +14,15 @@ import { Response } from 'express';
 import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BannedUserForEntityViewModel } from './types';
+import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BanUsersForBlogService } from './ban-user-for-blog.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 @Controller('blogger/users')
 @UseGuards(BearerAuthGuard)
@@ -29,10 +30,12 @@ export class BloggersUsersController {
   constructor(
     private readonly banUserService: BanUsersForBlogService,
     private readonly blogsService: BlogsService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Get('blog/:id')
   async getBannedUsersForBlog(
+    @UserId() userId: string,
     @Param('id', IdValidationPipe) blogId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Res() res: Response,
@@ -43,6 +46,8 @@ export class BloggersUsersController {
     const blog = await this.blogsService.findBlogById(blogId);
 
     if (!blog) return res.status(HttpStatus.NOT_FOUND).end();
+
+    if (blog.userId !== userId) return res.status(HttpStatus.FORBIDDEN).end();
 
     const [bannedUsers, totalCount] =
       await this.banUserService.findBannedUsersByQuery(blogId, {
@@ -78,8 +83,9 @@ export class BloggersUsersController {
     const { blogId, isBanned, banReason } = body;
 
     const blog = await this.blogsService.findBlogById(blogId);
+    const user = await this.usersService.findUserById(userId);
 
-    if (!blog) return res.status(HttpStatus.NOT_FOUND).end();
+    if (!blog || !user) return res.status(HttpStatus.NOT_FOUND).end();
 
     if (blog.userId !== ownerId) return res.status(HttpStatus.FORBIDDEN).end();
 
