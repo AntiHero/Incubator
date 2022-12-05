@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
 import { PostDomainModel } from './types';
-import { PaginationQuery } from 'root/@common/types';
+import { Roles } from 'root/users/types/roles';
+import { CommentDTO } from 'root/comments/types';
 import { PostsAdapter } from './adapter/mongooose';
 import { LikeDomainModel } from 'root/likes/types';
-import { CommentDTO } from 'root/comments/types';
-import { Roles } from 'root/users/types/roles';
+import { PaginationQuery } from 'root/@common/types';
 
 @Injectable()
 export class PostsService {
-  constructor(private postsRepository: PostsAdapter) {}
+  constructor(private postsRepository: PostsAdapter) {
+    console.log(postsRepository);
+  }
 
   async savePost(post: PostDomainModel) {
     return this.postsRepository.addPost(post);

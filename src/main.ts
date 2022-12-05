@@ -1,8 +1,8 @@
 import 'module-alias/register';
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';

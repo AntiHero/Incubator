@@ -5,20 +5,13 @@ import { InjectModel } from 'nestjs-typegoose';
 import { BannedUserForEntityDTO } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import { countSkip } from 'root/@common/utils/count-skip';
-import { BlogModel } from 'root/blogs/schemas/blogs.schema';
-import { UserModel } from 'root/users/schema/users.schema';
 import { BannedUserEntity } from './entity/banned-user.entity';
 import { convertToBannedUserDTO } from './utils/convertToBannedUserDTO';
 import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
-import { SortDirectionKeys, SortDirections } from 'root/@common/types/enum';
 
 @Injectable()
 export class BanUsersForBlogService {
   constructor(
-    // @InjectModel(BlogModel)
-    // private readonly model: mongoose.Model<BlogModel>,
-    // @InjectModel(UserModel)
-    // private readonly userModel: mongoose.Model<UserModel>,
     @InjectModel(BannedUserForEntityModel)
     private readonly bannedUserForEntityModel: mongoose.Model<BannedUserForEntityModel>,
   ) {}

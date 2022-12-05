@@ -13,19 +13,19 @@ import {
   PostExtendedLikesDTO,
   PostLeanModel,
 } from '../types';
+import { Roles } from 'root/users/types/roles';
 import { PostModel } from '../schemas/post.schema';
 import { LikeDomainModel } from 'root/likes/types';
 import { Like } from 'root/likes/domain/likes.model';
 import { LIKES_LIMIT } from 'root/@common/constants';
 import { LikeStatuses } from 'root/@common/types/enum';
-import { toObjectId } from 'root/@common/utils/to-object-id';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';
+import { toObjectId } from 'root/@common/utils/to-object-id';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
+import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { Roles } from 'root/users/types/roles';
 
 @Injectable()
 export class PostsAdapter {

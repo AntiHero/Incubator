@@ -15,8 +15,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-
 import { FastifyReply } from 'fastify';
+
 import { Roles } from 'root/users/types/roles';
 import { PostsService } from './posts.service';
 import { LikePostDTO } from './dto/like-post.dto';
@@ -32,11 +32,11 @@ import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
 import { OPERATION_COMPLITION_ERROR } from 'root/@common/error-messages';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { UserLogin } from 'root/@common/decorators/user-login.decorator';
+import { PostCommentsGuard } from 'root/@common/guards/post-comments.guard';
 import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
 import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
-import { PostCommentsGuard } from 'root/@common/guards/post-comments.guard';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {
