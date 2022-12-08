@@ -57,6 +57,7 @@ declare global {
       userId: string;
       expDate: number;
       deviceId: string;
+      user: { userId: string; login: string };
     }
   }
 }

@@ -20,7 +20,7 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypegooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

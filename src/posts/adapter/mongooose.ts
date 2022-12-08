@@ -138,9 +138,11 @@ export class PostsAdapter {
 
         const createdLike = await this.likeModel.create(newLike);
 
-        await this.model.findByIdAndUpdate(id, {
-          $push: { likes: createdLike._id },
-        });
+        await this.model
+          .findByIdAndUpdate(id, {
+            $push: { likes: createdLike._id },
+          })
+          .exec();
 
         return true;
       } else {

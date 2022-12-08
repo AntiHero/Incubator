@@ -4,9 +4,13 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from 'root/users/users.module';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { TokensModule } from 'root/tokens/tokens.module';
 import { SecurityDevicesModule } from 'root/security-devices/security-devices.module';
 import { PasswordAuthorizationMiddleware } from 'root/@common/middlewares/password-authorization.middleware';
@@ -14,9 +18,9 @@ import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refre
 // import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
 
 @Module({
-  imports: [UsersModule, SecurityDevicesModule, TokensModule],
+  imports: [UsersModule, SecurityDevicesModule, TokensModule, PassportModule],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

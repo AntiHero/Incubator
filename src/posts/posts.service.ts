@@ -9,9 +9,7 @@ import { PaginationQuery } from 'root/@common/types';
 
 @Injectable()
 export class PostsService {
-  constructor(private postsRepository: PostsAdapter) {
-    console.log(postsRepository);
-  }
+  constructor(private postsRepository: PostsAdapter) {}
 
   async savePost(post: PostDomainModel) {
     return this.postsRepository.addPost(post);
