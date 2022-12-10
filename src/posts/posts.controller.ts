@@ -131,7 +131,7 @@ export class PostsController {
 
     if (!post) return res.status(404).send();
 
-    const login = req.login;
+    const login = req.login as unknown as string;
     const userId = req.userId;
     const likeStatus = body.likeStatus;
 

@@ -29,6 +29,7 @@ import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
 import { BanGuard } from 'root/@common/guards/banned-user.guard';
 import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 
 // const ips: IpsType = {};
 
@@ -195,8 +196,12 @@ export class AuthController {
   @Get('me')
   // @UseGuards(BearerAuthGuard)
   @UseGuards(JwtAuthGuard)
-  async me(@Res() res: Response, @Req() req: Request) {
-    const userId = req.user.userId;
+  async me(
+    // @UserId() userId: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    const { userId } = req.user as any;
 
     const user = await this.usersService.findUserById(userId);
 
