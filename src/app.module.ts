@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-
-import { LikesModule } from './likes/likes.module';
-import { PostsModule } from './posts/posts.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypegooseModule } from 'nestjs-typegoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
+import { PostsModule } from './posts/posts.module';
+import { LikesModule } from './likes/likes.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
@@ -15,6 +15,7 @@ import { getMongoConfig } from './configs/mongo.config';
 import { TestingModule } from './testing/testing.module';
 import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
+import { getPostgresConfig } from './configs/postgres.config';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 
@@ -25,6 +26,19 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: getMongoConfig,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getPostgresConfig,
+      // type: 'mysql',
+      // host: 'localhost',
+      // port: 3306,
+      // username: 'root',
+      // password: 'root',
+      // database: 'test',
+      // entities: [],
+      // synchronize: true,
     }),
     AuthModule,
     BlogsModule,

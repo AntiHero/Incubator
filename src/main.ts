@@ -1,4 +1,6 @@
-import 'module-alias/register';
+if (!process.env.DEV_MODE) {
+  require('module-alias/register');
+}
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
