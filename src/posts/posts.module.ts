@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Post } from './entity/post.entity';
 import { PostsService } from './posts.service';
-import { PostsAdapter } from './adapter/mongooose';
-import { PostsController } from './posts.controller';
-import { TypegooseModule } from 'nestjs-typegoose';
 import { PostModel } from './schemas/post.schema';
+import { PostsAdapter } from './adapter/mongooose';
+import { TypegooseModule } from 'nestjs-typegoose';
+import { PostsController } from './posts.controller';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
@@ -44,6 +46,7 @@ import { BannedUserForEntityModel } from 'root/bloggers/schemas/banned-user-for-
         schemaOptions: { collection: 'banned-users-for-entity' },
       },
     ]),
+    TypeOrmModule.forFeature([Post]),
   ],
   controllers: [PostsController],
   providers: [PostsService, PostsAdapter, IsBlogExist, BanUsersForBlogService],

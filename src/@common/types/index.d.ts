@@ -1,6 +1,6 @@
 import 'fastify';
 
-import { LikeStatuses, SortDirections } from './enum';
+import { LikeStatuses, SortDirectionKeys, SortDirections } from './enum';
 
 export type LikesInfoViewModel = {
   likesCount: number;
@@ -16,6 +16,16 @@ export type PaginationQuery = {
   searchNameTerm?: RegExp;
   searchLoginTerm?: RegExp;
   searchEmailTerm?: RegExp;
+};
+
+export type PaginationQueryType = {
+  pageNumber: number;
+  pageSize: number;
+  sortBy: string;
+  sortDirection: SortDirectionKeys;
+  searchNameTerm?: string;
+  searchLoginTerm?: string;
+  searchEmailTerm?: string;
 };
 
 export type PaginatorType<T> = {

@@ -3,19 +3,22 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
+import { Roles } from './types/roles';
 import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
 import { BanInfo, UserDomainModel } from './types';
 import { PaginationQuery } from 'root/@common/types';
 import { fiveMinInMs } from 'root/@common/constants';
 import { OptionalKey } from 'root/@common/types/utility';
+import { UsersSqlAdapter } from './adapter/postgres.adapter';
 import { EmailManager } from 'root/email-manager/email-manager';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private usersRepository: UsersAdapter,
     private emailManager: EmailManager,
+    private usersRepository: UsersAdapter,
+    private usersSqlRepository: UsersSqlAdapter,
   ) {}
 
   async authenticateUser(loginOrEmail: string, password: string) {
@@ -34,16 +37,13 @@ export class UsersService {
 
   async createUser(data: UserDomainModel) {
     const saltRounds = 10;
-
     const { login, password, email, role } = data;
-
     const passwordHash = await bcrypt.hash(password, saltRounds);
-
-    const user = await this.usersRepository.addUser({
+    const user = await this.usersSqlRepository.addUser({
       login,
       email,
       password: passwordHash,
-      role,
+      role: role ?? Roles.USER,
     });
 
     if (!user) return null;
@@ -136,11 +136,13 @@ export class UsersService {
   }
 
   async getAllUsers() {
-    return this.usersRepository.getAllUsers();
+    return this.usersSqlRepository.getAllUsers();
+    // return this.usersRepository.getAllUsers();
   }
 
   async findUserById(id: string) {
-    return this.usersRepository.findUserById(id);
+    // return this.usersRepository.findUserById(id);
+    return this.usersSqlRepository.findUserById(id);
   }
 
   async findUserByIdAndDelete(id: string) {

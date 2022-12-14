@@ -28,10 +28,10 @@ export type UserDTO = {
   id: string;
   login: string;
   email: string;
-  password: string;
   banInfo: BanInfo;
+  password?: string;
   confirmationInfo: ConfirmationInfo;
-  passwordRecover: PasswordRecovery;
+  passwordRecovery: PasswordRecovery;
   createdAt: string;
   role: Roles | null;
 };
@@ -61,4 +61,19 @@ export type UserInfoType = {
   email: string;
   login: string;
   userId: string;
+};
+
+export type UserDB = {
+  id: number;
+  login: string;
+  email: string;
+  banReason: string | null;
+  banDate: Date | null;
+  isBanned: boolean;
+  isConfirmed: boolean;
+  expDate: number;
+  passwordRecoveryCode: string | null;
+  confirmationCode: string | null;
+  createdAt: Date;
+  role: Roles;
 };

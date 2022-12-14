@@ -1,25 +1,46 @@
-import { Roles } from '../types/roles';
-import { UserDomainModel } from '../types';
-import { OptionalKey } from 'root/@common/types/utility';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  JoinColumn,
+  CreateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Roles } from 'root/users/types/roles';
 
+import { UserBanInfo } from './user-ban-info.entity';
+import { PasswordRecovery } from './password-recovery.entity';
+import { UserConfirmationInfo } from './user-confirmation-info.entity';
+
+@Entity('users')
 export class User {
-  public login: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  public password: string;
+  @Column()
+  login: string;
 
-  public email: string;
+  @Column()
+  email: string;
 
-  public role: Roles | null;
+  @Column({ select: false })
+  password: string;
 
-  constructor({
-    login,
-    password,
-    email,
-    role = null,
-  }: OptionalKey<UserDomainModel, 'role'>) {
-    this.login = login;
-    this.password = password;
-    this.email = email;
-    this.role = role;
-  }
+  @OneToOne(() => UserBanInfo, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'banInfo' })
+  banInfo: UserBanInfo;
+
+  @OneToOne(() => UserConfirmationInfo, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'confirmationInfo' })
+  confirmationInfo: UserConfirmationInfo;
+
+  @OneToOne(() => PasswordRecovery, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'passwordRecovery' })
+  passwordRecovery: PasswordRecovery;
+
+  @Column({ type: 'enum', enum: Roles, default: Roles.USER })
+  role: Roles;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

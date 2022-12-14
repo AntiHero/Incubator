@@ -27,7 +27,7 @@ export const convertToUserDTO = <
     code: doc.confirmationInfo.code,
     expDate: doc.confirmationInfo.expDate,
   },
-  passwordRecover: {
+  passwordRecovery: {
     code: doc.passwordRecover.code,
   },
   createdAt: doc.createdAt?.toISOString(),
