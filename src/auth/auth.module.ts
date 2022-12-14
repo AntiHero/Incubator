@@ -11,10 +11,12 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from 'root/users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { TokensModule } from 'root/tokens/tokens.module';
+// import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesModule } from 'root/security-devices/security-devices.module';
+// import { ConfirmationInfoSqlRepository } from 'root/users/adapter/user-confirmation-info-sql.adapter';
+// import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
 import { PasswordAuthorizationMiddleware } from 'root/@common/middlewares/password-authorization.middleware';
 import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refresh-token.validation.middleware';
-import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
 
 @Module({
   imports: [UsersModule, SecurityDevicesModule, TokensModule, PassportModule],

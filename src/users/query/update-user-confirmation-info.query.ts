@@ -1,6 +1,9 @@
+import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { createEscapedString } from '../utils/createEscapedString';
 
-export const updateUserQuery = (updates: any) => {
+export const updateUserConfirmationInfo = (
+  updates: Partial<UserConfirmationInfo>,
+) => {
   // const fields = Object.entries(updates)
   //   .map((entry) => {
   //     return (
@@ -15,6 +18,6 @@ export const updateUserQuery = (updates: any) => {
   const fields = createEscapedString(updates);
 
   return `
-    UPDATE users SET ${fields} WHERE id=$1 RETURNING id
+    UPDATE user_confirmation_info SET ${fields} WHERE id=$1 RETURNING id
   `;
 };

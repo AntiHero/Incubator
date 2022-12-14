@@ -9,9 +9,9 @@ import { CommentsService } from 'root/comments/comments.service';
 @Injectable()
 export class AdminsService {
   constructor(
+    private likesService: LikesService,
     private usersRepository: UsersService,
     private commentsService: CommentsService,
-    private likesService: LikesService,
   ) {}
 
   async banUser(id: string, data: Omit<BanInfo, 'banDate'>) {

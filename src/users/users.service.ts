@@ -7,11 +7,13 @@ import { Roles } from './types/roles';
 import { UserForToken } from 'root/auth/types';
 import { UsersAdapter } from './adapter/mongoose';
 import { BanInfo, UserDomainModel } from './types';
-import { PaginationQuery } from 'root/@common/types';
 import { fiveMinInMs } from 'root/@common/constants';
 import { OptionalKey } from 'root/@common/types/utility';
 import { UsersSqlAdapter } from './adapter/postgres.adapter';
 import { EmailManager } from 'root/email-manager/email-manager';
+import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
+import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
+import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
 
 @Injectable()
 export class UsersService {
@@ -19,10 +21,15 @@ export class UsersService {
     private emailManager: EmailManager,
     private usersRepository: UsersAdapter,
     private usersSqlRepository: UsersSqlAdapter,
+    private readonly userBanInfoSqlRepository: UsersBanInfoSqlRepository,
+    private readonly usersConfirmationInfoSqlRepository: ConfirmationInfoSqlRepository,
   ) {}
 
   async authenticateUser(loginOrEmail: string, password: string) {
-    const user = await this.usersRepository.findUserByLoginOrEmail(
+    // const user = await this.usersRepository.findUserByLoginOrEmail(
+    //   loginOrEmail,
+    // );
+    const user = await this.usersSqlRepository.findUserByLoginOrEmail(
       loginOrEmail,
     );
 
@@ -95,13 +102,17 @@ export class UsersService {
   }
 
   async findUserByLoginOrEmail(loginOrEmail: string, email?: string) {
-    return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, email);
+    // return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, email);
+    return this.usersSqlRepository.findUserByLoginOrEmail(loginOrEmail);
   }
 
   async validateUser(data: UserDomainModel) {
-    const user = await this.usersRepository.findUserByLoginOrEmail(
+    // const user = await this.usersRepository.findUserByLoginOrEmail(
+    //   data.login,
+    //   data.email,
+    // );
+    const user = await this.usersSqlRepository.findUserByLoginOrEmail(
       data.login,
-      data.email,
     );
 
     const passwordCorrect =
@@ -131,8 +142,10 @@ export class UsersService {
     return this.usersRepository.findUserByQuery(query);
   }
 
-  async findUsersByQuery(query: PaginationQuery) {
-    return this.usersRepository.findUsersByQuery(query);
+  // async findUsersByQuery(query: PaginationQuery) {
+  async findUsersByQuery(query: PaginationQueryType) {
+    // return this.usersRepository.findUsersByQuery(query);
+    return this.usersSqlRepository.findUsersByQuery(query);
   }
 
   async getAllUsers() {
@@ -146,24 +159,32 @@ export class UsersService {
   }
 
   async findUserByIdAndDelete(id: string) {
-    return this.usersRepository.findUserByIdAndDelete(id);
+    // return this.usersRepository.findUserByIdAndDelete(id);
+    return this.usersSqlRepository.findUserByIdAndDelete(id);
   }
 
   async deleteAllUsers() {
-    await this.usersRepository.deleteAllUsers();
+    // await this.usersRepository.deleteAllUsers();
+    await this.usersSqlRepository.deleteAllUsers();
   }
 
   async resendConfirmationEmail(id: string, email: string) {
-    const newCode = uuidv4();
+    const code = uuidv4();
+    const expDate = Date.now() + fiveMinInMs;
 
-    await this.usersRepository.findUserByIdAndUpdate(id, {
-      'confirmationInfo.expDate': Date.now() + fiveMinInMs,
-      'confirmationInfo.code': newCode,
-    });
+    // await this.usersRepository.findUserByIdAndUpdate(id, {
+    //   'confirmationInfo.expDate': Date.now() + fiveMinInMs,
+    //   'confirmationInfo.code': newCode,
+    // });
+    await this.usersConfirmationInfoSqlRepository.updateConfirmationInfoCode(
+      id,
+      code,
+      expDate,
+    );
 
     await this.emailManager.sendConfirmationEmail({
       to: email as string,
-      code: newCode,
+      code,
     });
   }
 
@@ -176,6 +197,7 @@ export class UsersService {
       banInfo = { ...data };
     }
 
-    return this.usersRepository.banUser(id, banInfo);
+    // return this.usersRepository.banUser(id, banInfo);
+    return this.userBanInfoSqlRepository.banUser(id, banInfo);
   }
 }

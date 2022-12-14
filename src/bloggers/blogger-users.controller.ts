@@ -28,9 +28,9 @@ import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUs
 @UseGuards(BearerAuthGuard)
 export class BloggersUsersController {
   constructor(
-    private readonly banUserService: BanUsersForBlogService,
     private readonly blogsService: BlogsService,
     private readonly usersService: UsersService,
+    private readonly banUserService: BanUsersForBlogService,
   ) {}
 
   @Get('blog/:id')

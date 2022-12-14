@@ -19,13 +19,16 @@ import {
 
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
-import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import {
+  PaginationQuerySanitizer,
+  PaginationQuerySanitizerPipe,
+} from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)
@@ -55,7 +58,8 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers(
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    // @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizer) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const {

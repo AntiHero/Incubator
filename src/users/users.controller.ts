@@ -15,12 +15,15 @@ import { Response } from 'express';
 
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
-import { PaginationQuery } from 'root/@common/types';
+import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import {
+  PaginationQuerySanitizer,
+  PaginationQuerySanitizerPipe,
+} from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)
@@ -47,7 +50,8 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers(
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    // @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizer) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const {

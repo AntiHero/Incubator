@@ -13,11 +13,12 @@ import { OptionalKey } from 'root/@common/types/utility';
 import { getUsersByQuery } from '../query/get-users.query';
 import { SortDirectionKeys } from 'root/@common/types/enum';
 import { UserBanInfo } from '../entity/user-ban-info.entity';
+import { updateUserQuery } from '../query/update-user.query';
 import { getUserByIdQuery } from '../query/get-user-by-id.query';
 import { PasswordRecovery } from '../entity/password-recovery.entity';
+import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
-import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login';
 
 @Injectable()
 export class UsersSqlAdapter {
@@ -128,7 +129,7 @@ export class UsersSqlAdapter {
         `,
         [id],
       )
-    ).at(0)?.id;
+    )[0]?.id;
   }
 
   async findUserByConfirmationInfoCode(code: string) {
@@ -158,23 +159,28 @@ export class UsersSqlAdapter {
   async findUsersByQuery(
     query: PaginationQueryType,
   ): Promise<[UserDTO[], number]> {
-    const searchNameTerm = query.searchNameTerm;
+    const searchLoginTerm = query.searchLoginTerm;
+    const searchEmailTerm = query.searchEmailTerm;
 
-    if (typeof searchNameTerm !== 'string')
+    if (
+      typeof searchLoginTerm !== 'string' ||
+      typeof searchEmailTerm !== 'string'
+    )
       throw new Error('Wrong searchNameTerm type');
 
     const count = (
       await this.repository.query(
         `
-          SELECT COUNT(*) FROM users WHERE login ~* $1 OR email ~* $1
+          SELECT COUNT(*) FROM users WHERE login ~* $1 OR email ~* $2
         `,
-        [searchNameTerm],
+        [searchLoginTerm, searchEmailTerm],
       )
     )[0]?.count;
 
     const users = await this.repository.query(
       getUsersByQuery(
-        searchNameTerm,
+        searchLoginTerm,
+        searchEmailTerm,
         query.sortBy,
         query.sortDirection,
         query.pageSize,
@@ -203,29 +209,28 @@ export class UsersSqlAdapter {
 
   async findUserByIdAndUpdate(id: string, updates: any) {
     try {
+      await this.repository.query(updateUserQuery(updates), [id]);
+
+      const user = await this.repository.query(getUserByIdQuery, [id]);
+
+      if (!user) return null;
+
+      return ConvertToUser.convertToDTO(user);
     } catch (e) {
       console.error(e);
 
       return null;
     }
   }
+
+  async deleteAllUsers() {
+    await this.repository.query(
+      `
+        DELETE FROM users
+      `,
+    );
+  }
 }
-
-//   async findUserByIdAndUpdate(id: string, updates: any) {
-//     try {
-//       const updatedUser = await this.model
-//         .findByIdAndUpdate(id, updates, {
-//           projection: '_id',
-//         })
-//         .exec();
-
-//       return updatedUser && true;
-//     } catch (e) {
-//       console.log(e);
-
-//       return null;
-//     }
-//   }
 
 //   async deleteAllUsers() {
 //     await this.model.deleteMany({}).exec();

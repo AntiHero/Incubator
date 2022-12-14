@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { Request, Response } from 'express';
 import {
   Body,
   Controller,
@@ -11,9 +10,10 @@ import {
   UsePipes,
   UseGuards,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 
-import { EmailDTO } from './dto/email.dto';
 import { CodeDTO } from './dto/code.dto';
+import { EmailDTO } from './dto/email.dto';
 import { UserInfoType } from 'root/users/types';
 import { User } from 'root/users/models/user.model';
 import { UsersService } from 'root/users/users.service';
@@ -21,15 +21,17 @@ import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
 import { LoginSuccessViewModel, UserForToken } from './types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
+import { BanGuard } from 'root/@common/guards/banned-user.guard';
+import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
+import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
-import { BanGuard } from 'root/@common/guards/banned-user.guard';
-import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
 
 // const ips: IpsType = {};
 
@@ -37,8 +39,10 @@ import { UserId } from 'root/@common/decorators/user-id.decorator';
 export class AuthController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly securityDevicesService: SecurityDevicesService,
     private readonly tokensService: TokensService,
+    private readonly confirmUserService: ConfirmUserUseCase,
+    private readonly securityDevicesService: SecurityDevicesService,
+    private readonly getUserByConfirmationCodeUseCase: GetUserByConfirmationCodeUseCase,
   ) {}
   @Post('password-recovery')
   async passwordRecovery(@Res() res: Response) {
@@ -134,11 +138,13 @@ export class AuthController {
   @Post('registration-confirmation')
   @UsePipes(RegistrationCodeValidationPipe)
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
-    const user = await this.usersService.findUserByQuery({
-      'confirmationInfo.code': body.code,
-    });
+    // const user = await this.usersService.findUserByQuery({
+    //   'confirmationInfo.code': body.code,
+    // });
+    const user = await this.getUserByConfirmationCodeUseCase.execute(body.code);
 
-    await this.usersService.confirmUser(user.id);
+    // await this.usersService.confirmUser(user.id);
+    await this.confirmUserService.execute(user.id);
 
     res.status(204).send();
   }

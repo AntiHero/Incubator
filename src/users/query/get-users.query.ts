@@ -1,7 +1,8 @@
 import { SortDirectionKeys } from 'root/@common/types/enum';
 
 export const getUsersByQuery = (
-  searchTerm: string,
+  searchLoginTerm: string,
+  searchEmailTerm: string,
   sortBy: string,
   sortOrder: SortDirectionKeys,
   limit: number,
@@ -12,7 +13,7 @@ export const getUsersByQuery = (
     user_confirmation_info."isConfirmed", user_confirmation_info."code" AS "confirmationCode", 
     user_confirmation_info."expDate", password_recovery."code" AS "passwordRecoveryCode"
     FROM users, user_ban_info, user_confirmation_info, password_recovery 
-    WHERE (users.login ~* '${searchTerm}' OR users.email ~* '${searchTerm}')  
+    WHERE (users.login ~* '${searchLoginTerm}' OR users.email ~* '${searchEmailTerm}')  
     AND users."banInfo"=user_ban_info.id
     AND users."passwordRecovery"=password_recovery.id
     AND users."confirmationInfo"=user_confirmation_info.id

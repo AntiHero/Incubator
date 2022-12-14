@@ -1,6 +1,6 @@
 import { createEscapedString } from '../utils/createEscapedString';
 
-export const updateUserQuery = (updates: any) => {
+export const updateUserBanInfoQuery = (updates: any) => {
   // const fields = Object.entries(updates)
   //   .map((entry) => {
   //     return (
@@ -12,9 +12,10 @@ export const updateUserQuery = (updates: any) => {
   //     );
   //   })
   //   .toString();
+
   const fields = createEscapedString(updates);
 
   return `
-    UPDATE users SET ${fields} WHERE id=$1 RETURNING id
+    UPDATE user_ban_info SET ${fields} WHERE id=$1 RETURNING id
   `;
 };

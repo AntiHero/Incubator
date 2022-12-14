@@ -10,8 +10,13 @@ import { UsersController } from './users.controller';
 import { UserBanInfo } from './entity/user-ban-info.entity';
 import { UsersSqlAdapter } from './adapter/postgres.adapter';
 import { PasswordRecovery } from './entity/password-recovery.entity';
+import { ConfirmUserUseCase } from './use-cases/confirm-user.use-case';
 import { EmailManagerModule } from 'root/email-manager/email-manager.module';
 import { UserConfirmationInfo } from './entity/user-confirmation-info.entity';
+import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
+import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
+import { GetUserByConfirmationCodeUseCase } from './use-cases/find-user-by-confirmation-code.use-case';
+import { CheckUserConfirmationCodeUseCase } from './use-cases/check-user-confirmation-code.use-case';
 
 @Module({
   imports: [
@@ -30,7 +35,21 @@ import { UserConfirmationInfo } from './entity/user-confirmation-info.entity';
     EmailManagerModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersAdapter, UsersSqlAdapter],
-  exports: [UsersService],
+  providers: [
+    UsersService,
+    UsersAdapter,
+    UsersSqlAdapter,
+    ConfirmUserUseCase,
+    UsersBanInfoSqlRepository,
+    ConfirmationInfoSqlRepository,
+    CheckUserConfirmationCodeUseCase,
+    GetUserByConfirmationCodeUseCase,
+  ],
+  exports: [
+    UsersService,
+    ConfirmUserUseCase,
+    GetUserByConfirmationCodeUseCase,
+    CheckUserConfirmationCodeUseCase,
+  ],
 })
 export class UsersModule {}
