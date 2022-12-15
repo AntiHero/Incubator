@@ -12,7 +12,20 @@ export class IdValidationPipe implements PipeTransform {
     if (metadata.data !== 'id') return value;
 
     if (!Types.ObjectId.isValid(value)) {
-      throw new BadRequestException('Id is not vaid');
+      throw new BadRequestException('Id is not valid');
+    }
+
+    return value;
+  }
+}
+
+@Injectable()
+export class SqlIdValidationPipe implements PipeTransform {
+  transform(value, metadata: ArgumentMetadata) {
+    if (metadata.data !== 'id') return value;
+
+    if (Number.isNaN(parseInt(value))) {
+      throw new BadRequestException('Id is not valid');
     }
 
     return value;

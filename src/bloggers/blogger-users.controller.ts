@@ -20,7 +20,7 @@ import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BanUsersForBlogService } from './ban-user-for-blog.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { SqlIdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
 

@@ -22,9 +22,9 @@ import { AdminsService } from './admins.service';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
+import { SqlIdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import {
   PaginationQuerySanitizer,
   PaginationQuerySanitizerPipe,
