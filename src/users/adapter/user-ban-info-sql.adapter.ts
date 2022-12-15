@@ -25,17 +25,19 @@ export class UsersBanInfoSqlRepository {
     };
 
     try {
-      const banInfoId = await this.usersRepository.query(
-        `
+      const banInfoId = (
+        await this.usersRepository.query(
+          `
           SELECT "banInfo" FROM users WHERE users.id=$1 LIMIT 1
         `,
-        [id],
-      )[0]?.confirmationInfo;
+          [id],
+        )
+      )[0]?.banInfo;
 
       if (!banInfoId) return null;
 
       await this.usersBanInfoRepository.query(updateUserBanInfoQuery(updates), [
-        id,
+        banInfoId,
       ]);
 
       return true;

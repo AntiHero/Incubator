@@ -9,7 +9,8 @@ export class CommentModel extends TimeStamps {
   content: string;
 
   @prop()
-  userId: Types.ObjectId;
+  // userId: Types.ObjectId;
+  userId: number;
 
   @prop()
   entityId: Types.ObjectId;

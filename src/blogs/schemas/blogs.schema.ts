@@ -27,7 +27,8 @@ export class BlogModel extends TimeStamps {
   posts: Ref<PostModel>[];
 
   @prop({ default: null })
-  userId: Types.ObjectId | null;
+  // userId: Types.ObjectId | null;
+  userId: number | null;
 
   @prop({ default: new BlogBanInfo(), _id: false })
   banInfo: BlogBanInfo;

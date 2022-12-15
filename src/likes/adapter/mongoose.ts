@@ -76,7 +76,8 @@ export class LikesAdapter {
 
   async updateLikes(userId: string, update: Partial<LikeDTO>) {
     return this.model.updateMany(
-      { userId: new Types.ObjectId(userId) },
+      // { userId: new Types.ObjectId(userId) },
+      { userId },
       update,
     );
   }

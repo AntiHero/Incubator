@@ -194,7 +194,8 @@ export class CommentsAdapter {
 
   async updateComments(userId: string, update: Partial<UserDTO>) {
     return this.model.updateMany(
-      { userId: new Types.ObjectId(userId) },
+      // { userId: new Types.ObjectId(userId) },
+      { userId },
       update,
     );
   }
