@@ -116,7 +116,6 @@ export class UsersAdapter {
       .lean()
       .exec();
 
-    console.log(user, 'user');
     if (!user) return null;
 
     return true;

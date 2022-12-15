@@ -85,7 +85,6 @@ export class UsersSqlAdapter {
         await this.repository.query(getUserByIdQuery, [savedUserId])
       )[0];
 
-      console.log(savedUser, 'savedUser');
       return ConvertToUser.convertToDTO(savedUser);
     } catch (e) {
       console.error(e);

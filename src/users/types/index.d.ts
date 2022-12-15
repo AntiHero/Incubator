@@ -69,6 +69,7 @@ export type UserDB = {
   email: string;
   banReason: string | null;
   banDate: Date | null;
+  password: string;
   isBanned: boolean;
   isConfirmed: boolean;
   expDate: number;

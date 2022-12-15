@@ -18,5 +18,5 @@ export class SecurityDeviceModel {
   lastActiveDate: Date;
 
   @prop()
-  userId: Types.ObjectId;
+  userId: number;
 }

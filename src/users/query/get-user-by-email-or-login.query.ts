@@ -1,5 +1,5 @@
 export const getUserByLoginOrEmail = `
-  SELECT users.id, users.login, users.email, users.role, users."createdAt", 
+  SELECT users.id, users.login, users.email, users.role, users."createdAt", users.password, 
     user_ban_info."banDate", user_ban_info."isBanned", user_ban_info."banReason",
     user_confirmation_info."isConfirmed", user_confirmation_info."code" AS "confirmationCode", 
     user_confirmation_info."expDate", password_recovery."code" AS "passwordRecoveryCode"

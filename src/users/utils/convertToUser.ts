@@ -12,6 +12,7 @@ export class ConvertToUser implements ConvertToEntity {
         banReason: doc.banReason,
         isBanned: doc.isBanned,
       },
+      password: doc.password,
       role: doc.role,
       confirmationInfo: {
         isConfirmed: doc.isConfirmed,
