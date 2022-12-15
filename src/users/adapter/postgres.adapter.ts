@@ -188,7 +188,7 @@ export class UsersSqlAdapter {
       ),
     );
 
-    return [users.map(ConvertToUser.convertToDTO), count];
+    return [users.map(ConvertToUser.convertToDTO), Number(count)];
   }
 
   async findUserByLoginOrEmail(loginOrEmail: string) {
