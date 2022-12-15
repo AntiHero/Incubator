@@ -17,8 +17,10 @@ export const getUsersByQuery = (
     AND users."banInfo"=user_ban_info.id
     AND users."passwordRecovery"=password_recovery.id
     AND users."confirmationInfo"=user_confirmation_info.id
-    ORDER BY "${sortBy}" ${sortOrder} 
-    LIMIT ${limit}
+    ORDER BY "${sortBy}" ${
+  sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder
+}
+    LIMIT ${limit} 
     OFFSET ${offset}
 `;
 // ORDER BY CASE WHEN $3 = 'asc' THEN '%%' || $2 || '%%' END ASC,

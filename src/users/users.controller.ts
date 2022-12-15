@@ -10,6 +10,7 @@ import {
   Query,
   Res,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -24,6 +25,7 @@ import {
   PaginationQuerySanitizer,
   PaginationQuerySanitizerPipe,
 } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)
@@ -31,6 +33,7 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
+  @UsePipes(UserUnicityValidationPipe)
   async saveUser(@Body() body: CreateUserDto, @Res() res: Response) {
     const { login, email, password } = body;
 

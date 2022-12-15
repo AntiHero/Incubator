@@ -26,15 +26,15 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @OneToOne(() => UserBanInfo, { onDelete: 'CASCADE' })
+  @OneToOne(() => UserBanInfo)
   @JoinColumn({ name: 'banInfo' })
   banInfo: UserBanInfo;
 
-  @OneToOne(() => UserConfirmationInfo, { onDelete: 'CASCADE' })
+  @OneToOne(() => UserConfirmationInfo)
   @JoinColumn({ name: 'confirmationInfo' })
   confirmationInfo: UserConfirmationInfo;
 
-  @OneToOne(() => PasswordRecovery, { onDelete: 'CASCADE' })
+  @OneToOne(() => PasswordRecovery)
   @JoinColumn({ name: 'passwordRecovery' })
   passwordRecovery: PasswordRecovery;
 

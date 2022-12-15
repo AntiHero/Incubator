@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UsePipes } from '@nestjs/common';
 
 import { Roles } from './types/roles';
 import { UserForToken } from 'root/auth/types';
@@ -14,6 +14,7 @@ import { EmailManager } from 'root/email-manager/email-manager';
 import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
 import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
+import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,7 @@ export class UsersService {
     return true;
   }
 
+  // @UsePipes(UserUnicityValidationPipe)
   async createUser(data: UserDomainModel) {
     const saltRounds = 10;
     const { login, password, email, role } = data;

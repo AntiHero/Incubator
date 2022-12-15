@@ -122,14 +122,73 @@ export class UsersSqlAdapter {
     // const user = await this.repository.find({ where: { id: Number(id) } });
 
     // return this.repository.remove(user);
-    return (
+    try {
+      const foreignIds = (
+        await this.repository.query(
+          `
+          SELECT "banInfo", "passwordRecovery", "confirmationInfo"
+            FROM users WHERE users.id=$1
+        `,
+          [id],
+        )
+      )[0];
+
+      console.log(foreignIds);
+      if (!foreignIds) return null;
+
       await this.repository.query(
         `
-          DELETE FROM users WHERE users.id=$1 RETURNING id
+          DELETE FROM users WHERE users.id=$1
         `,
         [id],
-      )
-    )[0]?.id;
+      );
+
+      await this.repository.query(
+        `
+          DELETE FROM user_ban_info WHERE user_ban_info.id=$1
+        `,
+        [foreignIds.banInfo],
+      );
+
+      await this.repository.query(
+        `
+          DELETE FROM password_recovery WHERE password_recovery.id=$1
+        `,
+        [foreignIds.passwordRecovery],
+      );
+
+      await this.repository.query(
+        `
+          DELETE FROM user_confirmation_info WHERE user_confirmation_info.id=$1
+        `,
+        [foreignIds.confirmationInfo],
+      );
+      // const foreignIds = this.repository.query(
+      //   `
+
+      //   `
+      // )
+
+      // await this.repository.query(
+      //   `
+      //   DELETE FROM user_ban_info WHERE users.id=$1 RETURNING id
+      // `,
+      //   [id],
+      // )
+
+      // await this.repository.query(
+      //   `
+      //   DELETE FROM users WHERE users.id=$1 RETURNING id
+      // `,
+      //   [id],
+      // )
+
+      return true;
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
   }
 
   async findUserByConfirmationInfoCode(code: string) {
@@ -226,9 +285,27 @@ export class UsersSqlAdapter {
   async deleteAllUsers() {
     await this.repository.query(
       `
-        DELETE FROM users
+        DELETE FROM users;
+        DELETE FROM user_ban_info;
+        DELETE FROM password_recovery;
+        DELETE FROM user_confirmation_info;
       `,
     );
+    // await this.repository.query(
+    //   `
+    //     DELETE FROM user_ban_info
+    //   `,
+    // );
+    // await this.repository.query(
+    //   `
+    //     DELETE FROM password_recovery
+    //   `,
+    // );
+    // await this.repository.query(
+    //   `
+    //     DELETE FROM user_confirmation_info
+    //   `,
+    // );
   }
 }
 
