@@ -19,6 +19,7 @@ import { PasswordRecovery } from '../entity/password-recovery.entity';
 import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
+import { fiveMinInMs } from 'root/@common/constants';
 
 @Injectable()
 export class UsersSqlAdapter {
@@ -59,7 +60,9 @@ export class UsersSqlAdapter {
       const confirmationInfoId = (
         await this.userConfirmationInfoRepository.query(
           `INSERT INTO user_confirmation_info ("expDate", "code", "isConfirmed") 
-            VALUES (DEFAULT, DEFAULT, DEFAULT) RETURNING id`,
+            VALUES (${
+              Date.now() + fiveMinInMs
+            }, DEFAULT, DEFAULT) RETURNING id`,
         )
       )[0]?.id;
 
@@ -132,7 +135,6 @@ export class UsersSqlAdapter {
         )
       )[0];
 
-      console.log(foreignIds);
       if (!foreignIds) return null;
 
       await this.repository.query(

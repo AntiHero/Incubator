@@ -8,6 +8,7 @@ import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
 import { updateUserConfirmationInfo } from '../query/update-user-confirmation-info.query';
 import { getUserConfirmationInfoIdQuery } from '../query/get-user-confirmation-info-id.query';
+import { getUserByIdQuery } from '../query/get-user-by-id.query';
 
 @Injectable()
 export class ConfirmationInfoSqlRepository {
@@ -19,12 +20,13 @@ export class ConfirmationInfoSqlRepository {
   ) {}
 
   async confirmUser(id: string) {
+    console.log(id);
     try {
-      const confirmationInfoId = await this.usersRepository.query(
-        getUserConfirmationInfoIdQuery,
-        [id],
+      const confirmationInfoId = (
+        await this.usersRepository.query(getUserConfirmationInfoIdQuery, [id])
       )[0]?.confirmationInfo;
 
+      console.log(confirmationInfoId);
       if (!confirmationInfoId) return null;
 
       await this.userConfirmationInfoRepository.query(
@@ -53,10 +55,23 @@ export class ConfirmationInfoSqlRepository {
 
       if (!confirmationInfoId) return null;
 
+      const userId = (
+        await this.usersRepository.query(
+          `
+          SELECT id FROM users WHERE users."confirmationInfo"=$1
+        `,
+          [confirmationInfoId],
+        )
+      )[0]?.id;
+
+      // const user = (
+      //   await this.usersRepository.query(getUserByConfirmationCode, [
+      //     confirmationInfoId,
+      //   ])
+      // )[0];
+
       const user = (
-        await this.usersRepository.query(getUserByConfirmationCode, [
-          confirmationInfoId,
-        ])
+        await this.usersRepository.query(getUserByIdQuery, [userId])
       )[0];
 
       if (!user) return null;
@@ -71,7 +86,7 @@ export class ConfirmationInfoSqlRepository {
 
   async checkUserConfirmationCode(code: string) {
     const user = await this.findUserByConfirmationCode(code);
-
+    console.log(user);
     if (
       !user ||
       user.confirmationInfo.isConfirmed ||
@@ -82,24 +97,24 @@ export class ConfirmationInfoSqlRepository {
     return true;
   }
 
-  async updateConfirmationInfoCode(id: string, code: string, expDate: number) {
+  async updateConfirmationInfoCode(id: string, expDate: number) {
     try {
-      const confirmationInfoId = await this.usersRepository.query(
-        getUserConfirmationInfoIdQuery,
-        [id],
+      const confirmationInfoId = (
+        await this.usersRepository.query(getUserConfirmationInfoIdQuery, [id])
       )[0]?.confirmationInfo;
 
       if (!confirmationInfoId) return null;
 
-      await this.userConfirmationInfoRepository.query(
-        updateUserConfirmationInfo({
-          code,
-          expDate,
-        }),
-        [id],
-      );
+      const code = (
+        await this.userConfirmationInfoRepository.query(
+          updateUserConfirmationInfo({
+            expDate,
+          }),
+          [confirmationInfoId],
+        )
+      )[0][0]?.code;
 
-      return true;
+      return code;
     } catch (error) {
       console.error(error);
 

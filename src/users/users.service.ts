@@ -171,18 +171,19 @@ export class UsersService {
   }
 
   async resendConfirmationEmail(id: string, email: string) {
-    const code = uuidv4();
+    // const code = uuidv4();
     const expDate = Date.now() + fiveMinInMs;
 
     // await this.usersRepository.findUserByIdAndUpdate(id, {
     //   'confirmationInfo.expDate': Date.now() + fiveMinInMs,
     //   'confirmationInfo.code': newCode,
     // });
-    await this.usersConfirmationInfoSqlRepository.updateConfirmationInfoCode(
-      id,
-      code,
-      expDate,
-    );
+    const code =
+      await this.usersConfirmationInfoSqlRepository.updateConfirmationInfoCode(
+        id,
+        // code,
+        expDate,
+      );
 
     await this.emailManager.sendConfirmationEmail({
       to: email as string,
