@@ -7,31 +7,24 @@ import {
 } from 'typeorm';
 
 import { User } from 'root/users/entity/user.entity';
+import { Post } from 'root/posts/entity/post.entity';
 
-type BlogBanInfo = {
-  banDate: Date | null;
-  isBanned: boolean;
-};
-
-@Entity('blogs')
-export class Blog {
+@Entity('comments')
+export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
-
-  @Column()
-  description: string;
-
-  @Column()
-  websiteUrl: string;
+  content: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  userId: User;
+  user: User;
 
-  @Column('simple-json', { default: { banDate: null, isBanned: false } })
-  banInfo: BlogBanInfo;
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
+  entity: Post;
+
+  @Column()
+  isBanned: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

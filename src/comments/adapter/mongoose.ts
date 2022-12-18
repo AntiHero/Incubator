@@ -1,7 +1,8 @@
-import mongoose, { Types } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
+import { UserDTO } from 'root/users/types';
 import { LikeDTO } from 'root/likes/types';
 import { InjectModel } from 'nestjs-typegoose';
 import { PaginationQuery } from 'root/@common/types';
@@ -12,7 +13,6 @@ import { countSkip } from 'root/@common/utils/count-skip';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { CommentDomainModel, CommentExtendedLikesDTO } from '../types';
 import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { UserDTO } from 'root/users/types';
 
 @Injectable()
 export class CommentsAdapter {

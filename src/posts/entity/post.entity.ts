@@ -19,8 +19,8 @@ export class Post {
   @Column()
   shortDescription: string;
 
-  @ManyToOne(() => Blog, (blog) => blog.posts)
-  blogId: Blog;
+  @ManyToOne(() => Blog, { onDelete: 'CASCADE' })
+  blog: Blog;
 
   @CreateDateColumn()
   createdAt: Date;

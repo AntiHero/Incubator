@@ -2,24 +2,20 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Roles } from '../types/roles';
 import { User } from '../entity/user.entity';
-import { UserModel } from '../schema/users.schema';
 import { UserDomainModel, UserDTO } from '../types';
+import { fiveMinInMs } from 'root/@common/constants';
 import { ConvertToUser } from '../utils/convertToUser';
 import { PaginationQueryType } from 'root/@common/types';
 import { countSkip } from 'root/@common/utils/count-skip';
-import { OptionalKey } from 'root/@common/types/utility';
 import { getUsersByQuery } from '../query/get-users.query';
-import { SortDirectionKeys } from 'root/@common/types/enum';
 import { UserBanInfo } from '../entity/user-ban-info.entity';
 import { updateUserQuery } from '../query/update-user.query';
 import { getUserByIdQuery } from '../query/get-user-by-id.query';
 import { PasswordRecovery } from '../entity/password-recovery.entity';
-import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
+import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
-import { fiveMinInMs } from 'root/@common/constants';
 
 @Injectable()
 export class UsersSqlAdapter {
@@ -100,16 +96,6 @@ export class UsersSqlAdapter {
     try {
       const user = (await this.repository.query(getUserByIdQuery, [id]))[0];
 
-      // console.log(
-      //   await this.findUsersByQuery({
-      //     pageNumber: 3,
-      //     pageSize: 1,
-      //     searchNameTerm: 'al',
-      //     sortBy: 'login',
-      //     sortDirection: SortDirectionKeys.desc,
-      //   }),
-      // );
-      // const doc = await this.repository.findOne({ where: { id: Number(id) } });
       if (!user) return null;
 
       return ConvertToUser.convertToDTO(user);
@@ -164,25 +150,6 @@ export class UsersSqlAdapter {
         `,
         [foreignIds.confirmationInfo],
       );
-      // const foreignIds = this.repository.query(
-      //   `
-
-      //   `
-      // )
-
-      // await this.repository.query(
-      //   `
-      //   DELETE FROM user_ban_info WHERE users.id=$1 RETURNING id
-      // `,
-      //   [id],
-      // )
-
-      // await this.repository.query(
-      //   `
-      //   DELETE FROM users WHERE users.id=$1 RETURNING id
-      // `,
-      //   [id],
-      // )
 
       return true;
     } catch (e) {
@@ -292,45 +259,5 @@ export class UsersSqlAdapter {
         DELETE FROM user_confirmation_info;
       `,
     );
-    // await this.repository.query(
-    //   `
-    //     DELETE FROM user_ban_info
-    //   `,
-    // );
-    // await this.repository.query(
-    //   `
-    //     DELETE FROM password_recovery
-    //   `,
-    // );
-    // await this.repository.query(
-    //   `
-    //     DELETE FROM user_confirmation_info
-    //   `,
-    // );
   }
 }
-
-//   async deleteAllUsers() {
-//     await this.model.deleteMany({}).exec();
-//   }
-
-//   async banUser(id: string, data: OptionalKey<BanInfo, 'banDate'>) {
-//     const banInfo: BanInfo = {
-//       isBanned: data.isBanned,
-//       banReason: data.isBanned ? data.banReason : null,
-//       banDate: data.isBanned ? data.banDate : null,
-//     };
-
-//     const user = await this.model
-//       .findByIdAndUpdate(id, {
-//         banInfo,
-//       })
-//       .lean()
-//       .exec();
-
-//     console.log(user, 'user');
-//     if (!user) return null;
-
-//     return true;
-//   }
-// }
