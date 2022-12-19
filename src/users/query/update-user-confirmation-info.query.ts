@@ -4,17 +4,6 @@ import { createEscapedString } from '../utils/createEscapedString';
 export const updateUserConfirmationInfo = (
   updates: Partial<UserConfirmationInfo>,
 ) => {
-  // const fields = Object.entries(updates)
-  //   .map((entry) => {
-  //     return (
-  //       '"' +
-  //       entry[0] +
-  //       '"' +
-  //       '=' +
-  //       (typeof entry[1] === 'string' ? "'" + entry[1] + "'" : entry[1])
-  //     );
-  //   })
-  //   .toString();
   const fields = createEscapedString(updates);
 
   return `

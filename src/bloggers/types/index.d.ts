@@ -1,5 +1,6 @@
 import { LikeDTO } from 'root/likes/types';
 import { LikesInfoViewModel } from 'root/@common/types';
+import { LikeStatuses } from 'root/@common/types/enum';
 
 export type BannedUserForEntity = {
   entityId: string;
@@ -50,8 +51,11 @@ export type BloggerCommentDTO = {
   id: string;
   content: string;
   userId: string;
-  likes: LikeDTO[];
+  likes?: LikeDTO[];
   isBanned: boolean;
+  likesCount?: number;
+  dislikesCount?: number;
+  userStatus?: LikeStatuses;
   userLogin: string;
   createdAt: string;
   blogName: string;

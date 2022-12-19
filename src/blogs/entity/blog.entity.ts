@@ -30,7 +30,7 @@ export class Blog {
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   userId: User;
 
-  @Column('simple-json', { default: { banDate: null, isBanned: false } })
+  @Column('simple-json', { default: '{ "banDate": null, "isBanned": false }' })
   banInfo: BlogBanInfo;
 
   @CreateDateColumn()

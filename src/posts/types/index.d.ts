@@ -45,9 +45,9 @@ export type PostDTO = {
   shortDescription: string;
   content: string;
   blogId: string;
-  blogName: string;
-  comments: CommentDTO[];
-  likes: LikeDTO[];
+  blogName?: string;
+  comments?: CommentDTO[];
+  likes?: LikeDTO[];
   createdAt: string;
 };
 
@@ -57,12 +57,12 @@ export type PostExtendedLikesDTO = {
   shortDescription: string;
   content: string;
   blogId: string;
-  blogName: string;
+  blogName?: string;
   createdAt: string;
   likesCount: number;
   dislikesCount: number;
   userStatus: LikeStatuses;
-  newestLikes: LikeDTO[];
+  newestLikes?: LikeDTO[];
 };
 
 export type PostDomainModelWithId = WithId<PostDomainModel>;

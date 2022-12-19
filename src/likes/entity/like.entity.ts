@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  OneToOne,
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
@@ -18,15 +17,13 @@ export class PostLike {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Post)
-  @JoinColumn()
-  entity: Post;
+  @ManyToOne(() => Post)
+  @JoinColumn({ name: 'entityId' })
+  entityId: Post;
 
   @ManyToOne(() => User)
-  user: User;
-
-  @Column()
-  login: string;
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 
   @Column({
     type: 'enum',
@@ -47,15 +44,13 @@ export class CommentLike {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Comment)
-  @JoinColumn()
-  entity: Comment;
+  @ManyToOne(() => Comment)
+  @JoinColumn({ name: 'entityId' })
+  entityId: Comment;
 
   @ManyToOne(() => User)
-  user: User;
-
-  @Column()
-  login: string;
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 
   @Column({
     type: 'enum',

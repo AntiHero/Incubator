@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { User } from 'root/users/entity/user.entity';
 
@@ -10,6 +16,9 @@ export class SecurityDevice {
   @Column()
   title: string;
 
+  @Column()
+  ip: string;
+
   @Column({ type: 'uuid', default: () => 'gen_random_uuid()' })
   deviceId: string;
 
@@ -17,5 +26,6 @@ export class SecurityDevice {
   lastActiveDate: Date;
 
   @ManyToOne(() => User)
-  user: User;
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 }

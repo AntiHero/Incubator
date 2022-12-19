@@ -23,8 +23,3 @@ export const getUsersByQuery = (
     LIMIT ${limit} 
     OFFSET ${offset}
 `;
-// ORDER BY CASE WHEN $3 = 'asc' THEN '%%' || $2 || '%%' END ASC,
-// CASE WHEN $3 = 'desc' THEN 'cratedAt' END DESC
-
-// ORDER BY (CASE WHEN $2 = 'asc' THEN "createdAt" END) ASC,
-//     (CASE WHEN $2 = 'desc' THEN "createdAt" END) DESC

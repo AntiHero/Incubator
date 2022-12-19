@@ -4,6 +4,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from 'root/users/entity/user.entity';
@@ -18,12 +19,14 @@ export class Comment {
   content: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  user: User;
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 
   @ManyToOne(() => Post, { onDelete: 'CASCADE' })
-  entity: Post;
+  @JoinColumn({ name: 'entityId' })
+  entityId: Post;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   isBanned: boolean;
 
   @CreateDateColumn()

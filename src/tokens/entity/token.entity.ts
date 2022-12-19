@@ -11,6 +11,6 @@ export class Token {
   @Column()
   expDate: Date;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
   blackListed: boolean;
 }

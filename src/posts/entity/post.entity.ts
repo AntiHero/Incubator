@@ -4,6 +4,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from 'typeorm';
 
 import { Blog } from 'root/blogs/entity/blog.entity';
@@ -17,10 +18,14 @@ export class Post {
   title: string;
 
   @Column()
+  content: string;
+
+  @Column()
   shortDescription: string;
 
   @ManyToOne(() => Blog, { onDelete: 'CASCADE' })
-  blog: Blog;
+  @JoinColumn({ name: 'blogId' })
+  blogId: Blog;
 
   @CreateDateColumn()
   createdAt: Date;

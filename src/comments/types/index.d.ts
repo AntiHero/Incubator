@@ -29,9 +29,9 @@ export type CommentDTO = {
   content: string;
   userId: string;
   entityId: string;
-  likes: LikeDTO[];
+  likes?: LikeDTO[];
   isBanned: boolean;
-  userLogin: string;
+  userLogin?: string;
   createdAt: string;
 };
 
@@ -45,9 +45,9 @@ export type CommentViewModel = {
   readonly id: string;
   content: string;
   userId: string;
-  userLogin: string;
+  userLogin?: string;
   createdAt: string;
-  likesInfo: LikesInfoViewModel;
+  likesInfo?: LikesInfoViewModel;
 };
 
 export type CommentExtendedLikesDTO = {
@@ -55,7 +55,7 @@ export type CommentExtendedLikesDTO = {
   content: string;
   userId: string;
   entityId: string;
-  userLogin: string;
+  userLogin?: string;
   createdAt: string;
   likesCount: number;
   dislikesCount: number;
