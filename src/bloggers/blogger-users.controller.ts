@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { PaginationQuery } from 'root/@common/types';
+import { PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BannedUserForEntityViewModel } from './types';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
+import { BanUsersByBloggerService } from './ban-users.service';
 import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
-import { BanUsersForBlogService } from './ban-user-for-blog.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { SqlIdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
@@ -30,14 +30,14 @@ export class BloggersUsersController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly usersService: UsersService,
-    private readonly banUserService: BanUsersForBlogService,
+    private readonly banUsersService: BanUsersByBloggerService,
   ) {}
 
   @Get('blog/:id')
   async getBannedUsersForBlog(
     @UserId() userId: string,
     @Param('id', IdValidationPipe) blogId: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchLoginTerm } =
@@ -50,7 +50,7 @@ export class BloggersUsersController {
     if (blog.userId !== userId) return res.status(HttpStatus.FORBIDDEN).end();
 
     const [bannedUsers, totalCount] =
-      await this.banUserService.findBannedUsersByQuery(blogId, {
+      await this.banUsersService.findBannedUsersByQuery(blogId, {
         pageNumber,
         pageSize,
         sortBy,
@@ -89,7 +89,7 @@ export class BloggersUsersController {
 
     if (blog.userId !== ownerId) return res.status(HttpStatus.FORBIDDEN).end();
 
-    await this.banUserService.banUser(userId, blogId, isBanned, banReason);
+    await this.banUsersService.banUser(userId, blogId, isBanned, banReason);
 
     res.status(HttpStatus.NO_CONTENT).end();
   }

@@ -1,14 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
 import { BlogDomainModel } from './types';
-import { BlogsAdapter } from './adapter/mongoose';
-import { PaginationQuery } from 'root/@common/types';
-import { PostDomainModel } from 'root/posts/types';
 import { Roles } from 'root/users/types/roles';
+import { PostDomainModel } from 'root/posts/types';
+import { PaginationQueryType } from 'root/@common/types';
+import { BlogsRepository } from './adapter/blogs.repository';
+import { BlogsQueryRepository } from './adapter/blogs-query.repository';
 
 @Injectable()
 export class BlogsService {
-  constructor(private blogsRepository: BlogsAdapter) {}
+  constructor(
+    private readonly blogsRepository: BlogsRepository,
+    private readonly blogsQueryRepository: BlogsQueryRepository,
+  ) {}
 
   async saveBlog(blog: BlogDomainModel) {
     return this.blogsRepository.addBlog(blog);
@@ -16,26 +20,26 @@ export class BlogsService {
 
   async findBlogPostsByQuery(
     id: string,
-    query: PaginationQuery,
+    query: PaginationQueryType,
     userId?: string,
   ) {
-    return this.blogsRepository.findBlogPostsByQuery(id, query, userId);
+    return this.blogsQueryRepository.findBlogPostsByQuery(id, query, userId);
   }
 
-  async findUserBlogsByQuery(userId: string, query: PaginationQuery) {
-    return this.blogsRepository.findUserBlogsByQuery(userId, query);
+  async findUserBlogsByQuery(userId: string, query: PaginationQueryType) {
+    return this.blogsQueryRepository.findUserBlogsByQuery(userId, query);
   }
 
-  async findBlogsByQuery(query: PaginationQuery, forRole?: Roles) {
-    return this.blogsRepository.findBlogsByQuery(query, forRole);
+  async findBlogsByQuery(query: PaginationQueryType, forRole?: Roles) {
+    return this.blogsQueryRepository.findBlogsByQuery(query, forRole);
   }
 
   async getAllBlogs() {
-    return this.blogsRepository.getAllBlogs();
+    return this.blogsQueryRepository.getAllBlogs();
   }
 
   async findBlogById(id: string, forUser?: Roles) {
-    return this.blogsRepository.findBlogById(id, forUser);
+    return this.blogsQueryRepository.findBlogById(id, forUser);
   }
 
   async findBlogByIdAndUpate(id: string, update: Partial<BlogDomainModel>) {
@@ -58,7 +62,7 @@ export class BlogsService {
     return this.blogsRepository.banBlog(id, banStatus);
   }
 
-  async getAllComments(userId: string, query: PaginationQuery) {
-    return this.blogsRepository.getAllComments(userId, query);
+  async getAllComments(userId: string, query: PaginationQueryType) {
+    return this.blogsQueryRepository.getAllComments(userId, query);
   }
 }

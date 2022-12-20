@@ -4,7 +4,7 @@ import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'src/blogs/blogs.service';
 import { TokensService } from 'root/tokens/tokens.service';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
-import { BanUsersForBlogService } from 'root/bloggers/ban-user-for-blog.service';
+import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
 
 @Controller('testing')
 export class TestingController {
@@ -13,7 +13,7 @@ export class TestingController {
     private readonly usersSevice: UsersService,
     private readonly tokensService: TokensService,
     private readonly securityDevicesService: SecurityDevicesService,
-    private readonly bannedUserforBlogService: BanUsersForBlogService,
+    private readonly banUsersByBloggerService: BanUsersByBloggerService,
   ) {}
 
   @Delete('all-data')
@@ -23,6 +23,6 @@ export class TestingController {
     await this.usersSevice.deleteAllUsers();
     await this.securityDevicesService.deleteAllDevices();
     await this.tokensService.deleteAllTokens();
-    await this.bannedUserforBlogService.deleteAll();
+    await this.banUsersByBloggerService.deleteAllBannedUsers();
   }
 }

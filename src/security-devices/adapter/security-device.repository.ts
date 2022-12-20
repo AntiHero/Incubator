@@ -8,7 +8,7 @@ import { ConvertSecurityDeviceData } from '../utils/convertSecurityDevice';
 import { updateSecurityDeviceQuery } from '../query/update-security-device.query';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class SecurityDevicesRepository {
   constructor(
     @InjectRepository(SecurityDevice)
     private readonly securityDevicesRepository: Repository<SecurityDevice>,
@@ -56,7 +56,7 @@ export class CommentsQueryRepository {
     return true;
   }
 
-  async deleteOneByQuery(query: { deviceId: string }) {
+  async deleteOneByQuery(query: Record<string, any>) {
     const { deviceId } = query;
 
     const deletedId = (

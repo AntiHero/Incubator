@@ -16,7 +16,7 @@ import {
 import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
-import { PaginationQuery } from 'root/@common/types';
+import { PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
@@ -34,7 +34,7 @@ export class BlogsController {
 
   @Get()
   async getBlogs(
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =

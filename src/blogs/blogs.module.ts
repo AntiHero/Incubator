@@ -1,43 +1,29 @@
 import { Module } from '@nestjs/common';
-import { TypegooseModule } from 'nestjs-typegoose';
 
+import { Blog } from './entity/blog.entity';
 import { BlogsService } from './blogs.service';
-import { BlogsAdapter } from './adapter/mongoose';
-import { BlogModel } from './schemas/blogs.schema';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlogsController } from './blogs.controller';
-import { PostModel } from 'root/posts/schemas/post.schema';
-import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { CommentModel } from 'root/comments/schemas/comment.schema';
+import { Post } from 'root/posts/entity/post.entity';
+import { User } from 'root/users/entity/user.entity';
+import { BlogsRepository } from './adapter/blogs.repository';
+import { Comment } from 'root/comments/entity/comment.entity';
+import { BlogsQueryRepository } from './adapter/blogs-query.repository';
+import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: BlogModel,
-        schemaOptions: { collection: 'blogs' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: PostModel,
-        schemaOptions: { collection: 'posts' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: LikeModel,
-        schemaOptions: { collection: 'likes' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: CommentModel,
-        schemaOptions: { collection: 'comments' },
-      },
+    TypeOrmModule.forFeature([
+      Blog,
+      Post,
+      User,
+      Comment,
+      PostLike,
+      CommentLike,
     ]),
   ],
   controllers: [BlogsController],
-  providers: [BlogsService, BlogsAdapter],
+  providers: [BlogsService, BlogsRepository, BlogsQueryRepository],
   exports: [BlogsService],
 })
 export class BlogsModule {}

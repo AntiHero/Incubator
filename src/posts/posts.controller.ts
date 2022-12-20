@@ -15,17 +15,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { FastifyReply } from 'fastify';
 
 import { Roles } from 'root/users/types/roles';
 import { PostsService } from './posts.service';
 import { LikePostDTO } from './dto/like-post.dto';
-import { PaginationQuery } from 'root/@common/types';
 import { CreatePostDTO } from './dto/create-post.dto';
 import Paginator from 'root/@common/models/Paginator';
 import { UpdatePostDTO } from './dto/update-post.dto';
 import { CommentViewModel } from 'root/comments/types';
 import { Post as PostModel } from './domain/posts.model';
+import { PaginationQueryType } from 'root/@common/types';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
@@ -45,8 +44,8 @@ export class PostsController {
   @Get()
   async getPosts(
     @UserId() userId: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
-    @Res() res: FastifyReply,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
+    @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
@@ -155,7 +154,7 @@ export class PostsController {
   async updatePost(
     @Param('id') id,
     @Body() body: UpdatePostDTO,
-    @Res() res: FastifyReply,
+    @Res() res: Response,
   ) {
     const { title, shortDescription, blogId, content } = body;
 
@@ -172,7 +171,7 @@ export class PostsController {
 
   @Delete(':id')
   @UseGuards(BasicAuthGuard)
-  async deletePost(@Param('id') id, @Res() res: FastifyReply) {
+  async deletePost(@Param('id') id, @Res() res: Response) {
     const post = await this.postsService.findPostByIdAndDelete(id);
 
     if (!post) return res.status(404).send();
@@ -184,8 +183,8 @@ export class PostsController {
   async getPostComments(
     @Param('id') id: string,
     @UserId() userId: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
-    @Res() res: FastifyReply,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
+    @Res() res: Response,
   ) {
     const post = await this.postsService.findPostById(id);
 

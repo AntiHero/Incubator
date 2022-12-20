@@ -27,7 +27,7 @@ import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
 import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
 
 @Injectable()
-export class BlogsAdapter {
+export class BlogsQueryRepository {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -98,7 +98,7 @@ export class BlogsAdapter {
   async findBlogPostsByQuery(
     id: string,
     query: PaginationQueryType,
-    userId: '',
+    userId = '',
   ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
       const count = await this.countBlogPosts(id);

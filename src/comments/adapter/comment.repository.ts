@@ -1,15 +1,15 @@
+import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import { CommentDomainModel } from '../types';
+import { Comment } from '../entity/comment.entity';
+import { LikeDomainModel } from 'root/likes/types';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { CommentLike } from 'root/likes/entity/like.entity';
-import { LikeDomainModel } from 'root/likes/types';
-import { User } from 'root/users/entity/user.entity';
-import { Repository } from 'typeorm';
-import { Comment } from '../entity/comment.entity';
-import { updateCommentLikeQuery } from '../query/update-comment-like.query';
-import { updateCommentQuery } from '../query/update-comment.query';
-import { CommentDomainModel } from '../types';
 import { ConvertCommentData } from '../utils/convertComment';
+import { updateCommentQuery } from '../query/update-comment.query';
+import { updateCommentLikeQuery } from '../query/update-comment-like.query';
 
 @Injectable()
 export class CommentsRepository {
@@ -111,7 +111,7 @@ export class CommentsRepository {
     );
   }
 
-  async findCommentByIdAndUpate(
+  async findCommentByIdAndUpdate(
     id: string,
     updates: Partial<CommentDomainModel>,
   ) {

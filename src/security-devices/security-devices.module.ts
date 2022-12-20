@@ -1,23 +1,30 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TypegooseModule } from 'nestjs-typegoose';
+
 import { TokensModule } from 'root/tokens/tokens.module';
-import { SecurityDevicesAdapter } from './adapter/mongoose';
+import { SecurityDevice } from './entity/security-device.entity';
 import { SecurityDevicesService } from './security-devices.service';
-import { SecurityDeviceModel } from './schemas/security-device.schema';
 import { SecurityDevicesController } from './security-devices.controller';
+import { SecurityDevicesRepository } from './adapter/security-device.repository';
 import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refresh-token.validation.middleware';
+import { SecurityDevicesQueryRepository } from './adapter/security-device-query.repository';
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: SecurityDeviceModel,
-        schemaOptions: { collection: 'securityDevices' },
-      },
-    ]),
+    // TypegooseModule.forFeature([
+    //   {
+    //     typegooseClass: SecurityDeviceModel,
+    //     schemaOptions: { collection: 'securityDevices' },
+    //   },
+    // ]),
+    TypeOrmModule.forFeature([SecurityDevice]),
     TokensModule,
   ],
-  providers: [SecurityDevicesService, SecurityDevicesAdapter],
+  providers: [
+    SecurityDevicesService,
+    SecurityDevicesRepository,
+    SecurityDevicesQueryRepository,
+  ],
   exports: [SecurityDevicesService],
   controllers: [SecurityDevicesController],
 })

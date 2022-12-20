@@ -16,7 +16,6 @@ import { Response } from 'express';
 import Blog from 'root/blogs/domain/blogs.model';
 import { BlogViewModel } from 'root/blogs/types';
 import { BloggerCommentsViewModel } from './types';
-import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
@@ -27,6 +26,7 @@ import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
@@ -94,7 +94,7 @@ export class BloggersBlogsController {
   @Get('comments')
   async getComments(
     @UserId() userId: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection } = query;
@@ -165,7 +165,7 @@ export class BloggersBlogsController {
   async getBlogPosts(
     @UserId() userId: string,
     @Param('id') id: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const blog = await this.blogsService.findBlogById(id);

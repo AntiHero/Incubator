@@ -11,7 +11,7 @@ import { ConvertPostData } from 'root/posts/utils/convertPostData';
 import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
 
 @Injectable()
-export class BlogsAdapter {
+export class BlogsRepository {
   constructor(
     @InjectRepository(Blog)
     private readonly blogsRepository: Repository<Blog>,
@@ -60,14 +60,18 @@ export class BlogsAdapter {
 
   async findBlogByIdAndDelete(id: string) {
     try {
-      await this.blogsRepository.query(
-        `
-          DELETE FROM blogs WHERE blogs.id=$1
+      const blog = (
+        await this.blogsRepository.query(
+          `
+          DELETE FROM blogs WHERE blogs.id=$1 RETURNING *
         `,
-        [id],
-      );
+          [id],
+        )
+      )[0];
 
-      return true;
+      if (!blog) return null;
+
+      return ConvertBlogData.toDTO(blog);
     } catch (e) {
       console.error(e);
 

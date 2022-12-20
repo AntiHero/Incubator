@@ -3,14 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Comment } from '../entity/comment.entity';
-import { CommentLike } from 'root/likes/entity/like.entity';
-import { ConvertLikeData } from 'root/likes/utils/convertLike';
-import { ConvertCommentData } from '../utils/convertComment';
-import { CommentDTO, CommentExtendedLikesDTO } from '../types';
 import { User } from 'root/users/entity/user.entity';
-import { getLikesCount } from '../query/get-comment-likes-count.query';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { PaginationQueryType } from 'root/@common/types';
+import { CommentLike } from 'root/likes/entity/like.entity';
+import { ConvertCommentData } from '../utils/convertComment';
+import { CommentDTO, CommentExtendedLikesDTO } from '../types';
+import { ConvertLikeData } from 'root/likes/utils/convertLike';
+import { getLikesCount } from '../query/get-comment-likes-count.query';
 
 @Injectable()
 export class CommentsQueryRepository {

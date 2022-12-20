@@ -1,7 +1,8 @@
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
-import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
+
 import { ObjectId } from 'root/@common/decorators/object-id-validator.decorator';
+import { CheckBlogExistance } from 'root/@common/decorators/check-blog-existance.decorator';
 
 import {
   MAX_LENGTH_ERROR,
@@ -31,6 +32,6 @@ export class CreatePostDTO {
   @Transform(({ value }) => typeof value === 'string' && value.trim())
   @IsNotEmpty()
   @ObjectId()
-  @Validate(IsBlogExist)
+  @Validate(CheckBlogExistance)
   blogId: string;
 }

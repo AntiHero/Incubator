@@ -76,7 +76,7 @@ export class ConfirmationInfoSqlRepository {
 
       if (!user) return null;
 
-      return ConvertToUser.convertToDTO(user);
+      return ConvertToUser.toDTO(user);
     } catch (error) {
       console.error(error);
 

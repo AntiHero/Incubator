@@ -6,7 +6,7 @@ import { Token } from '../entity/token.entity';
 import { TokenDTO } from '../types';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class TokensRepository {
   constructor(
     @InjectRepository(Token)
     private readonly tokensRepository: Repository<Token>,

@@ -9,7 +9,7 @@ import { updatePostLikesQuery } from '../query/update-post-likes.query';
 import { updateCommentLikesQuery } from '../query/update-comment-likes.query';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class LikesRepository {
   constructor(
     @InjectRepository(PostLike)
     private readonly postsLikesRepository: Repository<PostLike>,

@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
 import { SecurityDeviceDTO } from './types';
-import { SecurityDevicesAdapter } from './adapter/mongoose';
+import { SecurityDevicesRepository } from './adapter/security-device.repository';
+import { SecurityDevicesQueryRepository } from './adapter/security-device-query.repository';
 
 @Injectable()
 export class SecurityDevicesService {
   constructor(
-    private readonly securityDevicesRepository: SecurityDevicesAdapter,
+    private readonly securityDevicesRepository: SecurityDevicesRepository,
+    private readonly securityDevicesQueryRepository: SecurityDevicesQueryRepository,
   ) {}
 
   async terminateAllSessions() {
@@ -21,7 +23,7 @@ export class SecurityDevicesService {
   }
 
   async getDevicesList(userId: string) {
-    return this.securityDevicesRepository.findAllByQuery({ userId });
+    return this.securityDevicesQueryRepository.findAllByQuery({ userId });
   }
 
   async saveDevice(device: SecurityDeviceDTO) {
@@ -29,11 +31,12 @@ export class SecurityDevicesService {
   }
 
   async getDevice(query: Record<string, any>) {
-    return this.securityDevicesRepository.findOneByQuery(query);
+    const { deviceId } = query;
+    return this.securityDevicesQueryRepository.findByDeviceId(deviceId);
   }
 
   async getDevicesByQuery(query: Record<string, any>) {
-    return this.securityDevicesRepository.findAllByQuery(query);
+    return this.securityDevicesQueryRepository.findAllByQuery(query);
   }
 
   async createDeviceIfNotExists(newDevice: Partial<SecurityDeviceDTO>) {

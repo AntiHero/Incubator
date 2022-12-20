@@ -1,36 +1,29 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { v4 as uuidv4 } from 'uuid';
-import { Injectable, UsePipes } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { Roles } from './types/roles';
 import { UserForToken } from 'root/auth/types';
-import { UsersAdapter } from './adapter/mongoose';
 import { BanInfo, UserDomainModel } from './types';
 import { fiveMinInMs } from 'root/@common/constants';
+import { PaginationQueryType } from 'root/@common/types';
 import { OptionalKey } from 'root/@common/types/utility';
-import { UsersSqlAdapter } from './adapter/postgres.adapter';
+import { UsersRepository } from './adapter/postgres.adapter';
 import { EmailManager } from 'root/email-manager/email-manager';
-import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
 import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
-import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private emailManager: EmailManager,
-    private usersRepository: UsersAdapter,
-    private usersSqlRepository: UsersSqlAdapter,
+    private readonly emailManager: EmailManager,
+    private readonly usersRepository: UsersRepository,
     private readonly userBanInfoSqlRepository: UsersBanInfoSqlRepository,
     private readonly usersConfirmationInfoSqlRepository: ConfirmationInfoSqlRepository,
   ) {}
 
   async authenticateUser(loginOrEmail: string, password: string) {
-    // const user = await this.usersRepository.findUserByLoginOrEmail(
-    //   loginOrEmail,
-    // );
-    const user = await this.usersSqlRepository.findUserByLoginOrEmail(
+    const user = await this.usersRepository.findUserByLoginOrEmail(
       loginOrEmail,
     );
 
@@ -43,12 +36,11 @@ export class UsersService {
     return true;
   }
 
-  // @UsePipes(UserUnicityValidationPipe)
   async createUser(data: UserDomainModel) {
     const saltRounds = 10;
     const { login, password, email, role } = data;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    const user = await this.usersSqlRepository.addUser({
+    const user = await this.usersRepository.addUser({
       login,
       email,
       password: passwordHash,
@@ -70,7 +62,7 @@ export class UsersService {
       userForToken,
       process.env.SECRET ?? 'simple_secret',
       {
-        expiresIn: 600,
+        expiresIn: 6000,
         // expiresIn: 10,
       },
     );
@@ -79,7 +71,7 @@ export class UsersService {
       userForToken,
       process.env.SECRET ?? 'simple_secret',
       {
-        expiresIn: 1000,
+        expiresIn: 10000,
         // expiresIn: 20,
       },
     );
@@ -103,19 +95,12 @@ export class UsersService {
     return this.generateTokens(userForToken);
   }
 
-  async findUserByLoginOrEmail(loginOrEmail: string, email?: string) {
-    // return this.usersRepository.findUserByLoginOrEmail(loginOrEmail, email);
-    return this.usersSqlRepository.findUserByLoginOrEmail(loginOrEmail);
+  async findUserByLoginOrEmail(loginOrEmail: string) {
+    return this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
   }
 
   async validateUser(data: UserDomainModel) {
-    // const user = await this.usersRepository.findUserByLoginOrEmail(
-    //   data.login,
-    //   data.email,
-    // );
-    const user = await this.usersSqlRepository.findUserByLoginOrEmail(
-      data.login,
-    );
+    const user = await this.usersRepository.findUserByLoginOrEmail(data.login);
 
     const passwordCorrect =
       user === null
@@ -125,63 +110,51 @@ export class UsersService {
     return passwordCorrect;
   }
 
-  async checkUsersConfirmation(code: string) {
-    const user = await this.usersRepository.findUserByQuery({
-      'confirmationInfo.code': code,
-    });
+  // async checkUsersConfirmation(code: string) {
+  //   const user = await this.usersRepository.findUserByQuery({
+  //     'confirmationInfo.code': code,
+  //   });
 
-    if (
-      !user ||
-      user.confirmationInfo.isConfirmed ||
-      user.confirmationInfo.expDate < Date.now()
-    )
-      return null;
+  //   if (
+  //     !user ||
+  //     user.confirmationInfo.isConfirmed ||
+  //     user.confirmationInfo.expDate < Date.now()
+  //   )
+  //     return null;
 
-    return true;
-  }
+  //   return true;
+  // }
 
-  async findUserByQuery(query: any) {
-    return this.usersRepository.findUserByQuery(query);
-  }
+  // async findUserByQuery(query: any) {
+  //   return this.usersRepository.findUserByQuery(query);
+  // }
 
-  // async findUsersByQuery(query: PaginationQuery) {
   async findUsersByQuery(query: PaginationQueryType) {
-    // return this.usersRepository.findUsersByQuery(query);
-    return this.usersSqlRepository.findUsersByQuery(query);
+    return this.usersRepository.findUsersByQuery(query);
   }
 
   async getAllUsers() {
-    return this.usersSqlRepository.getAllUsers();
-    // return this.usersRepository.getAllUsers();
+    return this.usersRepository.getAllUsers();
   }
 
   async findUserById(id: string) {
-    // return this.usersRepository.findUserById(id);
-    return this.usersSqlRepository.findUserById(id);
+    return this.usersRepository.findUserById(id);
   }
 
   async findUserByIdAndDelete(id: string) {
-    // return this.usersRepository.findUserByIdAndDelete(id);
-    return this.usersSqlRepository.findUserByIdAndDelete(id);
+    return this.usersRepository.findUserByIdAndDelete(id);
   }
 
   async deleteAllUsers() {
-    // await this.usersRepository.deleteAllUsers();
-    await this.usersSqlRepository.deleteAllUsers();
+    await this.usersRepository.deleteAllUsers();
   }
 
   async resendConfirmationEmail(id: string, email: string) {
-    // const code = uuidv4();
     const expDate = Date.now() + fiveMinInMs;
 
-    // await this.usersRepository.findUserByIdAndUpdate(id, {
-    //   'confirmationInfo.expDate': Date.now() + fiveMinInMs,
-    //   'confirmationInfo.code': newCode,
-    // });
     const code =
       await this.usersConfirmationInfoSqlRepository.updateConfirmationInfoCode(
         id,
-        // code,
         expDate,
       );
 
@@ -200,7 +173,6 @@ export class UsersService {
       banInfo = { ...data };
     }
 
-    // return this.usersRepository.banUser(id, banInfo);
     return this.userBanInfoSqlRepository.banUser(id, banInfo);
   }
 }

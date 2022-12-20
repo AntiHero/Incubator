@@ -1,27 +1,34 @@
-import { BannedUserForEntity } from '../types';
+import {
+  Column,
+  Entity,
+  OneToOne,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-export class BannedUserEntity implements BannedUserForEntity {
-  public user: string;
+import { User } from 'root/users/entity/user.entity';
+import { Blog } from 'root/blogs/entity/blog.entity';
 
-  public banReason: string | null;
+@Entity('banned_users')
+export class BannedUser {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  public isBanned = false;
+  @OneToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  userId: User;
 
-  public entityId: string;
+  @Column({ nullable: true })
+  banReason: string;
 
-  public banDate: Date;
+  @ManyToOne(() => Blog)
+  @JoinColumn({ name: 'entityId' })
+  entityId: Blog;
 
-  constructor({
-    user,
-    entityId,
-    banReason = null,
-    isBanned = false,
-    banDate = new Date(),
-  }: Partial<BannedUserForEntity>) {
-    this.user = user;
-    this.banReason = banReason;
-    this.isBanned = isBanned;
-    this.entityId = entityId;
-    this.banDate = banDate;
-  }
+  @Column({ type: 'boolean' })
+  isBanned: boolean;
+
+  @Column({ type: 'date', default: () => 'now()' })
+  banDate: Date;
 }

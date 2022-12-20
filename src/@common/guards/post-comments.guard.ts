@@ -6,13 +6,13 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from 'root/posts/posts.service';
-import { BanUsersForBlogService } from 'root/bloggers/ban-user-for-blog.service';
+import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
 
 @Injectable()
 export class PostCommentsGuard implements CanActivate {
   constructor(
-    private readonly banUsersForBlogService: BanUsersForBlogService,
     private readonly postsService: PostsService,
+    private readonly banUsersByBloggerService: BanUsersByBloggerService,
   ) {}
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
@@ -24,7 +24,7 @@ export class PostCommentsGuard implements CanActivate {
 
       const blogId = post.blogId;
 
-      const bannedUser = await this.banUsersForBlogService.findBannedUser(
+      const bannedUser = await this.banUsersByBloggerService.findBannedUser(
         userId,
         blogId,
       );

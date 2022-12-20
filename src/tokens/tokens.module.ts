@@ -1,20 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypegooseModule } from 'nestjs-typegoose';
 
+import { Token } from './entity/token.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokensService } from './tokens.service';
-import { TokenModel } from './schemas/token.schema';
-import { TokensAdapter } from './adapters/mongoose';
+import { TokensRepository } from './adapters/tokens.repository';
 
 @Module({
-  imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: TokenModel,
-        schemaOptions: { collection: 'tokens' },
-      },
-    ]),
-  ],
-  providers: [TokensService, TokensAdapter],
+  imports: [TypeOrmModule.forFeature([Token])],
+  providers: [TokensService, TokensRepository],
   exports: [TokensService],
 })
 export class TokensModule {}

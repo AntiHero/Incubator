@@ -7,7 +7,7 @@ import { ConvertSecurityDeviceData } from '../utils/convertSecurityDevice';
 import { convertToSecurityDeviceDTO } from '../utils/convertToSecurityDeviceDTO';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class SecurityDevicesQueryRepository {
   constructor(
     @InjectRepository(SecurityDevice)
     private readonly securityDevicesRepository: Repository<SecurityDevice>,
@@ -28,6 +28,19 @@ export class CommentsQueryRepository {
       await this.securityDevicesRepository.query(
         `SELECT * FROM security_devices WHERE id=$1`,
         [id],
+      )
+    )[0];
+
+    if (!device) return null;
+
+    return convertToSecurityDeviceDTO(device);
+  }
+
+  async findByDeviceId(deviceId: string) {
+    const device = (
+      await this.securityDevicesRepository.query(
+        `SELECT * FROM security_devices WHERE "deviceId"=$1`,
+        [deviceId],
       )
     )[0];
 

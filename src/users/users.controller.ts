@@ -16,15 +16,12 @@ import { Response } from 'express';
 
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
-import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationQueryType } from 'root/@common/types';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import {
-  PaginationQuerySanitizer,
-  PaginationQuerySanitizerPipe,
-} from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 
 @Controller('users')
@@ -54,7 +51,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async getUsers(
     // @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
-    @Query(PaginationQuerySanitizer) query: PaginationQueryType,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const {
@@ -88,11 +85,11 @@ export class UsersController {
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }
 
-  /* Test */
-  @Get(':id')
-  async getUserById(@Param('id') id: string, @Res() res: Response) {
-    res.status(200).send(await this.usersService.findUserById(id));
-  }
+  // /* Test */
+  // @Get(':id')
+  // async getUserById (@Param('id') id: string, @Res() res: Response) {
+  //   res.status(200).send(await this.usersService.findUserById(id));
+  // }
 
   @Delete(':id')
   async deleteUser(@Param('id') id: string, @Res() res: Response) {

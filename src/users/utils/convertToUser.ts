@@ -2,7 +2,7 @@ import { UserDB, UserDTO } from '../types';
 import { ConvertToEntity } from 'root/@common/utils/convert';
 
 export class ConvertToUser implements ConvertToEntity {
-  static convertToDTO(doc: UserDB): UserDTO {
+  static toDTO(doc: UserDB): UserDTO {
     return {
       id: String(doc.id),
       login: doc.login,

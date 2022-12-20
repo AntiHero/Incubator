@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommentLike, PostLike } from '../entity/like.entity';
 
 @Injectable()
-export class CommentsQueryRepository {
+export class LikeQueryRepository {
   constructor(
     @InjectRepository(PostLike)
     private readonly postsLikesRepository: Repository<PostLike>,
@@ -13,20 +13,6 @@ export class CommentsQueryRepository {
     private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
 }
-
-//   async addLike(like: LikeDomainModel) {
-//     try {
-//       const postLike = await this.model.create({
-//         ...like,
-//         postId: new Types.ObjectId(like.entityId),
-//         userId: new Types.ObjectId(like.userId),
-//       });
-
-//       return convertToLikeDTO(postLike);
-//     } catch (e) {
-//       return null;
-//     }
-//   }
 
 //   async findLikeByQuery(query: Partial<LikeDomainModel>) {
 //     const filter: any = { ...query };

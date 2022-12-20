@@ -14,7 +14,7 @@ export type BannedUserForEntityDTO = {
   id: string;
   entityId: string;
   userId: string;
-  login: string;
+  login?: string;
   isBanned: boolean;
   banReason: string;
   banDate: string;

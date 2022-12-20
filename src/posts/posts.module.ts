@@ -3,53 +3,39 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Post } from './entity/post.entity';
 import { PostsService } from './posts.service';
-import { PostModel } from './schemas/post.schema';
-import { PostsAdapter } from './adapter/mongooose';
-import { TypegooseModule } from 'nestjs-typegoose';
 import { PostsController } from './posts.controller';
-import { BlogModel } from 'root/blogs/schemas/blogs.schema';
-import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { CommentModel } from 'root/comments/schemas/comment.schema';
-import { IsBlogExist } from 'root/@common/decorators/is-blog-exist.decorator';
+import { Blog } from 'root/blogs/entity/blog.entity';
+import { User } from 'root/users/entity/user.entity';
+import { Comment } from 'root/comments/entity/comment.entity';
+import { PostsRepository } from './adapter/posts.repostitory';
+import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
+import { BannedUser } from 'root/bloggers/entity/banned-user.entity';
+import { PostsQueryRepository } from './adapter/posts-query.repository';
 import { BanUsersForBlogService } from 'root/bloggers/ban-user-for-blog.service';
-import { BannedUserForEntityModel } from 'root/bloggers/schemas/banned-user-for-entity.schema';
+import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
+import { CheckBlogExistance } from 'root/@common/decorators/check-blog-existance.decorator';
 
 @Module({
   imports: [
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: PostModel,
-        schemaOptions: { collection: 'posts' },
-      },
+    TypeOrmModule.forFeature([
+      Post,
+      Blog,
+      User,
+      Comment,
+      PostLike,
+      BannedUser,
+      CommentLike,
     ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: BlogModel,
-        schemaOptions: { collection: 'blogs' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: LikeModel,
-        schemaOptions: { collection: 'likes' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: CommentModel,
-        schemaOptions: { collection: 'comments' },
-      },
-    ]),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: BannedUserForEntityModel,
-        schemaOptions: { collection: 'banned-users-for-entity' },
-      },
-    ]),
-    TypeOrmModule.forFeature([Post]),
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsAdapter, IsBlogExist, BanUsersForBlogService],
+  providers: [
+    PostsService,
+    PostsRepository,
+    CheckBlogExistance,
+    PostsQueryRepository,
+    // BanUsersForBlogService,
+    BanUsersByBloggerService,
+  ],
   exports: [PostsService],
 })
 export class PostsModule {}

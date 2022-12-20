@@ -16,9 +16,9 @@ import Blog from './domain/blogs.model';
 import { BlogViewModel } from './types';
 import { BlogsService } from './blogs.service';
 import { Roles } from 'root/users/types/roles';
-import { PaginationQuery } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';
+import { PaginationQueryType } from 'root/@common/types';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { CreateBlogPostDTO } from './dto/create-blog-post.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
@@ -116,7 +116,7 @@ export class BlogsController {
   async getBlogPosts(
     @UserId() userId: string,
     @Param('id') id: string,
-    @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const blog = await this.blogsService.findBlogById(id);

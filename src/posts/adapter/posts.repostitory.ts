@@ -28,8 +28,6 @@ export class PostsRepository {
     private readonly commentsRepository: Repository<Comment>,
     @InjectRepository(PostLike)
     private readonly postLikesRepository: Repository<PostLike>,
-    @InjectRepository(CommentLike)
-    private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
 
   async addPost(post: Partial<PostDomainModel>) {
@@ -92,14 +90,18 @@ export class PostsRepository {
 
   async findPostByIdAndDelete(id: string) {
     try {
-      await this.postsRepository.query(
-        `
-          DELETE FROM posts WHERE posts.id=$1
+      const post = (
+        await this.postsRepository.query(
+          `
+          DELETE FROM posts WHERE posts.id=$1 RETURNING *
         `,
-        [id],
-      );
+          [id],
+        )
+      )[0];
 
-      return true;
+      if (!post) return null;
+
+      return ConvertPostData.toDTO(post);
     } catch (e) {
       console.error(e);
 

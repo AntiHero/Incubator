@@ -18,7 +18,7 @@ import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
 
 @Injectable()
-export class UsersSqlAdapter {
+export class UsersRepository {
   constructor(
     @InjectRepository(User)
     private readonly repository: Repository<User>,
@@ -33,7 +33,7 @@ export class UsersSqlAdapter {
   async getAllUsers() {
     const users = await this.repository.query('SELECT * FROM users');
 
-    return users.map(ConvertToUser.convertToDTO);
+    return users.map(ConvertToUser.toDTO);
   }
 
   async addUser(user: UserDomainModel) {
@@ -84,7 +84,7 @@ export class UsersSqlAdapter {
         await this.repository.query(getUserByIdQuery, [savedUserId])
       )[0];
 
-      return ConvertToUser.convertToDTO(savedUser);
+      return ConvertToUser.toDTO(savedUser);
     } catch (e) {
       console.error(e);
 
@@ -98,7 +98,7 @@ export class UsersSqlAdapter {
 
       if (!user) return null;
 
-      return ConvertToUser.convertToDTO(user);
+      return ConvertToUser.toDTO(user);
     } catch (e) {
       console.error(e);
 
@@ -107,9 +107,6 @@ export class UsersSqlAdapter {
   }
 
   async findUserByIdAndDelete(id: string) {
-    // const user = await this.repository.find({ where: { id: Number(id) } });
-
-    // return this.repository.remove(user);
     try {
       const foreignIds = (
         await this.repository.query(
@@ -180,7 +177,7 @@ export class UsersSqlAdapter {
 
     if (!user) return null;
 
-    return ConvertToUser.convertToDTO(user);
+    return ConvertToUser.toDTO(user);
   }
 
   async findUsersByQuery(
@@ -215,8 +212,20 @@ export class UsersSqlAdapter {
       ),
     );
 
-    return [users.map(ConvertToUser.convertToDTO), Number(count)];
+    return [users.map(ConvertToUser.toDTO), Number(count)];
   }
+
+  // async findUserByQuery(query: any) {
+  //   const user = (await this.repository.query(
+  //     `
+
+  //     `
+  //   ))
+
+  //   if (!user) return null;
+
+  //   return ConvertToUser.toDTO(user);
+  // }
 
   async findUserByLoginOrEmail(loginOrEmail: string) {
     try {
@@ -226,7 +235,7 @@ export class UsersSqlAdapter {
 
       if (!user) return null;
 
-      return ConvertToUser.convertToDTO(user);
+      return ConvertToUser.toDTO(user);
     } catch (e) {
       console.error(e);
 
@@ -242,7 +251,7 @@ export class UsersSqlAdapter {
 
       if (!user) return null;
 
-      return ConvertToUser.convertToDTO(user);
+      return ConvertToUser.toDTO(user);
     } catch (e) {
       console.error(e);
 
