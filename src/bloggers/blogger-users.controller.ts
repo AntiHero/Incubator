@@ -11,16 +11,16 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BannedUserForEntityViewModel } from './types';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
+import { PaginationQueryType } from 'root/@common/types';
 import { BanUsersByBloggerService } from './ban-users.service';
 import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { SqlIdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
 
@@ -36,7 +36,7 @@ export class BloggersUsersController {
   @Get('blog/:id')
   async getBannedUsersForBlog(
     @UserId() userId: string,
-    @Param('id', IdValidationPipe) blogId: string,
+    @Param('id') blogId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
@@ -58,6 +58,7 @@ export class BloggersUsersController {
         searchLoginTerm,
       });
 
+    console.log(bannedUsers);
     const items: BannedUserForEntityViewModel[] = bannedUsers.map(
       convertToBannedUserForEntityViewModel,
     );

@@ -5,7 +5,7 @@ import {
   MIN_LENGTH_ERROR,
   NOT_STRING_ERROR,
 } from 'root/@common/error-messages';
-import { ObjectId } from 'root/@common/decorators/object-id-validator.decorator';
+import { IsId } from 'root/@common/decorators/sql-id.validator.decorator';
 
 export class BanUserForBlogDTO {
   @IsString({ message: NOT_STRING_ERROR })
@@ -17,6 +17,7 @@ export class BanUserForBlogDTO {
   @IsBoolean()
   isBanned: boolean;
 
-  @ObjectId()
+  // @ObjectId()
+  @IsId()
   blogId: string;
 }

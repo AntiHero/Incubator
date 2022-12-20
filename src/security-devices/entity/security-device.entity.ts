@@ -22,10 +22,10 @@ export class SecurityDevice {
   @Column({ type: 'uuid', default: () => 'gen_random_uuid()' })
   deviceId: string;
 
-  @Column({ type: 'date', default: () => 'now()' })
+  @Column({ type: 'timestamptz' })
   lastActiveDate: Date;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   userId: User;
 }

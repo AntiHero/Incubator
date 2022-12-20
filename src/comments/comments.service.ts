@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { CommentDTO } from './types';
 import { LikeDTO } from 'root/likes/types';
-import { CommentsAdapter } from './adapter/mongoose';
 import { CommentsRepository } from './adapter/comment.repository';
 import { CommentsQueryRepository } from './adapter/comment-query.repository';
 

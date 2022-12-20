@@ -62,7 +62,7 @@ export class BlogsQueryRepository {
       const blog = (
         await this.blogsRepository.query(
           `
-          SELECT * FROM blogs WHERE blogs.id=$1 LIMIT 1
+            SELECT * FROM blogs WHERE blogs.id=$1 LIMIT 1
          `,
           [id],
         )
@@ -70,11 +70,13 @@ export class BlogsQueryRepository {
 
       if (!blog) return null;
 
+      const banInfo = JSON.parse(blog.banInfo);
+
       if (forUser === Roles.USER) {
-        if (blog.banInfo.isBanned) return null;
+        if (banInfo.isBanned) return null;
       }
 
-      return ConvertBlogData.toDTO(blog);
+      return ConvertBlogData.toDTO({ ...blog, banInfo });
     } catch (error) {
       console.error(error);
 
@@ -92,7 +94,7 @@ export class BlogsQueryRepository {
       )
     )[0]?.count;
 
-    return count ?? 0;
+    return Number(count);
   }
 
   async findBlogPostsByQuery(
@@ -117,8 +119,8 @@ export class BlogsQueryRepository {
         (
           await this.blogsRepository.query(
             `
-        SELECT "name" FROM blogs WHERE id=$1
-      `,
+              SELECT "name" FROM blogs WHERE id=$1
+          `,
             [id],
           )
         )[0]?.name ?? '';
@@ -138,8 +140,8 @@ export class BlogsQueryRepository {
         let dislikesCount = 0;
 
         if (likesAndDislikesCount) {
-          likesCount = likesAndDislikesCount.likesCount;
-          dislikesCount = likesAndDislikesCount.dislikesCount;
+          likesCount = Number(likesAndDislikesCount.likesCount);
+          dislikesCount = Number(likesAndDislikesCount.dislikesCount);
         }
 
         let userStatus: LikeStatuses;
@@ -182,17 +184,16 @@ export class BlogsQueryRepository {
       let filter = `name ~* '${query.searchNameTerm}'`;
 
       if (forRole === Roles.USER) {
-        filter += ' AND ("banInfo"->>\'isBanned\')::boolean is false';
+        filter += ' AND ("banInfo"::jsonb->>\'isBanned\')::boolean is false';
       }
 
-      const count =
-        (
-          await this.blogsRepository.query(
-            `
+      const count = (
+        await this.blogsRepository.query(
+          `
           SELECT COUNT(*) FROM blogs WHERE ${filter}
         `,
-          )
-        )[0]?.count ?? 0;
+        )
+      )[0]?.count;
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
@@ -203,7 +204,14 @@ export class BlogsQueryRepository {
 
       if (!blogs) return null;
 
-      return [blogs.map(ConvertBlogData.toDTO), count];
+      return [
+        blogs.map((blog) => {
+          const banInfo = JSON.parse(blog.banInfo);
+
+          return ConvertBlogData.toDTO({ ...blog, banInfo });
+        }),
+        Number(count),
+      ];
     } catch (error) {
       console.error(error);
 
@@ -216,14 +224,13 @@ export class BlogsQueryRepository {
 
     const filter = `name ~* '${query.searchNameTerm}' AND "userId"=${userId}`;
 
-    const count =
-      (
-        await this.blogsRepository.query(
-          `
+    const count = (
+      await this.blogsRepository.query(
+        `
         SELECT COUNT(*) FROM blogs WHERE ${filter}
       `,
-        )
-      )[0]?.count ?? 0;
+      )
+    )[0]?.count;
 
     const { sortBy, sortDirection, pageSize: limit } = query;
     const offset = countSkip(query.pageSize, query.pageNumber);
@@ -234,7 +241,14 @@ export class BlogsQueryRepository {
 
     if (!blogs) return null;
 
-    return [blogs.map(ConvertBlogData.toDTO), count];
+    return [
+      blogs.map((blog) => {
+        const banInfo = JSON.parse(blog.banInfo);
+
+        return ConvertBlogData.toDTO({ ...blog, banInfo });
+      }),
+      Number(count),
+    ];
   }
 
   async getAllComments(
@@ -242,17 +256,16 @@ export class BlogsQueryRepository {
     query: PaginationQueryType,
   ): Promise<[BloggerCommentDTO[], number]> {
     try {
-      const count =
-        (
-          await this.commentRepository.query(
-            `
+      const count = (
+        await this.commentRepository.query(
+          `
           SELECT COUNT(*) FROM post_comments 
             WHERE "entityId"=(SELECT "id" FROM posts 
             WHERE "blogId"=(SELECT "id" FROM blogs WHERE "userId"=$1))
         `,
-            [userId],
-          )
-        )[0]?.count ?? 0;
+          [userId],
+        )
+      )[0]?.count;
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
@@ -320,8 +333,8 @@ export class BlogsQueryRepository {
         let dislikesCount = 0;
 
         if (likesAndDislikesCount) {
-          likesCount = likesAndDislikesCount.likesCount;
-          dislikesCount = likesAndDislikesCount.dislikesCount;
+          likesCount = Number(likesAndDislikesCount.likesCount);
+          dislikesCount = Number(likesAndDislikesCount.dislikesCount);
         }
 
         let userStatus: LikeStatuses;
@@ -331,8 +344,8 @@ export class BlogsQueryRepository {
             (
               await this.postLikesRepository.query(
                 `
-          SELECT "likeStatus" FROM comment_likes WHERE "userId"=$1 AND "entityId"=$2
-        `,
+                  SELECT "likeStatus" FROM comment_likes WHERE "userId"=$1 AND "entityId"=$2
+                `,
                 [userId, comment.id],
               )
             )[0]?.likeStatus ?? LikeStatuses.None;
@@ -351,7 +364,10 @@ export class BlogsQueryRepository {
         });
       }
 
-      return [result.map(ConvertBloggerData.toBloggerCommentDTO), count];
+      return [
+        result.map(ConvertBloggerData.toBloggerCommentDTO),
+        Number(count),
+      ];
     } catch (error) {
       console.error(error);
 

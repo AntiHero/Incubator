@@ -11,7 +11,6 @@ import { PostsRepository } from './adapter/posts.repostitory';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { BannedUser } from 'root/bloggers/entity/banned-user.entity';
 import { PostsQueryRepository } from './adapter/posts-query.repository';
-import { BanUsersForBlogService } from 'root/bloggers/ban-user-for-blog.service';
 import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
 import { CheckBlogExistance } from 'root/@common/decorators/check-blog-existance.decorator';
 
@@ -33,7 +32,6 @@ import { CheckBlogExistance } from 'root/@common/decorators/check-blog-existance
     PostsRepository,
     CheckBlogExistance,
     PostsQueryRepository,
-    // BanUsersForBlogService,
     BanUsersByBloggerService,
   ],
   exports: [PostsService],

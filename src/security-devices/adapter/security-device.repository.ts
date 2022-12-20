@@ -16,15 +16,16 @@ export class SecurityDevicesRepository {
   async create(deviceData: Partial<SecurityDeviceDTO>) {
     try {
       const { title, ip, lastActiveDate, userId } = deviceData;
+      console.log(lastActiveDate);
 
       const device = (
         await this.securityDevicesRepository.query(
           `
-          INSERT INTO security_devices ("title", "ip", "lastActiveDate", "userId", "deviceId",) 
+          INSERT INTO security_devices ("title", "ip", "lastActiveDate", "userId", "deviceId") 
             VALUES ($1, $2, $3, $4, DEFAULT) 
             RETURNING *
         `,
-          [title, ip, lastActiveDate || 'NOW()', userId],
+          [title, ip, new Date(), userId],
         )
       )[0];
 
@@ -63,7 +64,7 @@ export class SecurityDevicesRepository {
       await this.securityDevicesRepository.query(
         `
         DELETE FROM security_devices WHERE "deviceId"=$1
-          RETURNIG id
+          RETURNING id
       `,
         [deviceId],
       )
@@ -77,14 +78,20 @@ export class SecurityDevicesRepository {
   async updateOne(filter: Record<string, any>, updates: Record<string, any>) {
     const { deviceId } = filter;
 
-    const updatedDevice = (
-      await this.securityDevicesRepository.query(
-        updateSecurityDeviceQuery(updates),
-        deviceId,
-      )
-    )[0];
+    try {
+      const updatedDevice = (
+        await this.securityDevicesRepository.query(
+          updateSecurityDeviceQuery(updates),
+          [deviceId],
+        )
+      )[0][0];
 
-    return updatedDevice;
+      return updatedDevice;
+    } catch (e) {
+      console.log(e);
+
+      return null;
+    }
   }
 
   async deleteAllButOne(query: { userId: string; deviceId: string }) {

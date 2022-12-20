@@ -166,7 +166,6 @@ export class UsersRepository {
       )
     )[0]?.id;
 
-    console.log(confirmationInfoId);
     if (!confirmationInfoId) return null;
 
     const user = (

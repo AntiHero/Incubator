@@ -34,7 +34,9 @@ export class BlogsRepository {
         )
       )[0];
 
-      return ConvertBlogData.toDTO(createdBlog);
+      const banInfo = JSON.parse(createdBlog.banInfo);
+
+      return ConvertBlogData.toDTO({ ...createdBlog, banInfo });
     } catch (error) {
       console.error(error);
 
@@ -46,11 +48,13 @@ export class BlogsRepository {
     try {
       const blog = (
         await this.blogsRepository.query(updateBlogQuery(updates), [id])
-      )[0];
+      )[0][0];
 
       if (!blog) return null;
 
-      return ConvertBlogData.toDTO(blog);
+      const banInfo = JSON.parse(blog.banInfo);
+
+      return ConvertBlogData.toDTO({ ...blog, banInfo });
     } catch (e) {
       console.error(e);
 
@@ -67,11 +71,13 @@ export class BlogsRepository {
         `,
           [id],
         )
-      )[0];
+      )[0][0];
 
       if (!blog) return null;
 
-      return ConvertBlogData.toDTO(blog);
+      const banInfo = JSON.parse(blog.banInfo);
+
+      return ConvertBlogData.toDTO({ ...blog, banInfo });
     } catch (e) {
       console.error(e);
 
@@ -133,12 +139,38 @@ export class BlogsRepository {
 
   async banBlog(id: string, banStatus: boolean) {
     try {
-      await this.blogsRepository.query(
-        `
-          UPDATE blogs SET "banInfo"="banInfo"::jsonb || '{"isBanned":"${banStatus}"}' id=$1 RETURNING *
-        `,
-        [id],
-      );
+      let bannedBlog: any;
+
+      if (banStatus) {
+        bannedBlog = (
+          await this.blogsRepository.query(
+            `
+            UPDATE blogs SET "banInfo"="banInfo"::jsonb 
+              || '{"isBanned": ${banStatus}, "banDate": "${new Date().toISOString()}"}'
+              WHERE id=$1 RETURNING *
+          `,
+            [id],
+          )
+        )[0][0];
+      } else {
+        bannedBlog = (
+          await this.blogsRepository.query(
+            `
+            UPDATE blogs SET "banInfo"="banInfo"::jsonb 
+              || '{"isBanned": ${banStatus}, "banDate": null}'
+              WHERE id=$1 RETURNING *
+          `,
+            [id],
+          )
+        )[0][0];
+      }
+
+      if (!bannedBlog) return null;
+
+      const banInfo = JSON.parse(bannedBlog.banInfo);
+
+      console.log(banInfo);
+      return ConvertBlogData.toDTO({ ...bannedBlog, banInfo });
     } catch (error) {
       console.error(error);
 

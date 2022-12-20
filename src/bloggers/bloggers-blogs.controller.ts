@@ -19,6 +19,7 @@ import { BloggerCommentsViewModel } from './types';
 import Paginator from 'root/@common/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
+import { PaginationQueryType } from 'root/@common/types';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
@@ -26,11 +27,11 @@ import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { PaginationQuery, PaginationQueryType } from 'root/@common/types';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -243,7 +244,7 @@ export class BloggersBlogsController {
   async updateBlogPost(
     @UserId() userId: string,
     @Param('id') id: string,
-    @Param('postId') postId: string,
+    @Param('postId', IdValidationPipe) postId: string,
     @Body() body: UpdateBlogPostDTO,
     @Res() res: Response,
   ) {

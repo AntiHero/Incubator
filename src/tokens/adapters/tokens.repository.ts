@@ -38,7 +38,7 @@ export class TokensRepository {
     const tokenId = (
       await this.tokensRepository.query(
         `
-        SELECT id FROM tokens WHERE "token"=$1, "blackListed"=$2 LIMIT 1
+        SELECT id FROM tokens WHERE "token"=$1 AND "blackListed"=$2 LIMIT 1
       `,
         [token, blackListed],
       )

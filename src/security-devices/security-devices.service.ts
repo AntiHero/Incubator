@@ -48,7 +48,7 @@ export class SecurityDevicesService {
       if (device.title === newDevice.title) {
         await this.securityDevicesRepository.updateOne(
           { deviceId: device.deviceId },
-          { lastActiveDate: new Date() },
+          { lastActiveDate: new Date().toISOString() },
         );
 
         return device.deviceId;

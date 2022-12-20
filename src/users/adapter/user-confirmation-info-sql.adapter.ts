@@ -4,11 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { User } from '../entity/user.entity';
 import { ConvertToUser } from '../utils/convertToUser';
+import { getUserByIdQuery } from '../query/get-user-by-id.query';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
-import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
 import { updateUserConfirmationInfo } from '../query/update-user-confirmation-info.query';
 import { getUserConfirmationInfoIdQuery } from '../query/get-user-confirmation-info-id.query';
-import { getUserByIdQuery } from '../query/get-user-by-id.query';
 
 @Injectable()
 export class ConfirmationInfoSqlRepository {

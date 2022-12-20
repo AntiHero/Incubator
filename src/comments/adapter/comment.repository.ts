@@ -118,7 +118,7 @@ export class CommentsRepository {
     try {
       const updatedComment = (
         await this.commentsRepository.query(updateCommentQuery(updates), [id])
-      )[0];
+      )[0][0];
 
       if (updatedComment) return true;
     } catch (error) {
@@ -130,10 +130,11 @@ export class CommentsRepository {
 
   async updateComments(userId: string, updates: Partial<CommentDomainModel>) {
     try {
-      const updatedComment = await this.commentsRepository.query(
-        updateCommentQuery(updates),
-        [userId],
-      );
+      const updatedComment = (
+        await this.commentsRepository.query(updateCommentQuery(updates), [
+          userId,
+        ])
+      )[0][0];
 
       if (updatedComment) return true;
     } catch (error) {

@@ -10,16 +10,7 @@ import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refre
 import { SecurityDevicesQueryRepository } from './adapter/security-device-query.repository';
 
 @Module({
-  imports: [
-    // TypegooseModule.forFeature([
-    //   {
-    //     typegooseClass: SecurityDeviceModel,
-    //     schemaOptions: { collection: 'securityDevices' },
-    //   },
-    // ]),
-    TypeOrmModule.forFeature([SecurityDevice]),
-    TokensModule,
-  ],
+  imports: [TypeOrmModule.forFeature([SecurityDevice]), TokensModule],
   providers: [
     SecurityDevicesService,
     SecurityDevicesRepository,

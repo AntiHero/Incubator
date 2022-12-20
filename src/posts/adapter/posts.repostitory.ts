@@ -78,7 +78,7 @@ export class PostsRepository {
     try {
       const post = (
         await this.postsRepository.query(updatePostQuery(updates), [id])
-      )[0];
+      )[0][0];
 
       return ConvertPostData.toDTO(post);
     } catch (error) {
@@ -97,7 +97,7 @@ export class PostsRepository {
         `,
           [id],
         )
-      )[0];
+      )[0][0];
 
       if (!post) return null;
 

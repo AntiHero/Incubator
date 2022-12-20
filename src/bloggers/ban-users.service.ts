@@ -30,7 +30,7 @@ export class BanUsersByBloggerService {
         const userInBannedListId = (
           await this.bannedUsersRepository.query(
             `
-              SELECT id FROM banned_users WHERE "userId"=$1 AND "entityId"=$2 REU
+              SELECT id FROM banned_users WHERE "userId"=$1 AND "entityId"=$2
             `,
             [userId, blogId],
           )
@@ -40,18 +40,25 @@ export class BanUsersByBloggerService {
           await this.bannedUsersRepository.query(
             `
               INSERT INTO banned_users ("userId", "entityId", "banReason", "isBanned", "banDate") 
-                VALUES $1, $2, $3, $4, DEFAULT 
+                VALUES ($1, $2, $3, $4, $5) 
             `,
-            [userId, blogId, isBanned, banReason],
+            [userId, blogId, banReason, isBanned, new Date().toISOString()],
           );
         } else {
           await this.bannedUsersRepository.query(
             `
               UPDATE banned_users 
-                SET "userId"=$1, "entityId"=$2, "banReason"=$3, "isBanned"=$4, "banDate"=NOW()
-                WHERE id=$5
+                SET "userId"=$1, "entityId"=$2, "banReason"=$3, "isBanned"=$4, "banDate"=$5
+                WHERE id=$6
             `,
-            [userId, blogId, isBanned, banReason, userInBannedListId],
+            [
+              userId,
+              blogId,
+              banReason,
+              isBanned,
+              new Date().toISOString(),
+              userInBannedListId,
+            ],
           );
         }
       } else {
@@ -93,16 +100,15 @@ export class BanUsersByBloggerService {
     const { searchLoginTerm, sortBy, sortDirection, pageSize: limit } = query;
     const offset = countSkip(query.pageSize, query.pageNumber);
 
-    const count =
-      (
-        await this.bannedUsersRepository.query(
-          `
-            SELECT COUNT(*) FROM users WHERE (login ~* '${searchLoginTerm}') AND
-              users.id=(SELECT "userId" FROM banned_users WHERE "entityId"=$1)
+    const count = (
+      await this.bannedUsersRepository.query(
+        `
+            SELECT COUNT(*) FROM users WHERE (login ~* '${searchLoginTerm}' AND
+              users.id IN (SELECT "userId" FROM banned_users WHERE "entityId"=$1))
           `,
-          [blogId],
-        )
-      )[0]?.count ?? 0;
+        [blogId],
+      )
+    )[0]?.count;
 
     const bannedUsers = await this.usersRepository.query(
       getBannedUsersByQuery(
@@ -115,7 +121,7 @@ export class BanUsersByBloggerService {
       [blogId],
     );
 
-    return [bannedUsers.map(ConvertBannedUserData.toDTO), count];
+    return [bannedUsers.map(ConvertBannedUserData.toDTO), Number(count)];
   }
 
   async deleteAllBannedUsers() {

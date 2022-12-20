@@ -10,10 +10,10 @@ export const getBannedUsersByQuery = (
   SELECT users.id, users.login, banned_users."banReason", banned_users."entityId",
     banned_users."banDate", banned_users."isBanned", banned_users."userId"
     FROM users
-    WHERE (users.login ~* '${searchLoginTerm}' 
-      AND users.id=(SELECT "userId" 
-      FROM banned_users WHERE "entityId"=$1))  
     JOIN banned_users ON users.id=banned_users."userId"
+    WHERE (users.login ~* '${searchLoginTerm}' 
+      AND users.id IN (SELECT "userId" 
+      FROM banned_users WHERE "entityId"=$1))  
     ORDER BY "${sortBy}" ${
   sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder
 }

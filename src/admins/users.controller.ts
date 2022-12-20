@@ -20,11 +20,11 @@ import {
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
 import Paginator from 'root/@common/models/Paginator';
+import { PaginationQueryType } from 'root/@common/types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { PaginationQueryType } from 'root/@common/types';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
-import { SqlIdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { IdValidationPipe as IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/users')

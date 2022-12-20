@@ -19,7 +19,7 @@ export const getPostgresConfig = async (
   return {
     type: 'postgres',
     url: configService.get('DATABASE_URL'),
-    synchronize: process.env.DEV_MODE ? true : false,
+    synchronize: true,
     entities: [
       User,
       Blog,

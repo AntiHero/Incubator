@@ -4,6 +4,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from 'typeorm';
 
 import { User } from 'root/users/entity/user.entity';
@@ -28,6 +29,7 @@ export class Blog {
   websiteUrl: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
   userId: User;
 
   @Column('simple-json', { default: '{ "banDate": null, "isBanned": false }' })

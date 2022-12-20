@@ -58,17 +58,16 @@ export class CommentsQueryRepository {
 
   async countComments(entityId: string) {
     try {
-      const count =
-        (
-          await this.commentsRepository.query(
-            `
+      const count = (
+        await this.commentsRepository.query(
+          `
               SELECT COUNT(*) FROM comments WHERE "entityId"=$1 
             `,
-            [entityId],
-          )
-        )[0]?.count ?? 0;
+          [entityId],
+        )
+      )[0]?.count;
 
-      return count;
+      return Number(count);
     } catch (error) {
       console.error(error);
 
@@ -118,8 +117,8 @@ export class CommentsQueryRepository {
     const extendedComment: CommentExtendedLikesDTO = {
       ...ConvertCommentData.toDTO(comment),
       userLogin,
-      likesCount,
-      dislikesCount,
+      likesCount: Number(likesCount),
+      dislikesCount: Number(dislikesCount),
       userStatus,
     };
 

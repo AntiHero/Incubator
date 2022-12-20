@@ -122,7 +122,7 @@ export class AuthController {
 
     await this.tokensService.saveToken({
       token: req.cookies.refreshToken,
-      expDate: String(req.expDate),
+      expDate: new Date(req.expDate * 1000).toISOString(),
     });
 
     await this.securityDevicesService.updateDevice(
@@ -191,7 +191,7 @@ export class AuthController {
 
     await this.tokensService.saveToken({
       token: req.cookies.refreshToken,
-      expDate: String(req.expDate),
+      expDate: new Date(req.expDate * 1000).toISOString(),
     });
 
     res.clearCookie('refreshToken');

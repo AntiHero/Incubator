@@ -19,10 +19,10 @@ export class TestingController {
   @Delete('all-data')
   @HttpCode(204)
   async removeAllData() {
+    await this.banUsersByBloggerService.deleteAllBannedUsers();
     await this.blogsService.deleteAllBlogs();
     await this.usersSevice.deleteAllUsers();
     await this.securityDevicesService.deleteAllDevices();
     await this.tokensService.deleteAllTokens();
-    await this.banUsersByBloggerService.deleteAllBannedUsers();
   }
 }

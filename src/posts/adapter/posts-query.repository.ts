@@ -66,7 +66,7 @@ export class PostsQueryRepository {
       (
         await this.blogsRepository.query(
           `
-            SELECT name FROM blogs WHERE id=$1 LIMIT
+            SELECT name FROM blogs WHERE id=$1 LIMIT 1
           `,
           [post.blogId],
         )
@@ -74,14 +74,14 @@ export class PostsQueryRepository {
 
     const postLikes = await this.postLikesRepository.query(
       `
-        SELECT * FROM post_likes WHERE entityId=$1
+        SELECT * FROM post_likes WHERE "entityId"=$1
       `,
       [postId],
     );
 
     const postComments = await this.commentsRepository.query(
       `
-        SELECT * FROM comments WHERE entityId=$1
+        SELECT * FROM comments WHERE "entityId"=$1
       `,
       [postId],
     );
@@ -95,16 +95,15 @@ export class PostsQueryRepository {
   }
 
   async countPosts() {
-    const count =
-      (
-        await this.postsRepository.query(
-          `
+    const count = (
+      await this.postsRepository.query(
+        `
              SELECT COUNT(*) FROM posts
           `,
-        )
-      )[0]?.count ?? 0;
+      )
+    )[0]?.count;
 
-    return count;
+    return Number(count);
   }
 
   async getExtendedPostInfo(id: string, userId: string, forRole?: Roles) {
@@ -126,7 +125,7 @@ export class PostsQueryRepository {
         const blog = (
           await this.blogsRepository.query(
             `
-              SELECT * FROM blogs id=$1
+              SELECT * FROM blogs WHERE id=$1
             `,
             [post.blogId],
           )
@@ -136,40 +135,44 @@ export class PostsQueryRepository {
 
         blogName = blog.name;
 
-        if (blog.blogInfo.isBanned) {
+        const banInfo = JSON.parse(blog.banInfo);
+
+        if (banInfo.isBanned) {
           return null;
         }
       }
 
-      const likesCount =
-        (
-          await this.postLikesRepository.query(
-            `
+      const likesCount = (
+        await this.postLikesRepository.query(
+          `
               SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Like'
             `,
-            [id],
-          )
-        )[0]?.count ?? 0;
+          [id],
+        )
+      )[0]?.count;
 
-      const dislikesCount =
-        (
-          await this.postLikesRepository.query(
-            `
+      const dislikesCount = (
+        await this.postLikesRepository.query(
+          `
               SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Dislike'
             `,
-            [id],
-          )
-        )[0]?.count ?? 0;
+          [id],
+        )
+      )[0]?.count;
 
-      const userStatus =
-        (
-          await this.postLikesRepository.query(
-            `
+      let userStatus: LikeStatuses = LikeStatuses.None;
+
+      if (userId) {
+        userStatus =
+          (
+            await this.postLikesRepository.query(
+              `
               SELECT "likeStatus" FROM post_likes WHERE "entityId"=$1 AND "userId"=$2
             `,
-            [id, userId],
-          )
-        )[0]?.likeStatus ?? LikeStatuses.None;
+              [id, userId],
+            )
+          )[0]?.likeStatus ?? LikeStatuses.None;
+      }
 
       const newestLikes = await this.postLikesRepository.query(
         getBlogPostLikesByQuery,
@@ -179,8 +182,8 @@ export class PostsQueryRepository {
       const extendedPost: PostExtendedLikesDTO = {
         ...ConvertPostData.toDTO(post),
         blogName,
-        likesCount,
-        dislikesCount,
+        likesCount: Number(likesCount),
+        dislikesCount: Number(dislikesCount),
         userStatus,
         newestLikes: newestLikes.map(ConvertLikeData.toDTO),
       };
@@ -197,16 +200,15 @@ export class PostsQueryRepository {
     query: PaginationQueryType,
     filter: any,
     userId: string,
-  ) {
+  ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
-      const count =
-        (
-          await this.postsRepository.query(
-            `
+      const count = (
+        await this.postsRepository.query(
+          `
               SELECT COUNT(*) FROM posts 
             `,
-          )
-        )[0]?.count ?? 0;
+        )
+      )[0]?.count;
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
@@ -232,11 +234,11 @@ export class PostsQueryRepository {
         let dislikesCount = 0;
 
         if (likesAndDislikesCount) {
-          likesCount = likesAndDislikesCount.likesCount;
-          dislikesCount = likesAndDislikesCount.dislikesCount;
+          likesCount = Number(likesAndDislikesCount.likesCount);
+          dislikesCount = Number(likesAndDislikesCount.dislikesCount);
         }
 
-        let userStatus: LikeStatuses;
+        let userStatus: LikeStatuses = LikeStatuses.None;
 
         if (userId) {
           userStatus =
@@ -255,8 +257,8 @@ export class PostsQueryRepository {
           (
             await this.blogsRepository.query(
               `
-        SELECT "name" FROM blogs WHERE id=$1
-      `,
+                SELECT "name" FROM blogs WHERE id=$1
+              `,
               [post.blogId],
             )
           )[0]?.name ?? '';
@@ -264,14 +266,14 @@ export class PostsQueryRepository {
         result.push({
           ...ConvertPostData.toDTO(post),
           blogName,
-          likesCount,
-          dislikesCount,
+          likesCount: Number(likesCount),
+          dislikesCount: Number(dislikesCount),
           userStatus,
           newestLikes: likes.map(ConvertLikeData.toDTO),
         });
       }
 
-      return [result, count];
+      return [result, Number(count)];
     } catch (error) {
       console.error(error);
 
@@ -297,15 +299,14 @@ export class PostsQueryRepository {
     userId = '',
   ): Promise<[CommentExtendedLikesDTO[], number]> {
     try {
-      const count =
-        (
-          await this.commentsRepository.query(
-            `
+      const count = (
+        await this.commentsRepository.query(
+          `
               SELECT COUNT(*) FROM comments WHERE "entityId"=$1
             `,
-            [id],
-          )
-        )[0]?.count ?? 0;
+          [id],
+        )
+      )[0]?.count;
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
@@ -359,8 +360,8 @@ export class PostsQueryRepository {
 
         result.push({
           ...ConvertCommentData.toDTO(comment),
-          likesCount,
-          dislikesCount,
+          likesCount: Number(likesCount),
+          dislikesCount: Number(dislikesCount),
           userStatus,
           userLogin,
         });

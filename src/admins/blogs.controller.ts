@@ -85,7 +85,7 @@ export class BlogsController {
   @Put(':id/ban')
   @UseGuards(BasicAuthGuard)
   async banBlgo(
-    @Param('id', IdValidationPipe) id: string,
+    @Param('id') id: string,
     @Body() body: BanDTO,
     @Res() res: Response,
   ) {
@@ -99,7 +99,7 @@ export class BlogsController {
   @Put(':id/bind-with-user/:userId')
   @UseGuards(BasicAuthGuard)
   async banUser(
-    @Param('id', IdValidationPipe) id: string,
+    @Param('id') id: string,
     @Param('userId', IdValidationPipe) userId: string,
     @Body() body: BanUserDTO,
     @Res() res: Response,

@@ -29,6 +29,6 @@ export class BannedUser {
   @Column({ type: 'boolean' })
   isBanned: boolean;
 
-  @Column({ type: 'date', default: () => 'now()' })
+  @Column({ type: 'timestamptz' })
   banDate: Date;
 }

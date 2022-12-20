@@ -11,7 +11,7 @@ class Paginator<T> implements PaginatorType<T> {
     this.pagesCount = pagesCount;
     this.page = page;
     this.pageSize = pageSize;
-    this.totalCount = totalCount;
+    this.totalCount = Number(totalCount);
     this.items = items;
   }
 }

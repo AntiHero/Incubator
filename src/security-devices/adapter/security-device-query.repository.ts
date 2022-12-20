@@ -54,7 +54,7 @@ export class SecurityDevicesQueryRepository {
 
     const devices = await this.securityDevicesRepository.query(
       `
-        SELECT * FROM security_devies WHERE "userId"=$1
+        SELECT * FROM security_devices WHERE "userId"=$1
       `,
       [userId],
     );

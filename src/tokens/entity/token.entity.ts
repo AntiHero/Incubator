@@ -8,9 +8,9 @@ export class Token {
   @Column()
   token: string;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   expDate: Date;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   blackListed: boolean;
 }

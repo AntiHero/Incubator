@@ -12,7 +12,10 @@ export class ConvertBlogData {
       userId: String(blog.userId),
       banInfo: {
         isBanned: blog.banInfo.isBanned,
-        banDate: new Date(blog.banInfo.banDate).toISOString(),
+        banDate:
+          blog.banInfo.banDate === null
+            ? null
+            : new Date(blog.banInfo.banDate).toISOString(),
       },
       createdAt: blog.createdAt.toISOString(),
     };

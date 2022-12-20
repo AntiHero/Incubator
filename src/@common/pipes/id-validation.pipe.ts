@@ -1,7 +1,8 @@
-import { Types } from 'mongoose';
 import {
   ArgumentMetadata,
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
@@ -9,23 +10,11 @@ import {
 @Injectable()
 export class IdValidationPipe implements PipeTransform {
   transform(value, metadata: ArgumentMetadata) {
-    if (metadata.data !== 'id') return value;
+    if (!/id/i.test(metadata.data)) return value;
 
-    if (!Types.ObjectId.isValid(value)) {
-      throw new BadRequestException('Id is not valid');
-    }
-
-    return value;
-  }
-}
-
-@Injectable()
-export class SqlIdValidationPipe implements PipeTransform {
-  transform(value, metadata: ArgumentMetadata) {
-    if (metadata.data !== 'id') return value;
-
-    if (Number.isNaN(parseInt(value))) {
-      throw new BadRequestException('Id is not valid');
+    if (isNaN(value)) {
+      // throw new BadRequestException('Id is not valid');
+      throw new HttpException('Entity not found', HttpStatus.NOT_FOUND);
     }
 
     return value;
