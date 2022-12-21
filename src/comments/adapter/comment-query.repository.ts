@@ -94,25 +94,28 @@ export class CommentsQueryRepository {
     const likesCount = likesAndDislikesCount?.likesCount ?? 0;
     const dislikesCount = likesAndDislikesCount?.dislikesCount ?? 0;
 
-    const userStatus =
-      (
-        await this.commentLikesRepository.query(
-          `
-            SELECT "likeStatus" FROM comment_likes WHERE "userId"=$1 AND "entityId"=$2
-          `,
-          [userId, comment.id],
-        )
-      )[0]?.likeStatus ?? LikeStatuses.None;
-
     const userLogin =
       (
         await this.usersRepository.query(
           `
             SELECT "login" AS "userLogin" FROM users WHERE id=$1
           `,
-          [userId],
+          [comment.userId],
         )
       )[0]?.userLogin ?? '';
+
+    let userStatus: LikeStatuses = LikeStatuses.None;
+    if (userId) {
+      userStatus =
+        (
+          await this.commentLikesRepository.query(
+            `
+              SELECT "likeStatus" FROM comment_likes WHERE "userId"=$1 AND "entityId"=$2
+            `,
+            [userId, comment.id],
+          )
+        )[0]?.likeStatus ?? LikeStatuses.None;
+    }
 
     const extendedComment: CommentExtendedLikesDTO = {
       ...ConvertCommentData.toDTO(comment),
