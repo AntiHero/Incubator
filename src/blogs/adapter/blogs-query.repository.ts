@@ -144,16 +144,16 @@ export class BlogsQueryRepository {
           dislikesCount = Number(likesAndDislikesCount.dislikesCount);
         }
 
-        let userStatus: LikeStatuses;
+        let userStatus: LikeStatuses = LikeStatuses.None;
 
         if (userId) {
           userStatus =
             (
               await this.postLikesRepository.query(
                 `
-          SELECT "likeStatus" FROM post_likes WHERE "userId"=$1 AND "entityId"=$2
-        `,
-                [id, post.id],
+                  SELECT "likeStatus" FROM post_likes WHERE "userId"=$1 AND "entityId"=$2
+                `,
+                [userId, post.id],
               )
             )[0]?.likeStatus ?? LikeStatuses.None;
         }

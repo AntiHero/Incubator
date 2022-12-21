@@ -73,7 +73,7 @@ export class CommentsController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    const login = req.login as unknown as string;
+    // const login = req.login as unknown as string;
     const userId = req.userId;
     const { likeStatus } = body;
 
@@ -82,7 +82,6 @@ export class CommentsController {
     if (!comment) return res.status(404).send();
 
     await this.commentsService.likeComment(id, {
-      login,
       userId,
       likeStatus,
     });

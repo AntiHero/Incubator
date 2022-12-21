@@ -21,50 +21,97 @@ export class CommentsRepository {
     private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
 
-  async likeComment(id: string, likeData: Partial<LikeDomainModel>) {
+  async likeComment(id: string, data: Partial<LikeDomainModel>) {
     try {
+      const userId = data.userId;
+      const likeStatus = data.likeStatus;
       /* NEED DATA ID VERIFICATION*/
-
-      const like = (
+      const existingLike = (
         await this.commentLikesRepository.query(
           `
-          SELECT * FROM comment_likes WHERE "entityId"=$1 LIMIT 1
+          SELECT * FROM comment_likes WHERE "entityId"=$1 AND "userId"=$2
         `,
-          [id],
+          [id, userId],
         )
       )[0];
 
-      if (!like) {
-        const { likeStatus, userId } = likeData;
+      if (!existingLike && likeStatus === LikeStatuses.None) {
+        return true;
+      }
 
-        if (likeStatus === LikeStatuses.None) return true;
-
+      if (!existingLike) {
         await this.commentLikesRepository.query(
           `
-            INSERT INTO comment_likes ("entityId", "userId", "likeStatus", "isBanned")
+          INSERT INTO comment_likes ("entityId", "userId", "likeStatus", "isBanned")
             VALUES ($1, $2, $3, DEFAULT)
-          `,
-          [like.id, userId, likeStatus],
+        `,
+          [id, userId, likeStatus],
         );
 
         return true;
-      } else {
-        if (likeData.likeStatus === LikeStatuses.None) {
-          await this.commentLikesRepository.query(
-            `
-              DELETE FROM comment_likes WHERE id=$1
-            `,
-            [like.id],
-          );
-        } else {
-          await this.commentLikesRepository.query(
-            updateCommentLikeQuery({ likeStatus: likeData.likeStatus }),
-            [like.id],
-          );
-        }
+      }
+
+      if (likeStatus === LikeStatuses.None) {
+        await this.commentLikesRepository.query(
+          `
+            DELETE FROM comment_likes WHERE id=$1
+          `,
+          [existingLike.id],
+        );
 
         return true;
       }
+
+      if (existingLike.likeStatus === likeStatus) {
+        return true;
+      }
+
+      await this.commentLikesRepository.query(
+        updateCommentLikeQuery({ likeStatus }),
+        [existingLike.id],
+      );
+
+      return true;
+
+      // const like = (
+      //   await this.commentLikesRepository.query(
+      //     `
+      //     SELECT * FROM comment_likes WHERE "entityId"=$1 AND "userId"=$2 LIMIT 1
+      //   `,
+      //     [id],
+      //   )
+      // )[0];
+
+      // if (!like) {
+      //   const { likeStatus, userId } = likeData;
+
+      //   if (likeStatus === LikeStatuses.None) return true;
+
+      //   await this.commentLikesRepository.query(
+      //     `
+      //       INSERT INTO comment_likes ("entityId", "userId", "likeStatus", "isBanned")
+      //       VALUES ($1, $2, $3, DEFAULT)
+      //     `,
+      //     [like.id, userId, likeStatus],
+      //   );
+
+      //   return true;
+      // } else {
+      //   if (likeData.likeStatus === LikeStatuses.None) {
+      //     await this.commentLikesRepository.query(
+      //       `
+      //         DELETE FROM comment_likes WHERE id=$1
+      //       `,
+      //       [like.id],
+      //     );
+      //   } else {
+      //     await this.commentLikesRepository.query(
+      //       updateCommentLikeQuery({ likeStatus: likeData.likeStatus }),
+      //       [like.id],
+      //     );
+      //   }
+
+      //   return true;
     } catch (error) {
       console.error(error);
 
