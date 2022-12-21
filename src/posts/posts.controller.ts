@@ -137,7 +137,7 @@ export class PostsController {
     const likePost = await this.postsService.likePost(
       id,
       {
-        ...body,
+        likeStatus: body.likeStatus,
       },
       userId,
     );
