@@ -88,7 +88,7 @@ export class BlogsQueryRepository {
     const count = (
       await this.postRepository.query(
         `
-        SELECT COUNT(*) FROM posts WHERE blogId=$1
+        SELECT COUNT(*) FROM posts WHERE "blogId"=$1
       `,
         [id],
       )
