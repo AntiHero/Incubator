@@ -17,7 +17,7 @@ export class PostLike {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'entityId' })
   entityId: Post;
 
@@ -44,7 +44,7 @@ export class CommentLike {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Comment)
+  @ManyToOne(() => Comment, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'entityId' })
   entityId: Comment;
 
