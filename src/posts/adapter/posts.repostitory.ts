@@ -153,9 +153,14 @@ export class PostsRepository {
     comment: Pick<CommentDTO, 'content' | 'userId'>,
   ): Promise<CommentDTO> {
     try {
-      const post = await this.postsRepository.query(`
-      select * from posts where id=$1 LIMIT 1
-    `)[0];
+      const post = (
+        await this.postsRepository.query(
+          `
+      SELECT * FROM posts WHERE id=$1 LIMIT 1
+    `,
+          [id],
+        )
+      )[0];
 
       if (!post) return null;
 
