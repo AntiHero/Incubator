@@ -6,7 +6,7 @@ export const getBlogPostCommentsByQuery = (
   limit: number,
   offset: number,
 ) => `
-  SELECT * FROM post_comments 
+  SELECT * FROM comments 
     WHERE "entityId"=(SELECT "id" FROM posts 
     WHERE "blogId"=(SELECT "id" FROM blogs WHERE "userId"=$1))
     ORDER BY "${sortBy}" ${

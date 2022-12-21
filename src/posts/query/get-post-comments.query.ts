@@ -6,7 +6,7 @@ export const getPostCommentsByQuery = (
   limit: number,
   offset: number,
 ) => `
-  SELECT * FROM post_comments 
+  SELECT * FROM comments 
     WHERE "entityId"=$1
     ORDER BY "${sortBy}" ${
   sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder

@@ -4,6 +4,6 @@ export const updateCommentsQuery = (updates: any) => {
   const fields = createEscapedString(updates);
 
   return `
-    UPDATE comments SET ${fields} RETURNIGN *
+    UPDATE comments SET ${fields} WHERE "userId"=$1 RETURNIGN *
   `;
 };

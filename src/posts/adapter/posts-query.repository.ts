@@ -320,16 +320,6 @@ export class PostsQueryRepository {
       const result: CommentExtendedLikesDTO[] = [];
 
       for (const comment of comments) {
-        const userLogin =
-          (
-            await this.usersRepository.query(
-              `
-                SELECT "login" AS "userLogin" FROM users WHERE id=$1 LIMIT 1
-              `,
-              [userId],
-            )
-          )[0]?.userLogin ?? '';
-
         const likesAndDislikesCount = (
           await this.commentLikesRepository.query(getCommentLikesCount, [
             comment.id,
@@ -343,6 +333,16 @@ export class PostsQueryRepository {
         //   likesCount = likesAndDislikesCount.likesCount;
         //   dislikesCount = likesAndDislikesCount.dislikesCount;
         // }
+
+        const userLogin =
+          (
+            await this.usersRepository.query(
+              `
+            SELECT "login" AS "userLogin" FROM users WHERE id=$1 LIMIT 1
+          `,
+              [comment.userId],
+            )
+          )[0]?.userLogin ?? '';
 
         let userStatus: LikeStatuses;
 

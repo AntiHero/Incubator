@@ -259,7 +259,7 @@ export class BlogsQueryRepository {
       const count = (
         await this.commentRepository.query(
           `
-          SELECT COUNT(*) FROM post_comments 
+          SELECT COUNT(*) FROM comments 
             WHERE "entityId"=(SELECT "id" FROM posts 
             WHERE "blogId"=(SELECT "id" FROM blogs WHERE "userId"=$1))
         `,

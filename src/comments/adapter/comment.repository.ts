@@ -9,6 +9,7 @@ import { LikeStatuses } from 'root/@common/types/enum';
 import { CommentLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from '../utils/convertComment';
 import { updateCommentQuery } from '../query/update-comment.query';
+import { updateCommentsQuery } from '../query/update-comments.query';
 import { updateCommentLikeQuery } from '../query/update-comment-like.query';
 
 @Injectable()
@@ -131,7 +132,7 @@ export class CommentsRepository {
   async updateComments(userId: string, updates: Partial<CommentDomainModel>) {
     try {
       const updatedComment = (
-        await this.commentsRepository.query(updateCommentQuery(updates), [
+        await this.commentsRepository.query(updateCommentsQuery(updates), [
           userId,
         ])
       )[0][0];
