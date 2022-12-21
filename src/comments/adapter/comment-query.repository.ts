@@ -11,6 +11,7 @@ import { ConvertCommentData } from '../utils/convertComment';
 import { CommentDTO, CommentExtendedLikesDTO } from '../types';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
 import { getLikesCount } from '../query/get-comment-likes-count.query';
+import { UserBanInfo } from 'root/users/entity/user-ban-info.entity';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -19,6 +20,8 @@ export class CommentsQueryRepository {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
+    @InjectRepository(UserBanInfo)
+    private readonly usersBanInfoRepository: Repository<UserBanInfo>,
     @InjectRepository(CommentLike)
     private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
@@ -92,6 +95,18 @@ export class CommentsQueryRepository {
     )[0];
 
     if (!comment || comment.isBanned) return null;
+
+    const userBanInfo = (
+      await this.usersRepository.query(
+        `
+        SELECT * FROM user_ban_info WHERE user_ban_info.id=
+          (SELECT "banInfo" FROM users WHERE id=$1)
+      `,
+        [comment.userId],
+      )
+    )[0];
+
+    if (userBanInfo && userBanInfo.isBanned) return null;
 
     const likesAndDislikesCount = (
       await this.commentLikesRepository.query(getLikesCount, [comment.id])

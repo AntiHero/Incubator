@@ -8,24 +8,13 @@ import { UsersModule } from 'root/users/users.module';
 import { CommentsController } from './comments.controller';
 import { CommentLike } from 'root/likes/entity/like.entity';
 import { CommentsRepository } from './adapter/comment.repository';
+import { UserBanInfo } from 'root/users/entity/user-ban-info.entity';
 import { CommentsQueryRepository } from './adapter/comment-query.repository';
 
 @Module({
   imports: [
     UsersModule,
-    // TypegooseModule.forFeature([
-    //   {
-    //     typegooseClass: CommentModel,
-    //     schemaOptions: { collection: 'comments' },
-    //   },
-    // ]),
-    // TypegooseModule.forFeature([
-    //   {
-    //     typegooseClass: LikeModel,
-    //     schemaOptions: { collection: 'likes' },
-    //   },
-    // ]),
-    TypeOrmModule.forFeature([Comment, CommentLike, User]),
+    TypeOrmModule.forFeature([Comment, CommentLike, User, UserBanInfo]),
   ],
   controllers: [CommentsController],
   providers: [CommentsService, CommentsRepository, CommentsQueryRepository],
