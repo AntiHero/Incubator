@@ -151,7 +151,8 @@ export class PostsQueryRepository {
       const likesCount = (
         await this.postLikesRepository.query(
           `
-              SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Like'
+              SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Like' 
+                AND "isBanned"=false
             `,
           [id],
         )
@@ -160,7 +161,8 @@ export class PostsQueryRepository {
       const dislikesCount = (
         await this.postLikesRepository.query(
           `
-              SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Dislike'
+              SELECT COUNT(*) from post_likes WHERE "entityId"=$1 AND "likeStatus"='Dislike' 
+                AND "isBanned"=false
             `,
           [id],
         )
@@ -232,6 +234,7 @@ export class PostsQueryRepository {
           getBlogPostLikesByQuery,
           [post.id],
         );
+
         const likesAndDislikesCount = (
           await this.postLikesRepository.query(getLikesCount, [post.id])
         )[0];

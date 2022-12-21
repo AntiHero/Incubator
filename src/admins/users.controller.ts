@@ -96,6 +96,7 @@ export class UsersController {
     @Res() res: Response,
   ) {
     const user = await this.adminsService.banUser(id, body);
+    console.log(user, 'bannedUser');
 
     if (!user) return res.status(404).send();
 

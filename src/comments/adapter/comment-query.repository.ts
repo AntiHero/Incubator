@@ -94,19 +94,19 @@ export class CommentsQueryRepository {
       )
     )[0];
 
-    if (!comment || comment.isBanned) return null;
+    if (!comment || comment?.isBanned) return null;
 
-    const userBanInfo = (
-      await this.usersRepository.query(
-        `
-        SELECT * FROM user_ban_info WHERE user_ban_info.id=
-          (SELECT "banInfo" FROM users WHERE id=$1)
-      `,
-        [comment.userId],
-      )
-    )[0];
+    // const userBanInfo = (
+    //   await this.usersRepository.query(
+    //     `
+    //     SELECT * FROM user_ban_info WHERE user_ban_info.id=
+    //       (SELECT "banInfo" FROM users WHERE id=$1)
+    //   `,
+    //     [comment.userId],
+    //   )
+    // )[0];
 
-    if (userBanInfo && userBanInfo.isBanned) return null;
+    // if (userBanInfo && userBanInfo.isBanned) return null;
 
     const likesAndDislikesCount = (
       await this.commentLikesRepository.query(getLikesCount, [comment.id])
