@@ -34,26 +34,32 @@ export class CommentsQueryRepository {
   }
 
   async findCommentById(id: string): Promise<CommentDTO> {
-    const comment: Comment = (
-      await this.commentsRepository.query(
-        `
+    try {
+      const comment: Comment = (
+        await this.commentsRepository.query(
+          `
           SELECT * FROM comments WHERE id=$1
         `,
-        [id],
-      )
-    )[0];
+          [id],
+        )
+      )[0];
 
-    const userLogin =
-      (
-        await this.usersRepository.query(
-          `
+      const userLogin =
+        (
+          await this.usersRepository.query(
+            `
             SELECT "login" FROM users WHERE id=$1
           `,
-          [comment.userId],
-        )
-      )[0]?.login ?? '';
+            [comment.userId],
+          )
+        )[0]?.login ?? '';
 
-    return { ...ConvertCommentData.toDTO(comment), userLogin, likes: [] };
+      return { ...ConvertCommentData.toDTO(comment), userLogin, likes: [] };
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
   }
 
   async countComments(entityId: string) {
