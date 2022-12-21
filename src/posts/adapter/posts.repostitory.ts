@@ -141,6 +141,8 @@ export class PostsRepository {
         `,
         [id, likeData.userId, likeData.likeStatus],
       );
+
+      return true;
     } catch (error) {
       console.error(error);
 

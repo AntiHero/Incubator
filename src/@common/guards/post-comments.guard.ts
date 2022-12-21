@@ -22,6 +22,10 @@ export class PostCommentsGuard implements CanActivate {
     if (userId && postId) {
       const post = await this.postsService.findPostById(postId);
 
+      if (!post) {
+        throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
+      }
+
       const blogId = post.blogId;
 
       const bannedUser = await this.banUsersByBloggerService.findBannedUser(

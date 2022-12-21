@@ -239,6 +239,7 @@ export class PostsController {
     });
 
     if (!comment) return res.status(404).send();
+    console.log(comment);
 
     const extendedCommentView = convertToExtendedViewCommentModel(comment);
 

@@ -51,47 +51,53 @@ export class PostsQueryRepository {
   }
 
   async findPostById(postId: string) {
-    const post = (
-      await this.postsRepository.query(
-        `
+    try {
+      const post = (
+        await this.postsRepository.query(
+          `
           SELECT * FROM posts WHERE id=$1 LIMIT 1
         `,
-        [postId],
-      )
-    )[0];
+          [postId],
+        )
+      )[0];
 
-    if (!post) return null;
+      if (!post) return null;
 
-    const blogName =
-      (
-        await this.blogsRepository.query(
-          `
+      const blogName =
+        (
+          await this.blogsRepository.query(
+            `
             SELECT name FROM blogs WHERE id=$1 LIMIT 1
           `,
-          [post.blogId],
-        )
-      )[0]?.name ?? '';
+            [post.blogId],
+          )
+        )[0]?.name ?? '';
 
-    const postLikes = await this.postLikesRepository.query(
-      `
+      const postLikes = await this.postLikesRepository.query(
+        `
         SELECT * FROM post_likes WHERE "entityId"=$1
       `,
-      [postId],
-    );
+        [postId],
+      );
 
-    const postComments = await this.commentsRepository.query(
-      `
+      const postComments = await this.commentsRepository.query(
+        `
         SELECT * FROM comments WHERE "entityId"=$1
       `,
-      [postId],
-    );
+        [postId],
+      );
 
-    return {
-      ...ConvertPostData.toDTO(post),
-      blogName,
-      likes: postLikes.map(ConvertLikeData.toDTO),
-      comments: postComments.map(ConvertCommentData.toDTO),
-    };
+      return {
+        ...ConvertPostData.toDTO(post),
+        blogName,
+        likes: postLikes.map(ConvertLikeData.toDTO),
+        comments: postComments.map(ConvertCommentData.toDTO),
+      };
+    } catch (e) {
+      console.error(e);
+
+      return null;
+    }
   }
 
   async countPosts() {
@@ -344,7 +350,7 @@ export class PostsQueryRepository {
             )
           )[0]?.userLogin ?? '';
 
-        let userStatus: LikeStatuses;
+        let userStatus: LikeStatuses = LikeStatuses.None;
 
         if (userId) {
           userStatus =
