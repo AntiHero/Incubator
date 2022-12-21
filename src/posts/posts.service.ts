@@ -48,8 +48,8 @@ export class PostsService {
     return this.postsQueryRepository.findPostsByQuery(query, filter);
   }
 
-  async likePost(id: string, data: Partial<LikeDomainModel>) {
-    return this.postsRepository.likePost(id, data);
+  async likePost(id: string, data: Partial<LikeDomainModel>, userId: string) {
+    return this.postsRepository.likePost(id, data, userId);
   }
 
   async getAllPosts() {

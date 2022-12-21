@@ -130,15 +130,17 @@ export class PostsController {
 
     if (!post) return res.status(404).send();
 
-    const login = req.login as unknown as string;
+    // const login = req.login as unknown as string;
     const userId = req.userId;
-    const likeStatus = body.likeStatus;
+    // const likeStatus = body.likeStatus;
 
-    const likePost = await this.postsService.likePost(id, {
-      login,
+    const likePost = await this.postsService.likePost(
+      id,
+      {
+        ...body,
+      },
       userId,
-      likeStatus,
-    });
+    );
 
     if (!likePost)
       throw new HttpException(

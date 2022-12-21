@@ -14,6 +14,7 @@ import { LikeDomainModel } from 'root/likes/types';
 import { CommentDTO } from 'root/comments/types';
 import { User } from 'root/users/entity/user.entity';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
+import { updatePostLikeQuery } from '../query/update-post-like.query';
 
 @Injectable()
 export class PostsRepository {
@@ -109,38 +110,55 @@ export class PostsRepository {
     }
   }
 
-  async likePost(id: string, likeData: Partial<LikeDomainModel>) {
+  async likePost(
+    id: string,
+    likeData: Partial<LikeDomainModel>,
+    userId: string,
+  ) {
     try {
       const existingLike = (
         await this.postLikesRepository.query(
           `
-          SELECT * FROM post_likes WHERE "entityId"=$1
+          SELECT * FROM post_likes WHERE "entityId"=$1 AND "userId"=$2
         `,
-          [likeData.entityId],
+          [id, userId],
         )
       )[0];
 
-      if (!existingLike && likeData.likeStatus === LikeStatuses.None)
+      if (!existingLike && likeData.likeStatus === LikeStatuses.None) {
         return true;
+      }
 
-      if (likeData.likeStatus === LikeStatuses.None) {
+      if (!existingLike) {
         await this.postLikesRepository.query(
           `
-            DELETE FROM post_likes WHERE "entityId"=$1
-          `,
-          [likeData.entityId],
+          INSERT INTO post_likes ("entityId", "userId", "likeStatus", "isBanned")
+            VALUES ($1, $2, $3, DEFAULT)
+        `,
+          [id, userId, likeData.likeStatus],
         );
 
         return true;
       }
 
-      await this.postLikesRepository.query(
-        `
-          INSERT INTO post_likes ("entityId", "userId", "likeStatus", "isBanned")
-            VALUES ($1, $2, $3, DEFAULT)
-        `,
-        [id, likeData.userId, likeData.likeStatus],
-      );
+      if (likeData.likeStatus === LikeStatuses.None) {
+        await this.postLikesRepository.query(
+          `
+            DELETE FROM post_likes WHERE id=$1
+          `,
+          [existingLike.id],
+        );
+
+        return true;
+      }
+
+      if (existingLike.likeStatus === likeData.likeStatus) {
+        return true;
+      }
+
+      await this.postLikesRepository.query(updatePostLikeQuery(likeData), [
+        existingLike.id,
+      ]);
 
       return true;
     } catch (error) {
