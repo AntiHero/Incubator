@@ -6,7 +6,9 @@ export const getPostsByQuery = (
   limit: number,
   offset: number,
 ) => `
-  SELECT * FROM posts ORDER BY "${sortBy}" ${
+  SELECT * FROM (SELECT posts.*, blogs.name AS "blogName" 
+  FROM posts JOIN blogs ON posts."blogId"=blogs.id) AS bp
+  ORDER BY "${sortBy}" ${
   sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder
 }
     LIMIT ${limit} 
