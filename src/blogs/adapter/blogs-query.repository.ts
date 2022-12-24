@@ -256,16 +256,19 @@ export class BlogsQueryRepository {
     query: PaginationQueryType,
   ): Promise<[BloggerCommentDTO[], number]> {
     try {
-      const count = (
-        await this.commentRepository.query(
-          `
+      const count =
+        (
+          await this.commentRepository.query(
+            `
           SELECT COUNT(*) FROM comments 
             WHERE "entityId" IN (SELECT "id" FROM posts 
             WHERE "blogId" IN (SELECT "id" FROM blogs WHERE "userId"=$1))
         `,
-          [userId],
-        )
-      )[0]?.count;
+            [userId],
+          )
+        )[0]?.count ?? 0;
+
+      if (!count) return [[], 0];
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
@@ -278,50 +281,49 @@ export class BlogsQueryRepository {
       const result: BlogCommentType[] = [];
 
       for (const comment of comments) {
-        const blogData = (
-          await this.blogsRepository.query(
-            `
-            SELECT id, "name"
-              FROM (SELECT * FROM blogs WHERE id=(SELECT "blogId" FROM posts WHERE id=$1)) AS b
-          `,
-            [comment.entityId],
-          )
-        )[0];
+        // const blogData = (
+        //   await this.blogsRepository.query(
+        //     `
+        //     SELECT id, "name"
+        //       FROM (SELECT * FROM blogs WHERE id=(SELECT "blogId" FROM posts WHERE id=$1)) AS b
+        //   `,
+        //     [comment.entityId],
+        //   )
+        // )[0];
 
-        let blogName: string;
-        let blogId: string;
+        // let blogName: string;
+        // let blogId: string;
 
-        if (blogData) {
-          blogName = blogData.name;
-          blogId = blogData.id;
-        }
+        // if (blogData) {
+        //   blogName = blogData.name;
+        //   blogId = blogData.id;
+        // }
 
-        const postData = (
-          await this.postRepository.query(
-            `
-              SELECT id, "title" FROM posts WHERE id=$1
-            `,
-            [comment.entityId],
-          )
-        )[0];
+        // const postData = (
+        //   await this.postRepository.query(
+        //     `
+        //       SELECT id, "title" FROM posts WHERE id=$1
+        //     `,
+        //     [comment.entityId],
+        //   )
+        // )[0];
 
-        console.log(postData);
-        let title: string;
-        let postId: string;
+        // let title: string;
+        // let postId: string;
 
-        if (postData) {
-          title = postData.title;
-          postId = postData.id;
-        }
+        // if (postData) {
+        //   title = postData.title;
+        //   postId = postData.id;
+        // }
 
-        const userLogin = (
-          await this.userRepository.query(
-            `
-                SELECT "login" FROM users WHERE id=$1
-              `,
-            [comment.userId],
-          )
-        )[0]?.login;
+        // const userLogin = (
+        //   await this.userRepository.query(
+        //     `
+        //         SELECT "login" FROM users WHERE id=$1
+        //       `,
+        //     [comment.userId],
+        //   )
+        // )[0]?.login;
 
         const likesAndDislikesCount = (
           await this.commentLikesRepository.query(getCommentLikesCount, [
@@ -353,15 +355,15 @@ export class BlogsQueryRepository {
 
         result.push({
           ...ConvertCommentData.toDTO(comment),
-          title,
+          title: comment.title,
           likesCount,
           dislikesCount,
           userStatus,
-          postId,
-          blogId,
-          blogName,
-          userLogin,
-          userId: comment.userId,
+          postId: String(comment.postId),
+          blogId: String(comment.blogId),
+          blogName: comment.blogName,
+          userLogin: comment.login,
+          userId: String(comment.userId),
         });
       }
 
