@@ -176,7 +176,7 @@ export class PostsRepository {
       const post = (
         await this.postsRepository.query(
           `
-      SELECT * FROM posts WHERE id=$1 LIMIT 1
+      SELECT * FROM posts WHERE id=$1
     `,
           [id],
         )

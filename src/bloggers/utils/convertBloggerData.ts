@@ -12,17 +12,17 @@ export class ConvertBloggerData {
     blogPostComment: BlogCommentType,
   ): BloggerCommentDTO {
     return {
-      id: blogPostComment.id,
+      id: String(blogPostComment.id),
       blogId: String(blogPostComment.blogId),
       blogName: blogPostComment.blogName,
       title: blogPostComment.title,
-      postId: String(blogPostComment.title),
+      postId: String(blogPostComment.postId),
       createdAt: blogPostComment.createdAt,
       likesCount: blogPostComment.likesCount,
       dislikesCount: blogPostComment.dislikesCount,
       userStatus: blogPostComment.userStatus,
       content: blogPostComment.content,
-      userId: blogPostComment.userId,
+      userId: String(blogPostComment.userId),
       isBanned: blogPostComment.isBanned,
       userLogin: blogPostComment.userLogin,
     };

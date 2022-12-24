@@ -260,8 +260,8 @@ export class BlogsQueryRepository {
         await this.commentRepository.query(
           `
           SELECT COUNT(*) FROM comments 
-            WHERE "entityId"=(SELECT "id" FROM posts 
-            WHERE "blogId"=(SELECT "id" FROM blogs WHERE "userId"=$1))
+            WHERE "entityId" IN (SELECT "id" FROM posts 
+            WHERE "blogId" IN (SELECT "id" FROM blogs WHERE "userId"=$1))
         `,
           [userId],
         )
@@ -281,47 +281,47 @@ export class BlogsQueryRepository {
         const blogData = (
           await this.blogsRepository.query(
             `
-            SELECT id AS "blogId", "name" AS "blogName" 
-              FROM (SELECT * FROM blogs WHERE id=(SELECT "blogId" FROM posts WHERE id=$1))
+            SELECT id, "name"
+              FROM (SELECT * FROM blogs WHERE id=(SELECT "blogId" FROM posts WHERE id=$1)) AS b
           `,
             [comment.entityId],
           )
         )[0];
 
-        let blogName = '';
-        let blogId = '-1';
+        let blogName: string;
+        let blogId: string;
 
         if (blogData) {
-          blogName = blogData.blogName;
-          blogId = blogData.blogId;
+          blogName = blogData.name;
+          blogId = blogData.id;
         }
 
         const postData = (
           await this.postRepository.query(
             `
-            SELECT id AS "postId", "title" FROM (SELECT * FROM posts WHERE id=$1)
-          `,
+              SELECT id, "title" FROM posts WHERE id=$1
+            `,
             [comment.entityId],
           )
         )[0];
 
-        let title = '';
-        let postId = '-1';
+        console.log(postData);
+        let title: string;
+        let postId: string;
 
         if (postData) {
-          title = postData.blogName;
-          postId = postData.blogId;
+          title = postData.title;
+          postId = postData.id;
         }
 
-        const userLogin =
-          (
-            await this.userRepository.query(
-              `
-            SELECT "login" AS "userLogin" FROM users WHERE id=$1 LIMIT 1
-          `,
-              [userId],
-            )
-          )[0]?.userLogin ?? '';
+        const userLogin = (
+          await this.userRepository.query(
+            `
+                SELECT "login" FROM users WHERE id=$1
+              `,
+            [comment.userId],
+          )
+        )[0]?.login;
 
         const likesAndDislikesCount = (
           await this.commentLikesRepository.query(getCommentLikesCount, [
@@ -361,6 +361,7 @@ export class BlogsQueryRepository {
           blogId,
           blogName,
           userLogin,
+          userId: comment.userId,
         });
       }
 

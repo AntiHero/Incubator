@@ -58,7 +58,6 @@ export class BloggersUsersController {
         searchLoginTerm,
       });
 
-    console.log(bannedUsers);
     const items: BannedUserForEntityViewModel[] = bannedUsers.map(
       convertToBannedUserForEntityViewModel,
     );

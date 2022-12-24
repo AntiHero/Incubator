@@ -111,7 +111,7 @@ export class BloggersBlogsController {
     );
 
     const items: BloggerCommentsViewModel[] = comments.map((comment) =>
-      convertToBloggerCommentViewModel(comment, userId),
+      convertToBloggerCommentViewModel(comment),
     );
 
     const result = new Paginator(

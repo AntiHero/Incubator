@@ -7,8 +7,8 @@ export const getBlogPostCommentsByQuery = (
   offset: number,
 ) => `
   SELECT * FROM comments 
-    WHERE "entityId"=(SELECT "id" FROM posts 
-    WHERE "blogId"=(SELECT "id" FROM blogs WHERE "userId"=$1))
+    WHERE "entityId" IN (SELECT "id" FROM posts 
+    WHERE "blogId" IN (SELECT "id" FROM blogs WHERE "userId"=$1))
     ORDER BY "${sortBy}" ${
   sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder
 }
