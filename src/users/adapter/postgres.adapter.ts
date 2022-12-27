@@ -1,7 +1,9 @@
 import { Repository } from 'typeorm';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { Roles } from '../types/roles';
 import { User } from '../entity/user.entity';
 import { UserDomainModel, UserDTO } from '../types';
 import { fiveMinInMs } from 'root/@common/constants';
@@ -16,6 +18,7 @@ import { PasswordRecovery } from '../entity/password-recovery.entity';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
+import { BanStatus } from 'root/@common/types/enum';
 
 @Injectable()
 export class UsersRepository {
@@ -181,9 +184,20 @@ export class UsersRepository {
 
   async findUsersByQuery(
     query: PaginationQueryType,
+    forRole: Roles = Roles.USER,
   ): Promise<[UserDTO[], number]> {
     const searchLoginTerm = query.searchLoginTerm;
     const searchEmailTerm = query.searchEmailTerm;
+    let isBanned = undefined;
+
+    if (forRole === Roles.SUPER_ADMIN) {
+      isBanned =
+        query.banStatus === BanStatus.banned
+          ? true
+          : query.banStatus === BanStatus.notBanned
+          ? false
+          : undefined;
+    }
 
     if (
       typeof searchLoginTerm !== 'string' ||
@@ -194,7 +208,12 @@ export class UsersRepository {
     const count = (
       await this.repository.query(
         `
-          SELECT COUNT(*) FROM users WHERE login ~* $1 OR email ~* $2
+          SELECT COUNT(*) FROM users 
+            JOIN "user_ban_info" ubi ON users."banInfo"=ubi.id 
+            WHERE (login ~* $1 OR email ~* $2)
+            AND ubi."isBanned"=${
+              isBanned === undefined ? `ubi."isBanned"` : isBanned
+            } 
         `,
         [searchLoginTerm, searchEmailTerm],
       )
@@ -207,9 +226,11 @@ export class UsersRepository {
         query.sortBy,
         query.sortDirection,
         query.pageSize,
+        isBanned,
         countSkip(query.pageSize, query.pageNumber),
       ),
     );
+    // const users = [];
 
     return [users.map(ConvertToUser.toDTO), Number(count)];
   }

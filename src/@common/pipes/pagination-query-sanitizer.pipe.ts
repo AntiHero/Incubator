@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
 import { PaginationQuery, PaginationQueryType } from '../types';
-import { SortDirectionKeys, SortDirections } from '../types/enum';
+import { BanStatus, SortDirectionKeys, SortDirections } from '../types/enum';
 
 // @Injectable()
 // export class PaginationQuerySanitizerPipe implements PipeTransform {
@@ -62,6 +62,10 @@ export class PaginationQuerySanitizerPipe implements PipeTransform {
       : '.*';
     const searchNameTerm = value.searchNameTerm ? value.searchNameTerm : '.*';
 
+    const banStatus = Object.keys(BanStatus).includes(value.banStatus)
+      ? value.banStatus
+      : BanStatus.all;
+
     const sanitizedvalue: PaginationQueryType = {
       pageNumber,
       pageSize,
@@ -70,6 +74,7 @@ export class PaginationQuerySanitizerPipe implements PipeTransform {
       searchLoginTerm,
       searchEmailTerm,
       searchNameTerm,
+      banStatus,
     };
 
     return sanitizedvalue;

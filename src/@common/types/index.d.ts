@@ -1,6 +1,11 @@
 import 'fastify';
 
-import { LikeStatuses, SortDirectionKeys, SortDirections } from './enum';
+import {
+  BanStatus,
+  LikeStatuses,
+  SortDirectionKeys,
+  SortDirections,
+} from './enum';
 
 export type LikesInfoViewModel = {
   likesCount: number;
@@ -23,6 +28,7 @@ export type PaginationQueryType = {
   pageSize: number;
   sortBy: string;
   sortDirection: SortDirectionKeys;
+  banStatus?: BanStatus;
   searchNameTerm?: string;
   searchLoginTerm?: string;
   searchEmailTerm?: string;

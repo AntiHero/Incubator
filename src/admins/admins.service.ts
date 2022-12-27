@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { BanInfo } from 'root/users/types';
+import { BanInfo, UserDTO } from 'root/users/types';
 import { UsersService } from 'root/users/users.service';
 import { LikesService } from 'root/likes/likes.service';
 import { OptionalKey } from 'root/@common/types/utility';

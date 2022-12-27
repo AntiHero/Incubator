@@ -65,16 +65,21 @@ export class UsersController {
       sortDirection,
       searchEmailTerm,
       searchLoginTerm,
+      banStatus,
     } = query;
 
-    const [users, totalCount] = await this.usersService.findUsersByQuery({
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
-      searchEmailTerm,
-      searchLoginTerm,
-    });
+    const [users, totalCount] = await this.usersService.findUsersByQuery(
+      {
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        searchEmailTerm,
+        searchLoginTerm,
+        banStatus,
+      },
+      Roles.SUPER_ADMIN,
+    );
 
     const items = users.map(convertToUserViewModel);
 

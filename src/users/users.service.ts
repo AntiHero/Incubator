@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
 import { Injectable } from '@nestjs/common';
 
 import { Roles } from './types/roles';
@@ -129,8 +130,11 @@ export class UsersService {
   //   return this.usersRepository.findUserByQuery(query);
   // }
 
-  async findUsersByQuery(query: PaginationQueryType) {
-    return this.usersRepository.findUsersByQuery(query);
+  async findUsersByQuery(
+    query: PaginationQueryType,
+    forRole: Roles = Roles.USER,
+  ) {
+    return this.usersRepository.findUsersByQuery(query, forRole);
   }
 
   async getAllUsers() {

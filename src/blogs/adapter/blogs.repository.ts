@@ -169,7 +169,6 @@ export class BlogsRepository {
 
       const banInfo = JSON.parse(bannedBlog.banInfo);
 
-      console.log(banInfo);
       return ConvertBlogData.toDTO({ ...bannedBlog, banInfo });
     } catch (error) {
       console.error(error);

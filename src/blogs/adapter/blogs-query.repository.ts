@@ -281,50 +281,6 @@ export class BlogsQueryRepository {
       const result: BlogCommentType[] = [];
 
       for (const comment of comments) {
-        // const blogData = (
-        //   await this.blogsRepository.query(
-        //     `
-        //     SELECT id, "name"
-        //       FROM (SELECT * FROM blogs WHERE id=(SELECT "blogId" FROM posts WHERE id=$1)) AS b
-        //   `,
-        //     [comment.entityId],
-        //   )
-        // )[0];
-
-        // let blogName: string;
-        // let blogId: string;
-
-        // if (blogData) {
-        //   blogName = blogData.name;
-        //   blogId = blogData.id;
-        // }
-
-        // const postData = (
-        //   await this.postRepository.query(
-        //     `
-        //       SELECT id, "title" FROM posts WHERE id=$1
-        //     `,
-        //     [comment.entityId],
-        //   )
-        // )[0];
-
-        // let title: string;
-        // let postId: string;
-
-        // if (postData) {
-        //   title = postData.title;
-        //   postId = postData.id;
-        // }
-
-        // const userLogin = (
-        //   await this.userRepository.query(
-        //     `
-        //         SELECT "login" FROM users WHERE id=$1
-        //       `,
-        //     [comment.userId],
-        //   )
-        // )[0]?.login;
-
         const likesAndDislikesCount = (
           await this.commentLikesRepository.query(getCommentLikesCount, [
             comment.id,
