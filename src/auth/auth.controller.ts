@@ -71,10 +71,10 @@ export class AuthController {
 
     const userId = user.id;
 
-    const newDeviceId = uuid();
+    // const newDeviceId = uuid();
 
     const newDevice: SecurityDeviceInput = {
-      deviceId: newDeviceId,
+      // deviceId: newDeviceId,
       ip,
       lastActiveDate: new Date().toString(),
       title: userAgent || 'unknown',
@@ -83,13 +83,14 @@ export class AuthController {
 
     const login = user.login;
 
-    const existingDeviceId =
-      await this.securityDevicesService.createDeviceIfNotExists(newDevice);
+    const deviceId = await this.securityDevicesService.createDeviceIfNotExists(
+      newDevice,
+    );
 
     const userForToken: UserForToken = {
       login,
       userId,
-      deviceId: existingDeviceId ?? newDeviceId,
+      deviceId,
     };
 
     const [token, refreshToken] = await this.usersService.createTokensPair(
@@ -138,12 +139,8 @@ export class AuthController {
   @Post('registration-confirmation')
   @UsePipes(RegistrationCodeValidationPipe)
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
-    // const user = await this.usersService.findUserByQuery({
-    //   'confirmationInfo.code': body.code,
-    // });
     const user = await this.getUserByConfirmationCodeUseCase.execute(body.code);
 
-    // await this.usersService.confirmUser(user.id);
     await this.confirmUserService.execute(user.id);
 
     res.status(204).send();

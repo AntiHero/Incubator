@@ -55,9 +55,12 @@ export class SecurityDevicesService {
       }
     }
 
-    await this.securityDevicesRepository.create(newDevice);
+    const createdDeviceId = (
+      await this.securityDevicesRepository.create(newDevice)
+    ).deviceId;
 
-    return null;
+    // return null;
+    return createdDeviceId;
   }
 
   async deleteDeviceByQuery(query: Record<string, any>) {
