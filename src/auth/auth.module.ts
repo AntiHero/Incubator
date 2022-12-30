@@ -40,6 +40,10 @@ export class AuthModule implements NestModule {
           path: 'auth/registration-email-resending',
           method: RequestMethod.POST,
         },
+        {
+          path: 'auth/refresh-token',
+          method: RequestMethod.POST,
+        },
         { path: 'auth/login', method: RequestMethod.POST },
       )
       .apply(PasswordAuthorizationMiddleware)
