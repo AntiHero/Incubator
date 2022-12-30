@@ -128,7 +128,7 @@ export class AuthController {
 
     await this.securityDevicesService.updateDevice(
       { deviceId: req.deviceId },
-      { lastActiveDate: new Date() },
+      { lastActiveDate: new Date().toISOString() },
     );
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
