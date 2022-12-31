@@ -26,22 +26,22 @@ import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refre
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(IpRestrictionMiddleware)
-      .forRoutes(
-        {
-          path: 'auth/registration',
-          method: RequestMethod.POST,
-        },
-        {
-          path: 'auth/registration-confirmation',
-          method: RequestMethod.POST,
-        },
-        {
-          path: 'auth/registration-email-resending',
-          method: RequestMethod.POST,
-        },
-        { path: 'auth/login', method: RequestMethod.POST },
-      )
+      // .apply(IpRestrictionMiddleware)
+      // .forRoutes(
+      //   {
+      //     path: 'auth/registration',
+      //     method: RequestMethod.POST,
+      //   },
+      //   {
+      //     path: 'auth/registration-confirmation',
+      //     method: RequestMethod.POST,
+      //   },
+      //   {
+      //     path: 'auth/registration-email-resending',
+      //     method: RequestMethod.POST,
+      //   },
+      //   { path: 'auth/login', method: RequestMethod.POST },
+      // )
       .apply(PasswordAuthorizationMiddleware)
       .forRoutes({
         path: 'auth/login',
