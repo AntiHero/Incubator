@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -19,13 +20,11 @@ export class ConfirmationInfoSqlRepository {
   ) {}
 
   async confirmUser(id: string) {
-    console.log(id);
     try {
       const confirmationInfoId = (
         await this.usersRepository.query(getUserConfirmationInfoIdQuery, [id])
       )[0]?.confirmationInfo;
 
-      console.log(confirmationInfoId);
       if (!confirmationInfoId) return null;
 
       await this.userConfirmationInfoRepository.query(
@@ -85,7 +84,7 @@ export class ConfirmationInfoSqlRepository {
 
   async checkUserConfirmationCode(code: string) {
     const user = await this.findUserByConfirmationCode(code);
-    console.log(user);
+
     if (
       !user ||
       user.confirmationInfo.isConfirmed ||

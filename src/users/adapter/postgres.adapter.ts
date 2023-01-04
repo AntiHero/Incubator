@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Roles } from '../types/roles';
 import { User } from '../entity/user.entity';
 import { UserDomainModel, UserDTO } from '../types';
+import { BanStatus } from 'root/@common/types/enum';
 import { fiveMinInMs } from 'root/@common/constants';
 import { ConvertToUser } from '../utils/convertToUser';
 import { PaginationQueryType } from 'root/@common/types';
@@ -18,7 +19,6 @@ import { PasswordRecovery } from '../entity/password-recovery.entity';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
-import { BanStatus } from 'root/@common/types/enum';
 
 @Injectable()
 export class UsersRepository {
@@ -230,22 +230,9 @@ export class UsersRepository {
         countSkip(query.pageSize, query.pageNumber),
       ),
     );
-    // const users = [];
 
     return [users.map(ConvertToUser.toDTO), Number(count)];
   }
-
-  // async findUserByQuery(query: any) {
-  //   const user = (await this.repository.query(
-  //     `
-
-  //     `
-  //   ))
-
-  //   if (!user) return null;
-
-  //   return ConvertToUser.toDTO(user);
-  // }
 
   async findUserByLoginOrEmail(loginOrEmail: string) {
     try {
@@ -267,7 +254,7 @@ export class UsersRepository {
     try {
       await this.repository.query(updateUserQuery(updates), [id]);
 
-      const user = await this.repository.query(getUserByIdQuery, [id]);
+      const user = (await this.repository.query(getUserByIdQuery, [id]))[0];
 
       if (!user) return null;
 
@@ -288,5 +275,51 @@ export class UsersRepository {
         DELETE FROM user_confirmation_info;
       `,
     );
+  }
+
+  async findUserByRecoveryCode(code: string) {
+    try {
+      const id = (
+        await this.repository
+          .createQueryBuilder('u')
+          .select('id')
+          .where(
+            'u."passwordRecovery" = (SELECT id FROM password_recovery WHERE code = :code)',
+            { code },
+          )
+          .execute()
+      )[0]?.id;
+
+      return id;
+    } catch (e) {
+      console.log(e);
+
+      return null;
+    }
+  }
+
+  async setUserRecoveryCode(
+    userId: string,
+    options: { reset: boolean } = { reset: false },
+  ) {
+    try {
+      const updates = await this.passwordRecoveryRepository
+        .createQueryBuilder('pr')
+        .update(PasswordRecovery)
+        .set({
+          code: options.reset ? null : () => 'gen_random_uuid()',
+        })
+        .where(
+          'password_recovery.id = (SELECT "passwordRecovery" FROM users WHERE id = :userId)',
+          { userId },
+        )
+        .returning('code')
+        .execute();
+
+      return updates.affected ? updates.raw[0] : null;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 }

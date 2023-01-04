@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import {
   Body,
   Controller,
@@ -16,6 +15,7 @@ import { CodeDTO } from './dto/code.dto';
 import { EmailDTO } from './dto/email.dto';
 import { UserInfoType } from 'root/users/types';
 import { User } from 'root/users/models/user.model';
+import { NewPasswordDTO } from './dto/new-password.dto';
 import { UsersService } from 'root/users/users.service';
 import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
@@ -24,13 +24,15 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BanGuard } from 'root/@common/guards/banned-user.guard';
 import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+// import { UserId } from 'root/@common/decorators/user-id.decorator';
+// import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
+import { UpdateUserPasswordUseCase } from 'root/users/use-cases/update-password.use-case';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
 import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
+import { UpdateUserPasswordDecorator } from 'root/@common/decorators/update-user-password-use-case.decorator';
 import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
 
 // const ips: IpsType = {};
@@ -45,13 +47,33 @@ export class AuthController {
     private readonly getUserByConfirmationCodeUseCase: GetUserByConfirmationCodeUseCase,
   ) {}
   @Post('password-recovery')
-  async passwordRecovery(@Res() res: Response) {
-    res.status(201).send();
+  async passwordRecovery(@Body() body: EmailDTO, @Res() res: Response) {
+    const { email } = body;
+
+    const user = await this.usersService.findUserByLoginOrEmail(email);
+    console.log(user);
+    if (user) {
+      const { id, email } = user;
+      await this.usersService.sendRecoveryEmail(id, email);
+    }
+
+    res.status(204).send();
   }
 
   @Post('new-password')
-  async newPassword(@Res() res: Response) {
-    res.status(201).send();
+  async newPassword(
+    @Body()
+    body: NewPasswordDTO,
+    @UpdateUserPasswordDecorator()
+    updateUserPasswordUseCase: UpdateUserPasswordUseCase,
+    @Res()
+    res: Response,
+  ) {
+    const { recoveryCode, newPassword } = body;
+
+    await updateUserPasswordUseCase.execute(recoveryCode, newPassword);
+
+    res.status(204).send();
   }
 
   @Post('login')
@@ -71,10 +93,7 @@ export class AuthController {
 
     const userId = user.id;
 
-    // const newDeviceId = uuid();
-
     const newDevice: SecurityDeviceInput = {
-      // deviceId: newDeviceId,
       ip,
       lastActiveDate: new Date().toString(),
       title: userAgent || 'unknown',

@@ -8,8 +8,8 @@ import { Post } from 'root/posts/entity/post.entity';
 import { User } from 'root/users/entity/user.entity';
 import { BlogsRepository } from './adapter/blogs.repository';
 import { Comment } from 'root/comments/entity/comment.entity';
-import { BlogsQueryRepository } from './adapter/blogs-query.repository';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
+import { BlogsQueryRepository } from './adapter/blogs-query.repository';
 
 @Module({
   imports: [

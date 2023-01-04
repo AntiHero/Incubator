@@ -14,13 +14,10 @@ export class CheckBlogExistance implements ValidatorConstraintInterface {
   constructor(
     @InjectRepository(Blog)
     private readonly blogsRepository: Repository<Blog>,
-  ) // @InjectModel(BlogModel)
-  // private blogModel: mongoose.Model<BlogModel>,
-  {}
+  ) {}
 
   async validate(value: string) {
     try {
-      // const blog = await this.blogModel.findById(String(value));
       const blog = (
         await this.blogsRepository.query(
           `

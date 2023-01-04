@@ -10,7 +10,7 @@ const LOGIN = 'admin';
 const PASSWORD = 'qwerty';
 
 export const ApiBasicAuth = createParamDecorator(
-  (data, ctx: ExecutionContext) => {
+  (_data, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
 
     const authHeader = request.get('authorization');

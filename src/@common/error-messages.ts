@@ -16,3 +16,5 @@ export const NOT_EMAIL = 'Field is not email';
 export const WRONG_VALUE = 'Field contains wrong value';
 
 export const OPERATION_COMPLITION_ERROR = 'Operation cannot be completed';
+
+export const NOT_UUID_ERROR = 'Not uuid string';

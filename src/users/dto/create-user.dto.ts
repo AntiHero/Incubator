@@ -7,9 +7,7 @@ import {
   NOT_STRING_ERROR,
   WRONG_PATTERN_ERROR,
 } from 'root/@common/error-messages';
-
-const MIN_PASSWORD_LEN = 6;
-const MAX_PASSWORD_LEN = 20;
+import { MAX_PASSWORD_LEN, MIN_PASSWORD_LEN } from 'root/@common/constants';
 
 const MIN_LOGIN_LEN = 3;
 const MAX_LOGIN_LEN = 10;

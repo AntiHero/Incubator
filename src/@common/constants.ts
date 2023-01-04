@@ -8,3 +8,6 @@ export const MAX_TIMEOUT = 10_000;
 export const RATE_LIMIT = 5;
 
 export const LIKES_LIMIT = 3;
+
+export const MIN_PASSWORD_LEN = 6;
+export const MAX_PASSWORD_LEN = 20;

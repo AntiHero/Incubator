@@ -11,7 +11,6 @@ import { BlogsModule } from './blogs/blogs.module';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
 import { AdminsModule } from './admins/admins.module';
-import { getMongoConfig } from './configs/mongo.config';
 import { TestingModule } from './testing/testing.module';
 import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
@@ -22,11 +21,6 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    // TypegooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: getMongoConfig,
-    // }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

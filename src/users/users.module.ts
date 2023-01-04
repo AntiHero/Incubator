@@ -14,6 +14,7 @@ import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
 import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
 import { CheckUserConfirmationCodeUseCase } from './use-cases/check-user-confirmation-code.use-case';
 import { GetUserByConfirmationCodeUseCase } from './use-cases/find-user-by-confirmation-code.use-case';
+import { UpdateUserPasswordUseCase } from './use-cases/update-password.use-case';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GetUserByConfirmationCodeUseCase } from './use-cases/find-user-by-confi
     UsersRepository,
     ConfirmUserUseCase,
     UsersBanInfoSqlRepository,
+    UpdateUserPasswordUseCase,
     ConfirmationInfoSqlRepository,
     CheckUserConfirmationCodeUseCase,
     GetUserByConfirmationCodeUseCase,
@@ -38,6 +40,7 @@ import { GetUserByConfirmationCodeUseCase } from './use-cases/find-user-by-confi
   exports: [
     UsersService,
     ConfirmUserUseCase,
+    UpdateUserPasswordUseCase,
     GetUserByConfirmationCodeUseCase,
     CheckUserConfirmationCodeUseCase,
   ],

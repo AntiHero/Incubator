@@ -153,6 +153,19 @@ export class UsersService {
     await this.usersRepository.deleteAllUsers();
   }
 
+  async sendRecoveryEmail(userId: string, email: string) {
+    const codeData = await this.usersRepository.setUserRecoveryCode(userId);
+
+    if (codeData) {
+      const { code } = codeData;
+
+      await this.emailManager.sendRecoveryEmail({
+        to: email,
+        code,
+      });
+    }
+  }
+
   async resendConfirmationEmail(id: string, email: string) {
     const expDate = Date.now() + fiveMinInMs;
 

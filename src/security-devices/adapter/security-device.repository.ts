@@ -2,8 +2,8 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { SecurityDevice } from '../entity/security-device.entity';
 import { SecurityDeviceDTO } from '../types';
+import { SecurityDevice } from '../entity/security-device.entity';
 import { ConvertSecurityDeviceData } from '../utils/convertSecurityDevice';
 import { updateSecurityDeviceQuery } from '../query/update-security-device.query';
 
@@ -15,8 +15,7 @@ export class SecurityDevicesRepository {
   ) {}
   async create(deviceData: Partial<SecurityDeviceDTO>) {
     try {
-      const { title, ip, lastActiveDate, userId } = deviceData;
-      console.log(lastActiveDate);
+      const { title, ip, userId } = deviceData;
 
       const device = (
         await this.securityDevicesRepository.query(
