@@ -1,0 +1,41 @@
+import { Request, Response, NextFunction } from 'express';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NestMiddleware,
+} from '@nestjs/common';
+
+const AUTHENTICATION_SCHEME = 'Basic';
+const LOGIN = 'admin';
+const PASSWORD = 'qwerty';
+
+@Injectable()
+export class BasicAuthMiddleware implements NestMiddleware {
+  async use(req: Request, _res: Response, next: NextFunction) {
+    const authHeader = req.get('Authorization');
+
+    const [scheme, encodedLoginPassword] = authHeader.split(/\s+/);
+
+    if (scheme !== AUTHENTICATION_SCHEME) {
+      throw new HttpException(
+        'Invalid authentication scheme',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const decodedLoginPassowrd = Buffer.from(
+      encodedLoginPassword,
+      'base64',
+    ).toString();
+
+    if (decodedLoginPassowrd !== [LOGIN, PASSWORD].join(':')) {
+      throw new HttpException(
+        'Incorrect login/password pair',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    next();
+  }
+}

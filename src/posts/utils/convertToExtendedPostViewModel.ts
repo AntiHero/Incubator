@@ -1,0 +1,45 @@
+import { LikeViewModel } from 'root/likes/types';
+import { LikeStatuses } from 'root/@common/types/enum';
+import { PostDTO, PostExtendedLikesDTO, PostExtendedViewModel } from '../types';
+import { convertToLikeViewModel } from 'root/likes/utils/convertToLikeViewModel';
+
+export const convertToExtendedViewPostModel = (
+  post: PostExtendedLikesDTO | PostDTO,
+): PostExtendedViewModel => {
+  let likesCount = 0;
+  let dislikesCount = 0;
+  let newestLikes: LikeViewModel[] = [];
+  let myStatus: LikeStatuses = LikeStatuses.None;
+
+  if (post && 'likesCount' in post) {
+    likesCount = post.likesCount;
+  }
+
+  if (post && 'userStatus' in post) {
+    myStatus = post.userStatus;
+  }
+
+  if (post && 'dislikesCount' in post) {
+    dislikesCount = post.dislikesCount;
+  }
+
+  if (post && 'newestLikes' in post) {
+    newestLikes = post.newestLikes;
+  }
+
+  return {
+    id: post.id,
+    shortDescription: post.shortDescription,
+    content: post.content,
+    blogId: post.blogId,
+    blogName: post.blogName,
+    title: post.title,
+    createdAt: post.createdAt,
+    extendedLikesInfo: {
+      likesCount,
+      dislikesCount,
+      newestLikes: newestLikes.map(convertToLikeViewModel),
+      myStatus,
+    },
+  };
+};
