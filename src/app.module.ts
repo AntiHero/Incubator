@@ -17,6 +17,7 @@ import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
     AdminsModule,
     TokensModule,
     TestingModule,
+    ServiceModule,
     CommentsModule,
     BloggersModule,
     EmailManagerModule,

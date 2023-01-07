@@ -1,5 +1,6 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
+
 import { UpdateUserPasswordUseCase } from 'root/users/use-cases/update-password.use-case';
 
 export const UpdateUserPasswordDecorator = () =>

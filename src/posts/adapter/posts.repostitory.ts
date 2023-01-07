@@ -3,18 +3,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Post } from '../entity/post.entity';
-import { Blog } from 'root/blogs/entity/blog.entity';
-import { Comment } from 'root/comments/entity/comment.entity';
-import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
-import { PostDomainModel, PostExtendedLikesDTO } from '../types';
-import { ConvertPostData } from '../utils/convertPostData';
-import { LikeStatuses } from 'root/@common/types/enum';
-import { updatePostQuery } from '../query/update-post.query';
-import { LikeDomainModel } from 'root/likes/types';
 import { CommentDTO } from 'root/comments/types';
+import { LikeDomainModel } from 'root/likes/types';
+import { Blog } from 'root/blogs/entity/blog.entity';
 import { User } from 'root/users/entity/user.entity';
-import { ConvertCommentData } from 'root/comments/utils/convertComment';
+import { LikeStatuses } from 'root/@common/types/enum';
+import { PostLike } from 'root/likes/entity/like.entity';
+import { ConvertPostData } from '../utils/convertPostData';
+import { updatePostQuery } from '../query/update-post.query';
+import { Comment } from 'root/comments/entity/comment.entity';
+import { PostDomainModel, PostExtendedLikesDTO } from '../types';
 import { updatePostLikeQuery } from '../query/update-post-like.query';
+import { ConvertCommentData } from 'root/comments/utils/convertComment';
 
 @Injectable()
 export class PostsRepository {

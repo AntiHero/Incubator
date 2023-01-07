@@ -29,8 +29,6 @@ import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.quer
 @Injectable()
 export class BlogsQueryRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     @InjectRepository(Blog)
     private readonly blogsRepository: Repository<Blog>,
     @InjectRepository(Post)
