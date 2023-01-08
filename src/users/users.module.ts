@@ -11,10 +11,10 @@ import { ConfirmUserUseCase } from './use-cases/confirm-user.use-case';
 import { EmailManagerModule } from 'root/email-manager/email-manager.module';
 import { UserConfirmationInfo } from './entity/user-confirmation-info.entity';
 import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
+import { UpdateUserPasswordUseCase } from './use-cases/update-password.use-case';
 import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
 import { CheckUserConfirmationCodeUseCase } from './use-cases/check-user-confirmation-code.use-case';
 import { GetUserByConfirmationCodeUseCase } from './use-cases/find-user-by-confirmation-code.use-case';
-import { UpdateUserPasswordUseCase } from './use-cases/update-password.use-case';
 
 @Module({
   imports: [

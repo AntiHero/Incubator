@@ -7,6 +7,6 @@ export const updateUserConfirmationInfo = (
   const fields = createEscapedString(updates);
 
   return `
-    UPDATE user_confirmation_info SET ${fields}, code=gen_random_uuid () WHERE id=$1 RETURNING code 
+    UPDATE users_confirmation_info SET ${fields}, code=gen_random_uuid () WHERE id=$1 RETURNING code 
   `;
 };

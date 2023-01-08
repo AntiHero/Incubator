@@ -1,11 +1,11 @@
 export const getUserByConfirmationCode = `
-  SELECT users.id, users.login, users.email, users.role, users."createdAt", 
-    user_ban_info."banDate", user_ban_info."isBanned", user_ban_info."banReason",
-    user_confirmation_info."isConfirmed", user_confirmation_info."code" AS "confirmationCode", 
-    user_confirmation_info."expDate", password_recovery."code" AS "passwordRecoveryCode"
-    FROM users, user_ban_info, user_confirmation_info, password_recovery 
-    WHERE users."confirmationInfo"=$1
-    AND users."banInfo"=user_ban_info.id
-    AND users."passwordRecovery"=password_recovery.id
+  SELECT u.id, u.login, u.email, u.role, u."createdAt", 
+    ubi."banDate", ubi."isBanned", ubi."banReason",
+    uci."isConfirmed", uci."code" AS "confirmationCode", 
+    uci."expDate", pr."code" AS "passwordRecoveryCode"
+    FROM users u 
+    JOIN users_confirmation_info uci ON uci."userId"=u."id"
+    JOIN users_ban_info ubi ON ubi."userId"=u."id"
+    JOIN password_recovery pr ON pr."userId"=u."id"
     LIMIT 1
 `;

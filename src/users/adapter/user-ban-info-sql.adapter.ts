@@ -28,11 +28,11 @@ export class UsersBanInfoSqlRepository {
       const banInfoId = (
         await this.usersRepository.query(
           `
-          SELECT "banInfo" FROM users WHERE users.id=$1 LIMIT 1
+          SELECT "id" FROM users_ban_info WHERE users_ban_info."userId"=$1 LIMIT 1
         `,
           [id],
         )
-      )[0]?.banInfo;
+      )[0]?.id;
 
       if (!banInfoId) return null;
 

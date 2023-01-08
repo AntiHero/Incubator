@@ -10,7 +10,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "tsc && node --max-old-space-size=512 ./dist/main.js",
     "start:dev": "cross-env DEV_MODE=true nest start --watch",
     "start:debug": "cross-env DEV_MODE=true nest start --debug --watch",
     "start:prod": "node dist/main",

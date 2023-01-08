@@ -19,6 +19,7 @@ import { PasswordRecovery } from '../entity/password-recovery.entity';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 @Injectable()
 export class UsersRepository {
@@ -43,45 +44,33 @@ export class UsersRepository {
     const { login, email, password, role } = user;
 
     try {
-      const banInfoId = (
-        await this.userBanInfoRepository.query(
-          `INSERT INTO user_ban_info ("banDate", "banReason", "isBanned") 
-            VALUES (DEFAULT, DEFAULT, DEFAULT) RETURNING id`,
-        )
-      )[0]?.id;
-
-      const passwordRecoveryId = (
-        await this.passwordRecoveryRepository.query(
-          'INSERT INTO password_recovery ("code") VALUES (DEFAULT) RETURNING id',
-        )
-      )[0]?.id;
-
-      const confirmationInfoId = (
-        await this.userConfirmationInfoRepository.query(
-          `INSERT INTO user_confirmation_info ("expDate", "code", "isConfirmed") 
-            VALUES (${
-              Date.now() + fiveMinInMs
-            }, DEFAULT, DEFAULT) RETURNING id`,
-        )
-      )[0]?.id;
-
       const savedUserId = (
         await this.repository.query(
-          `INSERT INTO users ("login", "email", "password", "banInfo", "confirmationInfo",
-            "passwordRecovery", "role") 
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+          `INSERT INTO users ("login", "email", "password", "role") 
+            VALUES ($1, $2, $3, $4)
             RETURNING id`,
-          [
-            login,
-            email,
-            password,
-            banInfoId,
-            confirmationInfoId,
-            passwordRecoveryId,
-            role,
-          ],
+          [login, email, password, role],
         )
       )[0]?.id;
+
+      await this.userBanInfoRepository.query(
+        `INSERT INTO users_ban_info ("banDate", "banReason", "isBanned", "userId") 
+            VALUES (DEFAULT, DEFAULT, DEFAULT, $1) RETURNING id`,
+        [savedUserId],
+      );
+
+      await this.passwordRecoveryRepository.query(
+        'INSERT INTO password_recovery ("code", "userId") VALUES (DEFAULT, $1) RETURNING id',
+        [savedUserId],
+      );
+
+      await this.userConfirmationInfoRepository.query(
+        `INSERT INTO users_confirmation_info ("expDate", "code", "isConfirmed", "userId") 
+            VALUES (${
+              Date.now() + fiveMinInMs
+            }, DEFAULT, DEFAULT, $1) RETURNING id`,
+        [savedUserId],
+      );
 
       const savedUser = (
         await this.repository.query(getUserByIdQuery, [savedUserId])
@@ -111,45 +100,37 @@ export class UsersRepository {
 
   async findUserByIdAndDelete(id: string) {
     try {
-      const foreignIds = (
-        await this.repository.query(
-          `
-          SELECT "banInfo", "passwordRecovery", "confirmationInfo"
-            FROM users WHERE users.id=$1
-        `,
-          [id],
-        )
-      )[0];
+      const user = await this.repository.findOneBy({ id: Number(id) });
 
-      if (!foreignIds) return null;
+      if (!user) return null;
 
-      await this.repository.query(
-        `
-          DELETE FROM users WHERE users.id=$1
-        `,
-        [id],
-      );
+      await this.userBanInfoRepository
+        .createQueryBuilder()
+        .delete()
+        .from(UserConfirmationInfo)
+        .where('userId = :id', { id })
+        .execute();
 
-      await this.repository.query(
-        `
-          DELETE FROM user_ban_info WHERE user_ban_info.id=$1
-        `,
-        [foreignIds.banInfo],
-      );
+      await this.userConfirmationInfoRepository
+        .createQueryBuilder()
+        .delete()
+        .from(UserConfirmationInfo)
+        .where('userId = :id', { id })
+        .execute();
 
-      await this.repository.query(
-        `
-          DELETE FROM password_recovery WHERE password_recovery.id=$1
-        `,
-        [foreignIds.passwordRecovery],
-      );
+      await this.passwordRecoveryRepository
+        .createQueryBuilder()
+        .delete()
+        .from(PasswordRecovery)
+        .where('userId = :id', { id })
+        .execute();
 
-      await this.repository.query(
-        `
-          DELETE FROM user_confirmation_info WHERE user_confirmation_info.id=$1
-        `,
-        [foreignIds.confirmationInfo],
-      );
+      await this.repository
+        .createQueryBuilder()
+        .delete()
+        .from(User)
+        .where('id = :id', { id })
+        .execute();
 
       return true;
     } catch (e) {
@@ -160,20 +141,20 @@ export class UsersRepository {
   }
 
   async findUserByConfirmationInfoCode(code: string) {
-    const confirmationInfoId = (
+    const confirmationInfoUserId = (
       await this.repository.query(
         `
-          SELECT id FROM user_confirmation_info WHERE code=$1
+          SELECT id FROM users_confirmation_info WHERE code=$1
         `,
         [code],
       )
-    )[0]?.id;
+    )[0]?.userId;
 
-    if (!confirmationInfoId) return null;
+    if (!confirmationInfoUserId) return null;
 
     const user = (
       await this.repository.query(getUserByConfirmationCode, [
-        confirmationInfoId,
+        confirmationInfoUserId,
       ])
     )[0];
 
@@ -208,8 +189,8 @@ export class UsersRepository {
     const count = (
       await this.repository.query(
         `
-          SELECT COUNT(*) FROM users 
-            JOIN "user_ban_info" ubi ON users."banInfo"=ubi.id 
+          SELECT COUNT(*) FROM users u
+            JOIN "users_ban_info" ubi ON u."id"=ubi."userId"
             WHERE (login ~* $1 OR email ~* $2)
             AND ubi."isBanned"=${
               isBanned === undefined ? `ubi."isBanned"` : isBanned
@@ -269,10 +250,10 @@ export class UsersRepository {
   async deleteAllUsers() {
     await this.repository.query(
       `
-        DELETE FROM users;
-        DELETE FROM user_ban_info;
+        DELETE FROM users_confirmation_info;
+        DELETE FROM users_ban_info;
         DELETE FROM password_recovery;
-        DELETE FROM user_confirmation_info;
+        DELETE FROM users;
       `,
     );
   }
@@ -284,7 +265,7 @@ export class UsersRepository {
           .createQueryBuilder('u')
           .select('id')
           .where(
-            'u."passwordRecovery" = (SELECT id FROM password_recovery WHERE code = :code)',
+            'u."id" = (SELECT "userId" FROM password_recovery WHERE code = :code)',
             { code },
           )
           .execute()
@@ -309,10 +290,7 @@ export class UsersRepository {
         .set({
           code: options.reset ? null : () => 'gen_random_uuid()',
         })
-        .where(
-          'password_recovery.id = (SELECT "passwordRecovery" FROM users WHERE id = :userId)',
-          { userId },
-        )
+        .where('password_recovery."userId" = :userId)', { userId })
         .returning('code')
         .execute();
 

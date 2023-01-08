@@ -21,8 +21,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationQueryType } from 'root/@common/types';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)
@@ -50,7 +50,6 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers(
-    // @Query(PaginationQuerySanitizerPipe) query: PaginationQuery,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {

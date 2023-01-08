@@ -1,3 +1,3 @@
 export const getUserConfirmationInfoIdQuery = `
-    SELECT "confirmationInfo" FROM users WHERE users.id=$1 LIMIT 1
+    SELECT "id" FROM users_confirmation_info uci WHERE uci."userId"=$1 LIMIT 1
    `;

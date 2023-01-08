@@ -23,7 +23,7 @@ export class ValidateRecoveryCode implements ValidatorConstraintInterface {
           .createQueryBuilder('u')
           .select('id')
           .where(
-            'u."passwordRecovery" = (SELECT id FROM password_recovery WHERE code = :code)',
+            'u."id" = (SELECT "userId" FROM password_recovery WHERE code = :code)',
             { code: value },
           )
           .execute()
