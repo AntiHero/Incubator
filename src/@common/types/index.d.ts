@@ -42,11 +42,7 @@ export type PaginatorType<T> = {
   items: T;
 };
 
-export type IpsType = { [key: string]: { [key: string]: RateLimiter } };
-
-interface RateLimiter {
-  count: number;
-}
+export type ReqCounterHistory = { [key: string]: { [key: string]: number } };
 
 declare module 'fastify' {
   export interface FastifyRequest {

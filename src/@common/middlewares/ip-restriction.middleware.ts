@@ -6,21 +6,21 @@ import {
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
-import { IpsType } from '../types';
-import { rateLimit } from '../utils/rate-limit';
+import { reqLimiter } from '../utils/request-limiter';
 import { MAX_TIMEOUT, RATE_LIMIT } from '../constants';
-
-const ips: IpsType = {};
 
 @Injectable()
 export class IpRestrictionMiddleware implements NestMiddleware {
   async use(req: Request, _res: Response, next: NextFunction) {
     const ip = req.ip;
-    const url = req.url;
+    const endpoint = req.url;
 
-    try {
-      rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
-    } catch (e) {
+    const isLimitExceeded = reqLimiter(endpoint, ip, {
+      limit: RATE_LIMIT,
+      timeout: MAX_TIMEOUT,
+    });
+
+    if (isLimitExceeded) {
       throw new HttpException(
         'Too many requests',
         HttpStatus.TOO_MANY_REQUESTS,

@@ -7,11 +7,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-import { IpsType } from '../types';
-import { rateLimit } from '../utils/rate-limit';
+import { reqLimiter } from '../utils/request-limiter';
 import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
-
-const ips: IpsType = {};
 
 @Injectable()
 export class IpRestrictionGuard implements CanActivate {
@@ -20,11 +17,14 @@ export class IpRestrictionGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const ip = request.ip;
-    const url = request.url;
+    const endpoint = request.url;
 
-    try {
-      rateLimit(ips, url, ip, RATE_LIMIT, MAX_TIMEOUT);
-    } catch (e) {
+    const isLimitExceeded = reqLimiter(endpoint, ip, {
+      limit: RATE_LIMIT,
+      timeout: MAX_TIMEOUT,
+    });
+
+    if (isLimitExceeded) {
       throw new HttpException(
         'Too many requests',
         HttpStatus.TOO_MANY_REQUESTS,
