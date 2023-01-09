@@ -1,14 +1,12 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { createParamDecorator, Inject } from '@nestjs/common';
 
-export const ServiceDecorator = (service: new (...args: any[]) => any) =>
-  createParamDecorator(() => {
-    return null;
-  })(null, factory(service.name));
+export const Service = (service: new (...args: any[]) => any) =>
+  createParamDecorator(() => null)(null, factory(service.name));
 
 const factory = (token: string) => {
   @Injectable()
-  class InjectService implements PipeTransform {
+  class ServicePipe implements PipeTransform {
     @Inject(token) service: any;
 
     transform() {
@@ -16,5 +14,5 @@ const factory = (token: string) => {
     }
   }
 
-  return InjectService;
+  return ServicePipe;
 };
