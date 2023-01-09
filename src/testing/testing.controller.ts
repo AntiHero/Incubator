@@ -1,10 +1,10 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 
 import { UsersService } from 'root/users/users.service';
-import { BlogsService } from 'src/blogs/blogs.service';
+import { BlogsService } from 'root/blogs/blogs.service';
 import { TokensService } from 'root/tokens/tokens.service';
-import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
+import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 
 @Controller('testing')
 export class TestingController {

@@ -52,7 +52,7 @@ export class AuthController {
     const { email } = body;
 
     const user = await this.usersService.findUserByLoginOrEmail(email);
-    console.log(user);
+
     if (user) {
       const { id, email } = user;
       await this.usersService.sendRecoveryEmail(id, email);
@@ -220,7 +220,6 @@ export class AuthController {
   @Header('Content-Type', 'text/plain')
   @UseGuards(JwtAuthGuard)
   async me(@Req() req: Request) {
-    console.log(req.user);
     const user = await this.usersService.findUserById(req.user.userId);
 
     if (!user) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);

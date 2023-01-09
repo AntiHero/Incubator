@@ -222,7 +222,6 @@ export class UsersRepository {
       )[0];
 
       if (!user) return null;
-      console.log(ConvertToUser.toDTO(user));
       return ConvertToUser.toDTO(user);
     } catch (e) {
       console.error(e);

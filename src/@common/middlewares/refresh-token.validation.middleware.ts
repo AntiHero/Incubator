@@ -23,7 +23,7 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
         process.env.SECRET ?? 'simple_secret',
       ) as jwt.JwtPayload;
 
-      const { id, expDate, deviceId } = decodedToken.id;
+      const { id, exp, deviceId } = decodedToken;
 
       const blackListedToken = await this.tokensService.findTokenByQuery({
         token: refreshToken,
@@ -34,7 +34,7 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
         throw new HttpException('Not authorized', HttpStatus.UNAUTHORIZED);
       } else {
         req.userId = id;
-        req.expDate = expDate;
+        req.expDate = exp;
         req.deviceId = deviceId;
       }
     } catch (e) {
