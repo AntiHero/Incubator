@@ -19,7 +19,9 @@ export const UserId = createParamDecorator((_data, ctx: ExecutionContext) => {
       ) as jwt.JwtPayload;
 
       userId = decodedToken.id;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return userId;

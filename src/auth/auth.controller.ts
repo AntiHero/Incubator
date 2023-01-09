@@ -8,6 +8,11 @@ import {
   Headers,
   UsePipes,
   UseGuards,
+  HttpCode,
+  Ip,
+  Header,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -24,8 +29,6 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BanGuard } from 'root/@common/guards/banned-user.guard';
 import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
-// import { UserId } from 'root/@common/decorators/user-id.decorator';
-// import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UpdateUserPasswordUseCase } from 'root/users/use-cases/update-password.use-case';
@@ -34,8 +37,6 @@ import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
 import { UpdateUserPasswordDecorator } from 'root/@common/decorators/update-user-password-use-case.decorator';
 import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
-
-// const ips: IpsType = {};
 
 @Controller('auth')
 export class AuthController {
@@ -80,11 +81,10 @@ export class AuthController {
   @UseGuards(BanGuard)
   async login(
     @Body() body: LoginUserDTO,
-    @Req() req: Request,
     @Res() res: Response,
+    @Ip() ip: string,
     @Headers('user-agent') userAgent: string,
   ) {
-    const ip = req.ip;
     const { loginOrEmail } = body;
 
     const user = await this.usersService.findUserByLoginOrEmail(loginOrEmail);
@@ -216,18 +216,14 @@ export class AuthController {
   }
 
   @Get('me')
-  // @UseGuards(BearerAuthGuard)
+  @HttpCode(200)
+  @Header('Content-Type', 'text/plain')
   @UseGuards(JwtAuthGuard)
-  async me(
-    // @UserId() userId: string,
-    @Res() res: Response,
-    @Req() req: Request,
-  ) {
-    const { userId } = req.user as any;
+  async me(@Req() req: Request) {
+    console.log(req.user);
+    const user = await this.usersService.findUserById(req.user.userId);
 
-    const user = await this.usersService.findUserById(userId);
-
-    if (!user) res.status(404).send();
+    if (!user) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
 
     const userView: UserInfoType = {
       email: user.email,
@@ -235,6 +231,6 @@ export class AuthController {
       userId: user.id,
     };
 
-    res.status(200).type('text/plain').send(userView);
+    return userView;
   }
 }

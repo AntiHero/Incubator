@@ -64,11 +64,15 @@ export interface APIErrorResult {
 
 declare global {
   namespace Express {
-    export interface Request {
-      login: string;
+    export interface User {
       userId: string;
-      expDate: number;
-      deviceId: string;
+    }
+
+    export interface Request {
+      login?: string;
+      userId?: string;
+      expDate?: number;
+      deviceId?: string;
     }
   }
 }

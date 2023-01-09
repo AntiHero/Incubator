@@ -23,9 +23,7 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
         process.env.SECRET ?? 'simple_secret',
       ) as jwt.JwtPayload;
 
-      const id = decodedToken.id;
-      const expDate = decodedToken.exp;
-      const deviceId = decodedToken.deviceId;
+      const { id, expDate, deviceId } = decodedToken.id;
 
       const blackListedToken = await this.tokensService.findTokenByQuery({
         token: refreshToken,
