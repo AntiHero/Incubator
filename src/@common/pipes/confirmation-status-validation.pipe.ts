@@ -21,7 +21,7 @@ export class ConfirmationStatusValidationPipe implements PipeTransform {
     if (!user || user.confirmationInfo.isConfirmed)
       throw new HttpException(
         {
-          message: 'Confirmation code error',
+          message: 'Confirmation error',
           field: 'email',
         },
         HttpStatus.BAD_REQUEST,

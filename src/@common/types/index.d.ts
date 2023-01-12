@@ -1,4 +1,5 @@
 import 'fastify';
+import { HTTPMethods } from 'fastify';
 
 import {
   BanStatus,
@@ -42,7 +43,9 @@ export type PaginatorType<T> = {
   items: T;
 };
 
-export type ReqCounterHistory = { [key: string]: { [key: string]: number } };
+export type ReqCounterHistory = {
+  [key: string]: { [key: string]: number };
+};
 
 declare module 'fastify' {
   export interface FastifyRequest {

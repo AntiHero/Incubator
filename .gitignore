@@ -4,3 +4,5 @@ yarn-error.log
 .vscode
 .env
 .dbdata
+credentials.json
+token.json

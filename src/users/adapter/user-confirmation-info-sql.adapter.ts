@@ -84,7 +84,7 @@ export class ConfirmationInfoSqlRepository {
     try {
       const confirmationInfoId = (
         await this.usersRepository.query(getUserConfirmationInfoIdQuery, [id])
-      )[0]?.confirmationInfo;
+      )[0]?.id;
 
       if (!confirmationInfoId) return null;
 
