@@ -272,7 +272,7 @@ export class UsersRepository {
 
       return id;
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return null;
     }
@@ -295,7 +295,7 @@ export class UsersRepository {
 
       return updates.affected ? updates.raw[0] : null;
     } catch (e) {
-      console.log(e);
+      console.log('error');
       return null;
     }
   }

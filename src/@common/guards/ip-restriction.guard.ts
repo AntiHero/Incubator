@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+
 import {
   Injectable,
   CanActivate,
@@ -9,20 +10,11 @@ import {
 import { Request } from 'express';
 
 import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
-import { HTTPMethods } from 'fastify';
 
-type ReqHistory = {
-  [key in HTTPMethods]?: {
-    [key: string]: { [key: string]: InitState };
-  };
-};
+type ReqInfo = { ip: string; path: string; time: number };
+type RequestHistory = ReqInfo[];
 
-type InitState = {
-  count: number;
-  time: number;
-};
-
-const reqHistory: ReqHistory = {};
+const history: RequestHistory = [];
 
 @Injectable()
 export class IpRestrictionGuard implements CanActivate {
@@ -31,36 +23,22 @@ export class IpRestrictionGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest() as Request;
     const ip = req.ip;
-    const endpoint = req.url;
-    const method = req.method as HTTPMethods;
+    const path = req.path;
 
-    const initState: InitState = {
-      count: 0,
-      time: Date.now(),
-    };
+    const now = Date.now();
 
-    const methodObj = reqHistory[method] ?? { [endpoint]: { [ip]: initState } };
+    const reqsInLastTenSeconds = history.filter(
+      (r) => now - r.time < MAX_TIMEOUT && r.ip === ip && r.path === path,
+    );
 
-    reqHistory[method] = methodObj;
-
-    const endpointObj = methodObj[endpoint] ?? { [ip]: initState };
-
-    methodObj[endpoint] = endpointObj;
-
-    const ipObj = endpointObj[ip];
-
-    ipObj.count++;
-
-    if (ipObj.count > RATE_LIMIT) {
-      if (Date.now() - ipObj.time < MAX_TIMEOUT) {
-        throw new HttpException(
-          'Too many requests',
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      } else {
-        reqHistory[method][endpoint][ip] = initState;
-      }
+    if (reqsInLastTenSeconds.length >= RATE_LIMIT) {
+      throw new HttpException(
+        'Too many requests',
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
+
+    history.push({ ip, path, time: now });
 
     return true;
   }

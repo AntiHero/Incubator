@@ -30,7 +30,7 @@ export class SecurityDevicesRepository {
 
       return ConvertSecurityDeviceData.toDTO(device);
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return null;
     }
@@ -87,7 +87,7 @@ export class SecurityDevicesRepository {
 
       return updatedDevice;
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return null;
     }

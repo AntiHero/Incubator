@@ -17,7 +17,7 @@ export class AnyService {
 
       return blogs;
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return [];
     }

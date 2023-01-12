@@ -31,7 +31,7 @@ export class ValidateRecoveryCode implements ValidatorConstraintInterface {
 
       return id ? true : false;
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return false;
     }

@@ -38,7 +38,7 @@ export class RefreshTokenValidationMiddleware implements NestMiddleware {
         req.deviceId = deviceId;
       }
     } catch (e) {
-      console.log(e);
+      console.log('error');
       throw new HttpException('Not authorized', HttpStatus.UNAUTHORIZED);
     }
 

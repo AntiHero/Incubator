@@ -29,6 +29,8 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BanGuard } from 'root/@common/guards/banned-user.guard';
 import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
+import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
+import { AuthenticationGuard } from 'root/@common/guards/authentication.guard';
 import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UpdateUserPasswordUseCase } from 'root/users/use-cases/update-password.use-case';
@@ -37,7 +39,6 @@ import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
 import { UpdateUserPasswordDecorator } from 'root/@common/decorators/update-user-password-use-case.decorator';
 import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
-import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -79,7 +80,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(IpRestrictionGuard, BanGuard)
+  @UseGuards(IpRestrictionGuard, AuthenticationGuard, BanGuard)
   async login(
     @Body() body: LoginUserDTO,
     @Res() res: Response,
@@ -162,7 +163,7 @@ export class AuthController {
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
     const user = await this.getUserByConfirmationCodeUseCase.execute(body.code);
 
-    await this.confirmUserService.execute(user.id);
+    await this.confirmUserService.execute(user?.id);
 
     res.status(204).send();
   }
@@ -200,7 +201,7 @@ export class AuthController {
 
     await this.usersService.resendConfirmationEmail(userId, email);
 
-    res.status(204).send();
+    res.sendStatus(204);
   }
 
   @Post('logout')

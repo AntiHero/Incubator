@@ -23,7 +23,7 @@ export class SecurityDevicesAdapter {
       const doc = await this.model.create(inputData);
       return convertToSecurityDeviceDTO(doc);
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return null;
     }

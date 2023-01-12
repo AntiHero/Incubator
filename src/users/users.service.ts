@@ -41,6 +41,7 @@ export class UsersService {
     const saltRounds = 10;
     const { login, password, email, role } = data;
     const passwordHash = await bcrypt.hash(password, saltRounds);
+
     const user = await this.usersRepository.addUser({
       login,
       email,
@@ -97,6 +98,8 @@ export class UsersService {
   }
 
   async findUserByLoginOrEmail(loginOrEmail: string) {
+    if (!loginOrEmail) return null;
+
     return this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
   }
 

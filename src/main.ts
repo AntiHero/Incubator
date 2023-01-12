@@ -17,6 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
   });
+  app.set('trust proxy', 1);
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: true,
@@ -26,7 +27,6 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
-  app.set('trust proxy', 1);
   await app.listen(PORT || 8000, '0.0.0.0');
 }
 bootstrap();

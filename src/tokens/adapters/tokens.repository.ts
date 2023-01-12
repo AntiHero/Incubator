@@ -26,7 +26,7 @@ export class TokensRepository {
 
       return true;
     } catch (e) {
-      console.log(e);
+      console.log('error');
 
       return null;
     }

@@ -20,7 +20,7 @@ export const UserId = createParamDecorator((_data, ctx: ExecutionContext) => {
 
       userId = decodedToken.id;
     } catch (e) {
-      console.log(e);
+      console.log('error');
     }
   }
 

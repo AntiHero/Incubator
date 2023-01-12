@@ -161,7 +161,7 @@ export class PostsAdapter {
         return true;
       }
     } catch (e) {
-      console.log(e);
+      console.log('error');
       return null;
     }
   }
