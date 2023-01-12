@@ -37,6 +37,7 @@ import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-
 import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
 import { UpdateUserPasswordDecorator } from 'root/@common/decorators/update-user-password-use-case.decorator';
 import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
+import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -78,7 +79,7 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(BanGuard)
+  @UseGuards(IpRestrictionGuard, BanGuard)
   async login(
     @Body() body: LoginUserDTO,
     @Res() res: Response,
@@ -156,6 +157,7 @@ export class AuthController {
   }
 
   @Post('registration-confirmation')
+  @UseGuards(IpRestrictionGuard)
   @UsePipes(RegistrationCodeValidationPipe)
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
     const user = await this.getUserByConfirmationCodeUseCase.execute(body.code);
@@ -166,6 +168,7 @@ export class AuthController {
   }
 
   @Post('registration')
+  @UseGuards(IpRestrictionGuard)
   @UsePipes(UserUnicityValidationPipe)
   async registration(@Body() body: CreateUserDto, @Res() res: Response) {
     const { login, email, password } = body;
@@ -181,6 +184,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
+  @UseGuards(IpRestrictionGuard)
   @UsePipes(ConfirmationStatusValidationPipe)
   async registrationEmailResending(
     @Res() res: Response,

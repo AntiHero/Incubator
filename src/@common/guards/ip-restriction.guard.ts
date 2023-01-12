@@ -52,7 +52,7 @@ export class IpRestrictionGuard implements CanActivate {
     ipObj.count++;
 
     if (ipObj.count > RATE_LIMIT) {
-      if (ipObj.time - Date.now() < MAX_TIMEOUT) {
+      if (Date.now() - ipObj.time < MAX_TIMEOUT) {
         throw new HttpException(
           'Too many requests',
           HttpStatus.TOO_MANY_REQUESTS,
