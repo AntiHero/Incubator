@@ -6,3 +6,5 @@ yarn-error.log
 .dbdata
 credentials.json
 token.json
+test-utils
+test

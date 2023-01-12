@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypegooseModule } from 'nestjs-typegoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
@@ -12,12 +11,12 @@ import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
 import { AdminsModule } from './admins/admins.module';
 import { TestingModule } from './testing/testing.module';
+import { ServiceModule } from './service/service.module';
 import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
-import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [

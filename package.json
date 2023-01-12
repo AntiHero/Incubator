@@ -74,6 +74,7 @@
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "googleapis": "105",
     "@google-cloud/local-auth": "2.1.0",
     "@nestjs/testing": "^9.0.0",
     "@types/jest": "28.1.8",
@@ -85,7 +86,6 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "googleapis": "105",
     "imap": "^0.8.19",
     "jest": "28.1.3",
     "lint-staged": "^13.0.3",
