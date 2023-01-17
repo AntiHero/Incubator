@@ -11,5 +11,6 @@ import { QuestionsQueryProvider } from './repository/questions.query-repo';
   imports: [TypeOrmModule.forFeature([Question])],
   providers: [QuestionsProvider, QuestionsQueryProvider, QuestionsService],
   controllers: [QuizGameController],
+  exports: [QuestionsService],
 })
 export class QuizGameModule {}

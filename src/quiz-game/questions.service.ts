@@ -30,4 +30,8 @@ export class QuestionsService {
   async updatePublishedStatus(id: string, published: boolean) {
     return this.questionsRepo.updatePublishedStatus(id, published);
   }
+
+  async deleteAllQuestions() {
+    return this.questionsRepo.deleteAll();
+  }
 }

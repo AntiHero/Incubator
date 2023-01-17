@@ -88,4 +88,18 @@ export class QuestionsProvider {
       return null;
     }
   }
+
+  async deleteAll() {
+    try {
+      await this.questionsRepo
+        .createQueryBuilder()
+        .delete()
+        .from(Question)
+        .execute();
+    } catch (error) {
+      console.log(error);
+
+      return null;
+    }
+  }
 }
