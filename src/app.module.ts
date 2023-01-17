@@ -17,6 +17,7 @@ import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { QuizGameModule } from './quiz-game/quiz-game.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
     BloggersModule,
     EmailManagerModule,
     SecurityDevicesModule,
+    QuizGameModule,
   ],
   controllers: [AppController],
 })

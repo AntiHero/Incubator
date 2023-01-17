@@ -80,7 +80,8 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(IpRestrictionGuard, AuthenticationGuard, BanGuard)
+  // @UseGuards(IpRestrictionGuard, AuthenticationGuard, BanGuard)
+  @UseGuards(AuthenticationGuard, BanGuard)
   async login(
     @Body() body: LoginUserDTO,
     @Res() res: Response,
@@ -158,7 +159,7 @@ export class AuthController {
   }
 
   @Post('registration-confirmation')
-  @UseGuards(IpRestrictionGuard)
+  // @UseGuards(IpRestrictionGuard)
   @UsePipes(RegistrationCodeValidationPipe)
   async registrationConfirmation(@Res() res: Response, @Body() body: CodeDTO) {
     const user = await this.getUserByConfirmationCodeUseCase.execute(body.code);
@@ -169,7 +170,7 @@ export class AuthController {
   }
 
   @Post('registration')
-  @UseGuards(IpRestrictionGuard)
+  // @UseGuards(IpRestrictionGuard)
   @UsePipes(UserUnicityValidationPipe)
   async registration(@Body() body: CreateUserDto, @Res() res: Response) {
     const { login, email, password } = body;
@@ -185,7 +186,7 @@ export class AuthController {
   }
 
   @Post('registration-email-resending')
-  @UseGuards(IpRestrictionGuard)
+  // @UseGuards(IpRestrictionGuard)
   @UsePipes(ConfirmationStatusValidationPipe)
   async registrationEmailResending(
     @Res() res: Response,

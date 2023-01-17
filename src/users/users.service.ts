@@ -64,8 +64,8 @@ export class UsersService {
       userForToken,
       process.env.SECRET ?? 'simple_secret',
       {
-        // expiresIn: 6000,
-        expiresIn: 10,
+        expiresIn: 6000,
+        // expiresIn: 10,
       },
     );
 
@@ -73,8 +73,8 @@ export class UsersService {
       userForToken,
       process.env.SECRET ?? 'simple_secret',
       {
-        // expiresIn: 10000,
-        expiresIn: 20,
+        expiresIn: 10000,
+        // expiresIn: 20,
       },
     );
 

@@ -1,6 +1,11 @@
 export const NOT_STRING_ERROR = 'Field should be of type string';
-
+export const NOT_EMAIL = 'Field is not email';
+export const WRONG_VALUE = 'Field contains wrong value';
+export const OPERATION_COMPLITION_ERROR = 'Operation cannot be completed';
+export const NOT_UUID_ERROR = 'Not uuid string';
+export const NOT_ARRAY_ERROR = 'Field is not array';
 export const WRONG_PATTERN_ERROR = "Field doesn't match provided pattern";
+export const NOT_BOOLEAN_ERROR = 'Field is a boolean';
 
 export const MAX_LENGTH_ERROR = (max: number) =>
   `Value should be less than ${max} characters long`;
@@ -10,11 +15,3 @@ export const MIN_LENGTH_ERROR = (min: number) =>
 
 export const EMPTY_STRING_ERROR =
   'Field should not be empty or consists of spaces';
-
-export const NOT_EMAIL = 'Field is not email';
-
-export const WRONG_VALUE = 'Field contains wrong value';
-
-export const OPERATION_COMPLITION_ERROR = 'Operation cannot be completed';
-
-export const NOT_UUID_ERROR = 'Not uuid string';

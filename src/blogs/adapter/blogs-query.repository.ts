@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Blog } from '../entity/blog.entity';
 import { Roles } from 'root/users/types/roles';
 import { BlogCommentType, BlogDTO } from '../types';
-import { User } from 'root/users/entity/user.entity';
 import { Post } from 'root/posts/entity/post.entity';
 import { LikeStatuses } from 'root/@common/types/enum';
 import { PostExtendedLikesDTO } from 'root/posts/types';

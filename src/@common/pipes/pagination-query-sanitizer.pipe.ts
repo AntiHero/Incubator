@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
-import { PaginationQuery, PaginationQueryType } from '../types';
-import { BanStatus, SortDirectionKeys, SortDirections } from '../types/enum';
+import { PaginationQueryType } from '../types';
+import { BanStatus, SortDirectionKeys } from '../types/enum';
 
 // @Injectable()
 // export class PaginationQuerySanitizerPipe implements PipeTransform {
