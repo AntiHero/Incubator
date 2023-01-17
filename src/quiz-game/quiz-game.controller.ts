@@ -19,17 +19,17 @@ import { QuestionPaginationQuery } from './types';
 import Paginator from 'root/@common/models/Paginator';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { QuestionQuerySanitizerPipe } from 'root/@common/pipes/question-pagination-sanitizter.pipe';
 import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
+import { QuestionQuerySanitizerPipe } from 'root/@common/pipes/question-pagination-sanitizter.pipe';
 
 @Controller('sa/quiz/questions')
 export class QuizGameController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Header('Content-Type', 'text/plain')
   async createQuestion(@Body() body: CreateQuestionDto) {
     const question = await this.questionsService.createQuestion(body);
@@ -38,7 +38,7 @@ export class QuizGameController {
   }
 
   @Get()
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Header('Content-Type', 'text/plain')
   async getQuestions(
     @Query(QuestionQuerySanitizerPipe) query: QuestionPaginationQuery,
@@ -74,7 +74,7 @@ export class QuizGameController {
   }
 
   @Delete(':id')
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BasicAuthGuard)
   async deleteQuestion(
     @Param('id', IdValidationPipe) id: string,
     @Res() res: Response,
@@ -89,7 +89,7 @@ export class QuizGameController {
   }
 
   @Put(':id')
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BasicAuthGuard)
   async updateQuestion(
     @Param('id', IdValidationPipe) id: string,
     @Body() body: CreateQuestionDto,
@@ -108,7 +108,7 @@ export class QuizGameController {
   }
 
   @Put(':id')
-  @UseGuards(BearerAuthGuard)
+  @UseGuards(BasicAuthGuard)
   async updateQuestionPublishedStatus(
     @Param('id', IdValidationPipe) id: string,
     @Body() body: UpdatePublishStatusDto,
