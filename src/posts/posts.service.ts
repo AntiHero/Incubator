@@ -11,7 +11,6 @@ import { PostsQueryRepository } from './adapter/posts-query.repository';
 @Injectable()
 export class PostsService {
   constructor(
-    // private postsRepository: PostsAdapter
     private readonly postsRepository: PostsRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
   ) {}
@@ -42,10 +41,6 @@ export class PostsService {
     userId?: string,
   ) {
     return this.postsQueryRepository.findPostCommentsByQuery(id, query, userId);
-  }
-
-  async findPostsByQuery(query: PaginationQueryType, filter: any = {}) {
-    return this.postsQueryRepository.findPostsByQuery(query, filter);
   }
 
   async likePost(id: string, data: Partial<LikeDomainModel>, userId: string) {

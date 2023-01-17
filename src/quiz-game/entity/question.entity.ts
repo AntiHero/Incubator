@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { QuestionDTOModel } from '../types';
+import { QuestionDTO } from '../types';
 
 @Entity('questions')
 export class Question {
@@ -16,7 +16,7 @@ export class Question {
   body: string;
 
   @Column({ type: 'jsonb' })
-  correctAnswers: any;
+  correctAnswers: string[];
 
   @Column({ default: false })
   published: boolean;
@@ -25,16 +25,16 @@ export class Question {
   createdAt: Date;
 
   @UpdateDateColumn({ nullable: true })
-  updatedAt: Date;
+  updatedAt: Date | null;
 
-  toDTO(): QuestionDTOModel {
+  toDTO(): QuestionDTO {
     return {
       id: String(this.id),
       body: this.body,
       published: this.published,
       correctAnswers: this.correctAnswers,
       createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
+      updatedAt: this.updatedAt?.toISOString() ?? null,
     };
   }
 }

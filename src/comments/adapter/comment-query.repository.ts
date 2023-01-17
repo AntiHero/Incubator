@@ -5,13 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from '../entity/comment.entity';
 import { User } from 'root/users/entity/user.entity';
 import { LikeStatuses } from 'root/@common/types/enum';
-import { PaginationQueryType } from 'root/@common/types';
 import { CommentLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from '../utils/convertComment';
 import { CommentDTO, CommentExtendedLikesDTO } from '../types';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
 import { getLikesCount } from '../query/get-comment-likes-count.query';
-import { UserBanInfo } from 'root/users/entity/user-ban-info.entity';
 
 @Injectable()
 export class CommentsQueryRepository {
@@ -20,8 +18,6 @@ export class CommentsQueryRepository {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
-    @InjectRepository(UserBanInfo)
-    private readonly usersBanInfoRepository: Repository<UserBanInfo>,
     @InjectRepository(CommentLike)
     private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
@@ -136,64 +132,4 @@ export class CommentsQueryRepository {
 
     return extendedComment;
   }
-
-  async findCommentsByQuery(query: PaginationQueryType, entityId?: string) {
-    // const { sortBy, sortDirection, pageSize: limit } = query;
-    // const offset = countSkip(query.pageSize, query.pageNumber);
-
-    // let comments = [];
-    // if (entityId) {
-    //   const filter = `\"entityId\"=${entityId}`;
-
-    //   comments = await this.commentsRepository.query(
-    //     getCommentsWithFilterByQuery(
-    //       filter,
-    //       sortBy,
-    //       sortDirection,
-    //       limit,
-    //       offset,
-    //     ),
-    //     [entityId],
-    //   );
-    // }
-    return null;
-  }
 }
-
-//   async findCommentByIdAndDelete(id: string) {
-//     const result = await this.model
-//       .findOneAndRemove({ _id: new Types.ObjectId(id) })
-//       .lean();
-
-//     if (result) return true;
-
-//     return null;
-//   }
-
-//   async findCommentByIdAndUpdate(
-//     id: string,
-//     updates: Partial<CommentDomainModel>,
-//   ) {
-//     try {
-//       const result = await this.model.findByIdAndUpdate(id, updates).lean();
-
-//       if (result) return true;
-//     } catch (e) {
-//       console.error(e);
-//     }
-
-//     return null;
-//   }
-
-//   async updateComments(userId: string, update: Partial<UserDTO>) {
-//     return this.model.updateMany(
-//       // { userId: new Types.ObjectId(userId) },
-//       { userId },
-//       update,
-//     );
-//   }
-
-//   async deleteAllComments() {
-//     await this.model.deleteMany({}).exec();
-//   }
-// }

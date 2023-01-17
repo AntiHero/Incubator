@@ -2,17 +2,17 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { QuestionInputModel } from '../types';
-import { Question } from '../entity/question.entity';
+import { QuestionInputModel } from '../../types';
+import { Question } from '../../entity/question.entity';
 
 @Injectable()
 export class QuestionsProvider {
-  constructor(
+  public constructor(
     @InjectRepository(Question)
     private readonly questionsRepo: Repository<Question>,
   ) {}
 
-  async create(data: QuestionInputModel) {
+  public async create(data: QuestionInputModel) {
     const { body, correctAnswers } = data;
 
     try {
@@ -24,10 +24,11 @@ export class QuestionsProvider {
 
       question.body = body;
       question.correctAnswers = correctAnswers;
+      question.updatedAt = null;
 
       const savedQuestion = await this.questionsRepo.save(question);
 
-      return savedQuestion;
+      return savedQuestion.toDTO();
     } catch (error) {
       console.log(error);
 
@@ -35,7 +36,7 @@ export class QuestionsProvider {
     }
   }
 
-  async findByIdAndDelete(id: string) {
+  public async findByIdAndDelete(id: string) {
     try {
       const result = await this.questionsRepo
         .createQueryBuilder()
@@ -53,7 +54,7 @@ export class QuestionsProvider {
     }
   }
 
-  async findByIdAndUpdate(id: string, updates: QuestionInputModel) {
+  public async findByIdAndUpdate(id: string, updates: QuestionInputModel) {
     try {
       const result = await this.questionsRepo
         .createQueryBuilder()
@@ -71,7 +72,7 @@ export class QuestionsProvider {
     }
   }
 
-  async updatePublishedStatus(id: string, published: boolean) {
+  public async updatePublishedStatus(id: string, published: boolean) {
     try {
       const result = await this.questionsRepo
         .createQueryBuilder()
@@ -89,7 +90,7 @@ export class QuestionsProvider {
     }
   }
 
-  async deleteAll() {
+  public async deleteAll() {
     try {
       await this.questionsRepo
         .createQueryBuilder()

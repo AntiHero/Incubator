@@ -84,12 +84,6 @@ export class UsersController {
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }
 
-  // /* Test */
-  // @Get(':id')
-  // async getUserById (@Param('id') id: string, @Res() res: Response) {
-  //   res.status(200).send(await this.usersService.findUserById(id));
-  // }
-
   @Delete(':id')
   async deleteUser(@Param('id') id: string, @Res() res: Response) {
     const user = await this.usersService.findUserByIdAndDelete(id);

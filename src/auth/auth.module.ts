@@ -15,7 +15,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { TokensModule } from 'root/tokens/tokens.module';
 import { SecurityDevicesModule } from 'root/security-devices/security-devices.module';
 import { ValidateRecoveryCode } from 'root/@common/decorators/validate-uuid.decorator';
-import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
+// import { IpRestrictionMiddleware } from 'root/@common/middlewares/ip-restriction.middleware';
 // import { PasswordAuthorizationMiddleware } from 'root/@common/middlewares/password-authorization.middleware';
 import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refresh-token.validation.middleware';
 

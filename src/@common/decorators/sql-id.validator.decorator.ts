@@ -9,7 +9,7 @@ export function IsId(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any) {
-          return !isNaN(value);
+          return isNaN(value) && value !== null;
         },
       },
     });

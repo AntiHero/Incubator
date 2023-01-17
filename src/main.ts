@@ -27,6 +27,8 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
+
   await app.listen(PORT || 8000, '0.0.0.0');
 }
+
 bootstrap();

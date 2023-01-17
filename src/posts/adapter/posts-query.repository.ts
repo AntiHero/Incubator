@@ -290,10 +290,6 @@ export class PostsQueryRepository {
     }
   }
 
-  async findPostsByQuery(query: PaginationQueryType, filter: any = {}) {
-    return null;
-  }
-
   async deleteAllPosts() {
     await this.postsRepository.query(
       `
@@ -338,11 +334,6 @@ export class PostsQueryRepository {
         const likesCount = likesAndDislikesCount?.likesCount ?? 0;
         const dislikesCount = likesAndDislikesCount?.dislikesCount ?? 0;
 
-        // if (likesAndDislikesCount) {
-        //   likesCount = likesAndDislikesCount.likesCount;
-        //   dislikesCount = likesAndDislikesCount.dislikesCount;
-        // }
-
         const userLogin =
           (
             await this.usersRepository.query(
@@ -384,30 +375,3 @@ export class PostsQueryRepository {
     }
   }
 }
-
-//   async addComment(
-//     id: string,
-//     data: Pick<CommentDTO, 'content' | 'userId' | 'userLogin'>,
-//   ) {
-//     const post = await this.model.findById(id).lean().exec();
-
-//     if (!post) return null;
-
-//     const { content, userId, userLogin } = data;
-
-//     const comment = await this.commentModel.create({
-//       userId,
-//       entityId: id,
-//       content,
-//       userLogin,
-//     });
-
-//     await this.model.findByIdAndUpdate(id, {
-//       $push: { comments: comment._id },
-//     });
-
-//     await comment.populate('likes');
-
-//     return convertToCommentDTO(comment);
-//   }
-// }

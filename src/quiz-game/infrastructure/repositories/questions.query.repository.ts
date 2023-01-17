@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 
-import { PublishedStatus } from '../types/enum';
-import { Question } from '../entity/question.entity';
+import {
+  QuestionDTO,
+  QuestionPaginationQuery,
+} from 'root/quiz-game/types/index';
 import { countSkip } from 'root/@common/utils/count-skip';
-import { QuestionDTOModel, QuestionPaginationQuery } from '../types';
+import { PublishedStatus } from 'root/quiz-game/types/enum';
+import { Question } from 'root/quiz-game/entity/question.entity';
 
 @Injectable()
 export class QuestionsQueryProvider {
@@ -14,9 +17,9 @@ export class QuestionsQueryProvider {
     private readonly questionsRepo: Repository<Question>,
   ) {}
 
-  async findQuestionsByQuery(
+  public async findQuestionsByQuery(
     query: QuestionPaginationQuery,
-  ): Promise<[number, QuestionDTOModel[]]> {
+  ): Promise<[number, QuestionDTO[]]> {
     const filter: FindOptionsWhere<Question> = {
       body: ILike('%' + query.searchBodyTerm + '%'),
     };
@@ -51,5 +54,34 @@ export class QuestionsQueryProvider {
     });
 
     return [count, questions.map((q) => q.toDTO())];
+  }
+
+  public async getAllQuestions(): Promise<QuestionDTO[]> {
+    try {
+      const questions = await this.questionsRepo.find();
+
+      return questions.map((question) => question.toDTO());
+    } catch (error) {
+      console.log(error);
+
+      return null;
+    }
+  }
+
+  public async getRandomQuestions(limit?: number): Promise<QuestionDTO[]> {
+    try {
+      const questions = await this.questionsRepo
+        .createQueryBuilder('questions')
+        .where('questions.published = :published', { published: true })
+        .orderBy('RANDOM()')
+        .take(limit)
+        .getMany();
+
+      return questions.map((question) => question.toDTO());
+    } catch (error) {
+      console.log(error);
+
+      return null;
+    }
   }
 }

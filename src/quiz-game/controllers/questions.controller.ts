@@ -1,31 +1,30 @@
 import { Response } from 'express';
 import {
-  Body,
-  Controller,
-  Delete,
   Get,
-  Header,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
   Put,
-  Query,
   Res,
+  Body,
+  Post,
+  Param,
+  Query,
+  Delete,
+  Header,
+  HttpStatus,
+  Controller,
   UseGuards,
 } from '@nestjs/common';
 
-import { QuestionPaginationQuery } from './types';
+import { QuestionPaginationQuery } from '../types';
 import Paginator from 'root/@common/models/Paginator';
-import { QuestionsService } from './questions.service';
-import { CreateQuestionDto } from './dto/create-question.dto';
+import { QuestionsService } from '../services/questions.service';
+import { CreateQuestionDto } from '../dto/create-question.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
+import { UpdatePublishStatusDto } from '../dto/update-publish-status.dto';
 import { QuestionQuerySanitizerPipe } from 'root/@common/pipes/question-pagination-sanitizter.pipe';
 
 @Controller('sa/quiz/questions')
-export class QuizGameController {
+export class QuizQuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
   @Post()
@@ -107,7 +106,7 @@ export class QuizGameController {
     }
   }
 
-  @Put(':id')
+  @Put(':id/publish')
   @UseGuards(BasicAuthGuard)
   async updateQuestionPublishedStatus(
     @Param('id', IdValidationPipe) id: string,

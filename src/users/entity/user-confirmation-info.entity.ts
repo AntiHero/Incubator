@@ -16,7 +16,7 @@ export class UserConfirmationInfo {
   @Column({ type: 'bigint' })
   expDate: number;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   userId: User;
 

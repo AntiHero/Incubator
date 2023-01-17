@@ -11,26 +11,14 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   login: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ select: false })
   password: string;
-
-  // @OneToOne(() => UserBanInfo)
-  // @JoinColumn({ name: 'banInfo' })
-  // banInfo: UserBanInfo;
-
-  // @OneToOne(() => UserConfirmationInfo)
-  // @JoinColumn({ name: 'confirmationInfo' })
-  // confirmationInfo: UserConfirmationInfo;
-
-  // @OneToOne(() => PasswordRecovery)
-  // @JoinColumn({ name: 'passwordRecovery' })
-  // passwordRecovery: PasswordRecovery;
 
   @Column({ type: 'enum', enum: Roles, default: Roles.USER })
   role: Roles;
