@@ -109,10 +109,12 @@ export type GamePayload = {
 
 export type GameUpdates = {
   id: string;
-  status: GameStatuses;
-  finishGameDate: Date;
-  firstPlayerScore: number;
-  secondPlayerScore: number;
+  status?: GameStatuses;
+  finishGameDate?: Date;
+  firstPlayerScore?: number;
+  secondPlayerScore?: number;
+  firstPlayerCurrentAnswerNum?: number;
+  secondPlayerCurrentAnswerNum?: number;
 };
 
 export type PairsQuery = {

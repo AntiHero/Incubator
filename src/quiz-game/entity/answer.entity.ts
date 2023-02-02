@@ -34,7 +34,9 @@ export class Answer {
   @Column({ type: 'enum', enum: AnswerStatuses, nullable: true })
   answerStatus: AnswerStatuses;
 
-  @CreateDateColumn()
+  // @CreateDateColumn()
+  // addedAt: Date;
+  @Column({ type: 'timestamptz', default: '() => now()' })
   addedAt: Date;
 
   public toDTO(): AnswerDTO {

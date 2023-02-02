@@ -121,6 +121,7 @@ export class PairsRepository {
     try {
       await manager
         .createQueryBuilder(PairGame, 'pairs')
+        .setLock('pessimistic_write')
         .update()
         .set({
           ...gameUpdates,

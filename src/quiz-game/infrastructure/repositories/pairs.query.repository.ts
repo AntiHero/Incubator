@@ -22,8 +22,8 @@ export class PairsQueryRepository {
     try {
       const currentGame = await this.dataSource
         .createQueryBuilder(PairGame, 'pairs')
-        .useTransaction(true)
-        .setLock('pessimistic_write', undefined, ['pairs'])
+        // .useTransaction(true)
+        // .setLock('pessimistic_write', undefined, ['pairs'])
         .where([
           { firstPlayer: { id: Number(userId) }, status: GameStatuses.Active },
           { secondPlayer: { id: Number(userId) }, status: GameStatuses.Active },
@@ -125,6 +125,45 @@ export class PairsQueryRepository {
     const { pageSize, pageNumber, sortBy, sortDirection } = query;
 
     try {
+      // const gamesCount = await this.pairsRepository
+      //   .createQueryBuilder('pairs')
+      //   .where([
+      //     { firstPlayer: { id: userId }, status: GameStatuses.Active },
+      //     { secondPlayer: { id: userId }, status: GameStatuses.Active },
+      //     { firstPlayer: { id: userId }, status: GameStatuses.Finished },
+      //     { secondPlayer: { id: userId }, status: GameStatuses.Finished },
+      //   ])
+      //   .getCount();
+
+      // const games = await this.pairsRepository
+      //   .createQueryBuilder('pairs')
+      //   .where([
+      //     { firstPlayer: { id: userId }, status: GameStatuses.Active },
+      //     { secondPlayer: { id: userId }, status: GameStatuses.Active },
+      //     { firstPlayer: { id: userId }, status: GameStatuses.Finished },
+      //     { secondPlayer: { id: userId }, status: GameStatuses.Finished },
+      //   ])
+      //   .setFindOptions({
+      //     // relationLoadStrategy: 'query',
+      //     relations: {
+      //       firstPlayer: true,
+      //       secondPlayer: true,
+      //       answers: {
+      //         player: true,
+      //         pairGame: true,
+      //         question: true,
+      //       },
+      //     },
+      //     order: {
+      //       answers: {
+      //         addedAt: 'ASC',
+      //       },
+      //       [sortBy]: sortDirection,
+      //     },
+      //     skip: countSkip(pageSize, pageNumber),
+      //     take: pageSize,
+      //   })
+      //   .getManyAndCount();
       const games = await this.pairsRepository.findAndCount({
         where: [
           { firstPlayer: { id: userId }, status: GameStatuses.Active },
@@ -140,10 +179,10 @@ export class PairsQueryRepository {
           },
         },
         order: {
-          [sortBy as keyof PairGame]: sortDirection,
-          // answers: {
-          //   addedAt: 'ASC',
-          // },
+          answers: {
+            addedAt: 'ASC',
+          },
+          [sortBy]: sortDirection,
         },
         skip: countSkip(pageSize, pageNumber),
         take: pageSize,
