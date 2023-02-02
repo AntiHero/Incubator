@@ -129,8 +129,8 @@ export class PairsQueryRepository {
         where: [
           { firstPlayer: { id: userId }, status: GameStatuses.Active },
           { secondPlayer: { id: userId }, status: GameStatuses.Active },
-          { firstPlayer: { id: userId }, status: GameStatuses.Pending },
-          { secondPlayer: { id: userId }, status: GameStatuses.Pending },
+          { firstPlayer: { id: userId }, status: GameStatuses.Finished },
+          { secondPlayer: { id: userId }, status: GameStatuses.Finished },
         ],
         relations: {
           answers: {
@@ -141,6 +141,9 @@ export class PairsQueryRepository {
         },
         order: {
           [sortBy as keyof PairGame]: sortDirection,
+          // answers: {
+          //   addedAt: 'ASC',
+          // },
         },
         skip: countSkip(pageSize, pageNumber),
         take: pageSize,
