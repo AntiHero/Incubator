@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import { Answer } from '../entity/answer.entity';
-import { GamePairDTO, GamePayload } from '../types';
 import { Question } from '../entity/question.entity';
 import { QuestionsService } from './questions.service';
 import { UsersService } from 'root/users/users.service';
 import { AnswerStatuses, GameStatuses } from '../types/enum';
+import { GamePairDTO, GamePayload, PairsQuery } from '../types';
 import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 import { PairsQueryRepository } from '../infrastructure/repositories/pairs.query.repository';
 
@@ -13,8 +13,8 @@ import { PairsQueryRepository } from '../infrastructure/repositories/pairs.query
 export class PairsService {
   public constructor(
     private readonly usersService: UsersService,
-    private readonly questionsService: QuestionsService,
     private readonly pairsRepository: PairsRepository,
+    private readonly questionsService: QuestionsService,
     private readonly pairsQueryRepository: PairsQueryRepository,
   ) {}
   public async getMyCurrentGame(
@@ -49,6 +49,13 @@ export class PairsService {
     if (!game) return null;
 
     return game;
+  }
+
+  public async getMyGames(
+    userId: number,
+    query: PairsQuery,
+  ): Promise<[GamePairDTO[], number]> {
+    return this.pairsQueryRepository.getMyGames(userId, query);
   }
 
   public async createConnection(userId: string): Promise<GamePairDTO> {

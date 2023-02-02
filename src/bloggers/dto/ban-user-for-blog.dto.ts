@@ -17,7 +17,6 @@ export class BanUserForBlogDTO {
   @IsBoolean()
   isBanned: boolean;
 
-  // @ObjectId()
   @IsId()
   blogId: string;
 }

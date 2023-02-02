@@ -15,7 +15,7 @@ import { ServiceModule } from './service/service.module';
 import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';
-import { QuizGameModule } from './quiz-game/quiz-game.module';
+import { QuizGameModule } from './quiz-game/pairs.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 

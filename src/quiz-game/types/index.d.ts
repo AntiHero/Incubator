@@ -1,3 +1,4 @@
+import { SortDirection } from 'root/@common/types/enum';
 import { PublishedStatus } from './enum';
 import { AnswerStatuses, GameStatuses } from './enum';
 
@@ -44,7 +45,6 @@ export type AnswerViewModel = {
 };
 
 export type AnswerDTO = AnswerViewModel & {
-  id: string;
   playerId: string;
   gameId: string;
   questionId: string;
@@ -95,11 +95,12 @@ export type GamePairDTO = {
   firstPlayerScore: number;
   secondPlayerScore: number;
   questions: QuestionDTO[];
-  answers: AnswerDTO[];
   status: GameStatuses;
   pairCreatedDate: string;
   startGameDate: string;
   finishGameDate: string;
+  firstPlayerAnswers: AnswerDTO[];
+  secondPlayerAnswers: AnswerDTO[];
 };
 
 export type GamePayload = {
@@ -108,8 +109,17 @@ export type GamePayload = {
 
 export type GameUpdates = {
   id: string;
-  status: GameStatuses;
-  finishGameDate: Date;
-  firstPlayerScore: number;
-  secondPlayerScore: number;
+  status?: GameStatuses;
+  finishGameDate?: Date;
+  firstPlayerScore?: number;
+  secondPlayerScore?: number;
+  firstPlayerAnswers?: AnswerDTO[];
+  secondPlayerAnswers?: AnswerDTO[];
+};
+
+export type PairsQuery = {
+  sortBy: string;
+  pageSize: number;
+  pageNumber: number;
+  sortDirection: SortDirection;
 };

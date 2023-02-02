@@ -73,7 +73,6 @@ export class CommentsController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
-    // const login = req.login as unknown as string;
     const userId = req.userId;
     const { likeStatus } = body;
 

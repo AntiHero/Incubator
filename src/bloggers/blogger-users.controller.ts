@@ -62,13 +62,7 @@ export class BloggersUsersController {
       convertToBannedUserForEntityViewModel,
     );
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(HttpStatus.OK).send(JSON.stringify(result));
   }

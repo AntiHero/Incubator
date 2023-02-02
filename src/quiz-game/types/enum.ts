@@ -10,9 +10,9 @@ export enum AnswerStatuses {
 }
 
 export enum GameStatuses {
-  pending = 'PendingSecondPlayer',
-  active = 'Active',
-  finished = 'Finished',
+  Pending = 'PendingSecondPlayer',
+  Active = 'Active',
+  Finished = 'Finished',
 }
 
 export enum GamePairErrors {

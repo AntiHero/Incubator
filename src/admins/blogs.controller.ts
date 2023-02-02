@@ -16,9 +16,9 @@ import {
 import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
-import { PaginationQueryType } from 'root/@common/types';
 import Paginator from 'root/@common/models/Paginator';
 import { BlogsService } from 'root/blogs/blogs.service';
+import { PaginationQueryType } from 'root/@common/types';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { BlogWithBanInfo, BlogWithExtendedOwnerInfoType } from './types';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
@@ -71,13 +71,7 @@ export class BlogsController {
       items.push(extendedBlog);
     }
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }

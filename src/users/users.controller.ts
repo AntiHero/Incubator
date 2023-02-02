@@ -73,13 +73,7 @@ export class UsersController {
 
     const items = users.map(convertToUserViewModel);
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }

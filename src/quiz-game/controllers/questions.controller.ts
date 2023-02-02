@@ -17,10 +17,10 @@ import {
 import { QuestionPaginationQuery } from '../types';
 import Paginator from 'root/@common/models/Paginator';
 import { QuestionsService } from '../services/questions.service';
-import { CreateQuestionDto } from '../dto/create-question.dto';
+import { CreateQuestionDTO } from '../dto/create-question.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { UpdatePublishStatusDto } from '../dto/update-publish-status.dto';
+import { UpdatePublishStatusDTO } from '../dto/update-publish-status.dto';
 import { QuestionQuerySanitizerPipe } from 'root/@common/pipes/question-pagination-sanitizter.pipe';
 
 @Controller('sa/quiz/questions')
@@ -30,7 +30,7 @@ export class QuizQuestionsController {
   @Post()
   @UseGuards(BasicAuthGuard)
   @Header('Content-Type', 'text/plain')
-  async createQuestion(@Body() body: CreateQuestionDto) {
+  async createQuestion(@Body() body: CreateQuestionDTO) {
     const question = await this.questionsService.createQuestion(body);
 
     return question;
@@ -61,13 +61,7 @@ export class QuizQuestionsController {
         publishedStatus,
       });
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      questions,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, questions);
 
     return result;
   }
@@ -91,7 +85,7 @@ export class QuizQuestionsController {
   @UseGuards(BasicAuthGuard)
   async updateQuestion(
     @Param('id', IdValidationPipe) id: string,
-    @Body() body: CreateQuestionDto,
+    @Body() body: CreateQuestionDTO,
     @Res() res: Response,
   ) {
     const isUpdated = await this.questionsService.findQuestionByIdAndUpdate(
@@ -110,7 +104,7 @@ export class QuizQuestionsController {
   @UseGuards(BasicAuthGuard)
   async updateQuestionPublishedStatus(
     @Param('id', IdValidationPipe) id: string,
-    @Body() body: UpdatePublishStatusDto,
+    @Body() body: UpdatePublishStatusDTO,
     @Res() res: Response,
   ) {
     const { published } = body;

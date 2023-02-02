@@ -28,9 +28,8 @@ export class PairsRepository {
       const { firstPlayer } = gamePayload;
 
       newGame.firstPlayer = firstPlayer;
-      newGame.status = GameStatuses.pending;
-      newGame.questions = [];
-      newGame.answers = [];
+      newGame.status = GameStatuses.Pending;
+      newGame.pairCreatedDate = new Date();
 
       await this.pairsRepository.save(newGame);
 
@@ -56,15 +55,17 @@ export class PairsRepository {
       const updateResult = await manager
         .getRepository(PairGame)
         .createQueryBuilder('game')
+        .useTransaction(true)
+        .setLock('pessimistic_write')
         // READ COMMITTED DO THE JOB
         .update({
-          status: GameStatuses.active,
+          status: GameStatuses.Active,
           secondPlayer: {
             id: Number(userId),
           },
           startGameDate: new Date(),
         })
-        .where({ status: GameStatuses.pending })
+        .where({ status: GameStatuses.Pending })
         .returning('id')
         .execute();
 
@@ -119,14 +120,22 @@ export class PairsRepository {
   public async updateGame(gameUpdates: GameUpdates, manager: EntityManager) {
     const { id } = gameUpdates;
     try {
-      await manager
+      const updates = await manager
         .createQueryBuilder(PairGame, 'pairs')
         .update()
         .set({
           ...gameUpdates,
         })
         .where({ id })
+        .returning([
+          'firstPlayerScore',
+          'secondPlayerScore',
+          'firstPlayerAnswers',
+          'secondPlayerAnswers',
+        ])
         .execute();
+
+      return updates.raw[0];
     } catch (e) {
       console.log(e);
     }

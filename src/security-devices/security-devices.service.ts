@@ -59,7 +59,6 @@ export class SecurityDevicesService {
       await this.securityDevicesRepository.create(newDevice)
     ).deviceId;
 
-    // return null;
     return createdDeviceId;
   }
 

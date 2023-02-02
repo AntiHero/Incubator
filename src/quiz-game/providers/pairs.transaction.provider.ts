@@ -3,14 +3,14 @@ import { EntityManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
 import { Answer } from '../entity/answer.entity';
+import { AnswerDTO, GameUpdates } from '../types';
+import { PairGame } from '../entity/pairs.entity';
 import { Question } from '../entity/question.entity';
 import { User } from 'root/users/entity/user.entity';
-import { PairGame } from '../entity/pairs.entity';
 import { AnswerStatuses, GameStatuses } from '../types/enum';
-import { PairsService } from '../services/pairs.service';
-import { AnswersRepository } from '../infrastructure/repositories/answers.repository';
-import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
+import { AnswersConverter } from '../utils/answers.converter';
 import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
+import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
 
 type PlayerAnswer = {
   playerId: string;
@@ -20,13 +20,11 @@ type PlayerAnswer = {
 @Injectable()
 export class PlayerAnswerTransaction extends BaseTransactionProvider<
   PlayerAnswer,
-  Answer
+  AnswerDTO
 > {
   public constructor(
     dataSource: DataSource,
-    private readonly gamesPairService: PairsService,
     private readonly pairsRepository: PairsRepository,
-    private readonly answersRepository: AnswersRepository,
   ) {
     super(dataSource);
   }
@@ -39,8 +37,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       .createQueryBuilder(PairGame, 'pairs')
       .setLock('pessimistic_write', undefined, ['pairs'])
       .where([
-        { firstPlayer: { id: Number(playerId) }, status: GameStatuses.active },
-        { secondPlayer: { id: Number(playerId) }, status: GameStatuses.active },
+        { firstPlayer: { id: Number(playerId) }, status: GameStatuses.Active },
+        { secondPlayer: { id: Number(playerId) }, status: GameStatuses.Active },
       ])
       .setFindOptions({
         relations: {
@@ -55,62 +53,75 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const {
       questions,
       id: gameId,
-      firstPlayer: { id: firstPlayerId },
-      secondPlayer: { id: secondPlayerId },
+      firstPlayerScore,
+      secondPlayerScore,
+      firstPlayerAnswers,
+      secondPlayerAnswers,
     } = game;
 
-    const answers = await manager
-      .createQueryBuilder(Answer, 'answers')
-      .where({
-        pairGame: {
-          id: gameId,
-        },
-      })
-      .setFindOptions({
-        relations: {
-          player: true,
-        },
-      })
-      .getMany();
+    console.log(questions);
 
-    const userAnswers = this.gamesPairService.getCurrentPlayerAnswers(
-      playerId,
-      answers,
-    );
+    const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
+    const questionsCount = game.questionsLength;
 
-    const currentQuestion = questions[userAnswers.length];
+    if (isCurrentPlayerFirst) {
+      if (firstPlayerAnswers.length === questionsCount) return null;
+    } else {
+      if (secondPlayerAnswers.length === questionsCount) return null;
+    }
 
-    const isCorrect = this.gamesPairService.isAnswerCorrect(
-      answer,
-      currentQuestion,
-    );
+    let currentPlayerScore = 0;
+    let anotherPlayerScore = 0;
 
-    isCorrect && game.increasePlayerScore(Number(playerId));
+    let currentPlayerAnswers: AnswerDTO[] = [];
+    let anotherPlayerAnswers: AnswerDTO[] = [];
 
-    const isLast = this.gamesPairService.isAnswerLast(answers, questions);
+    if (isCurrentPlayerFirst) {
+      currentPlayerScore = firstPlayerScore;
+      currentPlayerAnswers = firstPlayerAnswers;
 
-    if (isLast) {
-      game.changeStatus(GameStatuses.finished);
-      game.finishGameDate = new Date();
+      anotherPlayerScore = secondPlayerScore;
+      anotherPlayerAnswers = secondPlayerAnswers;
+    } else {
+      currentPlayerScore = secondPlayerScore;
+      currentPlayerAnswers = secondPlayerAnswers;
 
-      if (this.gamesPairService.playerHasCorrectAnswers(userAnswers)) {
-        const playerIdForBonus =
-          Number(playerId) === firstPlayerId ? secondPlayerId : firstPlayerId;
+      anotherPlayerScore = firstPlayerScore;
+      anotherPlayerAnswers = firstPlayerAnswers;
+    }
 
-        game.increasePlayerScore(playerIdForBonus);
+    const gameUpdates: GameUpdates = { id: gameId };
+
+    const currentQuestion = game.getCurrentQuestion(Number(playerId));
+
+    const isCorrect = game.isAnswerCorrect(answer, currentQuestion);
+
+    if (isCorrect) {
+      if (isCurrentPlayerFirst) {
+        gameUpdates.firstPlayerScore = ++currentPlayerScore;
+      } else {
+        gameUpdates.secondPlayerScore = ++currentPlayerScore;
       }
     }
 
-    await this.pairsRepository.updateGame(
-      {
-        id: gameId,
-        status: game.status,
-        finishGameDate: game.finishGameDate,
-        firstPlayerScore: game.firstPlayerScore,
-        secondPlayerScore: game.secondPlayerScore,
-      },
-      manager,
+    const isAnswerLast = game.isAnswerLast;
+
+    if (isAnswerLast) {
+      gameUpdates.status = GameStatuses.Finished;
+      gameUpdates.finishGameDate = new Date();
+    }
+
+    const hasBonusPoint = anotherPlayerAnswers.some(
+      (answer) => answer.answerStatus === AnswerStatuses.correct,
     );
+
+    if (hasBonusPoint && isAnswerLast) {
+      if (isCurrentPlayerFirst) {
+        gameUpdates.secondPlayerScore = ++anotherPlayerScore;
+      } else {
+        gameUpdates.firstPlayerScore = ++currentPlayerScore;
+      }
+    }
 
     const { id: questionId } = currentQuestion;
 
@@ -122,9 +133,20 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       question: <Question>{ id: Number(questionId) },
       player: <User>{ id: Number(playerId) },
       pairGame: <PairGame>{ id: gameId },
-      answerStatus,
+      answerStatus: answerStatus,
+      addedAt: new Date(),
     });
 
-    return this.answersRepository.createAnswer(newAnswer, manager);
+    currentPlayerAnswers.push(newAnswer.toDTO());
+
+    if (isCurrentPlayerFirst) {
+      gameUpdates.firstPlayerAnswers = currentPlayerAnswers;
+    } else {
+      gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
+    }
+
+    await this.pairsRepository.updateGame(gameUpdates, manager);
+
+    return AnswersConverter.toDTO(newAnswer);
   }
 }

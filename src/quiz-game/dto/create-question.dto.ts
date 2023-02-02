@@ -11,7 +11,7 @@ import {
 const MAX_LENGTH = 500;
 const MIN_LENGTH = 10;
 
-export class CreateQuestionDto {
+export class CreateQuestionDTO {
   @IsString({ message: NOT_STRING_ERROR })
   @Transform(({ value: v }) => typeof v === 'string' && v.trim())
   @MaxLength(MAX_LENGTH, { message: MAX_LENGTH_ERROR(MAX_LENGTH) })

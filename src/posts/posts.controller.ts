@@ -65,13 +65,7 @@ export class PostsController {
 
     const items = posts.map(convertToExtendedViewPostModel);
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }
@@ -130,9 +124,7 @@ export class PostsController {
 
     if (!post) return res.status(404).send();
 
-    // const login = req.login as unknown as string;
     const userId = req.userId;
-    // const likeStatus = body.likeStatus;
 
     const likePost = await this.postsService.likePost(
       id,
@@ -212,13 +204,7 @@ export class PostsController {
 
     const items: CommentViewModel[] = comments.map(convertToCommentViewModel);
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }

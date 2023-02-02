@@ -1,16 +1,14 @@
 import {
   Column,
   Entity,
-  OneToMany,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { GamePairDTO } from '../types';
-import { Answer } from './answer.entity';
+import { AnswerDTO, GamePairDTO, QuestionDTO } from '../types';
 import { GameStatuses } from '../types/enum';
-import { QuestionDTO } from 'root/quiz-game/types';
 import { User } from 'root/users/entity/user.entity';
 
 @Entity('pairs')
@@ -33,21 +31,22 @@ export class PairGame {
   secondPlayerScore: number;
 
   @Column({ type: 'jsonb', default: [] })
-  questions: any[];
+  questions: QuestionDTO[];
 
-  @OneToMany(() => Answer, (answer) => answer.pairGame, { cascade: true })
-  answers: Answer[];
+  @Column({ type: 'jsonb', default: [] })
+  firstPlayerAnswers: AnswerDTO[];
 
-  @Column({ default: 0 })
-  firstPlayerCurrentAnswerNum: number;
+  @Column({ type: 'jsonb', default: [] })
+  secondPlayerAnswers: AnswerDTO[];
 
-  @Column({ default: 0 })
-  secondPlayerCurrentAnswerNum: number;
-
-  @Column({ type: 'enum', enum: GameStatuses, nullable: true, default: null })
+  @Column({
+    enum: GameStatuses,
+    nullable: true,
+    default: null,
+  })
   status: GameStatuses;
 
-  @Column({ type: 'timestamptz', default: '() => now()' })
+  @CreateDateColumn()
   pairCreatedDate: Date;
 
   @Column({ type: 'timestamptz', nullable: true, default: null })
@@ -56,16 +55,8 @@ export class PairGame {
   @Column({ type: 'timestamptz', nullable: true, default: null })
   finishGameDate: Date | null;
 
-  public isFinished() {
-    return this.status === GameStatuses.finished;
-  }
-
   public get questionsLength() {
     return this.questions.length;
-  }
-
-  public changeStatus(status: GameStatuses) {
-    this.status = status;
   }
 
   public increasePlayerScore(playerId: number) {
@@ -76,12 +67,35 @@ export class PairGame {
     }
   }
 
+  public get isAnswerLast() {
+    return (
+      this.questionsLength * 2 ===
+      this.firstPlayerAnswers.length + this.secondPlayerAnswers.length + 1
+    );
+  }
+
+  public isPlayerFirst(playerId: number) {
+    return this.firstPlayer.id === playerId;
+  }
+
+  public getCurrentQuestion(playerId: number) {
+    if (this.isPlayerFirst(playerId)) {
+      return this.questions[this.firstPlayerAnswers.length];
+    } else {
+      return this.questions[this.secondPlayerAnswers.length];
+    }
+  }
+
   public getPlayerScore(playerId: number) {
     if (playerId === this.firstPlayer.id) {
       return this.firstPlayerScore;
     } else {
       return this.secondPlayerScore;
     }
+  }
+
+  public isAnswerCorrect(answer: string, question: QuestionDTO) {
+    return question.correctAnswers.includes(answer);
   }
 
   public toDTO(): GamePairDTO {
@@ -96,10 +110,11 @@ export class PairGame {
         login: this.secondPlayer?.login.toString() ?? null,
       },
       status: this.status,
+      questions: this.questions,
       firstPlayerScore: this.firstPlayerScore,
       secondPlayerScore: this.secondPlayerScore,
-      questions: <QuestionDTO[]>this.questions,
-      answers: this.answers?.map((answer) => answer.toDTO()) ?? [],
+      firstPlayerAnswers: this.firstPlayerAnswers,
+      secondPlayerAnswers: this.secondPlayerAnswers,
       pairCreatedDate: this.pairCreatedDate.toISOString(),
       startGameDate: this.startGameDate?.toISOString() ?? null,
       finishGameDate: this.finishGameDate?.toISOString() ?? null,

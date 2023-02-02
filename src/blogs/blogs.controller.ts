@@ -68,13 +68,7 @@ export class BlogsController {
 
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }
@@ -144,13 +138,7 @@ export class BlogsController {
       convertToExtendedViewPostModel,
     );
 
-    const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
-      pageNumber,
-      pageSize,
-      totalCount,
-      items,
-    );
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     res.type('text/plain').status(200).send(JSON.stringify(result));
   }

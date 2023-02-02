@@ -1,27 +1,20 @@
 import { GamePairDTO, GamePairViewModel } from '../types';
+import { AnswersConverter } from './answers.converter';
 
 export class GamePairConverter {
   static toView(game: GamePairDTO): GamePairViewModel {
-    const firstPlayerAnswers = game.answers
-      .filter((answer) => answer.playerId === game.firstPlayer.id)
-      .map((answer) => ({
-        questionId: answer.questionId,
-        answerStatus: answer.answerStatus,
-        addedAt: answer.addedAt,
-      }));
-
     const firstPlayerInfo = {
       id: game.firstPlayer.id,
       login: game.firstPlayer.login,
     };
 
-    const secondPlayerAnswers = game.answers
-      .filter((answer) => answer.playerId === game.secondPlayer.id)
-      .map((answer) => ({
-        questionId: answer.questionId,
-        answerStatus: answer.answerStatus,
-        addedAt: answer.addedAt,
-      }));
+    const firstPlayerAnswers = game.firstPlayerAnswers.map(
+      AnswersConverter.toView,
+    );
+
+    const secondPlayerAnswers = game.secondPlayerAnswers.map(
+      AnswersConverter.toView,
+    );
 
     const secondPlayerInfo = {
       id: game.secondPlayer.id,
@@ -56,13 +49,9 @@ export class GamePairConverter {
   }
 
   static toOnePlayerView(game: GamePairDTO): Partial<GamePairViewModel> {
-    const firstPlayerAnswers = game.answers
-      .filter((answer) => answer.playerId === game.firstPlayer.id)
-      .map((answer) => ({
-        questionId: answer.questionId,
-        answerStatus: answer.answerStatus,
-        addedAt: answer.addedAt,
-      }));
+    const firstPlayerAnswers = game.firstPlayerAnswers.map(
+      AnswersConverter.toView,
+    );
 
     const firstPlayerInfo = {
       id: game.firstPlayer.id,

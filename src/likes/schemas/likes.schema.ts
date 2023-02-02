@@ -10,7 +10,6 @@ export class LikeModel extends TimeStamps {
   entityId: Types.ObjectId;
 
   @prop()
-  // userId: Types.ObjectId;
   userId: number;
 
   @prop()
