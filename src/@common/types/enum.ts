@@ -19,3 +19,8 @@ export enum BanStatus {
   banned = 'banned',
   notBanned = 'notBanned',
 }
+
+export enum SortDirection {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}

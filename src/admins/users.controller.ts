@@ -23,8 +23,8 @@ import Paginator from 'root/@common/models/Paginator';
 import { PaginationQueryType } from 'root/@common/types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/users')
@@ -84,7 +84,7 @@ export class UsersController {
     const items = users.map(convertToUserViewModel);
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,

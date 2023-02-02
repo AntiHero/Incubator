@@ -3,14 +3,14 @@ import { EntityManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
 import { Answer } from '../entity/answer.entity';
+import { PairGame } from '../entity/pairs.entity';
 import { Question } from '../entity/question.entity';
 import { User } from 'root/users/entity/user.entity';
-import { PairGame } from '../entity/pairs.entity';
-import { AnswerStatuses, GameStatuses } from '../types/enum';
 import { PairsService } from '../services/pairs.service';
+import { AnswerStatuses, GameStatuses } from '../types/enum';
+import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 import { AnswersRepository } from '../infrastructure/repositories/answers.repository';
 import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
-import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 
 type PlayerAnswer = {
   playerId: string;
@@ -39,8 +39,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       .createQueryBuilder(PairGame, 'pairs')
       .setLock('pessimistic_write', undefined, ['pairs'])
       .where([
-        { firstPlayer: { id: Number(playerId) }, status: GameStatuses.active },
-        { secondPlayer: { id: Number(playerId) }, status: GameStatuses.active },
+        { firstPlayer: { id: Number(playerId) }, status: GameStatuses.Active },
+        { secondPlayer: { id: Number(playerId) }, status: GameStatuses.Active },
       ])
       .setFindOptions({
         relations: {
@@ -90,7 +90,7 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const isLast = this.gamesPairService.isAnswerLast(answers, questions);
 
     if (isLast) {
-      game.changeStatus(GameStatuses.finished);
+      game.changeStatus(GameStatuses.Finished);
       game.finishGameDate = new Date();
 
       if (this.gamesPairService.playerHasCorrectAnswers(userAnswers)) {

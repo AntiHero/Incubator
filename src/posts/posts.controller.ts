@@ -66,7 +66,7 @@ export class PostsController {
     const items = posts.map(convertToExtendedViewPostModel);
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,
@@ -213,7 +213,7 @@ export class PostsController {
     const items: CommentViewModel[] = comments.map(convertToCommentViewModel);
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,

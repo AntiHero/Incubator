@@ -62,7 +62,7 @@ export class QuizQuestionsController {
       });
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,

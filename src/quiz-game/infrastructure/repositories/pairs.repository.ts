@@ -28,7 +28,7 @@ export class PairsRepository {
       const { firstPlayer } = gamePayload;
 
       newGame.firstPlayer = firstPlayer;
-      newGame.status = GameStatuses.pending;
+      newGame.status = GameStatuses.Pending;
       newGame.questions = [];
       newGame.answers = [];
 
@@ -58,13 +58,13 @@ export class PairsRepository {
         .createQueryBuilder('game')
         // READ COMMITTED DO THE JOB
         .update({
-          status: GameStatuses.active,
+          status: GameStatuses.Active,
           secondPlayer: {
             id: Number(userId),
           },
           startGameDate: new Date(),
         })
-        .where({ status: GameStatuses.pending })
+        .where({ status: GameStatuses.Pending })
         .returning('id')
         .execute();
 

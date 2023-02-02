@@ -1,3 +1,4 @@
+import { SortDirection } from 'root/@common/types/enum';
 import { PublishedStatus } from './enum';
 import { AnswerStatuses, GameStatuses } from './enum';
 
@@ -112,4 +113,11 @@ export type GameUpdates = {
   finishGameDate: Date;
   firstPlayerScore: number;
   secondPlayerScore: number;
+};
+
+export type PairsQuery = {
+  pageNumber: number;
+  pageSize: number;
+  sortBy: 'pairCreatedDate';
+  sortDirection: SortDirection;
 };

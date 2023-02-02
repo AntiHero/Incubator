@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { GamePairDTO } from 'root/quiz-game/types';
+import { GamePairDTO, PairsQuery } from 'root/quiz-game/types';
 import { GameStatuses } from 'root/quiz-game/types/enum';
 import { PairGame } from 'root/quiz-game/entity/pairs.entity';
+import { countSkip } from 'root/@common/utils/count-skip';
 
 @Injectable()
 export class PairsQueryRepository {
@@ -24,12 +25,12 @@ export class PairsQueryRepository {
         .useTransaction(true)
         .setLock('pessimistic_write', undefined, ['pairs'])
         .where([
-          { firstPlayer: { id: Number(userId) }, status: GameStatuses.active },
-          { secondPlayer: { id: Number(userId) }, status: GameStatuses.active },
+          { firstPlayer: { id: Number(userId) }, status: GameStatuses.Active },
+          { secondPlayer: { id: Number(userId) }, status: GameStatuses.Active },
           !activeOnly
             ? {
                 firstPlayer: { id: Number(userId) },
-                status: GameStatuses.pending,
+                status: GameStatuses.Pending,
               }
             : {},
         ])
@@ -105,13 +106,49 @@ export class PairsQueryRepository {
     try {
       const games = await this.pairsRepository.find({
         where: {
-          status: GameStatuses.pending,
+          status: GameStatuses.Pending,
         },
       });
 
       return games[0]?.toDTO() ?? null;
     } catch (error) {
       console.log(error);
+
+      return null;
+    }
+  }
+
+  public async getMyGames(
+    userId: number,
+    query: PairsQuery,
+  ): Promise<[GamePairDTO[], number]> {
+    const { pageSize, pageNumber, sortBy, sortDirection } = query;
+
+    try {
+      const games = await this.pairsRepository.findAndCount({
+        where: [
+          { firstPlayer: { id: userId }, status: GameStatuses.Active },
+          { secondPlayer: { id: userId }, status: GameStatuses.Active },
+          { firstPlayer: { id: userId }, status: GameStatuses.Pending },
+          { secondPlayer: { id: userId }, status: GameStatuses.Pending },
+        ],
+        relations: {
+          answers: {
+            player: true,
+            pairGame: true,
+            question: true,
+          },
+        },
+        order: {
+          [sortBy as keyof PairGame]: sortDirection,
+        },
+        skip: countSkip(pageSize, pageNumber),
+        take: pageSize,
+      });
+
+      return [games[0].map((game) => game.toDTO()), games[1]];
+    } catch (err) {
+      console.log(err);
 
       return null;
     }

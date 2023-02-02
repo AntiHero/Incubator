@@ -57,7 +57,7 @@ export class PairGame {
   finishGameDate: Date | null;
 
   public isFinished() {
-    return this.status === GameStatuses.finished;
+    return this.status === GameStatuses.Finished;
   }
 
   public get questionsLength() {
@@ -97,12 +97,12 @@ export class PairGame {
       },
       status: this.status,
       firstPlayerScore: this.firstPlayerScore,
-      secondPlayerScore: this.secondPlayerScore,
       questions: <QuestionDTO[]>this.questions,
-      answers: this.answers?.map((answer) => answer.toDTO()) ?? [],
+      secondPlayerScore: this.secondPlayerScore,
       pairCreatedDate: this.pairCreatedDate.toISOString(),
       startGameDate: this.startGameDate?.toISOString() ?? null,
       finishGameDate: this.finishGameDate?.toISOString() ?? null,
+      answers: this.answers?.map((answer) => answer.toDTO()) ?? [],
     };
   }
 }

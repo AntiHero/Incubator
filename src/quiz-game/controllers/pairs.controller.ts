@@ -3,40 +3,68 @@ import {
   Post,
   Body,
   Param,
+  Query,
   Header,
   HttpCode,
   UseGuards,
   Controller,
   HttpStatus,
   HttpException,
+  ParseIntPipe,
 } from '@nestjs/common';
 
+import { PairsQuery } from '../types';
 import { IdDTO } from '../dto/user-id.dto';
+import Paginator from 'root/@common/models/Paginator';
 import { CreateAnswerDTO } from '../dto/create-answer.dto';
+import { PairsQueryParsePipe } from '../@common/query.pipe';
 import { GamePairErrors, GameStatuses } from '../types/enum';
 import { GamePairConverter } from '../utils/pairs.converter';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { Service } from 'root/@common/decorators/service.decorator';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { PairsService } from 'root/quiz-game/services/pairs.service';
+import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { PairsTransactionService } from '../services/pairs.transaction.service';
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {
-  constructor(private readonly gamesPairService: PairsService) {}
+  constructor(private readonly pairsService: PairsService) {}
 
   @Get('my-current')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerAuthGuard)
   @Header('Content-type', 'text/plain')
   async getMyCurrentGame(@UserId() userId: string) {
-    const myGame = await this.gamesPairService.getMyCurrentGame(userId);
+    const myGame = await this.pairsService.getMyCurrentGame(userId);
 
     if (!myGame) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
 
-    return myGame.status === GameStatuses.pending
+    return myGame.status === GameStatuses.Pending
       ? GamePairConverter.toOnePlayerView(myGame)
       : GamePairConverter.toView(myGame);
+  }
+
+  @Get('my')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerAuthGuard)
+  @Header('Content-type', 'text/plain')
+  async my(
+    @UserId(ParseIntPipe) userId: number,
+    @Query(PairsQueryParsePipe) query: PairsQuery,
+  ) {
+    console.log(query);
+    const { pageSize, pageNumber } = query;
+
+    const [games, totalCount] = await this.pairsService.getMyGames(
+      userId,
+      query,
+    );
+
+    const items = games.map(GamePairConverter.toView);
+
+    const result = new Paginator(pageNumber, pageSize, totalCount, items);
+
+    return result;
   }
 
   @Get(':id')
@@ -46,14 +74,14 @@ export class PairsController {
   async getGame(@Param() params: IdDTO, @UserId() userId: string) {
     const { id: gameId } = params;
 
-    const game = await this.gamesPairService.getFinishedGameById(gameId);
+    const game = await this.pairsService.getFinishedGameById(gameId);
 
     if (!game) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
 
     if (game.firstPlayer.id !== userId && game.secondPlayer.id !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    return game.status === GameStatuses.pending
+    return game.status === GameStatuses.Pending
       ? GamePairConverter.toOnePlayerView(game)
       : GamePairConverter.toView(game);
   }
@@ -63,7 +91,7 @@ export class PairsController {
   @UseGuards(BearerAuthGuard)
   @Header('Content-type', 'text/plain')
   async createGame(@UserId() userId: string) {
-    const myCurrentGame = await this.gamesPairService.getMyCurrentGame(userId);
+    const myCurrentGame = await this.pairsService.getMyCurrentGame(userId);
 
     if (myCurrentGame)
       throw new HttpException(
@@ -71,9 +99,9 @@ export class PairsController {
         HttpStatus.FORBIDDEN,
       );
 
-    const game = await this.gamesPairService.createConnection(userId);
+    const game = await this.pairsService.createConnection(userId);
 
-    return game.status === GameStatuses.pending
+    return game.status === GameStatuses.Pending
       ? GamePairConverter.toOnePlayerView(game)
       : GamePairConverter.toView(game);
   }

@@ -74,7 +74,7 @@ export class UsersController {
     const items = users.map(convertToUserViewModel);
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,

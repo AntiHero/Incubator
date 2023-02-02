@@ -27,11 +27,11 @@ import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -82,7 +82,7 @@ export class BloggersBlogsController {
     const items: BlogViewModel[] = blogs.map(convertToBlogViewModel);
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,
@@ -115,7 +115,7 @@ export class BloggersBlogsController {
     );
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,
@@ -195,7 +195,7 @@ export class BloggersBlogsController {
     );
 
     const result = new Paginator(
-      Math.ceil(totalCount / pageSize),
+      // Math.ceil(totalCount / pageSize),
       pageNumber,
       pageSize,
       totalCount,
