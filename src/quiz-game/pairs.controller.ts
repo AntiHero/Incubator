@@ -18,7 +18,7 @@ import { IdDTO } from './dto/user-id.dto';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateAnswerDTO } from './dto/create-answer.dto';
 import { PairsQueryParsePipe } from './@common/query.pipe';
-import { GamePairErrors, GameStatuses } from './types/enum';
+import { GamePairErrors, GameStatuses, Statistics } from './types/enum';
 import { GamePairConverter } from './utils/pairs.converter';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { Service } from 'root/@common/decorators/service.decorator';
@@ -26,6 +26,7 @@ import { PairsService } from 'root/quiz-game/services/pairs.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { PairsTransactionService } from './services/pairs.transaction.service';
 import { AnswersConverter } from './utils/answers.converter';
+import { PairsStatisticsService } from './services/game-statistics.service';
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {
@@ -53,7 +54,6 @@ export class PairsController {
     @UserId(ParseIntPipe) userId: number,
     @Query(PairsQueryParsePipe) query: PairsQuery,
   ) {
-    console.log(query);
     const { pageSize, pageNumber } = query;
 
     const [games, totalCount] = await this.pairsService.getMyGames(
@@ -66,6 +66,19 @@ export class PairsController {
     const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     return result;
+  }
+
+  @Get('my-statistics')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerAuthGuard)
+  @Header('Content-type', 'text/plain')
+  async getStatistics(
+    @Service(PairsStatisticsService) statisticsService: PairsStatisticsService,
+    @UserId(ParseIntPipe) userId: number,
+  ) {
+    const statistics = statisticsService.getStatistics(userId, Statistics.all);
+
+    return statistics;
   }
 
   @Get(':id')

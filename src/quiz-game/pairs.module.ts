@@ -15,6 +15,7 @@ import { QuestionsProvider } from './infrastructure/repositories/questions.repos
 import { PairsRepository } from 'root/quiz-game/infrastructure/repositories/pairs.repository';
 import { QuestionsQueryProvider } from './infrastructure/repositories/questions.query.repository';
 import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories/pairs.query.repository';
+import { PairsStatisticsService } from './services/game-statistics.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Question, PairGame]), UsersModule],
@@ -26,6 +27,7 @@ import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories
     PairsQueryRepository,
     QuestionsQueryProvider,
     PlayerAnswerTransaction,
+    serviceProviderFactory(PairsStatisticsService),
     serviceProviderFactory(PairsTransactionService),
   ],
   controllers: [QuizQuestionsController, PairsController],

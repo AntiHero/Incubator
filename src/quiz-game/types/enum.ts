@@ -18,3 +18,13 @@ export enum GameStatuses {
 export enum GamePairErrors {
   ALREADY_HAS_A_GAME = 'You have a pending or active game',
 }
+
+export enum Statistics {
+  all = 'all',
+  sumScore = 'sumScore',
+  avgScore = 'avgScore',
+  winsCount = 'winsCount',
+  gamesCount = 'gamesCount',
+  drawsCount = 'drawsCount',
+  lossesCount = 'lossesCount',
+}

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { MoreThan, Raw, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -112,6 +112,207 @@ export class PairsQueryRepository {
       console.log(err);
 
       return null;
+    }
+  }
+
+  public async getPlayerSumScore(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .select(
+          `SUM(CASE 
+          WHEN pairs."firstPlayerId" = ${id} THEN pairs."firstPlayerScore"
+          WHEN pairs."secondPlayerId" = ${id} THEN pairs."secondPlayerScore"
+          ELSE 0
+          END)`,
+          'sumScore',
+        )
+        .where([
+          { status: GameStatuses.Active },
+          { status: GameStatuses.Finished },
+        ])
+        .execute();
+
+      return Number(result[0].sumScore);
+    } catch (err) {
+      console.log(err);
+
+      return 0;
+    }
+  }
+
+  public async getPlayerAvgScore(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .select(
+          `ROUND(AVG(CASE 
+          WHEN pairs."firstPlayerId" = ${id} THEN pairs."firstPlayerScore"
+          WHEN pairs."secondPlayerId" = ${id} THEN pairs."secondPlayerScore"
+          ELSE 0
+          END), 2)`,
+          'avgScore',
+        )
+        .where([
+          { status: GameStatuses.Active },
+          { status: GameStatuses.Finished },
+        ])
+        .execute();
+
+      return Number(result[0].avgScore) || 0;
+    } catch (err) {
+      console.log(err);
+
+      return 0;
+    }
+  }
+
+  public async getPlayerGameCount(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .where([
+          { firstPlayer: { id }, status: GameStatuses.Active },
+          { secondPlayer: { id }, status: GameStatuses.Active },
+          { firstPlayer: { id }, status: GameStatuses.Finished },
+          { secondPlayer: { id }, status: GameStatuses.Finished },
+        ])
+        .getCount();
+
+      return result;
+    } catch (err) {
+      console.log(err);
+
+      return 0;
+    }
+  }
+
+  public async getPlayerWinsCount(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .where([
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Active,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} > pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Active,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} > pairs."firstPlayerScore"`,
+            ),
+          },
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Finished,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} > pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Finished,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} > pairs.firstPlayerScore`,
+            ),
+          },
+        ])
+        .getCount();
+
+      return result;
+    } catch (err) {
+      console.log(err);
+      return 0;
+    }
+  }
+
+  public async getPlayerLossesCount(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .where([
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Active,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} < pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Active,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} < pairs."firstPlayerScore"`,
+            ),
+          },
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Finished,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} < pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Finished,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} < pairs.firstPlayerScore`,
+            ),
+          },
+        ])
+        .getCount();
+
+      return result;
+    } catch (err) {
+      console.log(err);
+      return 0;
+    }
+  }
+
+  public async getPlayerDrawsCount(id: number): Promise<number> {
+    try {
+      const result = await this.pairsRepository
+        .createQueryBuilder('pairs')
+        .where([
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Active,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} = pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Active,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} = pairs."firstPlayerScore"`,
+            ),
+          },
+          {
+            firstPlayer: { id },
+            status: GameStatuses.Finished,
+            firstPlayerScore: Raw(
+              (alias) => `${alias} = pairs."secondPlayerScore"`,
+            ),
+          },
+          {
+            secondPlayer: { id },
+            status: GameStatuses.Finished,
+            secondPlayerScore: Raw(
+              (alias) => `${alias} = pairs.firstPlayerScore`,
+            ),
+          },
+        ])
+        .getCount();
+
+      return result;
+    } catch (err) {
+      console.log(err);
+      return 0;
     }
   }
 }
