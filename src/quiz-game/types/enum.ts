@@ -22,7 +22,7 @@ export enum GamePairErrors {
 export enum Statistics {
   all = 'all',
   sumScore = 'sumScore',
-  avgScore = 'avgScore',
+  avgScore = 'avgScores',
   winsCount = 'winsCount',
   gamesCount = 'gamesCount',
   drawsCount = 'drawsCount',

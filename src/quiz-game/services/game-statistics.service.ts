@@ -36,7 +36,7 @@ export class PairsStatisticsService {
 
     if (statistics === Statistics.all) {
       result.sumScore = await this.getSummaryScore(id);
-      result.avgScore = await this.getAverageScore(id);
+      result.avgScores = await this.getAverageScore(id);
       result.gamesCount = await this.getGamesCount(id);
       result.winsCount = await this.getWinsCount(id);
       result.lossesCount = await this.getLossesCount(id);

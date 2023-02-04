@@ -128,8 +128,8 @@ export class PairsQueryRepository {
           'sumScore',
         )
         .where([
-          { status: GameStatuses.Active },
-          { status: GameStatuses.Finished },
+          { firstPlayer: { id }, status: GameStatuses.Finished },
+          { secondPlayer: { id }, status: GameStatuses.Finished },
         ])
         .execute();
 
@@ -154,8 +154,8 @@ export class PairsQueryRepository {
           'avgScore',
         )
         .where([
-          { status: GameStatuses.Active },
-          { status: GameStatuses.Finished },
+          { firstPlayer: { id }, status: GameStatuses.Finished },
+          { secondPlayer: { id }, status: GameStatuses.Finished },
         ])
         .execute();
 
@@ -172,8 +172,8 @@ export class PairsQueryRepository {
       const result = await this.pairsRepository
         .createQueryBuilder('pairs')
         .where([
-          { firstPlayer: { id }, status: GameStatuses.Active },
-          { secondPlayer: { id }, status: GameStatuses.Active },
+          // { firstPlayer: { id }, status: GameStatuses.Active },
+          // { secondPlayer: { id }, status: GameStatuses.Active },
           { firstPlayer: { id }, status: GameStatuses.Finished },
           { secondPlayer: { id }, status: GameStatuses.Finished },
         ])
@@ -192,20 +192,20 @@ export class PairsQueryRepository {
       const result = await this.pairsRepository
         .createQueryBuilder('pairs')
         .where([
-          {
-            firstPlayer: { id },
-            status: GameStatuses.Active,
-            firstPlayerScore: Raw(
-              (alias) => `${alias} > pairs."secondPlayerScore"`,
-            ),
-          },
-          {
-            secondPlayer: { id },
-            status: GameStatuses.Active,
-            secondPlayerScore: Raw(
-              (alias) => `${alias} > pairs."firstPlayerScore"`,
-            ),
-          },
+          // {
+          //   firstPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   firstPlayerScore: Raw(
+          //     (alias) => `${alias} > pairs."secondPlayerScore"`,
+          //   ),
+          // },
+          // {
+          //   secondPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   secondPlayerScore: Raw(
+          //     (alias) => `${alias} > pairs."firstPlayerScore"`,
+          //   ),
+          // },
           {
             firstPlayer: { id },
             status: GameStatuses.Finished,
@@ -235,20 +235,20 @@ export class PairsQueryRepository {
       const result = await this.pairsRepository
         .createQueryBuilder('pairs')
         .where([
-          {
-            firstPlayer: { id },
-            status: GameStatuses.Active,
-            firstPlayerScore: Raw(
-              (alias) => `${alias} < pairs."secondPlayerScore"`,
-            ),
-          },
-          {
-            secondPlayer: { id },
-            status: GameStatuses.Active,
-            secondPlayerScore: Raw(
-              (alias) => `${alias} < pairs."firstPlayerScore"`,
-            ),
-          },
+          // {
+          //   firstPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   firstPlayerScore: Raw(
+          //     (alias) => `${alias} < pairs."secondPlayerScore"`,
+          //   ),
+          // },
+          // {
+          //   secondPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   secondPlayerScore: Raw(
+          //     (alias) => `${alias} < pairs."firstPlayerScore"`,
+          //   ),
+          // },
           {
             firstPlayer: { id },
             status: GameStatuses.Finished,
@@ -278,20 +278,20 @@ export class PairsQueryRepository {
       const result = await this.pairsRepository
         .createQueryBuilder('pairs')
         .where([
-          {
-            firstPlayer: { id },
-            status: GameStatuses.Active,
-            firstPlayerScore: Raw(
-              (alias) => `${alias} = pairs."secondPlayerScore"`,
-            ),
-          },
-          {
-            secondPlayer: { id },
-            status: GameStatuses.Active,
-            secondPlayerScore: Raw(
-              (alias) => `${alias} = pairs."firstPlayerScore"`,
-            ),
-          },
+          // {
+          //   firstPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   firstPlayerScore: Raw(
+          //     (alias) => `${alias} = pairs."secondPlayerScore"`,
+          //   ),
+          // },
+          // {
+          //   secondPlayer: { id },
+          //   status: GameStatuses.Active,
+          //   secondPlayerScore: Raw(
+          //     (alias) => `${alias} = pairs."firstPlayerScore"`,
+          //   ),
+          // },
           {
             firstPlayer: { id },
             status: GameStatuses.Finished,
