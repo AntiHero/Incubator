@@ -18,15 +18,15 @@ import { IdDTO } from './dto/user-id.dto';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateAnswerDTO } from './dto/create-answer.dto';
 import { PairsQueryParsePipe } from './@common/query.pipe';
-import { GamePairErrors, GameStatuses, Statistics } from './types/enum';
 import { GamePairConverter } from './utils/pairs.converter';
+import { AnswersConverter } from './utils/answers.converter';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { Service } from 'root/@common/decorators/service.decorator';
 import { PairsService } from 'root/quiz-game/services/pairs.service';
+import { GamePairErrors, GameStatuses, Statistics } from './types/enum';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { PairsTransactionService } from './services/pairs.transaction.service';
-import { AnswersConverter } from './utils/answers.converter';
 import { PairsStatisticsService } from './services/game-statistics.service';
+import { PairsTransactionService } from './services/pairs.transaction.service';
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {
@@ -68,7 +68,7 @@ export class PairsController {
     return result;
   }
 
-  @Get('my-statistics')
+  @Get('my-statistic')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerAuthGuard)
   @Header('Content-type', 'text/plain')

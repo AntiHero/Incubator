@@ -1,4 +1,4 @@
-import { MoreThan, Raw, Repository } from 'typeorm';
+import { Raw, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
