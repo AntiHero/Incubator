@@ -6,7 +6,9 @@ import { Question } from './entity/question.entity';
 import { PairsController } from './pairs.controller';
 import { UsersModule } from 'root/users/users.module';
 import { PairsService } from './services/pairs.service';
+import { PairsUserController } from './users.controller';
 import { QuestionsService } from './services/questions.service';
+import { PairsStatisticsService } from './services/game-statistics.service';
 import { QuizQuestionsController } from './controllers/questions.controller';
 import { PairsTransactionService } from './services/pairs.transaction.service';
 import { PlayerAnswerTransaction } from './providers/pairs.transaction.provider';
@@ -15,7 +17,6 @@ import { QuestionsProvider } from './infrastructure/repositories/questions.repos
 import { PairsRepository } from 'root/quiz-game/infrastructure/repositories/pairs.repository';
 import { QuestionsQueryProvider } from './infrastructure/repositories/questions.query.repository';
 import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories/pairs.query.repository';
-import { PairsStatisticsService } from './services/game-statistics.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Question, PairGame]), UsersModule],
@@ -26,11 +27,11 @@ import { PairsStatisticsService } from './services/game-statistics.service';
     QuestionsProvider,
     PairsQueryRepository,
     QuestionsQueryProvider,
+    PairsStatisticsService,
     PlayerAnswerTransaction,
-    serviceProviderFactory(PairsStatisticsService),
     serviceProviderFactory(PairsTransactionService),
   ],
-  controllers: [QuizQuestionsController, PairsController],
+  controllers: [QuizQuestionsController, PairsController, PairsUserController],
   exports: [QuestionsService, PairsService],
 })
 export class QuizGameModule {}

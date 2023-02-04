@@ -68,19 +68,6 @@ export class PairsController {
     return result;
   }
 
-  @Get('my-statistic')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(BearerAuthGuard)
-  @Header('Content-type', 'text/plain')
-  async getStatistics(
-    @Service(PairsStatisticsService) statisticsService: PairsStatisticsService,
-    @UserId(ParseIntPipe) userId: number,
-  ) {
-    const statistics = statisticsService.getStatistics(userId, Statistics.all);
-
-    return statistics;
-  }
-
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerAuthGuard)
