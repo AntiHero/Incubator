@@ -19,10 +19,10 @@ export class PairsQueryParsePipe implements PipeTransform {
     ) as SortDirection;
 
     const sanitizedValue: PairsQuery = {
+      sortDirection,
       pageNumber,
       pageSize,
       sortBy,
-      sortDirection,
     };
 
     return sanitizedValue;

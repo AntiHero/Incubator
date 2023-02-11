@@ -1,5 +1,5 @@
 import { SortDirection } from 'root/@common/types/enum';
-import { PublishedStatus } from './enum';
+import { PublishedStatus, Statistics } from './enum';
 import { AnswerStatuses, GameStatuses } from './enum';
 
 export type QuestionViewModel = {
@@ -122,4 +122,29 @@ export type PairsQuery = {
   pageSize: number;
   pageNumber: number;
   sortDirection: SortDirection;
+};
+
+export type TopUsersQuery = {
+  pageSize: number;
+  pageNumber: number;
+  sort: string[] | string;
+};
+
+export type TopUsersSanitizedQuery = Omit<TopUsersQuery, 'sort'> & {
+  sort: [string, string][];
+};
+
+export type TopUsersDBType = { [key in Statistics]: string } & {
+  playerId: string;
+  login: string;
+};
+
+export type TopGamePlayerViewModel = {
+  sumScore: number;
+  avgScores: number;
+  gamesCount: number;
+  winsCount: number;
+  lossesCount: number;
+  drawsCount: number;
+  player: PlayerViewModel;
 };

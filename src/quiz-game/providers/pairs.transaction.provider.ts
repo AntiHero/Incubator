@@ -51,15 +51,12 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     if (!game || !game.questionsLength) return null;
 
     const {
-      questions,
       id: gameId,
       firstPlayerScore,
       secondPlayerScore,
       firstPlayerAnswers,
       secondPlayerAnswers,
     } = game;
-
-    console.log(questions);
 
     const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
     const questionsCount = game.questionsLength;

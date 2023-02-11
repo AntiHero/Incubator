@@ -17,7 +17,7 @@ import { PairsQuery } from './types';
 import { IdDTO } from './dto/user-id.dto';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateAnswerDTO } from './dto/create-answer.dto';
-import { PairsQueryParsePipe } from './@common/query.pipe';
+import { PairsQueryParsePipe } from './@common/pairs-query.pipe';
 import { GamePairErrors, GameStatuses } from './types/enum';
 import { GamePairConverter } from './utils/pairs.converter';
 import { AnswersConverter } from './utils/answers.converter';

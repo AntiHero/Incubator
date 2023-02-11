@@ -6,6 +6,7 @@ export const NOT_UUID_ERROR = 'Not uuid string';
 export const NOT_ARRAY_ERROR = 'Field is not array';
 export const WRONG_PATTERN_ERROR = "Field doesn't match provided pattern";
 export const NOT_BOOLEAN_ERROR = 'Field is not a boolean';
+export const BAD_QUERY_ERROR = 'Bad query';
 export const BAD_ID_ERROR = 'Bad Id';
 
 export const MAX_LENGTH_ERROR = (max: number) =>
