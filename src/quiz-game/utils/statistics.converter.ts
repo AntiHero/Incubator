@@ -24,7 +24,7 @@ export class StatisticsConverter {
       lossesCount: Number(lossesCount),
       player: {
         login,
-        id: playerId,
+        id: String(playerId),
       },
     };
   }
