@@ -1,10 +1,14 @@
+import * as dotenv from 'dotenv';
 import { DataSourceOptions } from 'typeorm';
+
+dotenv.config();
 
 export const config: DataSourceOptions = {
   type: 'postgres',
-  url: 'postgres://postgres:postgres@localhost/incubator',
+  url: process.env.DATABASE_URL,
   synchronize: false,
-  entities: ['./src/**/*.entity.ts'],
+  migrationsRun: true,
+  entities: [__dirname + '/src/**/*.entity.ts'],
   migrations: [__dirname + '/migrations/**/*.ts'],
   logging: 'all',
 };

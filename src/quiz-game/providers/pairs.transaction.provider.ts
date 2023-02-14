@@ -29,7 +29,7 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     super(dataSource);
   }
 
-  private timers: { [key: string]: NodeJS.Timer };
+  private timers: { [key: string]: NodeJS.Timer } = {};
 
   private timeout: 10_000;
 
@@ -111,8 +111,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const isAnswerLast = game.isAnswerLast;
 
     if (isAnswerLast) {
-      // this.timers[secondPlayer.id] = setTimeout(() => {}, this.timeout);
-
       gameUpdates.status = GameStatuses.Finished;
       gameUpdates.finishGameDate = new Date();
     }
