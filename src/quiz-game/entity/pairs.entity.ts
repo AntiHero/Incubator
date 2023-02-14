@@ -86,6 +86,14 @@ export class PairGame {
     }
   }
 
+  public isQuestionLast(playerId: number) {
+    if (this.isPlayerFirst(playerId)) {
+      return this.questionsLength === this.firstPlayerAnswers.length - 1;
+    } else {
+      return this.questionsLength === this.secondPlayerAnswers.length - 1;
+    }
+  }
+
   public getPlayerScore(playerId: number) {
     if (playerId === this.firstPlayer.id) {
       return this.firstPlayerScore;

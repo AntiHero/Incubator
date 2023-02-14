@@ -10,8 +10,11 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './@common/filters/exception-filter';
 import { exceptionFactory } from './@common/utils/custom-exception-factory';
+import { DataSource } from 'typeorm';
 
 const PORT = process.env.PORT;
+
+export let dataSource: DataSource;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -27,6 +30,8 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
+
+  dataSource = app.get(DataSource);
 
   await app.listen(PORT || 8000, '0.0.0.0');
 }

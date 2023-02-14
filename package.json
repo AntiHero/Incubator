@@ -20,8 +20,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:debug:e2e": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register ./node_modules/jest/bin/jest --config ./test/jest-e2e.json",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "postinstall": "husky install"
+    "test:e2e": "cross-env TEST=true jest --config ./test/jest-e2e.json",
+    "postinstall": "husky install",
+    "typeorm": "typeorm-ts-node-esm -d db/data-source.ts",
+    "migration:generate": "yarn typeorm migration:generate",
+    "migration:create": "typeorm migration:create ./migrations/EmptyMigration",
+    "migration:run": "yarn typeorm migration:run",
+    "db:drop": "yarn typeorm schema:drop"
   },
   "dependencies": {
     "@fastify/middie": "^8.0.0",

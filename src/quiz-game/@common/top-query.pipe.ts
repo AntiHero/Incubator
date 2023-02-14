@@ -15,8 +15,6 @@ export class TopQuerySanitizerPipe implements PipeTransform {
   async transform(value: Partial<TopUsersQuery>, metadata: ArgumentMetadata) {
     if (metadata.type !== 'query') return value;
 
-    console.log(value);
-
     const defaultSort: [string, string][] = [
       [Statistics.avgScore, SortDirection.DESC],
       [Statistics.sumScore, SortDirection.DESC],
@@ -60,7 +58,6 @@ export class TopQuerySanitizerPipe implements PipeTransform {
     } catch (err) {
       console.log(err);
     } finally {
-      console.log(sanitizedSort);
       const sanitizedValue: TopUsersSanitizedQuery = {
         sort: sanitizedSort,
         pageNumber,

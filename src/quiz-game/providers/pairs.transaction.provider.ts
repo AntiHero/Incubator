@@ -29,6 +29,10 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     super(dataSource);
   }
 
+  private timers: { [key: string]: NodeJS.Timer };
+
+  private timeout: 10_000;
+
   protected async execute(
     { playerId, answer }: PlayerAnswer,
     manager: EntityManager,
@@ -52,11 +56,14 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
     const {
       id: gameId,
+      secondPlayer,
       firstPlayerScore,
       secondPlayerScore,
       firstPlayerAnswers,
       secondPlayerAnswers,
     } = game;
+
+    console.log(secondPlayer);
 
     const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
     const questionsCount = game.questionsLength;
@@ -104,6 +111,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const isAnswerLast = game.isAnswerLast;
 
     if (isAnswerLast) {
+      // this.timers[secondPlayer.id] = setTimeout(() => {}, this.timeout);
+
       gameUpdates.status = GameStatuses.Finished;
       gameUpdates.finishGameDate = new Date();
     }

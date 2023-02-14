@@ -49,6 +49,20 @@ export class Answer {
     return answer;
   }
 
+  public static createWrongAnswer({
+    pairGame,
+    player,
+  }: {
+    pairGame: PairGame;
+    player: User;
+  }) {
+    const answer = new Answer();
+    answer.addedAt = new Date();
+    answer.answerStatus = AnswerStatuses.incorrect;
+    answer.pairGame = pairGame;
+    answer.player = player;
+  }
+
   public toDTO(): AnswerDTO {
     return {
       gameId: String(this.pairGame.id),
