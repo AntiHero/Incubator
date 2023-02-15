@@ -15,7 +15,7 @@ export abstract class BaseTransactionProvider<T, U> {
     const queryRunner = await this.createRunner();
 
     await queryRunner.connect();
-    await queryRunner.startTransaction('READ COMMITTED');
+    await queryRunner.startTransaction();
 
     const { manager } = queryRunner;
 

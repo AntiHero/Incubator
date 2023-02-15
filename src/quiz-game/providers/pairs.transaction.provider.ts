@@ -62,6 +62,7 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       firstPlayerAnswers,
       secondPlayerAnswers,
     } = game;
+    console.log(firstPlayerAnswers, secondPlayerAnswers);
 
     const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
 
@@ -73,27 +74,37 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       if (secondPlayerAnswers.length === questionsCount) return null;
     }
 
-    let currentPlayerScore = 0;
-    let anotherPlayerScore = 0;
+    // let currentPlayerScore = 0;
+    // let anotherPlayerScore = 0;
 
+    // let currentPlayerAnswers: AnswerDTO[] = [];
+    // let anotherPlayerAnswers: AnswerDTO[] = [];
     let currentPlayerAnswers: AnswerDTO[] = [];
     let anotherPlayerAnswers: AnswerDTO[] = [];
 
     if (isCurrentPlayerFirst) {
-      currentPlayerScore = firstPlayerScore;
-      currentPlayerAnswers = firstPlayerAnswers;
-
-      anotherPlayerScore = secondPlayerScore;
-      anotherPlayerAnswers = secondPlayerAnswers;
+      currentPlayerAnswers = game.firstPlayerAnswers;
+      anotherPlayerAnswers = game.secondPlayerAnswers;
     } else {
-      currentPlayerScore = secondPlayerScore;
-      currentPlayerAnswers = secondPlayerAnswers;
-
-      anotherPlayerScore = firstPlayerScore;
-      anotherPlayerAnswers = firstPlayerAnswers;
+      currentPlayerAnswers = game.secondPlayerAnswers;
+      anotherPlayerAnswers = game.firstPlayerAnswers;
     }
 
-    const gameUpdates: GameUpdates = { id: gameId };
+    // if (isCurrentPlayerFirst) {
+    //   currentPlayerScore = firstPlayerScore;
+    //   currentPlayerAnswers = firstPlayerAnswers;
+
+    //   anotherPlayerScore = secondPlayerScore;
+    //   anotherPlayerAnswers = secondPlayerAnswers;
+    // } else {
+    //   currentPlayerScore = secondPlayerScore;
+    //   currentPlayerAnswers = secondPlayerAnswers;
+
+    //   anotherPlayerScore = firstPlayerScore;
+    //   anotherPlayerAnswers = firstPlayerAnswers;
+    // }
+
+    // const gameUpdates: GameUpdates = { id: gameId };
 
     const currentQuestion = game.getCurrentQuestion(Number(playerId));
 
@@ -101,9 +112,11 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
     if (isCorrect) {
       if (isCurrentPlayerFirst) {
-        gameUpdates.firstPlayerScore = ++currentPlayerScore;
+        game.firstPlayerScore++;
+        // gameUpdates.firstPlayerScore = ++currentPlayerScore;
       } else {
-        gameUpdates.secondPlayerScore = ++currentPlayerScore;
+        game.secondPlayerScore++;
+        // gameUpdates.secondPlayerScore = ++currentPlayerScore;
       }
     }
 
@@ -112,19 +125,29 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     if (isAnswerLast) {
       this.finishGame.abort(Number(playerId));
 
-      gameUpdates.status = GameStatuses.Finished;
-      gameUpdates.finishGameDate = new Date();
+      game.status = GameStatuses.Finished;
+      game.finishGameDate = new Date();
+      // gameUpdates.status = GameStatuses.Finished;
+      // gameUpdates.finishGameDate = new Date();
     }
 
-    const hasBonusPoint = anotherPlayerAnswers.some(
-      (answer) => answer.answerStatus === AnswerStatuses.correct,
-    );
+    // const hasBonusPoint = anotherPlayerAnswers.some(
+    //   (answer) => answer.answerStatus === AnswerStatuses.correct,
+    // );
 
-    if (hasBonusPoint && isAnswerLast) {
-      if (isCurrentPlayerFirst) {
-        gameUpdates.secondPlayerScore = ++anotherPlayerScore;
-      } else {
-        gameUpdates.firstPlayerScore = ++currentPlayerScore;
+    if (isAnswerLast) {
+      const hasBonusPoint = anotherPlayerAnswers.some(
+        (answer) => answer.answerStatus === AnswerStatuses.correct,
+      );
+
+      if (hasBonusPoint) {
+        if (isCurrentPlayerFirst) {
+          game.secondPlayerScore++;
+          // gameUpdates.secondPlayerScore = ++anotherPlayerScore;
+        } else {
+          game.firstPlayerScore++;
+          // gameUpdates.firstPlayerScore = ++currentPlayerScore;
+        }
       }
     }
 
@@ -144,13 +167,14 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
     currentPlayerAnswers.push(newAnswer.toDTO());
 
-    if (isCurrentPlayerFirst) {
-      gameUpdates.firstPlayerAnswers = currentPlayerAnswers;
-    } else {
-      gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
-    }
+    // currentPlayerAnswers.push()
+    // if (isCurrentPlayerFirst) {
+    //   gameUpdates.firstPlayerAnswers = currentPlayerAnswers;
+    // } else {
+    //   gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
+    // }
 
-    const isMyAnswerLast = questionsCount - 1 === currentPlayerAnswers.length;
+    const isMyAnswerLast = currentPlayerAnswers.length === questionsCount;
 
     if (isMyAnswerLast && !isAnswerLast) {
       if (isCurrentPlayerFirst) {
@@ -160,7 +184,16 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       }
     }
 
-    await this.pairsRepository.updateGame(gameUpdates, manager);
+    await manager.save(game);
+    // await manager
+    //   .createQueryBuilder(PairGame, 'pairs')
+    //   .update()
+    //   .set(game)
+    //   .where({
+    //     id: gameId,
+    //   })
+    //   .execute();
+    // await this.pairsRepository.updateGame(gameUpdates, manager);
 
     return AnswersConverter.toDTO(newAnswer);
   }
