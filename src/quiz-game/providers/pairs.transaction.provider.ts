@@ -3,13 +3,12 @@ import { EntityManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
 import { Answer } from '../entity/answer.entity';
-import { AnswerDTO, GameUpdates } from '../types';
+import { AnswerDTO } from '../types';
 import { PairGame } from '../entity/pairs.entity';
 import { Question } from '../entity/question.entity';
 import { User } from 'root/users/entity/user.entity';
 import { AnswerStatuses, GameStatuses } from '../types/enum';
 import { AnswersConverter } from '../utils/answers.converter';
-import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
 import { FinishTheGameAfterDelayUseCase } from '../application/use-case/finish-the-game-after-delay.use-case-';
 
@@ -25,7 +24,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 > {
   public constructor(
     dataSource: DataSource,
-    private readonly pairsRepository: PairsRepository,
     private readonly finishGame: FinishTheGameAfterDelayUseCase,
   ) {
     super(dataSource);
@@ -57,12 +55,9 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       id: gameId,
       firstPlayer,
       secondPlayer,
-      firstPlayerScore,
-      secondPlayerScore,
       firstPlayerAnswers,
       secondPlayerAnswers,
     } = game;
-    console.log(firstPlayerAnswers, secondPlayerAnswers);
 
     const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
 
@@ -74,11 +69,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       if (secondPlayerAnswers.length === questionsCount) return null;
     }
 
-    // let currentPlayerScore = 0;
-    // let anotherPlayerScore = 0;
-
-    // let currentPlayerAnswers: AnswerDTO[] = [];
-    // let anotherPlayerAnswers: AnswerDTO[] = [];
     let currentPlayerAnswers: AnswerDTO[] = [];
     let anotherPlayerAnswers: AnswerDTO[] = [];
 
@@ -90,22 +80,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       anotherPlayerAnswers = game.firstPlayerAnswers;
     }
 
-    // if (isCurrentPlayerFirst) {
-    //   currentPlayerScore = firstPlayerScore;
-    //   currentPlayerAnswers = firstPlayerAnswers;
-
-    //   anotherPlayerScore = secondPlayerScore;
-    //   anotherPlayerAnswers = secondPlayerAnswers;
-    // } else {
-    //   currentPlayerScore = secondPlayerScore;
-    //   currentPlayerAnswers = secondPlayerAnswers;
-
-    //   anotherPlayerScore = firstPlayerScore;
-    //   anotherPlayerAnswers = firstPlayerAnswers;
-    // }
-
-    // const gameUpdates: GameUpdates = { id: gameId };
-
     const currentQuestion = game.getCurrentQuestion(Number(playerId));
 
     const isCorrect = game.isAnswerCorrect(answer, currentQuestion);
@@ -113,10 +87,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     if (isCorrect) {
       if (isCurrentPlayerFirst) {
         game.firstPlayerScore++;
-        // gameUpdates.firstPlayerScore = ++currentPlayerScore;
       } else {
         game.secondPlayerScore++;
-        // gameUpdates.secondPlayerScore = ++currentPlayerScore;
       }
     }
 
@@ -127,15 +99,7 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
       game.status = GameStatuses.Finished;
       game.finishGameDate = new Date();
-      // gameUpdates.status = GameStatuses.Finished;
-      // gameUpdates.finishGameDate = new Date();
-    }
 
-    // const hasBonusPoint = anotherPlayerAnswers.some(
-    //   (answer) => answer.answerStatus === AnswerStatuses.correct,
-    // );
-
-    if (isAnswerLast) {
       const hasBonusPoint = anotherPlayerAnswers.some(
         (answer) => answer.answerStatus === AnswerStatuses.correct,
       );
@@ -143,10 +107,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       if (hasBonusPoint) {
         if (isCurrentPlayerFirst) {
           game.secondPlayerScore++;
-          // gameUpdates.secondPlayerScore = ++anotherPlayerScore;
         } else {
           game.firstPlayerScore++;
-          // gameUpdates.firstPlayerScore = ++currentPlayerScore;
         }
       }
     }
@@ -167,13 +129,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
     currentPlayerAnswers.push(newAnswer.toDTO());
 
-    // currentPlayerAnswers.push()
-    // if (isCurrentPlayerFirst) {
-    //   gameUpdates.firstPlayerAnswers = currentPlayerAnswers;
-    // } else {
-    //   gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
-    // }
-
     const isMyAnswerLast = currentPlayerAnswers.length === questionsCount;
 
     if (isMyAnswerLast && !isAnswerLast) {
@@ -185,15 +140,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     }
 
     await manager.save(game);
-    // await manager
-    //   .createQueryBuilder(PairGame, 'pairs')
-    //   .update()
-    //   .set(game)
-    //   .where({
-    //     id: gameId,
-    //   })
-    //   .execute();
-    // await this.pairsRepository.updateGame(gameUpdates, manager);
 
     return AnswersConverter.toDTO(newAnswer);
   }
