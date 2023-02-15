@@ -16,10 +16,6 @@ import { FinishTheGameAfterDelayUseCase } from '../application/use-case/finish-t
 type PlayerAnswer = {
   playerId: string;
   answer: string;
-  // answerOrder: number;
-  // answersOrderObj: {
-  //   [key: string]: number;
-  // };
 };
 
 @Injectable()
@@ -36,7 +32,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
   }
 
   protected async execute(
-    // { playerId, answer, answerOrder, answersOrderObj }: PlayerAnswer,
     { playerId, answer }: PlayerAnswer,
     manager: EntityManager,
   ) {
@@ -59,7 +54,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     if (!game || !game.questionsLength) return null;
 
     const {
-      questions,
       id: gameId,
       firstPlayer,
       secondPlayer,
@@ -73,8 +67,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
 
     const questionsCount = game.questionsLength;
 
-    // if (answerOrder === questionsCount) return null;
-    // if (answersOrder[playerId] === questionsCount) return null;
     if (isCurrentPlayerFirst) {
       if (firstPlayerAnswers.length === questionsCount) return null;
     } else {
@@ -104,7 +96,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const gameUpdates: GameUpdates = { id: gameId };
 
     const currentQuestion = game.getCurrentQuestion(Number(playerId));
-    // const currentQuestion = questions[answerOrder];
 
     const isCorrect = game.isAnswerCorrect(answer, currentQuestion);
 
@@ -159,7 +150,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
     }
 
-    // const isMyAnswerLast = questionsCount - 1 === answerOrder;
     const isMyAnswerLast = questionsCount - 1 === currentPlayerAnswers.length;
 
     if (isMyAnswerLast && !isAnswerLast) {
@@ -171,16 +161,6 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     }
 
     await this.pairsRepository.updateGame(gameUpdates, manager);
-
-    // if (gameUpdates.status) {
-    //   delete answersOrderObj[playerId];
-
-    //   if (isCurrentPlayerFirst) {
-    //     delete answersOrderObj[secondPlayer.id];
-    //   } else {
-    //     delete answersOrderObj[firstPlayer.id];
-    //   }
-    // }
 
     return AnswersConverter.toDTO(newAnswer);
   }

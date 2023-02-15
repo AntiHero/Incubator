@@ -7,19 +7,10 @@ export class PairsTransactionService {
     private readonly playerAnswerTransaction: PlayerAnswerTransaction,
   ) {}
 
-  public async proceedAnswer(
-    playerId: string,
-    answer: string,
-    // answerOrder: number,
-    // answersOrderObj: {
-    //   [key: string]: number;
-    // },
-  ) {
+  public async proceedAnswer(playerId: string, answer: string) {
     return this.playerAnswerTransaction.run({
       playerId,
       answer,
-      // answerOrder,
-      // answersOrderObj,
     });
   }
 }

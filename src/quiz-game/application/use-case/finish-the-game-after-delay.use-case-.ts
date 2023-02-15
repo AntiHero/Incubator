@@ -68,7 +68,6 @@ export class FinishTheGameAfterDelayUseCase {
           game.firstPlayerScore++;
         }
       }
-      console.log(game, 'gavemBeforeSaving');
 
       await this.dataSource.getRepository(PairGame).save(game);
     } catch (err) {

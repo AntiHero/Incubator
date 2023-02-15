@@ -17,20 +17,15 @@ import { PairsQuery } from './types';
 import { IdDTO } from './dto/user-id.dto';
 import Paginator from 'root/@common/models/Paginator';
 import { CreateAnswerDTO } from './dto/create-answer.dto';
-import { PairsQueryParsePipe } from './@common/pairs-query.pipe';
 import { GamePairErrors, GameStatuses } from './types/enum';
 import { GamePairConverter } from './utils/pairs.converter';
 import { AnswersConverter } from './utils/answers.converter';
+import { PairsQueryParsePipe } from './@common/pairs-query.pipe';
 import { UserId } from 'root/@common/decorators/user-id.decorator';
 import { Service } from 'root/@common/decorators/service.decorator';
 import { PairsService } from 'root/quiz-game/services/pairs.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { PairsTransactionService } from './services/pairs.transaction.service';
-// import { QUESTIONS_LIMIT } from 'root/@common/constants';
-
-// const answersOrderObj: {
-//   [key: string]: number;
-// } = {};
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {
@@ -123,22 +118,9 @@ export class PairsController {
   ) {
     const { answer } = body;
 
-    // const isGameReady = await this.pairsService.getMyCurrentGame(userId, true);
-
-    // if (!isGameReady || answersOrderObj[userId] === QUESTIONS_LIMIT)
-    //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-
-    // if (answersOrderObj[userId] === undefined) {
-    //   answersOrderObj[userId] = 0;
-    // } else {
-    //   ++answersOrderObj[userId];
-    // }
-
     const proceededAnswer = await pairsTransactionService.proceedAnswer(
       userId,
       answer,
-      // answersOrderObj[userId],
-      // answersOrderObj,
     );
     if (!proceededAnswer)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
