@@ -15,12 +15,13 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
     "noImplicitAny": false,
     "esModuleInterop": true,
+    "strictNullChecks": false,
+    "resolveJsonModule": true,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "forceConsistentCasingInFileNames": false
   },
   "exclude": ["dist"]
 }

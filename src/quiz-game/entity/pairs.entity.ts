@@ -42,7 +42,7 @@ export class PairGame {
   @Column({
     enum: GameStatuses,
     nullable: true,
-    default: null,
+    default: GameStatuses.Pending,
   })
   status: GameStatuses;
 

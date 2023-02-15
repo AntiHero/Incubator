@@ -26,6 +26,11 @@ import { Service } from 'root/@common/decorators/service.decorator';
 import { PairsService } from 'root/quiz-game/services/pairs.service';
 import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
 import { PairsTransactionService } from './services/pairs.transaction.service';
+// import { QUESTIONS_LIMIT } from 'root/@common/constants';
+
+// const answersOrderObj: {
+//   [key: string]: number;
+// } = {};
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {
@@ -118,11 +123,23 @@ export class PairsController {
   ) {
     const { answer } = body;
 
+    // const isGameReady = await this.pairsService.getMyCurrentGame(userId, true);
+
+    // if (!isGameReady || answersOrderObj[userId] === QUESTIONS_LIMIT)
+    //   throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    // if (answersOrderObj[userId] === undefined) {
+    //   answersOrderObj[userId] = 0;
+    // } else {
+    //   ++answersOrderObj[userId];
+    // }
+
     const proceededAnswer = await pairsTransactionService.proceedAnswer(
       userId,
       answer,
+      // answersOrderObj[userId],
+      // answersOrderObj,
     );
-
     if (!proceededAnswer)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 

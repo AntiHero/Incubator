@@ -29,7 +29,7 @@ import { CreateUserDto } from 'root/users/dto/create-user.dto';
 import { BanGuard } from 'root/@common/guards/banned-user.guard';
 import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
-import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
+// import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
 import { AuthenticationGuard } from 'root/@common/guards/authentication.guard';
 import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';

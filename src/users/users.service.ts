@@ -6,10 +6,10 @@ import { Injectable } from '@nestjs/common';
 import { Roles } from './types/roles';
 import { UserForToken } from 'root/auth/types';
 import { BanInfo, UserDomainModel } from './types';
-import { fiveMinInMs } from 'root/@common/constants';
 import { PaginationQueryType } from 'root/@common/types';
 import { OptionalKey } from 'root/@common/types/utility';
 import { UsersRepository } from './adapter/postgres.adapter';
+import { fiveMinInMs, saltRounds } from 'root/@common/constants';
 import { EmailManager } from 'root/email-manager/email-manager';
 import { UsersBanInfoSqlRepository } from './adapter/user-ban-info-sql.adapter';
 import { ConfirmationInfoSqlRepository } from './adapter/user-confirmation-info-sql.adapter';
@@ -38,7 +38,6 @@ export class UsersService {
   }
 
   async createUser(data: UserDomainModel) {
-    const saltRounds = 10;
     const { login, password, email, role } = data;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 

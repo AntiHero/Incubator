@@ -3,7 +3,7 @@ import { DataSourceOptions } from 'typeorm';
 
 dotenv.config();
 
-export const config: DataSourceOptions = {
+export const conf: DataSourceOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
   synchronize: false,

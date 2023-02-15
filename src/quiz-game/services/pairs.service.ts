@@ -8,6 +8,7 @@ import { AnswerStatuses, GameStatuses } from '../types/enum';
 import { GamePairDTO, GamePayload, PairsQuery } from '../types';
 import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 import { PairsQueryRepository } from '../infrastructure/repositories/pairs.query.repository';
+import { QUESTIONS_LIMIT } from 'root/@common/constants';
 
 @Injectable()
 export class PairsService {
@@ -60,8 +61,6 @@ export class PairsService {
 
   public async createConnection(userId: string): Promise<GamePairDTO> {
     try {
-      const QUESTIONS_LIMIT = 5;
-
       const { id, login } = await this.usersService.findUserById(userId);
 
       let game = await this.pairsRepository.findPendingGameAndConnect(id);

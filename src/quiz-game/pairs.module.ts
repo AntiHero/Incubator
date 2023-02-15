@@ -17,6 +17,7 @@ import { QuestionsProvider } from './infrastructure/repositories/questions.repos
 import { PairsRepository } from 'root/quiz-game/infrastructure/repositories/pairs.repository';
 import { QuestionsQueryProvider } from './infrastructure/repositories/questions.query.repository';
 import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories/pairs.query.repository';
+import { FinishTheGameAfterDelayUseCase } from './application/use-case/finish-the-game-after-delay.use-case-';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Question, PairGame]), UsersModule],
@@ -29,6 +30,7 @@ import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories
     QuestionsQueryProvider,
     PairsStatisticsService,
     PlayerAnswerTransaction,
+    FinishTheGameAfterDelayUseCase,
     serviceProviderFactory(PairsTransactionService),
   ],
   controllers: [QuizQuestionsController, PairsController, PairsUserController],

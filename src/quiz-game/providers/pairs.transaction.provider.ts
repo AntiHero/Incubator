@@ -11,10 +11,15 @@ import { AnswerStatuses, GameStatuses } from '../types/enum';
 import { AnswersConverter } from '../utils/answers.converter';
 import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
 import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
+import { FinishTheGameAfterDelayUseCase } from '../application/use-case/finish-the-game-after-delay.use-case-';
 
 type PlayerAnswer = {
   playerId: string;
   answer: string;
+  // answerOrder: number;
+  // answersOrderObj: {
+  //   [key: string]: number;
+  // };
 };
 
 @Injectable()
@@ -25,20 +30,19 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
   public constructor(
     dataSource: DataSource,
     private readonly pairsRepository: PairsRepository,
+    private readonly finishGame: FinishTheGameAfterDelayUseCase,
   ) {
     super(dataSource);
   }
 
-  private timers: { [key: string]: NodeJS.Timer } = {};
-
-  private timeout: 10_000;
-
   protected async execute(
+    // { playerId, answer, answerOrder, answersOrderObj }: PlayerAnswer,
     { playerId, answer }: PlayerAnswer,
     manager: EntityManager,
   ) {
     const game = await manager
       .createQueryBuilder(PairGame, 'pairs')
+      .useTransaction(true)
       .setLock('pessimistic_write', undefined, ['pairs'])
       .where([
         { firstPlayer: { id: Number(playerId) }, status: GameStatuses.Active },
@@ -55,7 +59,9 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     if (!game || !game.questionsLength) return null;
 
     const {
+      questions,
       id: gameId,
+      firstPlayer,
       secondPlayer,
       firstPlayerScore,
       secondPlayerScore,
@@ -63,11 +69,12 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       secondPlayerAnswers,
     } = game;
 
-    console.log(secondPlayer);
-
     const isCurrentPlayerFirst = game.isPlayerFirst(Number(playerId));
+
     const questionsCount = game.questionsLength;
 
+    // if (answerOrder === questionsCount) return null;
+    // if (answersOrder[playerId] === questionsCount) return null;
     if (isCurrentPlayerFirst) {
       if (firstPlayerAnswers.length === questionsCount) return null;
     } else {
@@ -97,6 +104,7 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const gameUpdates: GameUpdates = { id: gameId };
 
     const currentQuestion = game.getCurrentQuestion(Number(playerId));
+    // const currentQuestion = questions[answerOrder];
 
     const isCorrect = game.isAnswerCorrect(answer, currentQuestion);
 
@@ -111,6 +119,8 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
     const isAnswerLast = game.isAnswerLast;
 
     if (isAnswerLast) {
+      this.finishGame.abort(Number(playerId));
+
       gameUpdates.status = GameStatuses.Finished;
       gameUpdates.finishGameDate = new Date();
     }
@@ -149,7 +159,28 @@ export class PlayerAnswerTransaction extends BaseTransactionProvider<
       gameUpdates.secondPlayerAnswers = currentPlayerAnswers;
     }
 
+    // const isMyAnswerLast = questionsCount - 1 === answerOrder;
+    const isMyAnswerLast = questionsCount - 1 === currentPlayerAnswers.length;
+
+    if (isMyAnswerLast && !isAnswerLast) {
+      if (isCurrentPlayerFirst) {
+        this.finishGame.execute(gameId, secondPlayer.id);
+      } else {
+        this.finishGame.execute(gameId, firstPlayer.id);
+      }
+    }
+
     await this.pairsRepository.updateGame(gameUpdates, manager);
+
+    // if (gameUpdates.status) {
+    //   delete answersOrderObj[playerId];
+
+    //   if (isCurrentPlayerFirst) {
+    //     delete answersOrderObj[secondPlayer.id];
+    //   } else {
+    //     delete answersOrderObj[firstPlayer.id];
+    //   }
+    // }
 
     return AnswersConverter.toDTO(newAnswer);
   }

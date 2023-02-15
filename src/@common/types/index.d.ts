@@ -84,3 +84,9 @@ export type BanType = {
   isBanned: boolean;
   banDate: string;
 };
+
+export type PlayerData = {
+  login: string;
+  password: string;
+  email: string;
+};

@@ -1,4 +1,5 @@
 export const basicLogin = 'admin';
+
 export const basicPassword = 'qwerty';
 
 export const fiveMinInMs = 5 * 60 * 1000;
@@ -10,4 +11,9 @@ export const RATE_LIMIT = 5;
 export const LIKES_LIMIT = 3;
 
 export const MIN_PASSWORD_LEN = 6;
+
 export const MAX_PASSWORD_LEN = 20;
+
+export const saltRounds = 10;
+
+export const QUESTIONS_LIMIT = 5;
