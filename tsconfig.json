@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": false,
     "forceConsistentCasingInFileNames": false
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "frontend"]
 }
