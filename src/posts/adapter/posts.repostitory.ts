@@ -7,7 +7,7 @@ import { CommentDTO } from 'root/comments/types';
 import { LikeDomainModel } from 'root/likes/types';
 import { Blog } from 'root/blogs/entity/blog.entity';
 import { User } from 'root/users/entity/user.entity';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { PostLike } from 'root/likes/entity/like.entity';
 import { ConvertPostData } from '../utils/convertPostData';
 import { updatePostQuery } from '../query/update-post.query';

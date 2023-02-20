@@ -11,11 +11,11 @@ import {
 
 import { Statistics } from './types/enum';
 import { TopUsersSanitizedQuery } from './types';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { TopQuerySanitizerPipe } from './@common/top-query.pipe';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { StatisticsConverter } from './utils/statistics.converter';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
 import { PairsStatisticsService } from './services/game-statistics.service';
 
 @Controller('pair-game-quiz/users')

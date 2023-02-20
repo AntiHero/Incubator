@@ -1,4 +1,4 @@
-import { WithId } from 'root/@common/types/utility';
+import { WithId } from 'root/@core/types/utility';
 import { Roles } from './roles';
 
 export type UserDomainModel = {

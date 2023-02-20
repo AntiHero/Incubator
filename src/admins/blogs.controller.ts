@@ -16,13 +16,13 @@ import {
 import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { BlogsService } from 'root/blogs/blogs.service';
-import { PaginationQueryType } from 'root/@common/types';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { PaginationQueryType } from 'root/@core/types';
+import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { BlogWithBanInfo, BlogWithExtendedOwnerInfoType } from './types';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/blogs')
 export class BlogsController {

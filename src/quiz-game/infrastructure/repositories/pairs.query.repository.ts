@@ -2,7 +2,7 @@ import { Raw, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { countSkip } from 'root/@common/utils/count-skip';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { GameStatuses, Statistics } from 'root/quiz-game/types/enum';
 import { PairGame } from 'root/quiz-game/entity/pairs.entity';
 import {

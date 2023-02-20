@@ -15,13 +15,13 @@ import {
 } from '@nestjs/common';
 
 import { QuestionPaginationQuery } from '../types';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { QuestionsService } from '../services/questions.service';
 import { CreateQuestionDTO } from '../dto/create-question.dto';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
+import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { UpdatePublishStatusDTO } from '../dto/update-publish-status.dto';
-import { QuestionQuerySanitizerPipe } from 'root/@common/pipes/question-pagination-sanitizter.pipe';
+import { QuestionQuerySanitizerPipe } from 'root/@core/pipes/question-pagination-sanitizter.pipe';
 
 @Controller('sa/quiz/questions')
 export class QuizQuestionsController {

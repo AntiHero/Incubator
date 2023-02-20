@@ -26,18 +26,18 @@ import { TokensService } from 'root/tokens/tokens.service';
 import { LoginUserDTO } from 'root/users/dto/login-user.dto';
 import { LoginSuccessViewModel, UserForToken } from './types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
-import { BanGuard } from 'root/@common/guards/banned-user.guard';
-import { JwtAuthGuard } from 'root/@common/guards/jwt-auth.guard';
+import { BanGuard } from 'root/@core/guards/banned-user.guard';
+import { JwtAuthGuard } from 'root/@core/guards/jwt-auth.guard';
 import { SecurityDeviceInput } from 'root/security-devices/types';
 // import { IpRestrictionGuard } from 'root/@common/guards/ip-restriction.guard';
-import { AuthenticationGuard } from 'root/@common/guards/authentication.guard';
+import { AuthenticationGuard } from 'root/@core/guards/authentication.guard';
 import { ConfirmUserUseCase } from 'root/users/use-cases/confirm-user.use-case';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { UpdateUserPasswordUseCase } from 'root/users/use-cases/update-password.use-case';
-import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
-import { RegistrationCodeValidationPipe } from 'root/@common/pipes/registration-code-validation.pipe';
-import { ConfirmationStatusValidationPipe } from 'root/@common/pipes/confirmation-status-validation.pipe';
-import { UpdateUserPasswordDecorator } from 'root/@common/decorators/update-user-password-use-case.decorator';
+import { UserUnicityValidationPipe } from 'root/@core/pipes/user-unicity-validation.pipe';
+import { RegistrationCodeValidationPipe } from 'root/@core/pipes/registration-code-validation.pipe';
+import { ConfirmationStatusValidationPipe } from 'root/@core/pipes/confirmation-status-validation.pipe';
+import { UpdateUserPasswordDecorator } from 'root/@core/decorators/update-user-password-use-case.decorator';
 import { GetUserByConfirmationCodeUseCase } from 'root/users/use-cases/find-user-by-confirmation-code.use-case';
 
 @Controller('auth')

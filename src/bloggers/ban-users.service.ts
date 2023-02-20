@@ -5,8 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BannedUserForEntityDTO } from './types';
 import { User } from 'root/users/entity/user.entity';
 import { BannedUser } from './entity/banned-user.entity';
-import { PaginationQueryType } from 'root/@common/types';
-import { countSkip } from 'root/@common/utils/count-skip';
+import { PaginationQueryType } from 'root/@core/types';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { ConvertBannedUserData } from './utils/convertBannedUser';
 import { getBannedUsersByQuery } from './query/get-banned-users.query';
 

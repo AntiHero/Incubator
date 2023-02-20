@@ -1,11 +1,11 @@
 import { HydratedDocument, LeanDocument } from 'mongoose';
 import { PostDatabaseModel, PostDomainModel, PostDTO } from 'root/posts/types';
 
-import { BanType } from 'root/@common/types';
+import { BanType } from 'root/@core/types';
 import { CommentDTO } from 'root/comments/types';
-import { WithId } from 'root/@common/types/utility';
+import { WithId } from 'root/@core/types/utility';
 import { LikeDTO } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 
 export type BlogSchemaModel = {
   name: string;

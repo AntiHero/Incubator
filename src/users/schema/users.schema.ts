@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
-import { fiveMinInMs } from 'root/@common/constants';
+import { fiveMinInMs } from 'root/@core/constants';
 import { Roles } from '../types/roles';
 
 class BanInfo {

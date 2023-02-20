@@ -6,7 +6,7 @@ import { SecurityDevice } from './entity/security-device.entity';
 import { SecurityDevicesService } from './security-devices.service';
 import { SecurityDevicesController } from './security-devices.controller';
 import { SecurityDevicesRepository } from './adapter/security-device.repository';
-import { RefreshTokenValidationMiddleware } from 'root/@common/middlewares/refresh-token.validation.middleware';
+import { RefreshTokenValidationMiddleware } from 'root/@core/middlewares/refresh-token.validation.middleware';
 import { SecurityDevicesQueryRepository } from './adapter/security-device-query.repository';
 
 @Module({

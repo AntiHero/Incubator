@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@common/constants';
+import { MAX_TIMEOUT, RATE_LIMIT } from 'root/@core/constants';
 
 type ReqInfo = { ip: string; path: string; time: number };
 type RequestHistory = ReqInfo[];

@@ -1,5 +1,5 @@
 import { UserDB, UserDTO } from '../types';
-import { ConvertToEntity } from 'root/@common/utils/convert';
+import { ConvertToEntity } from 'root/@core/utils/convert';
 
 export class ConvertToUser implements ConvertToEntity {
   static toDTO(doc: UserDB): UserDTO {

@@ -1,8 +1,8 @@
 import { Transform } from 'class-transformer';
 import { IsEnum, IsString } from 'class-validator';
 
-import { LikeStatuses } from 'root/@common/types/enum';
-import { NOT_STRING_ERROR, WRONG_VALUE } from 'root/@common/error-messages';
+import { LikeStatuses } from 'root/@core/types/enum';
+import { NOT_STRING_ERROR, WRONG_VALUE } from 'root/@core/error-messages';
 
 export class LikePostDTO {
   @IsString({ message: NOT_STRING_ERROR })

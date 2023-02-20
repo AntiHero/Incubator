@@ -8,8 +8,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './@common/filters/exception-filter';
-import { exceptionFactory } from './@common/utils/custom-exception-factory';
+import { HttpExceptionFilter } from './@core/filters/exception-filter';
+import { exceptionFactory } from './@core/utils/custom-exception-factory';
 import { DataSource } from 'typeorm';
 
 const PORT = process.env.PORT;

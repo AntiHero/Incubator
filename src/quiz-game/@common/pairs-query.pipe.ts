@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
 import { PairsQuery } from '../types';
-import { SortDirection } from 'root/@common/types/enum';
+import { SortDirection } from 'root/@core/types/enum';
 
 @Injectable()
 export class PairsQueryParsePipe implements PipeTransform {

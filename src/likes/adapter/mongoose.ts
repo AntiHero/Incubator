@@ -2,7 +2,7 @@ import { Types } from 'mongoose';
 
 import { InjectModel } from 'nestjs-typegoose';
 import { LikeModel } from '../schemas/likes.schema';
-import { SortDirections } from 'root/@common/types/enum';
+import { SortDirections } from 'root/@core/types/enum';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { convertToLikeDTO } from '../utils/convertToLikeDTO';
 import { LikeDatabaseModel, LikeDomainModel, LikeDTO } from '../types';

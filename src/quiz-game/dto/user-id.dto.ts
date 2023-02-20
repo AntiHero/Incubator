@@ -1,6 +1,6 @@
 import { IsUUID } from 'class-validator';
 
-import { BAD_ID_ERROR } from 'root/@common/error-messages';
+import { BAD_ID_ERROR } from 'root/@core/error-messages';
 
 const UUID_V = '4';
 

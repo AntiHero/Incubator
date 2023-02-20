@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { BanInfo } from 'root/users/types';
 import { UsersService } from 'root/users/users.service';
 import { LikesService } from 'root/likes/likes.service';
-import { OptionalKey } from 'root/@common/types/utility';
+import { OptionalKey } from 'root/@core/types/utility';
 import { CommentsService } from 'root/comments/comments.service';
 
 @Injectable()

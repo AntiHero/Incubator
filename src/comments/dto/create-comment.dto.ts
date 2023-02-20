@@ -5,7 +5,7 @@ import {
   MAX_LENGTH_ERROR,
   MIN_LENGTH_ERROR,
   NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
+} from 'root/@core/error-messages';
 
 export class CreateCommentDTO {
   @IsString({ message: NOT_STRING_ERROR })

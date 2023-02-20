@@ -1,4 +1,4 @@
-import { SortDirection } from 'root/@common/types/enum';
+import { SortDirection } from 'root/@core/types/enum';
 import { PublishedStatus, Statistics } from './enum';
 import { AnswerStatuses, GameStatuses } from './enum';
 

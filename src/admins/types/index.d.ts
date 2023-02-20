@@ -1,4 +1,4 @@
-import { BanType } from 'root/@common/types';
+import { BanType } from 'root/@core/types';
 import { BlogViewModel } from 'root/blogs/types';
 
 export type BlogWithExtendedOwnerInfoType = BlogViewModel & {

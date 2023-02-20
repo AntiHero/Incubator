@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsString } from 'class-validator';
 
-import { NOT_STRING_ERROR } from 'root/@common/error-messages';
+import { NOT_STRING_ERROR } from 'root/@core/error-messages';
 
 export class CreateAnswerDTO {
   @IsString({ message: NOT_STRING_ERROR })

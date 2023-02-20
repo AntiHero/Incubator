@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
 import { BannedUserForEntityDTO } from './types';
-import { PaginationQuery } from 'root/@common/types';
-import { countSkip } from 'root/@common/utils/count-skip';
+import { PaginationQuery } from 'root/@core/types';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { BannedUserEntity } from './entity/banned-user.model';
 import { convertToBannedUserDTO } from './utils/convertToBannedUserDTO';
 import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';

@@ -9,7 +9,7 @@ import {
 
 import { Post } from 'root/posts/entity/post.entity';
 import { User } from 'root/users/entity/user.entity';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { Comment } from 'root/comments/entity/comment.entity';
 
 @Entity('post_likes')

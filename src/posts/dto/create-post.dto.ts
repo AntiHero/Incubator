@@ -1,13 +1,10 @@
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
 
-import { ObjectId } from 'root/@common/decorators/object-id-validator.decorator';
-import { CheckBlogExistance } from 'root/@common/decorators/check-blog-existance.decorator';
+import { ObjectId } from 'root/@core/decorators/object-id-validator.decorator';
+import { CheckBlogExistance } from 'root/@core/decorators/check-blog-existance.decorator';
 
-import {
-  MAX_LENGTH_ERROR,
-  NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
+import { MAX_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@core/error-messages';
 
 export class CreatePostDTO {
   @IsString({ message: NOT_STRING_ERROR })

@@ -1,4 +1,4 @@
-import { SortDirectionKeys } from 'root/@common/types/enum';
+import { SortDirectionKeys } from 'root/@core/types/enum';
 
 export const getBlogPostsByQuery = (
   sortBy: string,

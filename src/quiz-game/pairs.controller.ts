@@ -15,16 +15,16 @@ import {
 
 import { PairsQuery } from './types';
 import { IdDTO } from './dto/user-id.dto';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { CreateAnswerDTO } from './dto/create-answer.dto';
 import { GamePairErrors, GameStatuses } from './types/enum';
 import { GamePairConverter } from './utils/pairs.converter';
 import { AnswersConverter } from './utils/answers.converter';
 import { PairsQueryParsePipe } from './@common/pairs-query.pipe';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
-import { Service } from 'root/@common/decorators/service.decorator';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
+import { Service } from 'root/@core/decorators/service.decorator';
 import { PairsService } from 'root/quiz-game/services/pairs.service';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
 import { PairsTransactionService } from './services/pairs.transaction.service';
 
 @Controller('pair-game-quiz/pairs')

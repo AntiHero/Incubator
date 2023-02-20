@@ -3,7 +3,7 @@ import { Controller, Delete, Get, Param, Req, Res } from '@nestjs/common';
 
 import { SecurityDevicesService } from './security-devices.service';
 import { convertToSecurityDeviceViewModel } from './utils/convertToDeviceViewModel';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
 
 @Controller('security/devices')
 export class SecurityDevicesController {

@@ -6,7 +6,7 @@ import {
 } from '../types';
 import { Post } from '../entity/post.entity';
 import { LikeViewModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
 
 export class ConvertPostData {

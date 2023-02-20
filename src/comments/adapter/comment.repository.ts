@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDomainModel } from '../types';
 import { Comment } from '../entity/comment.entity';
 import { LikeDomainModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { CommentLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from '../utils/convertComment';
 import { updateCommentQuery } from '../query/update-comment.query';

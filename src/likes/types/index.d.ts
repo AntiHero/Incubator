@@ -1,6 +1,6 @@
 import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 
 export type LikeSchemaModel = {
   entityId: Schema.Types.ObjectId;

@@ -4,8 +4,8 @@ import {
   ArgumentMetadata,
   BadRequestException,
 } from '@nestjs/common';
-import { SortDirection } from 'root/@common/types/enum';
-import { BAD_QUERY_ERROR } from 'root/@common/error-messages';
+import { SortDirection } from 'root/@core/types/enum';
+import { BAD_QUERY_ERROR } from 'root/@core/error-messages';
 
 import { Statistics } from '../types/enum';
 import { TopUsersQuery, TopUsersSanitizedQuery } from '../types';

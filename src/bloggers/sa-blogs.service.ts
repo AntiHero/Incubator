@@ -2,8 +2,8 @@ import { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from 'nestjs-typegoose';
-import { PaginationQuery } from 'root/@common/types';
-import { countSkip } from 'root/@common/utils/count-skip';
+import { PaginationQuery } from 'root/@core/types';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { convertToBlogDTO } from 'root/blogs/utils/convertToBlogDTO';

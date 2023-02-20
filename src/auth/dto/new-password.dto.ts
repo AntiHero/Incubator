@@ -12,9 +12,9 @@ import {
   MIN_LENGTH_ERROR,
   NOT_STRING_ERROR,
   NOT_UUID_ERROR,
-} from 'root/@common/error-messages';
-import { MAX_PASSWORD_LEN, MIN_PASSWORD_LEN } from 'root/@common/constants';
-import { ValidateRecoveryCode } from 'root/@common/decorators/validate-uuid.decorator';
+} from 'root/@core/error-messages';
+import { MAX_PASSWORD_LEN, MIN_PASSWORD_LEN } from 'root/@core/constants';
+import { ValidateRecoveryCode } from 'root/@core/decorators/validate-uuid.decorator';
 
 export class NewPasswordDTO {
   @IsString({ message: NOT_STRING_ERROR })

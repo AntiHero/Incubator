@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Comment } from '../entity/comment.entity';
 import { User } from 'root/users/entity/user.entity';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { CommentLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from '../utils/convertComment';
 import { CommentDTO, CommentExtendedLikesDTO } from '../types';

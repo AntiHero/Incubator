@@ -1,11 +1,8 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-import {
-  MIN_LENGTH_ERROR,
-  NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
-import { IsId } from 'root/@common/decorators/sql-id.validator.decorator';
+import { MIN_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@core/error-messages';
+import { IsId } from 'root/@core/decorators/sql-id.validator.decorator';
 
 export class BanUserForBlogDTO {
   @IsString({ message: NOT_STRING_ERROR })

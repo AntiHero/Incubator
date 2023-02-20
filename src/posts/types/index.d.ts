@@ -1,6 +1,6 @@
 import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 
-import { WithId } from 'root/@common/types/utility';
+import { WithId } from 'root/@core/types/utility';
 import {
   CommentDatabaseModel,
   CommentDomainModel,
@@ -12,7 +12,7 @@ import {
   LikeDomainModel,
   LikeDTO,
 } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 
 export type PostSchemaModel = {
   title: string;

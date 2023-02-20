@@ -1,4 +1,4 @@
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { CommentDTO, CommentViewModel } from '../types';
 
 export const convertToExtendedViewCommentModel = (

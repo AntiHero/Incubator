@@ -1,6 +1,6 @@
 import { LikeDTO } from 'root/likes/types';
-import { LikesInfoViewModel } from 'root/@common/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikesInfoViewModel } from 'root/@core/types';
+import { LikeStatuses } from 'root/@core/types/enum';
 
 export type BannedUserForEntity = {
   entityId: string;

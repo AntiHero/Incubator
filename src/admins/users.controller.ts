@@ -19,13 +19,13 @@ import {
 
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
-import Paginator from 'root/@common/models/Paginator';
-import { PaginationQueryType } from 'root/@common/types';
+import Paginator from 'root/@core/models/Paginator';
+import { PaginationQueryType } from 'root/@core/types';
 import { CreateUserDto } from 'root/users/dto/create-user.dto';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
+import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { convertToUserViewModel } from 'root/users/utils/convertToUserViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/users')
 @UseGuards(BasicAuthGuard)

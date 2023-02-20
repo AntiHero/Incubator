@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 import {
   NOT_STRING_ERROR,
   WRONG_PATTERN_ERROR,
-} from 'root/@common/error-messages';
+} from 'root/@core/error-messages';
 
 export class CreateBlogDTO {
   @IsString({ message: NOT_STRING_ERROR })

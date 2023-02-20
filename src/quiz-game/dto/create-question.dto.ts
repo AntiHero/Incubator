@@ -6,7 +6,7 @@ import {
   MIN_LENGTH_ERROR,
   NOT_ARRAY_ERROR,
   NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
+} from 'root/@core/error-messages';
 
 const MAX_LENGTH = 500;
 const MIN_LENGTH = 10;

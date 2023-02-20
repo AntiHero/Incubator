@@ -1,6 +1,6 @@
 import { Roles } from '../types/roles';
 import { UserDomainModel } from '../types';
-import { OptionalKey } from 'root/@common/types/utility';
+import { OptionalKey } from 'root/@core/types/utility';
 
 export class User {
   public login: string;

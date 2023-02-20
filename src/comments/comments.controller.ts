@@ -10,12 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
 
 import { CommentsService } from './comments.service';
 import { UpdateCommentDTO } from './dto/update.comment.dto';
 import { LikeCommentDTO } from './dto/like-comment-like.dto';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { convertToCommentViewModel } from './utils/convertToCommentViewModel';
 
 @Controller('comments')

@@ -11,17 +11,17 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { BannedUserForEntityViewModel } from './types';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
-import { PaginationQueryType } from 'root/@common/types';
+import { PaginationQueryType } from 'root/@core/types';
 import { BanUsersByBloggerService } from './ban-users.service';
 import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
+import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
 
 @Controller('blogger/users')

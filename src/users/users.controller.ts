@@ -16,13 +16,13 @@ import { Response } from 'express';
 
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PaginationQueryType } from 'root/@common/types';
-import { BasicAuthGuard } from 'root/@common/guards/basic.auth.guard';
+import { PaginationQueryType } from 'root/@core/types';
+import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { convertToUserViewModel } from './utils/convertToUserViewModel';
-import { UserUnicityValidationPipe } from 'root/@common/pipes/user-unicity-validation.pipe';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { UserUnicityValidationPipe } from 'root/@core/pipes/user-unicity-validation.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('users')
 @UseGuards(BasicAuthGuard)

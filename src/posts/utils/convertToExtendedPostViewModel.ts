@@ -1,5 +1,5 @@
 import { LikeViewModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { PostDTO, PostExtendedLikesDTO, PostExtendedViewModel } from '../types';
 import { convertToLikeViewModel } from 'root/likes/utils/convertToLikeViewModel';
 

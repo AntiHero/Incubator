@@ -1,10 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-import {
-  MIN_LENGTH_ERROR,
-  NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
+import { MIN_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@core/error-messages';
 
 export class BanUserDTO {
   @IsString({ message: NOT_STRING_ERROR })

@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-import { NOT_STRING_ERROR } from 'root/@common/error-messages';
+import { NOT_STRING_ERROR } from 'root/@core/error-messages';
 
 export class CodeDTO {
   @IsString({ message: NOT_STRING_ERROR })

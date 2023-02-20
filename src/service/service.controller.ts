@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 
 import { AnyService } from './service.service';
-import { Service } from 'root/@common/decorators/service.decorator';
+import { Service } from 'root/@core/decorators/service.decorator';
 
 @Controller('service')
 export class ServiceController {

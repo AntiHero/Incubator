@@ -9,7 +9,7 @@ import { Question } from '../entity/question.entity';
 import { User } from 'root/users/entity/user.entity';
 import { AnswerStatuses, GameStatuses } from '../types/enum';
 import { AnswersConverter } from '../utils/answers.converter';
-import { BaseTransactionProvider } from 'root/@common/providers/transaction.provider';
+import { BaseTransactionProvider } from 'root/@core/providers/transaction.provider';
 import { FinishTheGameAfterDelayUseCase } from '../application/use-case/finish-the-game-after-delay.use-case-';
 
 type PlayerAnswer = {

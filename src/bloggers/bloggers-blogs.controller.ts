@@ -16,22 +16,22 @@ import { Response } from 'express';
 import Blog from 'root/blogs/domain/blogs.model';
 import { BlogViewModel } from 'root/blogs/types';
 import { BloggerCommentsViewModel } from './types';
-import Paginator from 'root/@common/models/Paginator';
+import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
-import { PaginationQueryType } from 'root/@common/types';
+import { PaginationQueryType } from 'root/@core/types';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
-import { UserId } from 'root/@common/decorators/user-id.decorator';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
-import { BearerAuthGuard } from 'root/@common/guards/bearer-auth.guard';
-import { IdValidationPipe } from 'root/@common/pipes/id-validation.pipe';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
+import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
 import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@common/pipes/pagination-query-sanitizer.pipe';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)

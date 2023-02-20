@@ -1,9 +1,9 @@
 import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 
-import { WithId } from 'root/@common/types/utility';
-import { LikesInfoViewModel } from 'root/@common/types';
+import { WithId } from 'root/@core/types/utility';
+import { LikesInfoViewModel } from 'root/@core/types';
 import { LikeDatabaseModel, LikeDTO } from 'root/likes/types';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 
 export type CommentSchemaModel = {
   content: string;

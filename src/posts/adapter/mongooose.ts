@@ -3,8 +3,8 @@ import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
-import { PaginationQuery } from 'root/@common/types';
-import { countSkip } from 'root/@common/utils/count-skip';
+import { PaginationQuery } from 'root/@core/types';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { convertToPostDTO } from '../utils/convertToPostDTO';
 import {
   PostDatabaseModel,
@@ -17,11 +17,11 @@ import { Roles } from 'root/users/types/roles';
 import { PostModel } from '../schemas/post.schema';
 import { LikeDomainModel } from 'root/likes/types';
 import { Like } from 'root/likes/domain/likes.model';
-import { LIKES_LIMIT } from 'root/@common/constants';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LIKES_LIMIT } from 'root/@core/constants';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { BlogModel } from 'root/blogs/schemas/blogs.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
-import { toObjectId } from 'root/@common/utils/to-object-id';
+import { toObjectId } from 'root/@core/utils/to-object-id';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { CommentDTO, CommentExtendedLikesDTO } from 'root/comments/types';

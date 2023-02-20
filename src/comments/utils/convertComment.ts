@@ -1,5 +1,5 @@
 import { Comment } from '../entity/comment.entity';
-import { LikesInfoViewModel } from 'root/@common/types';
+import { LikesInfoViewModel } from 'root/@core/types';
 import { CommentDTO, CommentViewModel } from '../types';
 
 export class ConvertCommentData {

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Blog } from '../entity/blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'root/posts/entity/post.entity';
-import { LikeStatuses } from 'root/@common/types/enum';
+import { LikeStatuses } from 'root/@core/types/enum';
 import { ConvertBlogData } from '../utils/convertToBlog';
 import { updateBlogQuery } from '../query/update-blog.query';
 import { ConvertPostData } from 'root/posts/utils/convertPostData';

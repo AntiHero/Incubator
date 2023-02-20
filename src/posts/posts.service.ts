@@ -4,7 +4,7 @@ import { PostDomainModel } from './types';
 import { Roles } from 'root/users/types/roles';
 import { CommentDTO } from 'root/comments/types';
 import { LikeDomainModel } from 'root/likes/types';
-import { PaginationQueryType } from 'root/@common/types';
+import { PaginationQueryType } from 'root/@core/types';
 import { PostsRepository } from './adapter/posts.repostitory';
 import { PostsQueryRepository } from './adapter/posts-query.repository';
 

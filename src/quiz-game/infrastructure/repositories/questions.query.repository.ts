@@ -6,7 +6,7 @@ import {
   QuestionDTO,
   QuestionPaginationQuery,
 } from 'root/quiz-game/types/index';
-import { countSkip } from 'root/@common/utils/count-skip';
+import { countSkip } from 'root/@core/utils/count-skip';
 import { PublishedStatus } from 'root/quiz-game/types/enum';
 import { Question } from 'root/quiz-game/entity/question.entity';
 

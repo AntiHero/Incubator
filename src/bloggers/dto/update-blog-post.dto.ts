@@ -1,10 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import {
-  MAX_LENGTH_ERROR,
-  NOT_STRING_ERROR,
-} from 'root/@common/error-messages';
+import { MAX_LENGTH_ERROR, NOT_STRING_ERROR } from 'root/@core/error-messages';
 
 export class UpdateBlogPostDTO {
   @IsString({ message: NOT_STRING_ERROR })

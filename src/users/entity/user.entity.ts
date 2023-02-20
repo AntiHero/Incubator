@@ -11,7 +11,7 @@ import bcrypt from 'bcrypt';
 import { Roles } from 'root/users/types/roles';
 import { UserBanInfo } from './user-ban-info.entity';
 import { PasswordRecovery } from './password-recovery.entity';
-import { fiveMinInMs, saltRounds } from 'root/@common/constants';
+import { fiveMinInMs, saltRounds } from 'root/@core/constants';
 import { UserConfirmationInfo } from './user-confirmation-info.entity';
 
 @Entity('users')
