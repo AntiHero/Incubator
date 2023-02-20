@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { Answer } from '../entity/answer.entity';
-import { Question } from '../entity/question.entity';
+import { Answer } from '../../infrastructure/database/entity/answer.entity';
+import { Question } from '../../infrastructure/database/entity/question.entity';
 import { QuestionsService } from './questions.service';
 import { UsersService } from 'root/users/users.service';
-import { AnswerStatuses, GameStatuses } from '../types/enum';
-import { GamePairDTO, GamePayload, PairsQuery } from '../types';
-import { PairsRepository } from '../infrastructure/repositories/pairs.repository';
-import { PairsQueryRepository } from '../infrastructure/repositories/pairs.query.repository';
+import { AnswerStatuses, GameStatuses } from '../../@common/types/enum';
+import { GamePairDTO, GamePayload, PairsQuery } from '../../@common/types';
+import { PairsRepository } from '../../infrastructure/database/repositories/pairs.repository';
+import { PairsQueryRepository } from '../../infrastructure/database/repositories/pairs.query.repository';
 import { QUESTIONS_LIMIT } from 'root/@core/constants';
 
 @Injectable()

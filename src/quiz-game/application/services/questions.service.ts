@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { QuestionInputModel, QuestionPaginationQuery } from '../types';
-import { QuestionsProvider } from '../infrastructure/repositories/questions.repository';
-import { QuestionsQueryProvider } from '../infrastructure/repositories/questions.query.repository';
+import {
+  QuestionInputModel,
+  QuestionPaginationQuery,
+} from '../../@common/types';
+import { QuestionsProvider } from '../../infrastructure/database/repositories/questions.repository';
+import { QuestionsQueryProvider } from '../../infrastructure/database/repositories/questions.query.repository';
 
 @Injectable()
 export class QuestionsService {

@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { PairGame } from './entity/pairs.entity';
-import { Question } from './entity/question.entity';
-import { PairsController } from './pairs.controller';
 import { UsersModule } from 'root/users/users.module';
 import { PairsService } from './services/pairs.service';
-import { PairsUserController } from './users.controller';
 import { QuestionsService } from './services/questions.service';
+import { PairsUserController } from './controllers/users.controller';
+import { PairGame } from '../infrastructure/database/entity/pairs.entity';
 import { PairsStatisticsService } from './services/game-statistics.service';
 import { QuizQuestionsController } from './controllers/questions.controller';
+import { Question } from '../infrastructure/database/entity/question.entity';
 import { PairsTransactionService } from './services/pairs.transaction.service';
 import { PlayerAnswerTransaction } from './providers/pairs.transaction.provider';
 import { serviceProviderFactory } from 'root/@core/utils/serviceProviderFactory';
-import { QuestionsProvider } from './infrastructure/repositories/questions.repository';
-import { PairsRepository } from 'root/quiz-game/infrastructure/repositories/pairs.repository';
-import { QuestionsQueryProvider } from './infrastructure/repositories/questions.query.repository';
-import { PairsQueryRepository } from 'root/quiz-game/infrastructure/repositories/pairs.query.repository';
-import { FinishTheGameAfterDelayUseCase } from './application/use-case/finish-the-game-after-delay.use-case-';
+import { PairsController } from 'root/quiz-game/application/controllers/pairs.controller';
+import { QuestionsProvider } from '../infrastructure/database/repositories/questions.repository';
+import { FinishTheGameAfterDelayUseCase } from './use-cases/finish-the-game-after-delay.use-case-';
+import { PairsRepository } from 'root/quiz-game/infrastructure/database/repositories/pairs.repository';
+import { QuestionsQueryProvider } from '../infrastructure/database/repositories/questions.query.repository';
+import { PairsQueryRepository } from 'root/quiz-game/infrastructure/database/repositories/pairs.query.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Question, PairGame]), UsersModule],

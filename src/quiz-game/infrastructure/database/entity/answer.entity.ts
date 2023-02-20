@@ -8,10 +8,10 @@ import {
 } from 'typeorm';
 
 import { PairGame } from './pairs.entity';
-import { AnswerStatuses } from '../types/enum';
+import { AnswerStatuses } from '../../../@common/types/enum';
 import { User } from 'root/users/entity/user.entity';
-import { AnswerDTO, AnswerViewModel } from '../types';
-import { Question } from 'root/quiz-game/entity/question.entity';
+import { AnswerDTO, AnswerViewModel } from '../../../@common/types';
+import { Question } from 'root/quiz-game/infrastructure/database/entity/question.entity';
 
 @Entity('answers', {
   orderBy: {

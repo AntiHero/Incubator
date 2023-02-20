@@ -7,8 +7,8 @@ import {
 import { SortDirection } from 'root/@core/types/enum';
 import { BAD_QUERY_ERROR } from 'root/@core/error-messages';
 
-import { Statistics } from '../types/enum';
-import { TopUsersQuery, TopUsersSanitizedQuery } from '../types';
+import { Statistics } from './types/enum';
+import { TopUsersQuery, TopUsersSanitizedQuery } from './types';
 
 @Injectable()
 export class TopQuerySanitizerPipe implements PipeTransform {

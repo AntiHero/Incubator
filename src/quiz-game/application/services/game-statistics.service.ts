@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { Statistics } from '../types/enum';
-import { PairsQueryRepository } from '../infrastructure/repositories/pairs.query.repository';
-import { TopUsersSanitizedQuery } from '../types';
+import { Statistics } from '../../@common/types/enum';
+import { PairsQueryRepository } from '../../infrastructure/database/repositories/pairs.query.repository';
+import { TopUsersSanitizedQuery } from '../../@common/types';
 
 @Injectable()
 export class PairsStatisticsService {

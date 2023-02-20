@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 
-import { Answer } from 'root/quiz-game/entity/answer.entity';
+import { Answer } from 'root/quiz-game/infrastructure/database/entity/answer.entity';
 
 @Injectable()
 export class AnswersRepository {

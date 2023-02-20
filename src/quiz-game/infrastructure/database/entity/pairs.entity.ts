@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { AnswerDTO, GamePairDTO, QuestionDTO } from '../types';
-import { GameStatuses } from '../types/enum';
+import { AnswerDTO, GamePairDTO, QuestionDTO } from '../../../@common/types';
+import { GameStatuses } from '../../../@common/types/enum';
 import { User } from 'root/users/entity/user.entity';
 
 @Entity('pairs')

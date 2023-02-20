@@ -13,19 +13,22 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { PairsQuery } from './types';
-import { IdDTO } from './dto/user-id.dto';
+import { PairsQuery } from 'root/quiz-game/@common/types';
 import Paginator from 'root/@core/models/Paginator';
-import { CreateAnswerDTO } from './dto/create-answer.dto';
-import { GamePairErrors, GameStatuses } from './types/enum';
-import { GamePairConverter } from './utils/pairs.converter';
-import { AnswersConverter } from './utils/answers.converter';
-import { PairsQueryParsePipe } from './@common/pairs-query.pipe';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { Service } from 'root/@core/decorators/service.decorator';
-import { PairsService } from 'root/quiz-game/services/pairs.service';
+import { IdDTO } from 'root/quiz-game/application/dtos/user-id.dto';
+import { PairsService } from 'root/quiz-game/application/services/pairs.service';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
-import { PairsTransactionService } from './services/pairs.transaction.service';
+import {
+  GamePairErrors,
+  GameStatuses,
+} from 'root/quiz-game/@common/types/enum';
+import { GamePairConverter } from 'root/quiz-game/@common/utils/pairs.converter';
+import { AnswersConverter } from 'root/quiz-game/@common/utils/answers.converter';
+import { PairsQueryParsePipe } from 'root/quiz-game/@common/pairs-query.pipe';
+import { CreateAnswerDTO } from 'root/quiz-game/application/dtos/create-answer.dto';
+import { PairsTransactionService } from 'root/quiz-game/application/services/pairs.transaction.service';
 
 @Controller('pair-game-quiz/pairs')
 export class PairsController {

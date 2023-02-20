@@ -1,4 +1,4 @@
-import { Answer } from '../entity/answer.entity';
+import { Answer } from '../../infrastructure/database/entity/answer.entity';
 import { AnswerDTO, AnswerViewModel } from '../types';
 
 export class AnswersConverter {

@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Repository, DataSource, EntityManager } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PairGame } from 'root/quiz-game/entity/pairs.entity';
-import { GameStatuses } from 'root/quiz-game/types/enum';
+import { PairGame } from 'root/quiz-game/infrastructure/database/entity/pairs.entity';
+import { GameStatuses } from 'root/quiz-game/@common/types/enum';
 import {
   GamePairDTO,
   GamePayload,
   GameUpdates,
   QuestionDTO,
-} from 'root/quiz-game/types';
+} from 'root/quiz-game/@common/types';
 
 @Injectable()
 export class PairsRepository {

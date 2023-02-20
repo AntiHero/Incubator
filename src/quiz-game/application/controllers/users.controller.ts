@@ -9,14 +9,14 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { Statistics } from './types/enum';
-import { TopUsersSanitizedQuery } from './types';
+import { Statistics } from '../../@common/types/enum';
+import { TopUsersSanitizedQuery } from '../../@common/types';
 import Paginator from 'root/@core/models/Paginator';
-import { TopQuerySanitizerPipe } from './@common/top-query.pipe';
+import { TopQuerySanitizerPipe } from '../../@common/top-query.pipe';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
-import { StatisticsConverter } from './utils/statistics.converter';
+import { StatisticsConverter } from '../../@common/utils/statistics.converter';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
-import { PairsStatisticsService } from './services/game-statistics.service';
+import { PairsStatisticsService } from '../services/game-statistics.service';
 
 @Controller('pair-game-quiz/users')
 export class PairsUserController {

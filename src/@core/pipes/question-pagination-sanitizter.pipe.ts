@@ -1,8 +1,8 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
 import { SortDirectionKeys } from '../types/enum';
-import { PublishedStatus } from 'root/quiz-game/types/enum';
-import { QuestionPaginationQuery } from 'root/quiz-game/types';
+import { PublishedStatus } from 'root/quiz-game/@common/types/enum';
+import { QuestionPaginationQuery } from 'root/quiz-game/@common/types';
 
 @Injectable()
 export class QuestionQuerySanitizerPipe implements PipeTransform {

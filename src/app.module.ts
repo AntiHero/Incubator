@@ -12,7 +12,7 @@ import { TokensModule } from './tokens/tokens.module';
 import { AdminsModule } from './admins/admins.module';
 import { TestingModule } from './testing/testing.module';
 import { ServiceModule } from './service/service.module';
-import { QuizGameModule } from './quiz-game/pairs.module';
+import { QuizGameModule } from './quiz-game/application/pairs.module';
 import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';

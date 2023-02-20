@@ -5,10 +5,10 @@ import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import {
   QuestionDTO,
   QuestionPaginationQuery,
-} from 'root/quiz-game/types/index';
+} from 'root/quiz-game/@common/types/index';
 import { countSkip } from 'root/@core/utils/count-skip';
-import { PublishedStatus } from 'root/quiz-game/types/enum';
-import { Question } from 'root/quiz-game/entity/question.entity';
+import { PublishedStatus } from 'root/quiz-game/@common/types/enum';
+import { Question } from 'root/quiz-game/infrastructure/database/entity/question.entity';
 
 @Injectable()
 export class QuestionsQueryProvider {

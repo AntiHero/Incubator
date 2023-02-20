@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 import { PlayerData } from '../types';
 import { Injectable } from '@nestjs/common';
 import { User } from 'root/users/entity/user.entity';
-import { GameStatuses } from 'root/quiz-game/types/enum';
+import { GameStatuses } from 'root/quiz-game/@common/types/enum';
 import questionsData from 'root/@core/data/questions.json';
-import { PairGame } from 'root/quiz-game/entity/pairs.entity';
-import { Question } from 'root/quiz-game/entity/question.entity';
-import { QuestionsConverter } from 'root/quiz-game/utils/questions.converter';
+import { PairGame } from 'root/quiz-game/infrastructure/database/entity/pairs.entity';
+import { Question } from 'root/quiz-game/infrastructure/database/entity/question.entity';
+import { QuestionsConverter } from 'root/quiz-game/@common/utils/questions.converter';
 
 @Injectable()
 export class SeedProvider {

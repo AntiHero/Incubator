@@ -2,15 +2,15 @@ import { DataSource } from 'typeorm';
 import { EntityManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
-import { Answer } from '../entity/answer.entity';
-import { AnswerDTO } from '../types';
-import { PairGame } from '../entity/pairs.entity';
-import { Question } from '../entity/question.entity';
+import { Answer } from '../../infrastructure/database/entity/answer.entity';
+import { AnswerDTO } from '../../@common/types';
+import { PairGame } from '../../infrastructure/database/entity/pairs.entity';
+import { Question } from '../../infrastructure/database/entity/question.entity';
 import { User } from 'root/users/entity/user.entity';
-import { AnswerStatuses, GameStatuses } from '../types/enum';
-import { AnswersConverter } from '../utils/answers.converter';
+import { AnswerStatuses, GameStatuses } from '../../@common/types/enum';
+import { AnswersConverter } from '../../@common/utils/answers.converter';
 import { BaseTransactionProvider } from 'root/@core/providers/transaction.provider';
-import { FinishTheGameAfterDelayUseCase } from '../application/use-case/finish-the-game-after-delay.use-case-';
+import { FinishTheGameAfterDelayUseCase } from '../use-cases/finish-the-game-after-delay.use-case-';
 
 type PlayerAnswer = {
   playerId: string;

@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { QuestionDTO } from '../types';
+import { QuestionDTO } from '../../../@common/types';
 
 @Entity('questions')
 export class Question {

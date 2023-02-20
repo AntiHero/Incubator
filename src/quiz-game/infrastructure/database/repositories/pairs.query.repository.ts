@@ -3,14 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { countSkip } from 'root/@core/utils/count-skip';
-import { GameStatuses, Statistics } from 'root/quiz-game/types/enum';
-import { PairGame } from 'root/quiz-game/entity/pairs.entity';
+import { GameStatuses, Statistics } from 'root/quiz-game/@common/types/enum';
+import { PairGame } from 'root/quiz-game/infrastructure/database/entity/pairs.entity';
 import {
   GamePairDTO,
   PairsQuery,
   TopUsersDBType,
   TopUsersSanitizedQuery,
-} from 'root/quiz-game/types';
+} from 'root/quiz-game/@common/types';
 
 @Injectable()
 export class PairsQueryRepository {

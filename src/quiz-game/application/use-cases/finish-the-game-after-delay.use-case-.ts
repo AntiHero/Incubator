@@ -1,11 +1,14 @@
 import { DataSource } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { AnswerDTO } from 'root/quiz-game/types';
+import { AnswerDTO } from 'root/quiz-game/@common/types';
 import { User } from 'root/users/entity/user.entity';
-import { Answer } from 'root/quiz-game/entity/answer.entity';
-import { PairGame } from 'root/quiz-game/entity/pairs.entity';
-import { Question } from 'root/quiz-game/entity/question.entity';
-import { AnswerStatuses, GameStatuses } from 'root/quiz-game/types/enum';
+import { Answer } from 'root/quiz-game/infrastructure/database/entity/answer.entity';
+import { PairGame } from 'root/quiz-game/infrastructure/database/entity/pairs.entity';
+import { Question } from 'root/quiz-game/infrastructure/database/entity/question.entity';
+import {
+  AnswerStatuses,
+  GameStatuses,
+} from 'root/quiz-game/@common/types/enum';
 
 @Injectable()
 export class FinishTheGameAfterDelayUseCase {
