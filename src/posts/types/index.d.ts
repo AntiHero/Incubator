@@ -13,6 +13,7 @@ import {
   LikeDTO,
 } from 'root/likes/types';
 import { LikeStatuses } from 'root/@core/types/enum';
+import { PhotoSizeViewModel } from 'root/@core/types';
 
 export type PostSchemaModel = {
   title: string;
@@ -93,4 +94,8 @@ export type PostExtendedViewModel = {
   createdAt: string;
   title: string;
   extendedLikesInfo: ExtendedLikesInfoViewModel;
+};
+
+export type PostImagesViewModel = {
+  main: PhotoSizeViewModel[];
 };

@@ -90,3 +90,10 @@ export type PlayerData = {
   password: string;
   email: string;
 };
+
+export type PhotoSizeViewModel = {
+  url: string;
+  width: number;
+  height: number;
+  fileSize: number;
+};
