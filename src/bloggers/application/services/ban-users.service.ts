@@ -2,13 +2,13 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { BannedUserForEntityDTO } from './types';
 import { User } from 'root/users/entity/user.entity';
-import { BannedUser } from './entity/banned-user.entity';
 import { PaginationQueryType } from 'root/@core/types';
 import { countSkip } from 'root/@core/utils/count-skip';
-import { ConvertBannedUserData } from './utils/convertBannedUser';
-import { getBannedUsersByQuery } from './query/get-banned-users.query';
+import { BannedUserForEntityDTO } from 'root/bloggers/@common/types';
+import { ConvertBannedUserData } from 'root/bloggers/@common/utils/convertBannedUser';
+import { BannedUser } from 'root/bloggers/infrastructure/database/entities/banned-user.entity';
+import { getBannedUsersByQuery } from 'root/bloggers/infrastructure/database/queries/get-banned-users.query';
 
 @Injectable()
 export class BanUsersByBloggerService {

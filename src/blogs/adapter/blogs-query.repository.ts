@@ -8,22 +8,22 @@ import { BlogCommentType, BlogDTO } from '../types';
 import { Post } from 'root/posts/entity/post.entity';
 import { LikeStatuses } from 'root/@core/types/enum';
 import { PostExtendedLikesDTO } from 'root/posts/types';
-import { BloggerCommentDTO } from 'root/bloggers/types';
 import { ConvertBlogData } from '../utils/convertToBlog';
 import { PaginationQueryType } from 'root/@core/types';
 import { countSkip } from 'root/@core/utils/count-skip';
 import { getBlogsByQuery } from '../query/get-blogs.query';
 import { Comment } from 'root/comments/entity/comment.entity';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
+import { BloggerCommentDTO } from 'root/bloggers/@common/types';
 import { ConvertPostData } from 'root/posts/utils/convertPostData';
 import { getBlogPostsByQuery } from '../query/get-blog-posts.query';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
 import { getLikesCount } from '../query/get-blog-post-likes-count.query';
-import { ConvertBloggerData } from 'root/bloggers/utils/convertBloggerData';
 import { getBlogPostLikesByQuery } from '../query/get-blog-post-likes.query';
 import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
 import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
+import { ConvertBloggerData } from 'root/bloggers/@common/utils/convertBloggerData';
 
 @Injectable()
 export class BlogsQueryRepository {

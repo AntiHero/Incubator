@@ -10,3 +10,4 @@ test-utils
 test
 .eslintcache
 frontend
+key.json

@@ -5,23 +5,21 @@ import { InjectModel } from 'nestjs-typegoose';
 import { CommentModel } from 'root/comments/schemas/comment.schema';
 
 import { Roles } from 'root/users/types/roles';
-import { CommentDTO } from 'root/comments/types';
-import { BlogDomainModel, BlogDTO } from '../types';
-import { BlogModel } from '../schemas/blogs.schema';
 import { LIKES_LIMIT } from 'root/@core/constants';
 import { PaginationQuery } from 'root/@core/types';
+import { BlogDomainModel, BlogDTO } from '../types';
+import { BlogModel } from '../schemas/blogs.schema';
 import { LikeStatuses } from 'root/@core/types/enum';
 import { countSkip } from 'root/@core/utils/count-skip';
+import { toObjectId } from 'root/@core/utils/to-object-id';
 import { PostModel } from 'root/posts/schemas/post.schema';
 import { LikeModel } from 'root/likes/schemas/likes.schema';
 import { convertToBlogDTO } from '../utils/convertToBlogDTO';
-import { toObjectId } from 'root/@core/utils/to-object-id';
+import { BloggerCommentDTO } from 'root/bloggers/@common/types';
 import { convertToLikeDTO } from 'root/likes/utils/convertToLikeDTO';
 import { convertToPostDTO } from 'root/posts/utils/convertToPostDTO';
 import { PostDomainModel, PostExtendedLikesDTO } from 'root/posts/types';
-import { convertToCommentDTO } from 'root/comments/utils/convertToCommentDTO';
-import { BloggerCommentDTO } from 'root/bloggers/types';
-import { convertToBloggerCommentDTO } from 'root/bloggers/utils/convertToBloggerCommentDTO';
+import { convertToBloggerCommentDTO } from 'root/bloggers/@common/utils/convertToBloggerCommentDTO';
 
 @Injectable()
 export class BlogsAdapter {

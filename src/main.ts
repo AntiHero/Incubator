@@ -1,6 +1,8 @@
 if (!process.env.DEV_MODE) {
   require('module-alias/register');
 }
+
+import { DataSource } from 'typeorm';
 import cookieParser from 'cookie-parser';
 import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
@@ -10,7 +12,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './@core/filters/exception-filter';
 import { exceptionFactory } from './@core/utils/custom-exception-factory';
-import { DataSource } from 'typeorm';
+import { BadRequestExceptionFilter } from './@core/filters/bad-request-exception.filter';
 
 const PORT = process.env.PORT;
 
@@ -28,7 +30,10 @@ async function bootstrap() {
     }),
   );
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new BadRequestExceptionFilter(),
+  );
   app.use(cookieParser());
 
   dataSource = app.get(DataSource);

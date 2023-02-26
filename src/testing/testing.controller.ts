@@ -3,10 +3,10 @@ import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { TokensService } from 'root/tokens/tokens.service';
-import { QuestionsService } from 'root/quiz-game/application/services/questions.service';
-import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
-import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
 import { PairsService } from 'root/quiz-game/application/services/pairs.service';
+import { SecurityDevicesService } from 'root/security-devices/security-devices.service';
+import { QuestionsService } from 'root/quiz-game/application/services/questions.service';
+import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 
 @Controller('testing')
 export class TestingController {

@@ -12,17 +12,17 @@ import {
 import { Response } from 'express';
 
 import Paginator from 'root/@core/models/Paginator';
-import { BannedUserForEntityViewModel } from './types';
 import { UsersService } from 'root/users/users.service';
 import { BlogsService } from 'root/blogs/blogs.service';
 import { PaginationQueryType } from 'root/@core/types';
-import { BanUsersByBloggerService } from './ban-users.service';
-import { BanUserForBlogDTO } from './dto/ban-user-for-blog.dto';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
 import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
+import { BannedUserForEntityViewModel } from 'root/bloggers/@common/types';
+import { BanUserForBlogDTO } from 'root/bloggers/application/dtos/ban-user-for-blog.dto';
+import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
-import { convertToBannedUserForEntityViewModel } from './utils/convertToBannedUserForEntityViewModel';
+import { convertToBannedUserForEntityViewModel } from 'root/bloggers/@common/utils/convertToBannedUserForEntityViewModel';
 
 @Controller('blogger/users')
 @UseGuards(BearerAuthGuard)

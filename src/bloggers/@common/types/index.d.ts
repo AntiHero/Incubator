@@ -63,3 +63,8 @@ export type BloggerCommentDTO = {
   postId: string;
   title: string;
 };
+
+export type BlogImagesViewModel = {
+  wallpaper: PhotoSizeViewModel;
+  main: PhotoSizeViewModel[];
+};

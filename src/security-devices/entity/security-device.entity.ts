@@ -19,7 +19,8 @@ export class SecurityDevice {
   @Column()
   ip: string;
 
-  @Column({ type: 'uuid', default: () => 'gen_random_uuid()' })
+  // @Column({ type: 'uuid', default: () => 'gen_random_uuid()' })
+  @Column({ type: 'uuid', default: () => 'uuid_generate_v4()' })
   deviceId: string;
 
   @Column({ type: 'timestamptz' })

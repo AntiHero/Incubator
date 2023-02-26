@@ -1,5 +1,5 @@
-import { BannedUser } from '../entity/banned-user.entity';
 import { BannedUserForEntityDTO } from '../types';
+import { BannedUser } from 'root/bloggers/infrastructure/database/entities/banned-user.entity';
 
 export class ConvertBannedUserData {
   static toDTO(

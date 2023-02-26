@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-import { LikeStatuses } from 'root/@core/types/enum';
 import { BloggerCommentDTO, BloggerCommentsViewModel } from '../types';
 
 export const convertToBloggerCommentViewModel = (

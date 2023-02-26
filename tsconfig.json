@@ -6,10 +6,11 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2019",
     "paths": {
       "root/*": ["src/*"]
     },
+    "allowJs": false,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -19,6 +20,7 @@
     "esModuleInterop": true,
     "strictNullChecks": false,
     "resolveJsonModule": true,
+    "moduleResolution": "node",
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "forceConsistentCasingInFileNames": false

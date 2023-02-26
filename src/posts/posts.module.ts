@@ -9,10 +9,10 @@ import { User } from 'root/users/entity/user.entity';
 import { Comment } from 'root/comments/entity/comment.entity';
 import { PostsRepository } from './adapter/posts.repostitory';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
-import { BannedUser } from 'root/bloggers/entity/banned-user.entity';
 import { PostsQueryRepository } from './adapter/posts-query.repository';
-import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
+import { BannedUser } from 'root/bloggers/infrastructure/database/entities/banned-user.entity';
 import { CheckBlogExistance } from 'root/@core/decorators/check-blog-existance.decorator';
+import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 
 @Module({
   imports: [

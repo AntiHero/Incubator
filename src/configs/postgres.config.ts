@@ -11,9 +11,9 @@ export const getPostgresConfig = async (
     url: configService.get('DATABASE_URL'),
     entities: [],
     synchronize: false,
-    // migrationsRun: true,
+    migrationsRun: true,
     autoLoadEntities: true,
     logging: DEV_MODE ? 'all' : false,
-    migrations: [process.cwd() + '/dist/migrations/**/*.{ts,js}'],
+    migrations: ['./dist/migrations/**/*{.ts,.js}'],
   };
 };

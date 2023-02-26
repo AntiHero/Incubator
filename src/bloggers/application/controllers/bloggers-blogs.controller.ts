@@ -1,42 +1,55 @@
 import {
+  Res,
   Body,
-  Controller,
-  Delete,
   Get,
-  HttpStatus,
-  Param,
   Post,
   Put,
   Query,
-  Res,
+  Param,
+  Delete,
+  HttpStatus,
+  Controller,
   UseGuards,
+  UploadedFile,
+  UseInterceptors,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { Bucket, Storage } from '@google-cloud/storage';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import type { BlogViewModel } from 'root/blogs/types';
+import type { PaginationQueryType } from 'root/@core/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
-import { BlogViewModel } from 'root/blogs/types';
-import { BloggerCommentsViewModel } from './types';
+import { fiveMinInMs } from 'root/@core/constants';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/blogs.service';
-import { PaginationQueryType } from 'root/@core/types';
 import { PostExtendedViewModel } from 'root/posts/types';
-import { UpdateBlogPostDTO } from './dto/update-blog-post.dto';
+import { CloudService } from '../services/cloud.service';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
-import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
-import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
+import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
+import { BloggerCommentsViewModel } from 'root/bloggers/@common/types';
 import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
+import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
-import { convertToBloggerCommentViewModel } from './utils/convertToBloggerCommentsViewModel';
-import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
+import { FileTypeValidationPipe } from 'root/@core/pipes/file-type-validation.pipe';
+import { FileSizeValidationPipe } from 'root/@core/pipes/file-size-validation.pipe';
+import { ParseFileValidationPipe } from 'root/bloggers/@common/pipes/parse-file.pipe';
+import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-post.dto';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
+import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
+import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
 export class BloggersBlogsController {
   constructor(
+    private readonly cloudService: CloudService,
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,
   ) {}
@@ -290,5 +303,49 @@ export class BloggersBlogsController {
       return res.status(403).send();
     }
     res.status(204).send();
+  }
+
+  @Post(':id/images/wallpaper')
+  @UseInterceptors(FileInterceptor('file'))
+  async addWallpaper(
+    @UserId() userId: string,
+    @Param('id') blogId: string,
+    @UploadedFile(
+      ParseFileValidationPipe({
+        fileType: '.(png|jpeg|jpg)',
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const blog = await this.blogsService.findBlogById(blogId);
+
+    if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+
+    if (blog.userId !== userId)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    const uploadedImage = await this.cloudService.uploadImage(blog.id, file);
+
+    return uploadedImage;
+  }
+
+  @Post(':id/images/main')
+  @UseInterceptors(FileInterceptor('file'))
+  async addMainImage(
+    // @UploadedFile(
+    //   ParseFileValidationPipe({
+    //     fileType: '.(png|jpeg|jpg)',
+    //   }),
+    // )
+    // file: Express.Multer.File,
+    @UploadedFile(
+      new FileSizeValidationPipe(),
+      new FileTypeValidationPipe('jpeg', 'jpg', 'png'),
+    )
+    file: Express.Multer.File,
+  ) {
+    console.log(file, 'file');
+
+    return 5;
   }
 }

@@ -1,4 +1,4 @@
-import { BannedUserForEntity } from '../types';
+import { BannedUserForEntity } from '../../../@common/types';
 
 export class BannedUserEntity implements BannedUserForEntity {
   public user: string;

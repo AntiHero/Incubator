@@ -2,12 +2,12 @@ import mongoose, { Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 
-import { BannedUserForEntityDTO } from './types';
 import { PaginationQuery } from 'root/@core/types';
 import { countSkip } from 'root/@core/utils/count-skip';
-import { BannedUserEntity } from './entity/banned-user.model';
-import { convertToBannedUserDTO } from './utils/convertToBannedUserDTO';
-import { BannedUserForEntityModel } from './schemas/banned-user-for-entity.schema';
+import { BannedUserForEntityDTO } from 'root/bloggers/@common/types';
+import { convertToBannedUserDTO } from 'root/bloggers/@common/utils/convertToBannedUserDTO';
+import { BannedUserEntity } from 'root/bloggers/infrastructure/database/entities/banned-user.model';
+import { BannedUserForEntityModel } from '../../infrastructure/database/schemas/banned-user-for-entity.schema';
 
 @Injectable()
 export class BanUsersForBlogService {

@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from 'root/posts/posts.service';
-import { BanUsersByBloggerService } from 'root/bloggers/ban-users.service';
+import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 
 @Injectable()
 export class PostCommentsGuard implements CanActivate {

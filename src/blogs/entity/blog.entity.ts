@@ -32,6 +32,9 @@ export class Blog {
   @JoinColumn({ name: 'userId' })
   userId: User;
 
+  @Column({ default: true })
+  isMembership: boolean;
+
   @Column('simple-json', { default: '{ "banDate": null, "isBanned": false }' })
   banInfo: BlogBanInfo;
 

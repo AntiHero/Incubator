@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 import { BannedUserForEntityDTO } from '../types';
-import { BannedUserForEntityModel } from '../schemas/banned-user-for-entity.schema';
+import { BannedUserForEntityModel } from 'root/bloggers/infrastructure/database/schemas/banned-user-for-entity.schema';
 
 export const convertToBannedUserDTO = <
   T extends BannedUserForEntityModel & { _id: Types.ObjectId; login: string },
