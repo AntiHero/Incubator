@@ -10,7 +10,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "yarn migration:run && nest start",
     "start:dev": "cross-env DEV_MODE=true nest start --watch",
     "start:debug": "cross-env DEV_MODE=true nest start --debug --watch",
     "start:prod": "node dist/src/main",
@@ -26,7 +26,8 @@
     "migration:generate": "yarn typeorm migration:generate",
     "migration:create": "typeorm migration:create ./migrations/EmptyMigration",
     "migration:run": "yarn typeorm migration:run",
-    "db:drop": "yarn typeorm schema:drop"
+    "db:drop": "yarn typeorm schema:drop",
+    "schema:sync": "yarn typeorm schema:sync"
   },
   "dependencies": {
     "@google-cloud/storage": "^6.9.3",
