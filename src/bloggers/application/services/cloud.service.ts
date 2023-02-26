@@ -39,11 +39,8 @@ export class CloudService {
       },
     });
 
-    stream.on('error', () => {
-      throw new HttpException(
-        'Uploading image failed',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    stream.on('error', (err) => {
+      console.log(err);
     });
 
     await this.write(stream, file.buffer);
@@ -51,12 +48,13 @@ export class CloudService {
 
     console.log('image loaded successfully');
 
-    // const uploadedImage = this.bucket.file(fileName);
+    const uploadedImage = this.bucket.file(fileName);
 
-    // const url = await uploadedImage.getSignedUrl({
-    //   action: 'read',
-    //   expires: '01-01-2100',
-    // });
+    const url = await uploadedImage.getSignedUrl({
+      action: 'read',
+      expires: '01-01-2100',
+    });
+    console.log(url, 'url');
 
     return fileName;
   }

@@ -334,12 +334,14 @@ export class BloggersBlogsController {
     if (blog.userId !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    const uploadedImage = await this.cloudService.uploadImage('1', file);
+    const uploadedImage = await this.cloudService.uploadImage(blog.id, file);
 
     return uploadedImage;
   }
 
   @Post(':id/images/main')
+  @HttpCode(HttpStatus.CREATED)
+  @Header('Content-Type', 'text/plain')
   @UseInterceptors(FileInterceptor('file'))
   async addMainImage(
     // @UploadedFile(
@@ -357,6 +359,6 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ) {
-    return 0;
+    return 'done';
   }
 }
