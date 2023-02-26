@@ -17,11 +17,13 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
-import { Bucket, Storage } from '@google-cloud/storage';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import type { BlogImagesViewModel, BlogViewModel } from 'root/blogs/types';
+import type {
+  BlogImagesViewModel,
+  BlogViewModel,
+  BlogWithImagesViewModel,
+} from 'root/blogs/types';
 import type { PaginationQueryType } from 'root/@core/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
@@ -59,11 +61,7 @@ export class BloggersBlogsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Content-type', 'text/plain')
-  async saveBlog(
-    @UserId() userId,
-    @Body() body: CreateBlogDTO,
-    // @Res() res: Response,
-  ) {
+  async saveBlog(@UserId() userId, @Body() body: CreateBlogDTO) {
     const { name, description, websiteUrl } = body;
 
     const blog = new Blog(name, description, websiteUrl, userId);
@@ -71,21 +69,16 @@ export class BloggersBlogsController {
     const savedBlog = await this.blogsService.saveBlog(blog);
 
     const blogsViewModel: BlogViewModel = convertToBlogViewModel(savedBlog);
-    const blogsImagesViewModel: BlogImagesViewModel = {
-      wallpaper: {
-        fileSize: 100,
-        height: 1028,
-        width: 312,
-        url: 'https://fake.com/1',
+
+    const result: BlogWithImagesViewModel = {
+      ...blogsViewModel,
+      images: {
+        wallpaper: null,
+        main: [],
       },
-      main: [],
     };
 
-    return JSON.stringify({ ...blogsViewModel, blogsImagesViewModel });
-    // res
-    //   .type('text/plain')
-    //   .status(201)
-    //   .send(JSON.stringify(convertToBlogViewModel(savedBlog)));
+    return JSON.stringify(result);
   }
 
   @Get()
@@ -341,7 +334,7 @@ export class BloggersBlogsController {
     if (blog.userId !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    const uploadedImage = await this.cloudService.uploadImage(blog.id, file);
+    const uploadedImage = await this.cloudService.uploadImage('1', file);
 
     return uploadedImage;
   }
@@ -356,8 +349,11 @@ export class BloggersBlogsController {
     // )
     // file: Express.Multer.File,
     @UploadedFile(
-      new FileSizeValidationPipe(),
-      new FileTypeValidationPipe('jpeg', 'jpg', 'png'),
+      ParseFileValidationPipe({
+        fileType: '.(png|jpeg|jpg)',
+      }),
+      // new FileSizeValidationPipe(),
+      // new FileTypeValidationPipe('jpeg', 'jpg', 'png'),
     )
     file: Express.Multer.File,
   ) {

@@ -1,3 +1,4 @@
+import { Writable } from 'stream';
 import { ConfigService } from '@nestjs/config';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -13,6 +14,15 @@ export class CloudService {
     const bucketName = this.configService.get<string>('BUCKET_NAME');
 
     this.bucket = this.cloudStorage.bucket(bucketName);
+    console.log(this.bucket.projectId, 'projectId');
+  }
+
+  private async write(writer: Writable, data: Buffer) {
+    if (!writer.write(data)) {
+      return new Promise((resolve) => {
+        writer.once('drain', resolve);
+      });
+    }
   }
 
   async uploadImage(blogId: string, file: Express.Multer.File) {
@@ -23,25 +33,23 @@ export class CloudService {
     const image = this.bucket.file(fileName);
 
     const stream = image.createWriteStream({
+      resumable: false,
       metadata: {
         contentType: file.mimetype,
       },
     });
 
-    stream.write(file.buffer);
-    stream.end();
-
-    await new Promise((resolve, reject) => {
-      stream.on('finish', resolve);
-      stream.on('error', () =>
-        reject(
-          new HttpException(
-            'Uploading image failed',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          ),
-        ),
+    stream.on('error', () => {
+      throw new HttpException(
+        'Uploading image failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     });
+
+    await this.write(stream, file.buffer);
+    stream.end();
+
+    console.log('image loaded successfully');
 
     // const uploadedImage = this.bucket.file(fileName);
 

@@ -72,6 +72,10 @@ export type BlogCommentType = CommentDTO & {
   title: string;
 };
 
+export type BlogWithImagesViewModel = BlogViewModel & {
+  images: BlogImagesViewModel;
+};
+
 export type BlogImagesViewModel = {
   wallpaper: PhotoSizeViewModel;
   main: PhotoSizeViewModel[];
