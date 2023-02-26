@@ -18,6 +18,7 @@ export class ConvertBlogData {
             : new Date(blog.banInfo.banDate).toISOString(),
       },
       createdAt: blog.createdAt.toISOString(),
+      isMembership: blog.isMembership,
     };
   }
   static toView(blogDTO: BlogDTO): BlogViewModel {
@@ -27,6 +28,7 @@ export class ConvertBlogData {
       websiteUrl: blogDTO.websiteUrl,
       description: blogDTO.description,
       createdAt: blogDTO.createdAt,
+      isMembership: blogDTO.isMembership,
     };
   }
 }

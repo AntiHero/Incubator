@@ -26,6 +26,7 @@
     "migration:generate": "yarn typeorm migration:generate",
     "migration:create": "typeorm migration:create ./migrations/EmptyMigration",
     "migration:run": "yarn typeorm migration:run",
+    "migration:revert": "yarn typeorm migration:revert",
     "db:drop": "yarn typeorm schema:drop",
     "schema:sync": "yarn typeorm schema:sync"
   },

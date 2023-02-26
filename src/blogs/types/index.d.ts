@@ -41,6 +41,7 @@ export type BlogDTO = {
   posts: PostDTO[];
   createdAt: string;
   banInfo: BanType;
+  isMembership?: boolean;
 };
 
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;
@@ -58,7 +59,7 @@ export type BlogViewModel = {
   description: string;
   createdAt: string;
   isMembership?: boolean;
-  images?: BlogImagesViewModel;
+  // images?: BlogImagesViewModel;
 };
 
 export type BlogCommentType = CommentDTO & {
@@ -69,4 +70,9 @@ export type BlogCommentType = CommentDTO & {
   userStatus: LikeStatuses;
   postId: Types.ObjectId;
   title: string;
+};
+
+export type BlogImagesViewModel = {
+  wallpaper: PhotoSizeViewModel;
+  main: PhotoSizeViewModel[];
 };

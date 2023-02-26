@@ -32,7 +32,7 @@ export class Blog {
   @JoinColumn({ name: 'userId' })
   userId: User;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isMembership: boolean;
 
   @Column('simple-json', { default: '{ "banDate": null, "isBanned": false }' })

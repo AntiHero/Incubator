@@ -13,13 +13,15 @@ import {
   UploadedFile,
   UseInterceptors,
   HttpException,
+  Header,
+  HttpCode,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import type { BlogViewModel } from 'root/blogs/types';
+import type { BlogImagesViewModel, BlogViewModel } from 'root/blogs/types';
 import type { PaginationQueryType } from 'root/@core/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
@@ -55,10 +57,12 @@ export class BloggersBlogsController {
   ) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @Header('Content-type', 'text/plain')
   async saveBlog(
     @UserId() userId,
     @Body() body: CreateBlogDTO,
-    @Res() res: Response,
+    // @Res() res: Response,
   ) {
     const { name, description, websiteUrl } = body;
 
@@ -66,10 +70,22 @@ export class BloggersBlogsController {
 
     const savedBlog = await this.blogsService.saveBlog(blog);
 
-    res
-      .type('text/plain')
-      .status(201)
-      .send(JSON.stringify(convertToBlogViewModel(savedBlog)));
+    const blogsViewModel: BlogViewModel = convertToBlogViewModel(savedBlog);
+    const blogsImagesViewModel: BlogImagesViewModel = {
+      wallpaper: {
+        fileSize: 100,
+        height: 1028,
+        width: 312,
+        url: 'https://fake.com/1',
+      },
+      main: [],
+    };
+
+    return JSON.stringify({ ...blogsViewModel, blogsImagesViewModel });
+    // res
+    //   .type('text/plain')
+    //   .status(201)
+    //   .send(JSON.stringify(convertToBlogViewModel(savedBlog)));
   }
 
   @Get()
@@ -317,6 +333,7 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ) {
+    console.log(file);
     const blog = await this.blogsService.findBlogById(blogId);
 
     if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -344,8 +361,6 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ) {
-    console.log(file, 'file');
-
-    return 5;
+    return 0;
   }
 }
