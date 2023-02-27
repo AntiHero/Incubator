@@ -55,12 +55,13 @@ export class CloudService {
 
     const uploadedImage = this.bucket.file(fileName);
 
-    const url = (
-      await uploadedImage.getSignedUrl({
-        action: 'read',
-        expires: '01-01-2100',
-      })
-    )[0];
+    const url = uploadedImage.publicUrl();
+    // (
+    //   await uploadedImage.getSignedUrl({
+    //     action: 'read',
+    //     expires: '01-01-2100',
+    //   })
+    // )[0];
 
     const metadata = await sharp(file.buffer).metadata();
     const { size, width, height } = metadata;
