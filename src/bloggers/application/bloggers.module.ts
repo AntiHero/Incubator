@@ -11,18 +11,19 @@ import { BlogsModule } from 'root/blogs/blogs.module';
 import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
 import { CloudService } from './services/cloud.service';
+import { BlogImagesService } from './services/blog-images.service';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
+import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
+import { BlogImage } from '../infrastructure/database/entities/blog-image.entity';
 import { BannedUser } from '../infrastructure/database/entities/banned-user.entity';
+import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { BloggersBlogsController } from 'root/bloggers/application/controllers/bloggers-blogs.controller';
-import { BlogImagesService } from './services/blog-images.service';
-import { ImageRepository } from 'root/@core/repositories/image-repository';
-import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Blog, User, BannedUser]),
+    TypeOrmModule.forFeature([Blog, User, BannedUser, BlogImage]),
     BlogsModule,
     PostsModule,
     UsersModule,
