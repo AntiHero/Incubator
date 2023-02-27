@@ -31,6 +31,7 @@
     "schema:sync": "yarn typeorm schema:sync"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.279.0",
     "@google-cloud/storage": "^6.9.3",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/common": "^9.0.0",

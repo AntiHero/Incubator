@@ -1,9 +1,9 @@
-import { ConfigService } from '@nestjs/config';
-import { Storage } from '@google-cloud/storage';
+// import { ConfigService } from '@nestjs/config';
+// import { Storage } from '@google-cloud/storage';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module, HttpStatus } from '@nestjs/common';
 
-import type { StorageConfig } from 'root/@core/types';
+// import type { StorageConfig } from 'root/@core/types';
 
 import { Blog } from 'root/blogs/entity/blog.entity';
 import { User } from 'root/users/entity/user.entity';
@@ -12,7 +12,7 @@ import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
 import { CloudService } from './services/cloud.service';
 import { BlogImagesService } from './services/blog-images.service';
-import { HttpException } from '@nestjs/common/exceptions/http.exception';
+// import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
 import { BlogImage } from '../infrastructure/database/entities/blog-image.entity';
@@ -31,30 +31,30 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
   controllers: [BloggersBlogsController, BloggersUsersController],
   providers: [
     BanUsersByBloggerService,
-    {
-      provide: Storage,
-      useFactory(configService: ConfigService) {
-        try {
-          const StorageConfig: StorageConfig = JSON.parse(
-            configService.get<string>('CLOUD_STORAGE_CREDENTIALS'),
-          );
+    // {
+    //   provide: Storage,
+    //   useFactory(configService: ConfigService) {
+    //     try {
+    //       const StorageConfig: StorageConfig = JSON.parse(
+    //         configService.get<string>('CLOUD_STORAGE_CREDENTIALS'),
+    //       );
 
-          return new Storage({
-            projectId: StorageConfig.project_id,
-            credentials: {
-              client_email: StorageConfig.client_email,
-              private_key: StorageConfig.private_key,
-            },
-          });
-        } catch (err) {
-          throw new HttpException(
-            'Bad Google Cloud creds',
-            HttpStatus.INTERNAL_SERVER_ERROR,
-          );
-        }
-      },
-      inject: [ConfigService],
-    },
+    //       return new Storage({
+    //         projectId: StorageConfig.project_id,
+    //         credentials: {
+    //           client_email: StorageConfig.client_email,
+    //           private_key: StorageConfig.private_key,
+    //         },
+    //       });
+    //     } catch (err) {
+    //       throw new HttpException(
+    //         'Bad Google Cloud creds',
+    //         HttpStatus.INTERNAL_SERVER_ERROR,
+    //       );
+    //     }
+    //   },
+    //   inject: [ConfigService],
+    // },
     CloudService,
     BlogImagesService,
     {

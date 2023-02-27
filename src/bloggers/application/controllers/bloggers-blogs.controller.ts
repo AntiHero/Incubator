@@ -327,7 +327,6 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ): Promise<BlogImagesViewModel> {
-    console.log(file);
     const blog = await this.blogsService.findBlogById(blogId);
 
     if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -335,7 +334,11 @@ export class BloggersBlogsController {
     if (blog.userId !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    const uploadedImage = await this.cloudService.uploadImage(blog.id, file);
+    const uploadedImage = await this.cloudService.uploadImage(
+      userId,
+      blog.id,
+      file,
+    );
 
     const result: BlogImagesViewModel = {
       wallpaper: {
