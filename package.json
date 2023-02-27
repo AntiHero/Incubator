@@ -137,5 +137,8 @@
   },
   "_moduleAliases": {
     "root": "src"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
