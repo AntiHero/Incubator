@@ -16,21 +16,22 @@ import {
   Header,
   HttpCode,
 } from '@nestjs/common';
+import sharp from 'sharp';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+import type { PaginationQueryType } from 'root/@core/types';
 import type {
   BlogImagesViewModel,
   BlogViewModel,
   BlogWithImagesViewModel,
 } from 'root/blogs/types';
-import type { PaginationQueryType } from 'root/@core/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
 import { fiveMinInMs } from 'root/@core/constants';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
-import { BlogsService } from 'root/blogs/blogs.service';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { CloudService } from '../services/cloud.service';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
@@ -325,7 +326,7 @@ export class BloggersBlogsController {
       }),
     )
     file: Express.Multer.File,
-  ) {
+  ): Promise<BlogImagesViewModel> {
     console.log(file);
     const blog = await this.blogsService.findBlogById(blogId);
 
@@ -336,7 +337,17 @@ export class BloggersBlogsController {
 
     const uploadedImage = await this.cloudService.uploadImage(blog.id, file);
 
-    return uploadedImage;
+    const result: BlogImagesViewModel = {
+      wallpaper: {
+        fileSize: uploadedImage.size,
+        height: uploadedImage.height,
+        url: uploadedImage.url,
+        width: uploadedImage.width,
+      },
+      main: [],
+    };
+
+    return result;
   }
 
   @Post(':id/images/main')

@@ -1,7 +1,7 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 
 import { UsersService } from 'root/users/users.service';
-import { BlogsService } from 'root/blogs/blogs.service';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { TokensService } from 'root/tokens/tokens.service';
 import { PairsService } from 'root/quiz-game/application/services/pairs.service';
 import { SecurityDevicesService } from 'root/security-devices/security-devices.service';

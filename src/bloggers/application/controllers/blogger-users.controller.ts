@@ -13,7 +13,7 @@ import { Response } from 'express';
 
 import Paginator from 'root/@core/models/Paginator';
 import { UsersService } from 'root/users/users.service';
-import { BlogsService } from 'root/blogs/blogs.service';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { PaginationQueryType } from 'root/@core/types';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';

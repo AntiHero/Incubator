@@ -14,7 +14,7 @@ import { Response } from 'express';
 
 import Blog from './domain/blogs.model';
 import { BlogViewModel } from './types';
-import { BlogsService } from './blogs.service';
+import { BlogsService } from './services/blogs.service';
 import { Roles } from 'root/users/types/roles';
 import Paginator from 'root/@core/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';

@@ -16,6 +16,9 @@ import { BloggersUsersController } from './controllers/blogger-users.controller'
 import { BannedUser } from '../infrastructure/database/entities/banned-user.entity';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { BloggersBlogsController } from 'root/bloggers/application/controllers/bloggers-blogs.controller';
+import { BlogImagesService } from './services/blog-images.service';
+import { ImageRepository } from 'root/@core/repositories/image-repository';
+import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 
 @Module({
   imports: [
@@ -52,6 +55,11 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
       inject: [ConfigService],
     },
     CloudService,
+    BlogImagesService,
+    {
+      provide: ImageRepository,
+      useClass: BlogImagesRepository,
+    },
   ],
   exports: [BanUsersByBloggerService],
 })

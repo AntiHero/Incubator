@@ -54,6 +54,7 @@
     "@types/node": "^16.0.0",
     "@types/nodemailer": "^6.4.6",
     "@types/passport-jwt": "^3.0.7",
+    "@types/sharp": "^0.31.1",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "class-transformer": "^0.5.1",

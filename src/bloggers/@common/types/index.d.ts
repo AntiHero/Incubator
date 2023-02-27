@@ -1,6 +1,6 @@
-import { LikeDTO } from 'root/likes/types';
-import { LikesInfoViewModel } from 'root/@core/types';
-import { LikeStatuses } from 'root/@core/types/enum';
+import type { LikeDTO } from 'root/likes/types';
+import type { LikesInfoViewModel } from 'root/@core/types';
+import type { ImageType, LikeStatuses } from 'root/@core/types/enum';
 
 export type BannedUserForEntity = {
   entityId: string;
@@ -63,3 +63,17 @@ export type BloggerCommentDTO = {
   postId: string;
   title: string;
 };
+
+export type BlogImageDTO = {
+  id: number;
+  name: string;
+  type: ImageType;
+  height: number;
+  width: number;
+  url: string;
+  size: number;
+  blogId: number;
+  createdAt: string;
+};
+
+export type BlogImageInputModel = Omit<BlogImageDTO, 'id' | 'createdAt'>;

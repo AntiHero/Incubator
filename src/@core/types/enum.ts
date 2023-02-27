@@ -24,3 +24,8 @@ export enum SortDirection {
   ASC = 'ASC',
   DESC = 'DESC',
 }
+
+export enum ImageType {
+  wallpaper = 'wallpaper',
+  main = 'main',
+}

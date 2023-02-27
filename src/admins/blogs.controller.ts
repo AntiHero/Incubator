@@ -17,7 +17,7 @@ import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
 import Paginator from 'root/@core/models/Paginator';
-import { BlogsService } from 'root/blogs/blogs.service';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { PaginationQueryType } from 'root/@core/types';
 import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { BlogWithBanInfo, BlogWithExtendedOwnerInfoType } from './types';
