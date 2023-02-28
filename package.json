@@ -105,11 +105,12 @@
     "sinon": "^15.0.1",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
-    "ts-jest": "28.0.8"
+    "ts-jest": "28.0.8",
+    "tsc-files": "^1.1.3"
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix --cache"
+      "tsc-files --noEmit && eslint --fix --cache"
     ],
     "*.(ts|md|json)": [
       "prettier --write --cache"

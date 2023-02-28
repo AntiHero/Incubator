@@ -41,6 +41,9 @@ export class BlogImage {
   @JoinColumn({ name: 'blogId' })
   blog: Blog;
 
+  @Column()
+  blogId: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -53,7 +56,7 @@ export class BlogImage {
       size: this.size,
       width: this.width,
       height: this.height,
-      blogId: this.blog.id,
+      blogId: this.blogId,
       createdAt: this.createdAt.toISOString(),
     };
   }

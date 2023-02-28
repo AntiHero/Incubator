@@ -9,28 +9,38 @@ import {
   Delete,
   UseGuards,
   Controller,
+  HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
 
+import type { BlogViewModel, BlogWithImagesViewModel } from './types';
+
 import Blog from './domain/blogs.model';
-import { BlogViewModel } from './types';
-import { BlogsService } from './services/blogs.service';
 import { Roles } from 'root/users/types/roles';
 import Paginator from 'root/@core/models/Paginator';
 import { CreateBlogDTO } from './dto/create-blog.dto';
 import { PaginationQueryType } from 'root/@core/types';
+import { BlogsService } from './services/blogs.service';
+import { ImageConverter } from './utils/imageConverter';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { CreateBlogPostDTO } from './dto/create-blog-post.dto';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
+import { Header } from '@nestjs/common/decorators/http/header.decorator';
+import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
+import { BlogImagesService } from 'root/bloggers/application/services/blog-images.service';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
+import { HttpException } from '@nestjs/common/exceptions';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(private blogsService: BlogsService) {}
+  constructor(
+    private readonly blogsService: BlogsService,
+    private readonly blogImagesService: BlogImagesService,
+  ) {}
 
   @Post()
   @UseGuards(BasicAuthGuard)
@@ -74,16 +84,27 @@ export class BlogsController {
   }
 
   @Get(':id')
-  async getBlog(@Param('id') id, @Res() res: Response) {
+  @Header('Content-Type', 'text/plain')
+  @HttpCode(HttpStatus.OK)
+  async getBlog(@Param('id') id: string) {
     const blog = await this.blogsService.findBlogById(id, Roles.USER);
 
     if (!blog) {
-      return res.status(404).send();
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
-    res
-      .type('text/plain')
-      .status(200)
-      .send(JSON.stringify(convertToBlogViewModel(blog)));
+
+    const blogImages = await this.blogImagesService.getImages(blog.id);
+
+    const result: BlogWithImagesViewModel = {
+      ...convertToBlogViewModel(blog),
+      images: {
+        wallpaper:
+          blogImages.wallpaper && ImageConverter.toView(blogImages.wallpaper),
+        main: blogImages.main.map(ImageConverter.toView),
+      },
+    };
+
+    return result;
   }
 
   @Put(':id')
