@@ -15,7 +15,12 @@ export class CloudService {
     private readonly cloudStrategy: CloudStrategy,
   ) {}
 
-  async uploadImage(userId: string, blogId: string, file: Express.Multer.File) {
+  async uploadImage(
+    userId: string,
+    blogId: string,
+    file: Express.Multer.File,
+    imageType: ImageType,
+  ) {
     const timestamp = new Date().toISOString().replace(/:/g, '-');
 
     const prefix = createPrefix(userId);
@@ -33,7 +38,7 @@ export class CloudService {
       height,
       url,
       blogId: Number(blogId),
-      type: ImageType.wallpaper,
+      type: imageType,
     };
 
     const createdImage = await this.imageService.create(imageData);

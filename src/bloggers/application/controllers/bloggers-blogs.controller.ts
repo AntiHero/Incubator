@@ -28,7 +28,7 @@ import type {
 } from 'root/blogs/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
-import { fiveMinInMs } from 'root/@core/constants';
+import { ImageType } from 'root/@core/types/enum';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { BlogsService } from 'root/blogs/services/blogs.service';
@@ -338,6 +338,7 @@ export class BloggersBlogsController {
       userId,
       blog.id,
       file,
+      ImageType.wallpaper,
     );
 
     const result: BlogImagesViewModel = {
@@ -358,12 +359,8 @@ export class BloggersBlogsController {
   @Header('Content-Type', 'text/plain')
   @UseInterceptors(FileInterceptor('file'))
   async addMainImage(
-    // @UploadedFile(
-    //   ParseFileValidationPipe({
-    //     fileType: '.(png|jpeg|jpg)',
-    //   }),
-    // )
-    // file: Express.Multer.File,
+    @UserId() userId: string,
+    @Param('id') blogId: string,
     @UploadedFile(
       ParseFileValidationPipe({
         fileType: '.(png|jpeg|jpg)',
@@ -373,6 +370,32 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ) {
-    return 'done';
+    const blog = await this.blogsService.findBlogById(blogId);
+
+    if (!blog) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+
+    if (blog.userId !== userId)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    const uploadedImage = await this.cloudService.uploadImage(
+      userId,
+      blog.id,
+      file,
+      ImageType.main,
+    );
+
+    const result: BlogImagesViewModel = {
+      wallpaper: null,
+      main: [
+        {
+          fileSize: uploadedImage.size,
+          height: uploadedImage.height,
+          url: uploadedImage.url,
+          width: uploadedImage.width,
+        },
+      ],
+    };
+
+    return result;
   }
 }
