@@ -1,40 +1,39 @@
 import {
   Res,
-  Body,
   Get,
-  Post,
   Put,
+  Post,
+  Body,
   Query,
   Param,
   Delete,
-  HttpStatus,
-  Controller,
-  UseGuards,
-  UploadedFile,
-  UseInterceptors,
-  HttpException,
   Header,
   HttpCode,
+  UseGuards,
+  HttpStatus,
+  Controller,
+  UploadedFile,
+  HttpException,
+  UseInterceptors,
 } from '@nestjs/common';
-import sharp from 'sharp';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import type { PaginationQueryType } from 'root/@core/types';
 import type {
   BlogImagesViewModel,
   BlogViewModel,
   BlogWithImagesViewModel,
 } from 'root/blogs/types';
+import type { PaginationQueryType } from 'root/@core/types';
 
 import Blog from 'root/blogs/domain/blogs.model';
 import { ImageType } from 'root/@core/types/enum';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
-import { BlogsService } from 'root/blogs/services/blogs.service';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { CloudService } from '../services/cloud.service';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
@@ -49,6 +48,11 @@ import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-po
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
+import {
+  BLOG_MAIN_HEIGHT,
+  BLOG_MAIN_WIDTH,
+  BLOG_WP_HEIGHT,
+} from 'root/bloggers/@common/constants';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -323,6 +327,8 @@ export class BloggersBlogsController {
     @UploadedFile(
       ParseFileValidationPipe({
         fileType: '.(png|jpeg|jpg)',
+        minHeight: BLOG_WP_HEIGHT,
+        minWidth: BLOG_MAIN_WIDTH,
       }),
     )
     file: Express.Multer.File,
@@ -364,6 +370,8 @@ export class BloggersBlogsController {
     @UploadedFile(
       ParseFileValidationPipe({
         fileType: '.(png|jpeg|jpg)',
+        minHeight: BLOG_MAIN_HEIGHT,
+        minWidth: BLOG_MAIN_WIDTH,
       }),
       // new FileSizeValidationPipe(),
       // new FileTypeValidationPipe('jpeg', 'jpg', 'png'),
