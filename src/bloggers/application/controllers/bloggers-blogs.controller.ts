@@ -52,6 +52,7 @@ import {
   BLOG_MAIN_HEIGHT,
   BLOG_MAIN_WIDTH,
   BLOG_WP_HEIGHT,
+  BLOG_WP_WIDTH,
 } from 'root/bloggers/@common/constants';
 
 @Controller('blogger/blogs')
@@ -328,7 +329,7 @@ export class BloggersBlogsController {
       ParseFileValidationPipe({
         fileType: '.(png|jpeg|jpg)',
         minHeight: BLOG_WP_HEIGHT,
-        minWidth: BLOG_MAIN_WIDTH,
+        minWidth: BLOG_WP_WIDTH,
       }),
     )
     file: Express.Multer.File,

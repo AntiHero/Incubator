@@ -16,8 +16,8 @@ export class ImageDimensionsValidatorPipe extends FileValidator<ValidationOption
     const { height, width } = await sharp(file.buffer).metadata();
 
     return (
-      height < this.validationOptions.height ||
-      width < this.validationOptions.width
+      height === this.validationOptions.height &&
+      width === this.validationOptions.width
     );
   }
 
