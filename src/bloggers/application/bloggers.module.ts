@@ -1,7 +1,7 @@
 // import { ConfigService } from '@nestjs/config';
 // import { Storage } from '@google-cloud/storage';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module, HttpStatus } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 // import type { StorageConfig } from 'root/@core/types';
 
@@ -11,7 +11,9 @@ import { BlogsModule } from 'root/blogs/blogs.module';
 import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
 import { CloudService } from './services/cloud.service';
+import { CloudStrategy } from './strategies/cloud-strategy';
 import { BlogImagesService } from './services/blog-images.service';
+import { YandexCloudStrategy } from './strategies/yandex-cloud.strategy';
 // import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
@@ -60,6 +62,10 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
     {
       provide: ImageRepository,
       useClass: BlogImagesRepository,
+    },
+    {
+      provide: CloudStrategy,
+      useClass: YandexCloudStrategy,
     },
   ],
   exports: [BanUsersByBloggerService],
