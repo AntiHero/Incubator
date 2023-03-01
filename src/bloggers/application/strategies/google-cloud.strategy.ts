@@ -67,12 +67,12 @@ export class GoogleCloudStrategy extends CloudStrategy {
       const uploadedImage = this.bucket.file(fileName);
 
       const url = uploadedImage.publicUrl();
-      (
-        await uploadedImage.getSignedUrl({
-          action: 'read',
-          expires: '01-01-2100',
-        })
-      )[0];
+      // (
+      //   await uploadedImage.getSignedUrl({
+      //     action: 'read',
+      //     expires: '01-01-2100',
+      //   })
+      // )[0];
 
       return url;
     } catch (error) {

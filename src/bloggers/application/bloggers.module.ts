@@ -22,6 +22,7 @@ import { PostImagesRepository } from '../infrastructure/repositories/post-image.
 import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { BloggersBlogsController } from 'root/bloggers/application/controllers/bloggers-blogs.controller';
+// import { GoogleCloudStrategy } from './strategies/google-cloud.strategy';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
     {
       provide: CloudStrategy,
       useClass: YandexCloudStrategy,
+      // useClass: GoogleCloudStrategy,
     },
   ],
   exports: [BanUsersByBloggerService],
