@@ -27,7 +27,7 @@ export class BlogImagesService {
 
     const prefix = createPrefix(userId);
     // const fileName = `${timestamp}-${blogId}-${file.originalname}`;
-    const fileExt = file.filename.split('.')[1];
+    const fileExt = file.originalname.split('.')[1];
     const fileName = `${uuid()}.${fileExt}`;
 
     const metadata = await sharp(file.buffer).metadata();
@@ -54,6 +54,7 @@ export class BlogImagesService {
     };
 
     const createdImage = await this.imageRepository.create(imageData);
+    // this.imageRepository.create(imageData);
 
     return createdImage;
   }

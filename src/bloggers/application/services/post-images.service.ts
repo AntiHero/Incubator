@@ -56,7 +56,7 @@ export class PostsImagesService {
     const result: PostImageDTO[] = [];
 
     const prefix = createPrefix(userId);
-    const fileExt = file.filename.split('.')[1];
+    const fileExt = file.originalname.split('.')[1];
 
     const fileId = uuid();
 
