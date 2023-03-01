@@ -1,10 +1,16 @@
 import { HydratedDocument, LeanDocument } from 'mongoose';
-import { PostDatabaseModel, PostDomainModel, PostDTO } from 'root/posts/types';
 
-import { CommentDTO } from 'root/comments/types';
-import { WithId } from 'root/@core/types/utility';
 import { LikeStatuses } from 'root/@core/types/enum';
-import { BanType, PhotoSizeViewModel } from 'root/@core/types';
+
+import type {
+  PostDatabaseModel,
+  PostDomainModel,
+  PostDTO,
+} from 'root/posts/types';
+import type { BanInfo } from 'root/users/types';
+import type { CommentDTO } from 'root/comments/types';
+import type { WithId } from 'root/@core/types/utility';
+import type { BanType, PhotoSizeViewModel } from 'root/@core/types';
 
 export type BlogSchemaModel = {
   name: string;
@@ -42,6 +48,7 @@ export type BlogDTO = {
   createdAt: string;
   banInfo: BanType;
   isMembership?: boolean;
+  images?: BlogImagesViewModel;
 };
 
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;
@@ -59,7 +66,7 @@ export type BlogViewModel = {
   description: string;
   createdAt: string;
   isMembership?: boolean;
-  // images?: BlogImagesViewModel;
+  images?: BlogImagesViewModel;
 };
 
 export type BlogCommentType = CommentDTO & {
@@ -79,4 +86,35 @@ export type BlogWithImagesViewModel = BlogViewModel & {
 export type BlogImagesViewModel = {
   wallpaper: PhotoSizeViewModel;
   main: PhotoSizeViewModel[];
+};
+
+export type BlogsWithImagesQueryResult = {
+  id: number;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  banInfo: string;
+  createdAt: Date;
+  userId: number;
+  isMembership: boolean;
+  type: ImageType;
+  size: number;
+  width: number;
+  height: number;
+  url: string;
+};
+
+export type GroupedBlogsWithImages = {
+  id: number;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  banInfo: BanInfo;
+  createdAt: Date;
+  userId: number;
+  isMembership: boolean;
+  images: {
+    wallpaper: PhotoSizeViewModel;
+    main: PhotoSizeViewModel[];
+  };
 };

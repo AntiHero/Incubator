@@ -103,4 +103,24 @@ export class BlogImagesRepository extends ImageRepository {
       return null;
     }
   }
+
+  async deleteAll(
+    blogId?: string | number,
+    imageType?: ImageType,
+  ): Promise<void> {
+    const filter: { blogId?: number; type?: ImageType } = {};
+
+    if (blogId) {
+      filter.blogId = Number(blogId);
+      filter.type = imageType;
+    }
+
+    try {
+      await this.dataSource.getRepository(BlogImage).delete(filter);
+    } catch (error) {
+      console.log(error);
+
+      return null;
+    }
+  }
 }

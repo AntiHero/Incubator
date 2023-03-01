@@ -16,4 +16,9 @@ export abstract class ImageRepository {
   ): Promise<{ wallpaper: BlogImageDTO; main: BlogImageDTO[] }>;
 
   abstract deleteById(id: string | number): Promise<void | boolean>;
+
+  abstract deleteAll(
+    blogId?: string | number,
+    imageType?: ImageType,
+  ): Promise<void>;
 }

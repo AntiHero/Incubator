@@ -29,6 +29,10 @@ export class CloudService {
     const metadata = await sharp(file.buffer).metadata();
     const { size, width, height } = metadata;
 
+    if (imageType === ImageType.wallpaper) {
+      await this.imageService.deleteBlogWallpapers(blogId);
+    }
+
     const url = await this.cloudStrategy.upload(fileName, file, prefix);
 
     const imageData: BlogImageInputModel = {

@@ -20,4 +20,8 @@ export class BlogImagesService {
   async getImages(blogId: string) {
     return this.imageRepository.getImages(blogId);
   }
+
+  async deleteBlogWallpapers(blogId: string) {
+    return this.imageRepository.deleteAll(blogId, ImageType.wallpaper);
+  }
 }

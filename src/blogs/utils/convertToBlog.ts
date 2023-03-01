@@ -1,7 +1,28 @@
 import { Blog } from '../entity/blog.entity';
-import { BlogDTO, BlogViewModel } from '../types';
+import { BlogDTO, BlogViewModel, GroupedBlogsWithImages } from '../types';
 
 export class ConvertBlogData {
+  static withImagesToDTO(blog: GroupedBlogsWithImages): BlogDTO {
+    return {
+      id: String(blog.id),
+      posts: [],
+      name: blog.name,
+      websiteUrl: blog.websiteUrl,
+      description: blog.description,
+      userId: String(blog.userId),
+      banInfo: {
+        isBanned: blog.banInfo.isBanned,
+        banDate:
+          blog.banInfo.banDate === null
+            ? null
+            : new Date(blog.banInfo.banDate).toISOString(),
+      },
+      createdAt: blog.createdAt.toISOString(),
+      isMembership: blog.isMembership,
+      images: blog.images,
+    };
+  }
+
   static toDTO(blog: Blog): BlogDTO {
     return {
       id: String(blog.id),
@@ -29,6 +50,7 @@ export class ConvertBlogData {
       description: blogDTO.description,
       createdAt: blogDTO.createdAt,
       isMembership: blogDTO.isMembership,
+      images: blogDTO.images,
     };
   }
 }

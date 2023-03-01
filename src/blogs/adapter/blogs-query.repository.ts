@@ -2,17 +2,23 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import type {
+  BlogCommentType,
+  BlogDTO,
+  BlogsWithImagesQueryResult,
+  GroupedBlogsWithImages,
+} from '../types';
+
 import { Blog } from '../entity/blog.entity';
 import { Roles } from 'root/users/types/roles';
-import { BlogCommentType, BlogDTO } from '../types';
 import { Post } from 'root/posts/entity/post.entity';
-import { LikeStatuses } from 'root/@core/types/enum';
+import { PaginationQueryType } from 'root/@core/types';
 import { PostExtendedLikesDTO } from 'root/posts/types';
 import { ConvertBlogData } from '../utils/convertToBlog';
-import { PaginationQueryType } from 'root/@core/types';
 import { countSkip } from 'root/@core/utils/count-skip';
 import { getBlogsByQuery } from '../query/get-blogs.query';
 import { Comment } from 'root/comments/entity/comment.entity';
+import { ImageType, LikeStatuses } from 'root/@core/types/enum';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
 import { BloggerCommentDTO } from 'root/bloggers/@common/types';
 import { ConvertPostData } from 'root/posts/utils/convertPostData';
@@ -195,18 +201,56 @@ export class BlogsQueryRepository {
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
 
-      const blogs = await this.blogsRepository.query(
-        getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
-      );
+      const blogs: BlogsWithImagesQueryResult[] =
+        await this.blogsRepository.query(
+          getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
+        );
 
       if (!blogs) return null;
 
-      return [
-        blogs.map((blog) => {
-          const banInfo = JSON.parse(blog.banInfo);
+      const groupedBlogs: GroupedBlogsWithImages[] = [];
 
-          return ConvertBlogData.toDTO({ ...blog, banInfo });
-        }),
+      blogs.forEach((blog) => {
+        const index = groupedBlogs.findIndex((b) => blog.id === b.id);
+
+        const image = {
+          url: blog.url,
+          fileSize: blog.size,
+          height: blog.height,
+          width: blog.width,
+        };
+
+        if (index !== -1) {
+          if (blog.type === ImageType.wallpaper) {
+            groupedBlogs[index].images.wallpaper = image;
+          } else {
+            groupedBlogs[index].images.main.push(image);
+          }
+        } else {
+          groupedBlogs.push({
+            id: blog.id,
+            name: blog.name,
+            description: blog.description,
+            userId: blog.userId,
+            banInfo: JSON.parse(blog.banInfo),
+            websiteUrl: blog.websiteUrl,
+            createdAt: blog.createdAt,
+            isMembership: blog.isMembership,
+            images: {
+              wallpaper: blog.type === ImageType.wallpaper ? image : null,
+              main: blog.type === ImageType.main ? [image] : [],
+            },
+          });
+        }
+      });
+
+      return [
+        // blogs.map((blog) => {
+        //   const banInfo = JSON.parse(blog.banInfo);
+
+        //   return ConvertBlogData.toDTO({ ...blog, banInfo });
+        // }),
+        groupedBlogs.map(ConvertBlogData.withImagesToDTO),
         Number(count),
       ];
     } catch (error) {
