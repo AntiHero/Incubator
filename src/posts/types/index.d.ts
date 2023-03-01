@@ -94,8 +94,11 @@ export type PostExtendedViewModel = {
   createdAt: string;
   title: string;
   extendedLikesInfo: ExtendedLikesInfoViewModel;
+  images: {
+    main: PhotoSizeViewModel[];
+  };
 };
 
-export type PostImagesViewModel = {
-  main: PhotoSizeViewModel[];
-};
+// export type PostImagesViewModel = {
+//   main: PhotoSizeViewModel[];
+// };

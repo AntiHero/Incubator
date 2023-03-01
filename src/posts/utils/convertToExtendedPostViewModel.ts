@@ -41,5 +41,8 @@ export const convertToExtendedViewPostModel = (
       newestLikes: newestLikes.map(convertToLikeViewModel),
       myStatus,
     },
+    images: {
+      main: [],
+    },
   };
 };

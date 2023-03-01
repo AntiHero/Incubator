@@ -69,6 +69,9 @@ export class ConvertPostData {
         newestLikes: newestLikes.map(ConvertLikeData.toViewModel),
         myStatus,
       },
+      images: {
+        main: [],
+      },
     };
   }
 }
