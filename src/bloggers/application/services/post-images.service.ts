@@ -115,7 +115,7 @@ export class PostsImagesService {
 
     result.push(middleImage);
 
-    const smallFile = await this.cropFile(file, {
+    const smallImageFile = await this.cropFile(file, {
       width: SMALL_WIDTH,
       height: SMALL_HEIGHT,
     });
@@ -123,12 +123,12 @@ export class PostsImagesService {
     const smallImageName = `${fileId}-small.${fileExt}`;
 
     const smallImageUrl = await this.cloudStrategy.upload(
-      middleImageName,
-      middleFile,
+      smallImageName,
+      smallImageFile,
       prefix,
     );
 
-    metadata = await sharp(smallFile.buffer).metadata();
+    metadata = await sharp(smallImageFile.buffer).metadata();
     const { size: smallImageSize } = metadata;
 
     const smallImageData: PostImageInputModel = {

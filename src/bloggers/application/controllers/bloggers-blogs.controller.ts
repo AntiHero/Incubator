@@ -58,6 +58,7 @@ import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-po
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
+import { ImageConverter } from 'root/blogs/utils/imageConverter';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -310,13 +311,13 @@ export class BloggersBlogsController {
 
     const uploadedImages = await this.postImagesService.uploadImage(
       userId,
-      blog.id,
+      post.id,
       file,
       ImageType.main,
     );
 
     const result: PostImagesViewModel = {
-      main: uploadedImages,
+      main: uploadedImages.map(ImageConverter.toView),
     };
 
     return result;

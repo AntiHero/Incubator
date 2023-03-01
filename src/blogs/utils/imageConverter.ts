@@ -1,8 +1,8 @@
 import { PhotoSizeViewModel } from 'root/@core/types';
-import { BlogImageDTO } from 'root/bloggers/@common/types';
+import { BlogImageDTO, PostImageDTO } from 'root/bloggers/@common/types';
 
 export class ImageConverter {
-  static toView(image: BlogImageDTO): PhotoSizeViewModel {
+  static toView(image: BlogImageDTO | PostImageDTO): PhotoSizeViewModel {
     return {
       fileSize: image.size,
       height: image.height,

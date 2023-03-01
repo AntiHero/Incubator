@@ -12,19 +12,20 @@ import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
 import { CloudStrategy } from './strategies/cloud-strategy';
 import { BlogImagesService } from './services/blog-images.service';
+import { PostsImagesService } from './services/post-images.service';
 import { YandexCloudStrategy } from './strategies/yandex-cloud.strategy';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
+import { PostImage } from '../infrastructure/database/entities/post-image.entity';
 import { BlogImage } from '../infrastructure/database/entities/blog-image.entity';
 import { BannedUser } from '../infrastructure/database/entities/banned-user.entity';
 import { PostImagesRepository } from '../infrastructure/repositories/post-image.repository';
 import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { BloggersBlogsController } from 'root/bloggers/application/controllers/bloggers-blogs.controller';
-import { PostsImagesService } from './services/post-images.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Blog, User, BannedUser, BlogImage]),
+    TypeOrmModule.forFeature([Blog, User, BannedUser, BlogImage, PostImage]),
     BlogsModule,
     PostsModule,
     UsersModule,
