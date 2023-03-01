@@ -31,9 +31,9 @@ import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { Header } from '@nestjs/common/decorators/http/header.decorator';
 import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
+import { BlogImagesService } from 'root/bloggers/application/services/blog-images.service';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
-import { BlogImagesService } from 'root/bloggers/application/services/blog-images-deprecated.service';
 
 @Controller('blogs')
 export class BlogsController {
@@ -58,10 +58,7 @@ export class BlogsController {
   }
 
   @Get()
-  async getAllBlogs(
-    @Query(PaginationQuerySanitizerPipe) query,
-    // @Res() res: Response,
-  ) {
+  async getAllBlogs(@Query(PaginationQuerySanitizerPipe) query) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 
@@ -81,7 +78,6 @@ export class BlogsController {
     const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
     return result;
-    // res.type('text/plain').status(200).send(JSON.stringify(result));
   }
 
   @Get(':id')

@@ -24,20 +24,32 @@ import type {
   BlogViewModel,
   BlogWithImagesViewModel,
 } from 'root/blogs/types';
+import type {
+  BloggerCommentsViewModel,
+  PostImagesViewModel,
+} from 'root/bloggers/@common/types';
 import type { PaginationQueryType } from 'root/@core/types';
 
+import {
+  BLOG_MAIN_HEIGHT,
+  BLOG_MAIN_WIDTH,
+  BLOG_WP_HEIGHT,
+  BLOG_WP_WIDTH,
+  POST_MAIN_HEIGHT,
+  POST_MAIN_WIDTH,
+} from 'root/bloggers/@common/constants';
 import Blog from 'root/blogs/domain/blogs.model';
 import { ImageType } from 'root/@core/types/enum';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { PostExtendedViewModel } from 'root/posts/types';
-import { BlogImagesService } from '../services/blog-images.service';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
 import { BlogsService } from 'root/blogs/services/blogs.service';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
+import { BlogImagesService } from '../services/blog-images.service';
+import { PostsImagesService } from '../services/post-images.service';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
-import { BloggerCommentsViewModel } from 'root/bloggers/@common/types';
 import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
@@ -46,20 +58,14 @@ import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-po
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
-import {
-  BLOG_MAIN_HEIGHT,
-  BLOG_MAIN_WIDTH,
-  BLOG_WP_HEIGHT,
-  BLOG_WP_WIDTH,
-} from 'root/bloggers/@common/constants';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
 export class BloggersBlogsController {
   constructor(
-    // private readonly cloudService: CloudService,
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,
+    private readonly postImagesService: PostsImagesService,
     private readonly blogImagesService: BlogImagesService,
   ) {}
 
@@ -277,6 +283,46 @@ export class BloggersBlogsController {
     res.type('text/plain').status(204).send();
   }
 
+  @Post(':id/posts/:postId/images/main')
+  @HttpCode(HttpStatus.CREATED)
+  @Header('Content-Type', 'text/plain')
+  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file'))
+  async addBlogPostMainImage(
+    @UserId() userId: string,
+    @Param('id') id: string,
+    @Param('postId', IdValidationPipe) postId: string,
+    @UploadedFile(
+      ParseFileValidationPipe({
+        fileType: '.(png|jpeg|jpg)',
+        minHeight: POST_MAIN_HEIGHT,
+        minWidth: POST_MAIN_WIDTH,
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    const post = await this.postsService.findPostById(postId);
+
+    if (!post) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
+    const blog = await this.blogsService.findBlogById(id);
+
+    if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
+    const uploadedImages = await this.postImagesService.uploadImage(
+      userId,
+      blog.id,
+      file,
+      ImageType.main,
+    );
+
+    const result: PostImagesViewModel = {
+      main: uploadedImages,
+    };
+
+    return result;
+  }
+
   @Delete(':id/posts/:postId')
   async deleteBlogPost(
     @UserId() userId: string,
@@ -375,8 +421,6 @@ export class BloggersBlogsController {
         minHeight: BLOG_MAIN_HEIGHT,
         minWidth: BLOG_MAIN_WIDTH,
       }),
-      // new FileSizeValidationPipe(),
-      // new FileTypeValidationPipe('jpeg', 'jpg', 'png'),
     )
     file: Express.Multer.File,
   ) {

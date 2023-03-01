@@ -6,12 +6,12 @@ import type {
   BlogImageInputModel,
 } from 'root/bloggers/@common/types';
 
-import { BlogImage } from '../database/entities/blog-image.entity';
-import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { ImageType, SortDirection } from 'root/@core/types/enum';
+import { BlogImage } from '../database/entities/blog-image.entity';
+import { Repository } from 'root/@core/repositories/blog-image-repository';
 
 @Injectable()
-export class BlogImagesRepository extends ImageRepository {
+export class BlogImagesRepository extends Repository {
   constructor(private readonly dataSource: DataSource) {
     super();
   }

@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
 import sharp from 'sharp';
+import { uuid } from 'uuidv4';
+import { Injectable, Inject } from '@nestjs/common';
 
 import type { BlogImageInputModel } from 'root/bloggers/@common/types';
 
 import { ImageType } from 'root/@core/types/enum';
-// import { BlogImagesService } from './blog-images.service';
 import { createPrefix } from 'root/bloggers/@common/utils';
 import { CloudStrategy } from '../strategies/cloud-strategy';
-import { ImageRepository } from 'root/@core/repositories/image-repository';
+import { Repository } from 'root/@core/repositories/blog-image-repository';
 
 @Injectable()
 export class BlogImagesService {
   public constructor(
-    // private readonly imageService: BlogImagesService,
-    private readonly imageRepository: ImageRepository,
+    @Inject('BlogImagesRepository')
+    private readonly imageRepository: Repository,
     private readonly cloudStrategy: CloudStrategy,
   ) {}
 
@@ -23,10 +23,12 @@ export class BlogImagesService {
     file: Express.Multer.File,
     imageType: ImageType,
   ) {
-    const timestamp = new Date().toISOString().replace(/:/g, '-');
+    // const timestamp = new Date().toISOString().replace(/:/g, '-');
 
     const prefix = createPrefix(userId);
-    const fileName = `${timestamp}-${blogId}-${file.originalname}`;
+    // const fileName = `${timestamp}-${blogId}-${file.originalname}`;
+    const fileExt = file.filename.split('.')[1];
+    const fileName = `${uuid()}.${fileExt}`;
 
     const metadata = await sharp(file.buffer).metadata();
     const { size, width, height } = metadata;
@@ -54,5 +56,9 @@ export class BlogImagesService {
     const createdImage = await this.imageRepository.create(imageData);
 
     return createdImage;
+  }
+
+  async getImages(blogId: string) {
+    return this.imageRepository.getImages(blogId);
   }
 }

@@ -13,13 +13,14 @@ import { UsersModule } from 'root/users/users.module';
 import { CloudStrategy } from './strategies/cloud-strategy';
 import { BlogImagesService } from './services/blog-images.service';
 import { YandexCloudStrategy } from './strategies/yandex-cloud.strategy';
-import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
 import { BlogImage } from '../infrastructure/database/entities/blog-image.entity';
 import { BannedUser } from '../infrastructure/database/entities/banned-user.entity';
+import { PostImagesRepository } from '../infrastructure/repositories/post-image.repository';
 import { BlogImagesRepository } from '../infrastructure/repositories/blog-image.repository';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
 import { BloggersBlogsController } from 'root/bloggers/application/controllers/bloggers-blogs.controller';
+import { PostsImagesService } from './services/post-images.service';
 
 @Module({
   imports: [
@@ -58,9 +59,14 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
     // CloudService,
     // BlogImagesService,
     BlogImagesService,
+    PostsImagesService,
     {
-      provide: ImageRepository,
+      provide: 'BlogImagesRepository',
       useClass: BlogImagesRepository,
+    },
+    {
+      provide: 'PostImagesRepository',
+      useClass: PostImagesRepository,
     },
     {
       provide: CloudStrategy,
