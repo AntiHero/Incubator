@@ -301,13 +301,16 @@ export class BloggersBlogsController {
     )
     file: Express.Multer.File,
   ) {
-    const post = await this.postsService.findPostById(postId);
-
-    if (!post) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
-
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+
+    if (blog.userId !== userId)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    const post = await this.postsService.findPostById(postId);
+
+    if (!post) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
 
     const uploadedImages = await this.postImagesService.uploadImage(
       userId,
