@@ -48,16 +48,12 @@ export class BlogImagesService {
 
     // const createdImage = await this.imageRepository.create(imageData);
     if (imageType === ImageType.wallpaper) {
-      this.imageRepository.deleteAll(blogId, ImageType.wallpaper).then(() => {
-        this.imageRepository.create(imageData);
-      });
+      await this.imageRepository.deleteAll(blogId, ImageType.wallpaper);
     } else if (imageType === ImageType.main) {
-      this.imageRepository.deleteAll(blogId, ImageType.main).then(() => {
-        this.imageRepository.create(imageData);
-      });
+      await this.imageRepository.deleteAll(blogId, ImageType.main);
     }
 
-    // this.imageRepository.create(imageData);
+    await this.imageRepository.create(imageData);
 
     return { size, width, height, url };
     // return createdImage;

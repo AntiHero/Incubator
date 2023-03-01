@@ -287,7 +287,6 @@ export class BloggersBlogsController {
   @HttpCode(HttpStatus.CREATED)
   @Header('Content-Type', 'text/plain')
   @UseInterceptors(FileInterceptor('file'))
-  @UseInterceptors(FileInterceptor('file'))
   async addBlogPostMainImage(
     @UserId() userId: string,
     @Param('id') id: string,
