@@ -10,11 +10,9 @@ import { User } from 'root/users/entity/user.entity';
 import { BlogsModule } from 'root/blogs/blogs.module';
 import { PostsModule } from 'root/posts/posts.module';
 import { UsersModule } from 'root/users/users.module';
-import { CloudService } from './services/cloud.service';
 import { CloudStrategy } from './strategies/cloud-strategy';
 import { BlogImagesService } from './services/blog-images.service';
 import { YandexCloudStrategy } from './strategies/yandex-cloud.strategy';
-// import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { ImageRepository } from 'root/@core/repositories/image-repository';
 import { BloggersUsersController } from './controllers/blogger-users.controller';
 import { BlogImage } from '../infrastructure/database/entities/blog-image.entity';
@@ -57,7 +55,8 @@ import { BloggersBlogsController } from 'root/bloggers/application/controllers/b
     //   },
     //   inject: [ConfigService],
     // },
-    CloudService,
+    // CloudService,
+    // BlogImagesService,
     BlogImagesService,
     {
       provide: ImageRepository,

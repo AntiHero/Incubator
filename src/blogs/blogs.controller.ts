@@ -31,9 +31,9 @@ import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { convertToBlogViewModel } from './utils/convertToBlogViewModel';
 import { Header } from '@nestjs/common/decorators/http/header.decorator';
 import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
-import { BlogImagesService } from 'root/bloggers/application/services/blog-images.service';
-import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
+import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
+import { BlogImagesService } from 'root/bloggers/application/services/blog-images-deprecated.service';
 
 @Controller('blogs')
 export class BlogsController {

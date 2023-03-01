@@ -31,7 +31,7 @@ import { ImageType } from 'root/@core/types/enum';
 import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { PostExtendedViewModel } from 'root/posts/types';
-import { CloudService } from '../services/cloud.service';
+import { BlogImagesService } from '../services/blog-images.service';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
 import { BlogsService } from 'root/blogs/services/blogs.service';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
@@ -57,9 +57,10 @@ import {
 @UseGuards(BearerAuthGuard)
 export class BloggersBlogsController {
   constructor(
-    private readonly cloudService: CloudService,
+    // private readonly cloudService: CloudService,
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,
+    private readonly blogImagesService: BlogImagesService,
   ) {}
 
   @Post()
@@ -319,6 +320,8 @@ export class BloggersBlogsController {
   }
 
   @Post(':id/images/wallpaper')
+  @HttpCode(HttpStatus.CREATED)
+  @Header('Content-Type', 'text/plain')
   @UseInterceptors(FileInterceptor('file'))
   async addWallpaper(
     @UserId() userId: string,
@@ -339,7 +342,7 @@ export class BloggersBlogsController {
     if (blog.userId !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    const uploadedImage = await this.cloudService.uploadImage(
+    const uploadedImage = await this.blogImagesService.uploadImage(
       userId,
       blog.id,
       file,
@@ -384,7 +387,7 @@ export class BloggersBlogsController {
     if (blog.userId !== userId)
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    const uploadedImage = await this.cloudService.uploadImage(
+    const uploadedImage = await this.blogImagesService.uploadImage(
       userId,
       blog.id,
       file,
