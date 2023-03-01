@@ -41,8 +41,6 @@ import { BloggerCommentsViewModel } from 'root/bloggers/@common/types';
 import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { CreateBlogPostDTO } from 'root/blogs/dto/create-blog-post.dto';
 import { convertToBlogViewModel } from 'root/blogs/utils/convertToBlogViewModel';
-import { FileTypeValidationPipe } from 'root/@core/pipes/file-type-validation.pipe';
-import { FileSizeValidationPipe } from 'root/@core/pipes/file-size-validation.pipe';
 import { ParseFileValidationPipe } from 'root/bloggers/@common/pipes/parse-file.pipe';
 import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-post.dto';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';

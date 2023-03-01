@@ -244,15 +244,7 @@ export class BlogsQueryRepository {
         }
       });
 
-      return [
-        // blogs.map((blog) => {
-        //   const banInfo = JSON.parse(blog.banInfo);
-
-        //   return ConvertBlogData.toDTO({ ...blog, banInfo });
-        // }),
-        groupedBlogs.map(ConvertBlogData.withImagesToDTO),
-        Number(count),
-      ];
+      return [groupedBlogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
     } catch (error) {
       console.error(error);
 

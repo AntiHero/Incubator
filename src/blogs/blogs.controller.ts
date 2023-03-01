@@ -12,6 +12,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { HttpException } from '@nestjs/common/exceptions';
 
 import type { BlogViewModel, BlogWithImagesViewModel } from './types';
 
@@ -33,7 +34,6 @@ import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { BlogImagesService } from 'root/bloggers/application/services/blog-images.service';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
-import { HttpException } from '@nestjs/common/exceptions';
 
 @Controller('blogs')
 export class BlogsController {
@@ -60,7 +60,7 @@ export class BlogsController {
   @Get()
   async getAllBlogs(
     @Query(PaginationQuerySanitizerPipe) query,
-    @Res() res: Response,
+    // @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
@@ -80,7 +80,8 @@ export class BlogsController {
 
     const result = new Paginator(pageNumber, pageSize, totalCount, items);
 
-    res.type('text/plain').status(200).send(JSON.stringify(result));
+    return result;
+    // res.type('text/plain').status(200).send(JSON.stringify(result));
   }
 
   @Get(':id')
