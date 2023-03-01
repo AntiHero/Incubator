@@ -33,15 +33,8 @@ export class BlogImagesService {
     const metadata = await sharp(file.buffer).metadata();
     const { size, width, height } = metadata;
 
-    if (imageType === ImageType.wallpaper) {
-      await this.imageRepository.deleteAll(blogId, ImageType.wallpaper);
-    }
-
-    if (imageType === ImageType.main) {
-      await this.imageRepository.deleteAll(blogId, ImageType.main);
-    }
-
     const url = await this.cloudStrategy.upload(fileName, file, prefix);
+    // this.cloudStrategy.upload(fileName, file, prefix);
 
     const imageData: BlogImageInputModel = {
       name: fileName,
@@ -53,10 +46,21 @@ export class BlogImagesService {
       type: imageType,
     };
 
-    const createdImage = await this.imageRepository.create(imageData);
+    // const createdImage = await this.imageRepository.create(imageData);
+    if (imageType === ImageType.wallpaper) {
+      this.imageRepository.deleteAll(blogId, ImageType.wallpaper).then(() => {
+        this.imageRepository.create(imageData);
+      });
+    } else if (imageType === ImageType.main) {
+      this.imageRepository.deleteAll(blogId, ImageType.main).then(() => {
+        this.imageRepository.create(imageData);
+      });
+    }
+
     // this.imageRepository.create(imageData);
 
-    return createdImage;
+    return { size, width, height, url };
+    // return createdImage;
   }
 
   async getImages(blogId: string) {
