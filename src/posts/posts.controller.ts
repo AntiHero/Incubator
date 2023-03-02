@@ -16,26 +16,26 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 
-import { Roles } from 'root/users/types/roles';
-import { PostsService } from './posts.service';
-import { LikePostDTO } from './dto/like-post.dto';
-import { CreatePostDTO } from './dto/create-post.dto';
-import Paginator from 'root/@core/models/Paginator';
-import { UpdatePostDTO } from './dto/update-post.dto';
-import { CommentViewModel } from 'root/comments/types';
-import { Post as PostModel } from './domain/posts.model';
-import { PaginationQueryType } from 'root/@core/types';
-import { UserId } from 'root/@core/decorators/user-id.decorator';
-import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
-import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
+import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
+import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
+import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
+import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
+import { PostCommentsGuard } from 'root/@core/guards/post-comments.guard';
+import { UserLogin } from 'root/@core/decorators/user-login.decorator';
 import { OPERATION_COMPLITION_ERROR } from 'root/@core/error-messages';
 import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
-import { UserLogin } from 'root/@core/decorators/user-login.decorator';
-import { PostCommentsGuard } from 'root/@core/guards/post-comments.guard';
-import { convertToExtendedViewPostModel } from './utils/convertToExtendedPostViewModel';
-import { convertToCommentViewModel } from 'root/comments/utils/convertToCommentViewModel';
-import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
-import { convertToExtendedViewCommentModel } from 'root/comments/utils/convertToExtendedViewCommentModel';
+import { CreateCommentDTO } from '../comments/dto/create-comment.dto';
+import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
+import { UserId } from 'root/@core/decorators/user-id.decorator';
+import { Post as PostModel } from './domain/posts.model';
+import { PaginationQueryType } from 'root/@core/types';
+import { CommentViewModel } from 'root/comments/types';
+import { UpdatePostDTO } from './dto/update-post.dto';
+import { CreatePostDTO } from './dto/create-post.dto';
+import Paginator from 'root/@core/models/Paginator';
+import { LikePostDTO } from './dto/like-post.dto';
+import { Roles } from 'root/users/types/roles';
+import { PostsService } from './posts.service';
 
 @Controller({ path: 'posts', scope: Scope.REQUEST })
 export class PostsController {

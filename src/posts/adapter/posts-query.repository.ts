@@ -21,6 +21,8 @@ import { getPostCommentsByQuery } from '../query/get-post-comments.query';
 import { getLikesCount } from 'root/blogs/query/get-blog-post-likes-count.query';
 import { getBlogPostLikesByQuery } from 'root/blogs/query/get-blog-post-likes.query';
 import { getCommentLikesCount } from 'root/blogs/query/get-comment-likes-count.query';
+import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
+import { ImageConverter } from 'root/blogs/utils/imageConverter';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -37,6 +39,8 @@ export class PostsQueryRepository {
     private readonly postLikesRepository: Repository<PostLike>,
     @InjectRepository(CommentLike)
     private readonly commentLikesRepository: Repository<CommentLike>,
+    @InjectRepository(PostImage)
+    private readonly postImagesRepository: Repository<PostImage>,
   ) {}
 
   async getAllPosts() {
@@ -187,6 +191,12 @@ export class PostsQueryRepository {
         [id],
       );
 
+      const postImage = await this.postImagesRepository.find({
+        where: {
+          postId: Number(id),
+        },
+      });
+
       const extendedPost: PostExtendedLikesDTO = {
         ...ConvertPostData.toDTO(post),
         blogName,
@@ -194,6 +204,7 @@ export class PostsQueryRepository {
         dislikesCount: Number(dislikesCount),
         userStatus,
         newestLikes: newestLikes.map(ConvertLikeData.toDTO),
+        images: postImage.map((img) => img.toDTO()),
       };
 
       return extendedPost;

@@ -1,7 +1,12 @@
-import { LikeViewModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/@core/types/enum';
-import { PostDTO, PostExtendedLikesDTO, PostExtendedViewModel } from '../types';
 import { convertToLikeViewModel } from 'root/likes/utils/convertToLikeViewModel';
+import { ImageConverter } from 'root/blogs/utils/imageConverter';
+import { LikeStatuses } from 'root/@core/types/enum';
+import { LikeViewModel } from 'root/likes/types';
+import type {
+  PostDTO,
+  PostExtendedLikesDTO,
+  PostExtendedViewModel,
+} from '../types';
 
 export const convertToExtendedViewPostModel = (
   post: PostExtendedLikesDTO | PostDTO,
@@ -27,6 +32,12 @@ export const convertToExtendedViewPostModel = (
     newestLikes = post.newestLikes;
   }
 
+  let images = [];
+
+  if ('images' in post) {
+    images = post.images.map(ImageConverter.toView);
+  }
+
   return {
     id: post.id,
     shortDescription: post.shortDescription,
@@ -42,7 +53,7 @@ export const convertToExtendedViewPostModel = (
       myStatus,
     },
     images: {
-      main: [],
+      main: images,
     },
   };
 };

@@ -10,9 +10,11 @@ import { Comment } from 'root/comments/entity/comment.entity';
 import { PostsRepository } from './adapter/posts.repostitory';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { PostsQueryRepository } from './adapter/posts-query.repository';
-import { BannedUser } from 'root/bloggers/infrastructure/database/entities/banned-user.entity';
 import { CheckBlogExistance } from 'root/@core/decorators/check-blog-existance.decorator';
+import { BannedUser } from 'root/bloggers/infrastructure/database/entities/banned-user.entity';
 import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban-users.service';
+import { PostImagesRepository } from 'root/bloggers/infrastructure/repositories/post-image.repository';
+import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban
       User,
       Comment,
       PostLike,
+      PostImage,
       BannedUser,
       CommentLike,
     ]),
@@ -33,6 +36,10 @@ import { BanUsersByBloggerService } from 'root/bloggers/application/services/ban
     CheckBlogExistance,
     PostsQueryRepository,
     BanUsersByBloggerService,
+    {
+      provide: 'PostImagesRepository',
+      useClass: PostImagesRepository,
+    },
   ],
   exports: [PostsService],
 })

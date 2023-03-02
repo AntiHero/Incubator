@@ -1,19 +1,20 @@
 import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 
-import { WithId } from 'root/@core/types/utility';
-import {
+import type { PostImageDTO } from 'root/bloggers/@common/types';
+import type { PhotoSizeViewModel } from 'root/@core/types';
+import type { WithId } from 'root/@core/types/utility';
+import { LikeStatuses } from 'root/@core/types/enum';
+import type {
   CommentDatabaseModel,
   CommentDomainModel,
   CommentDTO,
 } from 'root/comments/types';
-import {
+import type {
   ExtendedLikesInfoViewModel,
   LikeDatabaseModel,
   LikeDomainModel,
   LikeDTO,
 } from 'root/likes/types';
-import { LikeStatuses } from 'root/@core/types/enum';
-import { PhotoSizeViewModel } from 'root/@core/types';
 
 export type PostSchemaModel = {
   title: string;
@@ -64,6 +65,7 @@ export type PostExtendedLikesDTO = {
   dislikesCount: number;
   userStatus: LikeStatuses;
   newestLikes?: LikeDTO[];
+  images?: PostImageDTO[];
 };
 
 export type PostDomainModelWithId = WithId<PostDomainModel>;
@@ -94,11 +96,9 @@ export type PostExtendedViewModel = {
   createdAt: string;
   title: string;
   extendedLikesInfo: ExtendedLikesInfoViewModel;
-  images: {
-    main: PhotoSizeViewModel[];
-  };
+  images: PostImagesViewModel;
 };
 
-// export type PostImagesViewModel = {
-//   main: PhotoSizeViewModel[];
-// };
+export type PostImagesViewModel = {
+  main: PhotoSizeViewModel[];
+};
