@@ -3,33 +3,42 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import type {
-  BlogCommentType,
-  BlogDTO,
+  PostExtendedLikesDTO,
+  PostsWithImagesDTO,
+} from 'root/posts/types';
+import type {
   BlogsWithImagesQueryResult,
   GroupedBlogsWithImages,
+  BlogCommentType,
+  BlogDTO,
 } from '../types';
 
-import { Blog } from '../entity/blog.entity';
-import { Roles } from 'root/users/types/roles';
-import { Post } from 'root/posts/entity/post.entity';
-import { PaginationQueryType } from 'root/@core/types';
-import { PostExtendedLikesDTO } from 'root/posts/types';
-import { ConvertBlogData } from '../utils/convertToBlog';
-import { countSkip } from 'root/@core/utils/count-skip';
-import { getBlogsByQuery } from '../query/get-blogs.query';
-import { Comment } from 'root/comments/entity/comment.entity';
-import { ImageType, LikeStatuses } from 'root/@core/types/enum';
-import { ConvertLikeData } from 'root/likes/utils/convertLike';
-import { BloggerCommentDTO } from 'root/bloggers/@common/types';
-import { ConvertPostData } from 'root/posts/utils/convertPostData';
-import { getBlogPostsByQuery } from '../query/get-blog-posts.query';
-import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
-import { ConvertCommentData } from 'root/comments/utils/convertComment';
-import { getLikesCount } from '../query/get-blog-post-likes-count.query';
-import { getBlogPostLikesByQuery } from '../query/get-blog-post-likes.query';
-import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
-import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
 import { ConvertBloggerData } from 'root/bloggers/@common/utils/convertBloggerData';
+import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
+import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
+import { getBlogPostLikesByQuery } from '../query/get-blog-post-likes.query';
+import { getLikesCount } from '../query/get-blog-post-likes-count.query';
+import { ConvertCommentData } from 'root/comments/utils/convertComment';
+import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
+import { getBlogPostsByQuery } from '../query/get-blog-posts.query';
+import { ConvertPostData } from 'root/posts/utils/convertPostData';
+import { BloggerCommentDTO } from 'root/bloggers/@common/types';
+import { ConvertLikeData } from 'root/likes/utils/convertLike';
+import {
+  ImageType,
+  LikeStatuses,
+  SortDirectionKeys,
+} from 'root/@core/types/enum';
+import { Comment } from 'root/comments/entity/comment.entity';
+import { getBlogsByQuery } from '../query/get-blogs.query';
+import { countSkip } from 'root/@core/utils/count-skip';
+import { ConvertBlogData } from '../utils/convertToBlog';
+import { PaginationQueryType } from 'root/@core/types';
+import { Post } from 'root/posts/entity/post.entity';
+import { Roles } from 'root/users/types/roles';
+import { Blog } from '../entity/blog.entity';
+import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
+import { url } from 'inspector';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -44,6 +53,8 @@ export class BlogsQueryRepository {
     private readonly postLikesRepository: Repository<PostLike>,
     @InjectRepository(CommentLike)
     private readonly commentLikesRepository: Repository<CommentLike>,
+    @InjectRepository(PostImage)
+    private readonly postImagesRepository: Repository<PostImage>,
   ) {}
 
   async getAllBlogs() {
@@ -112,11 +123,45 @@ export class BlogsQueryRepository {
       const offset = countSkip(query.pageSize, query.pageNumber);
 
       const posts = await this.postRepository.query(
-        getBlogPostsByQuery(sortBy, sortDirection, limit, offset),
+        getBlogPostsByQuery(sortBy, SortDirectionKeys.asc, limit, offset),
         [id],
       );
 
-      if (!posts) return null;
+      // console.log(posts, 'posts');
+
+      // if (!posts) return null;
+
+      // const postsWithImages: PostsWithImagesDTO[] = [];
+
+      // for (const post of posts) {
+      //   const index = postsWithImages.findIndex(
+      //     (p) => String(post.id) === p.id,
+      //   );
+
+      //   const image = {
+      //     url: post.url,
+      //     fileSize: post.size,
+      //     width: post.width,
+      //     height: post.height,
+      //   };
+
+      //   if (index === -1) {
+      //     postsWithImages.push({
+      //       id: String(post.id),
+      //       blogId: String(post.blogId),
+      //       blogName: String(post.blogName),
+      //       content: post.content,
+      //       title: post.title,
+      //       createdAt: post.createdAt.toISOString(),
+      //       shortDescription: post.shortDescription,
+      //       images: {
+      //         main: [image],
+      //       },
+      //     });
+      //   } else {
+      //     postsWithImages[index].images.main.push(image);
+      //   }
+      // }
 
       const blogName =
         (
@@ -135,6 +180,16 @@ export class BlogsQueryRepository {
           getBlogPostLikesByQuery,
           [post.id],
         );
+
+        const images = await this.postImagesRepository.query(
+          `
+            SELECT pi.size, pi.url, pi.height, pi.width
+            FROM post_images pi
+            WHERE pi."postId"=$1
+          `,
+          [post.id],
+        );
+
         const likesAndDislikesCount = (
           await this.postLikesRepository.query(getLikesCount, [post.id])
         )[0];
@@ -168,6 +223,14 @@ export class BlogsQueryRepository {
           dislikesCount,
           userStatus,
           newestLikes: likes.map(ConvertLikeData.toDTO),
+          images: {
+            main: images.map((img) => ({
+              url: img.url,
+              fileSize: img.size,
+              height: img.height,
+              width: img.width,
+            })),
+          },
         });
       }
 
@@ -255,6 +318,7 @@ export class BlogsQueryRepository {
 
   async findUserBlogsByQuery(userId: string, query: PaginationQueryType) {
     if (!userId) return [[], 0];
+    console.log(query);
 
     const filter = `name ~* '${query.searchNameTerm}' AND "userId"=${userId}`;
 

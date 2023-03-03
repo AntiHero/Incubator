@@ -15,6 +15,7 @@ import { BlogImagesService } from 'root/bloggers/application/services/blog-image
 import { BlogImage } from 'root/bloggers/infrastructure/database/entities/blog-image.entity';
 import { YandexCloudStrategy } from 'root/bloggers/application/strategies/yandex-cloud.strategy';
 import { BlogImagesRepository } from 'root/bloggers/infrastructure/repositories/blog-image.repository';
+import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BlogImagesRepository } from 'root/bloggers/infrastructure/repositories/
       User,
       Comment,
       PostLike,
+      PostImage,
       BlogImage,
       CommentLike,
     ]),

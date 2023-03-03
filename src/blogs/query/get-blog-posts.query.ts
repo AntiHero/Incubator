@@ -6,8 +6,9 @@ export const getBlogPostsByQuery = (
   limit: number,
   offset: number,
 ) => `
-  SELECT * FROM posts 
-    WHERE posts."blogId"=$1
+  SELECT p.*
+    FROM posts p
+    WHERE p."blogId"=$1
     ORDER BY "${sortBy}" ${
   sortBy === 'createdAt' ? sortOrder : 'COLLATE "C" ' + sortOrder
 }

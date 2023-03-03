@@ -248,6 +248,8 @@ export class PostsQueryRepository {
           getPostsByQuery(sortBy, sortDirection, limit, offset),
         );
 
+      console.log(posts, 'postsfromDB');
+
       // refactor
       if (!posts) return null;
 
@@ -256,11 +258,18 @@ export class PostsQueryRepository {
       const result: PostExtendedLikesDTO[] = [];
 
       for (const post of posts) {
-        const existingPost = postsWithImages.find(
-          (el) => el.id === String(post.id),
+        const index = postsWithImages.findIndex(
+          (p) => String(post.id) === p.id,
         );
 
-        if (!existingPost) {
+        const image = {
+          url: post.url,
+          fileSize: post.size,
+          width: post.width,
+          height: post.height,
+        };
+
+        if (index === -1) {
           postsWithImages.push({
             id: String(post.id),
             blogId: String(post.blogId),
@@ -270,29 +279,13 @@ export class PostsQueryRepository {
             createdAt: post.createdAt.toISOString(),
             shortDescription: post.shortDescription,
             images: {
-              main: post.url
-                ? [
-                    {
-                      url: post.url,
-                      fileSize: post.size,
-                      width: post.width,
-                      height: post.height,
-                    },
-                  ]
-                : [],
+              main: [image],
             },
           });
         } else {
-          existingPost.images.main.push({
-            url: post.url,
-            fileSize: post.size,
-            width: post.width,
-            height: post.height,
-          });
+          postsWithImages[index].images.main.push(image);
         }
       }
-
-      console.log(postsWithImages, 'postsWithImages');
 
       for (const post of postsWithImages) {
         const likes = await this.postLikesRepository.query(
@@ -348,7 +341,6 @@ export class PostsQueryRepository {
         });
       }
 
-      console.log(result, 'result');
       return [result, Number(count)];
     } catch (error) {
       console.error(error);
