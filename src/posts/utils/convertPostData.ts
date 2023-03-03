@@ -1,24 +1,51 @@
-import {
-  PostDTO,
-  PostViewModel,
-  PostExtendedLikesDTO,
-  PostExtendedViewModel,
-} from '../types';
-import { Post } from '../entity/post.entity';
-import { LikeViewModel } from 'root/likes/types';
-import { LikeStatuses } from 'root/@core/types/enum';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
+import { LikeStatuses } from 'root/@core/types/enum';
+import { LikeViewModel } from 'root/likes/types';
+import { Post } from '../entity/post.entity';
+
+// TYPES
+import type {
+  PostsWithImagesQueryResultType,
+  PostExtendedViewModel,
+  PostExtendedLikesDTO,
+  PostViewModel,
+  PostDTO,
+  PostsWithImagesDTO,
+} from '../types';
 
 export class ConvertPostData {
-  static toDTO(post: Post): PostDTO {
-    return {
+  static toDTO(
+    post: Post | PostsWithImagesQueryResultType | PostsWithImagesDTO,
+  ): PostDTO {
+    const result: PostDTO = {
       id: String(post.id),
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
       blogId: String(post.blogId),
-      createdAt: post.createdAt.toISOString(),
+      createdAt:
+        typeof post.createdAt === 'string'
+          ? post.createdAt
+          : post.createdAt.toISOString(),
     };
+
+    if ('size' in post) {
+      result.size = post.size;
+    }
+
+    if ('url' in post) {
+      result.url = post.url;
+    }
+
+    if ('height' in post) {
+      result.height = post.height;
+    }
+
+    if ('width' in post) {
+      result.width = post.width;
+    }
+
+    return result;
   }
   static toViewModel(post: PostDTO): PostViewModel {
     return {
@@ -70,7 +97,7 @@ export class ConvertPostData {
         myStatus,
       },
       images: {
-        main: [],
+        main: post.images.main,
       },
     };
   }

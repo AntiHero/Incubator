@@ -206,6 +206,7 @@ export class BlogsQueryRepository {
           getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
         );
 
+      // refactor
       if (!blogs) return null;
 
       const groupedBlogs: GroupedBlogsWithImages[] = [];

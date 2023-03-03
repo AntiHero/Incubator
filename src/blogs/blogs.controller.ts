@@ -58,7 +58,9 @@ export class BlogsController {
   }
 
   @Get()
-  async getAllBlogs(@Query(PaginationQuerySanitizerPipe) query) {
+  async getAllBlogs(
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
+  ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
       query;
 

@@ -32,10 +32,10 @@ export const convertToExtendedViewPostModel = (
     newestLikes = post.newestLikes;
   }
 
-  let images = [];
+  let main = [];
 
   if ('images' in post) {
-    images = post.images.map(ImageConverter.toView);
+    main = post.images.main;
   }
 
   return {
@@ -53,7 +53,7 @@ export const convertToExtendedViewPostModel = (
       myStatus,
     },
     images: {
-      main: images,
+      main,
     },
   };
 };

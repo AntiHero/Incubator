@@ -4,7 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Post } from '../entity/post.entity';
 import { Roles } from 'root/users/types/roles';
-import { PostExtendedLikesDTO } from '../types';
+import {
+  PostExtendedLikesDTO,
+  PostsWithImagesDTO,
+  PostsWithImagesQueryResultType,
+} from '../types';
 import { User } from 'root/users/models/user.model';
 import { Blog } from 'root/blogs/entity/blog.entity';
 import { LikeStatuses } from 'root/@core/types/enum';
@@ -204,7 +208,14 @@ export class PostsQueryRepository {
         dislikesCount: Number(dislikesCount),
         userStatus,
         newestLikes: newestLikes.map(ConvertLikeData.toDTO),
-        images: postImage.map((img) => img.toDTO()),
+        images: {
+          main: postImage.map((img) => ({
+            url: img.url,
+            height: img.height,
+            width: img.width,
+            fileSize: img.size,
+          })),
+        },
       };
 
       return extendedPost;
@@ -232,15 +243,58 @@ export class PostsQueryRepository {
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
 
-      const posts = await this.postsRepository.query(
-        getPostsByQuery(sortBy, sortDirection, limit, offset),
-      );
+      const posts: PostsWithImagesQueryResultType[] =
+        await this.postsRepository.query(
+          getPostsByQuery(sortBy, sortDirection, limit, offset),
+        );
 
+      // refactor
       if (!posts) return null;
+
+      const postsWithImages: PostsWithImagesDTO[] = [];
 
       const result: PostExtendedLikesDTO[] = [];
 
       for (const post of posts) {
+        const existingPost = postsWithImages.find(
+          (el) => el.id === String(post.id),
+        );
+
+        if (!existingPost) {
+          postsWithImages.push({
+            id: String(post.id),
+            blogId: String(post.blogId),
+            blogName: String(post.blogName),
+            content: post.content,
+            title: post.title,
+            createdAt: post.createdAt.toISOString(),
+            shortDescription: post.shortDescription,
+            images: {
+              main: post.url
+                ? [
+                    {
+                      url: post.url,
+                      fileSize: post.size,
+                      width: post.width,
+                      height: post.height,
+                    },
+                  ]
+                : [],
+            },
+          });
+        } else {
+          existingPost.images.main.push({
+            url: post.url,
+            fileSize: post.size,
+            width: post.width,
+            height: post.height,
+          });
+        }
+      }
+
+      console.log(postsWithImages, 'postsWithImages');
+
+      for (const post of postsWithImages) {
         const likes = await this.postLikesRepository.query(
           getBlogPostLikesByQuery,
           [post.id],
@@ -290,9 +344,11 @@ export class PostsQueryRepository {
           dislikesCount: Number(dislikesCount),
           userStatus,
           newestLikes: likes.map(ConvertLikeData.toDTO),
+          images: post.images,
         });
       }
 
+      console.log(result, 'result');
       return [result, Number(count)];
     } catch (error) {
       console.error(error);

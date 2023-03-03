@@ -49,15 +49,15 @@ export class PostImage {
 
   toDTO(): PostImageDTO {
     return {
-      id: this.id,
+      // id: this.id,
       url: this.url,
-      name: this.name,
-      type: this.type,
+      // name: this.name,
+      // type: this.type,
       size: this.size,
       width: this.width,
       height: this.height,
-      postId: this.postId,
-      createdAt: this.createdAt.toISOString(),
+      // postId: this.postId,
+      // createdAt: this.createdAt.toISOString(),
     };
   }
 

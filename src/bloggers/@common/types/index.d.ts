@@ -77,15 +77,15 @@ export type BlogImageDTO = {
 };
 
 export type PostImageDTO = {
-  id: number;
-  name: string;
-  type: ImageType;
+  id?: number;
+  name?: string;
+  type?: ImageType;
   height: number;
   width: number;
   url: string;
   size: number;
-  postId: number;
-  createdAt: string;
+  postId?: number;
+  createdAt?: string;
 };
 
 export type PostImageInputModel = Omit<PostImageDTO, 'id' | 'createdAt'>;

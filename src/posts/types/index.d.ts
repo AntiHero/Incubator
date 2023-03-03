@@ -51,6 +51,10 @@ export type PostDTO = {
   comments?: CommentDTO[];
   likes?: LikeDTO[];
   createdAt: string;
+  size?: number;
+  url?: string;
+  height?: number;
+  width?: number;
 };
 
 export type PostExtendedLikesDTO = {
@@ -65,7 +69,7 @@ export type PostExtendedLikesDTO = {
   dislikesCount: number;
   userStatus: LikeStatuses;
   newestLikes?: LikeDTO[];
-  images?: PostImageDTO[];
+  images?: PostImagesViewModel;
 };
 
 export type PostDomainModelWithId = WithId<PostDomainModel>;
@@ -101,4 +105,29 @@ export type PostExtendedViewModel = {
 
 export type PostImagesViewModel = {
   main: PhotoSizeViewModel[];
+};
+
+type PostsWithImagesQueryResultType = {
+  id: number;
+  shortDescription: string;
+  content: string;
+  blogId: number;
+  blogName: string;
+  title: string;
+  createdAt: Date;
+  size: number;
+  width: number;
+  height: number;
+  url: string;
+};
+
+type PostsWithImagesDTO = {
+  id: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
+  blogName: string;
+  title: string;
+  createdAt: string;
+  images: PostImagesViewModel;
 };
