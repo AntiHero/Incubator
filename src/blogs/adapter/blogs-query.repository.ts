@@ -1,18 +1,16 @@
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 
-import type {
-  PostExtendedLikesDTO,
-  PostsWithImagesDTO,
-} from 'root/posts/types';
 import type {
   BlogsWithImagesQueryResult,
   GroupedBlogsWithImages,
   BlogCommentType,
   BlogDTO,
 } from '../types';
+import type { PostExtendedLikesDTO } from 'root/posts/types';
 
+import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
 import { ConvertBloggerData } from 'root/bloggers/@common/utils/convertBloggerData';
 import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
 import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
@@ -24,11 +22,6 @@ import { getBlogPostsByQuery } from '../query/get-blog-posts.query';
 import { ConvertPostData } from 'root/posts/utils/convertPostData';
 import { BloggerCommentDTO } from 'root/bloggers/@common/types';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
-import {
-  ImageType,
-  LikeStatuses,
-  SortDirectionKeys,
-} from 'root/@core/types/enum';
 import { Comment } from 'root/comments/entity/comment.entity';
 import { getBlogsByQuery } from '../query/get-blogs.query';
 import { countSkip } from 'root/@core/utils/count-skip';
@@ -37,24 +30,27 @@ import { PaginationQueryType } from 'root/@core/types';
 import { Post } from 'root/posts/entity/post.entity';
 import { Roles } from 'root/users/types/roles';
 import { Blog } from '../entity/blog.entity';
-import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
-import { url } from 'inspector';
+import {
+  SortDirectionKeys,
+  LikeStatuses,
+  ImageType,
+} from 'root/@core/types/enum';
 
 @Injectable()
 export class BlogsQueryRepository {
   constructor(
-    @InjectRepository(Blog)
-    private readonly blogsRepository: Repository<Blog>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(Blog)
+    private readonly blogsRepository: Repository<Blog>,
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(PostLike)
     private readonly postLikesRepository: Repository<PostLike>,
-    @InjectRepository(CommentLike)
-    private readonly commentLikesRepository: Repository<CommentLike>,
     @InjectRepository(PostImage)
     private readonly postImagesRepository: Repository<PostImage>,
+    @InjectRepository(CommentLike)
+    private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
 
   async getAllBlogs() {
@@ -119,49 +115,13 @@ export class BlogsQueryRepository {
     try {
       const count = await this.countBlogPosts(id);
 
-      const { sortBy, sortDirection, pageSize: limit } = query;
+      const { sortBy, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
 
       const posts = await this.postRepository.query(
         getBlogPostsByQuery(sortBy, SortDirectionKeys.asc, limit, offset),
         [id],
       );
-
-      // console.log(posts, 'posts');
-
-      // if (!posts) return null;
-
-      // const postsWithImages: PostsWithImagesDTO[] = [];
-
-      // for (const post of posts) {
-      //   const index = postsWithImages.findIndex(
-      //     (p) => String(post.id) === p.id,
-      //   );
-
-      //   const image = {
-      //     url: post.url,
-      //     fileSize: post.size,
-      //     width: post.width,
-      //     height: post.height,
-      //   };
-
-      //   if (index === -1) {
-      //     postsWithImages.push({
-      //       id: String(post.id),
-      //       blogId: String(post.blogId),
-      //       blogName: String(post.blogName),
-      //       content: post.content,
-      //       title: post.title,
-      //       createdAt: post.createdAt.toISOString(),
-      //       shortDescription: post.shortDescription,
-      //       images: {
-      //         main: [image],
-      //       },
-      //     });
-      //   } else {
-      //     postsWithImages[index].images.main.push(image);
-      //   }
-      // }
 
       const blogName =
         (
@@ -268,9 +228,6 @@ export class BlogsQueryRepository {
         await this.blogsRepository.query(
           getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
         );
-
-      // refactor
-      if (!blogs) return null;
 
       const groupedBlogs: GroupedBlogsWithImages[] = [];
 

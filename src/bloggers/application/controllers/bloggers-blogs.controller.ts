@@ -148,7 +148,7 @@ export class BloggersBlogsController {
   }
 
   @Get(':id')
-  async getBlog(@Param('id') id, @Res() res: Response) {
+  async getBlog(@Param('id') id: string, @Res() res: Response) {
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
@@ -163,7 +163,7 @@ export class BloggersBlogsController {
   @Put(':id')
   async updateBlog(
     @UserId() userId: string,
-    @Param('id') id,
+    @Param('id') id: string,
     @Body() body: CreateBlogDTO,
     @Res() res: Response,
   ) {
