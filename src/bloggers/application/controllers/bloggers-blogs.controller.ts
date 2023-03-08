@@ -191,6 +191,7 @@ export class BloggersBlogsController {
     @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
+    console.log(userId, 'userId');
     const blog = await this.blogsService.findBlogById(id);
 
     if (!blog) {
