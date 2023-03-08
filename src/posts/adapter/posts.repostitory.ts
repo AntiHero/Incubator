@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
-import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
+// import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
 import { updatePostLikeQuery } from '../query/update-post-like.query';
 import { PostDomainModel, PostExtendedLikesDTO } from '../types';

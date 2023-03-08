@@ -47,3 +47,12 @@ type ExtendedLikesInfoViewModel = {
   myStatus: LikeStatus;
   newestLikes: LikeViewModel[];
 };
+
+export type LikeDBType = {
+  id: number;
+  likeStatus: LikeStatuses;
+  isBanned: boolean;
+  entityId: number;
+  userId: number;
+  createdAt: string | Date;
+};

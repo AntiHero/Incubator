@@ -20,7 +20,6 @@ export class FinishTheGameAfterDelayUseCase {
 
   private async finishGame(gameId: string, playerId: number) {
     try {
-      console.log('executing');
       const game = await this.dataSource.getRepository(PairGame).findOne({
         where: {
           id: gameId,

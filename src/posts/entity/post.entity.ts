@@ -25,7 +25,10 @@ export class Post {
 
   @ManyToOne(() => Blog, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'blogId' })
-  blogId: Blog;
+  blog: Blog;
+
+  @Column()
+  blogId: number;
 
   @CreateDateColumn()
   createdAt: Date;

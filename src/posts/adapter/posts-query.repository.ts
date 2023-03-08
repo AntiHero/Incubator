@@ -4,11 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Post } from '../entity/post.entity';
 import { Roles } from 'root/users/types/roles';
-import {
-  PostExtendedLikesDTO,
-  PostsWithImagesDTO,
-  PostsWithImagesQueryResultType,
-} from '../types';
+import { ExtendedPostQueryResult, PostExtendedLikesDTO } from '../types';
 import { User } from 'root/users/models/user.model';
 import { Blog } from 'root/blogs/entity/blog.entity';
 import { LikeStatuses } from 'root/@core/types/enum';
@@ -19,6 +15,7 @@ import { ConvertPostData } from '../utils/convertPostData';
 import { Comment } from 'root/comments/entity/comment.entity';
 import { CommentExtendedLikesDTO } from 'root/comments/types';
 import { ConvertLikeData } from 'root/likes/utils/convertLike';
+import { ImageConverter } from 'root/blogs/utils/imageConverter';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
 import { getPostCommentsByQuery } from '../query/get-post-comments.query';
@@ -26,7 +23,6 @@ import { getLikesCount } from 'root/blogs/query/get-blog-post-likes-count.query'
 import { getBlogPostLikesByQuery } from 'root/blogs/query/get-blog-post-likes.query';
 import { getCommentLikesCount } from 'root/blogs/query/get-comment-likes-count.query';
 import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
-import { ImageConverter } from 'root/blogs/utils/imageConverter';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -235,111 +231,129 @@ export class PostsQueryRepository {
       const count = (
         await this.postsRepository.query(
           `
-              SELECT COUNT(*) FROM posts 
-            `,
+          SELECT COUNT(*) FROM posts 
+        `,
         )
       )[0]?.count;
 
       const { sortBy, sortDirection, pageSize: limit } = query;
       const offset = countSkip(query.pageSize, query.pageNumber);
 
-      const posts: PostsWithImagesQueryResultType[] =
-        await this.postsRepository.query(
-          getPostsByQuery(sortBy, sortDirection, limit, offset),
-        );
-
-      console.log(posts, 'postsfromDB');
-
-      // refactor
-      if (!posts) return null;
-
-      const postsWithImages: PostsWithImagesDTO[] = [];
+      const posts: ExtendedPostQueryResult[] = await this.postsRepository.query(
+        getPostsByQuery(sortBy, sortDirection, limit, offset),
+      );
 
       const result: PostExtendedLikesDTO[] = [];
 
       for (const post of posts) {
-        const index = postsWithImages.findIndex(
-          (p) => String(post.id) === p.id,
-        );
-
-        const image = {
-          url: post.url,
-          fileSize: post.size,
-          width: post.width,
-          height: post.height,
-        };
-
-        if (index === -1) {
-          postsWithImages.push({
-            id: String(post.id),
-            blogId: String(post.blogId),
-            blogName: String(post.blogName),
-            content: post.content,
-            title: post.title,
-            createdAt: post.createdAt.toISOString(),
-            shortDescription: post.shortDescription,
-            images: {
-              main: [image],
-            },
-          });
-        } else {
-          postsWithImages[index].images.main.push(image);
-        }
-      }
-
-      for (const post of postsWithImages) {
-        const likes = await this.postLikesRepository.query(
-          getBlogPostLikesByQuery,
-          [post.id],
-        );
-
-        const likesAndDislikesCount = (
-          await this.postLikesRepository.query(getLikesCount, [post.id])
-        )[0];
-
-        let likesCount = 0;
-        let dislikesCount = 0;
-
-        if (likesAndDislikesCount) {
-          likesCount = Number(likesAndDislikesCount.likesCount);
-          dislikesCount = Number(likesAndDislikesCount.dislikesCount);
-        }
-
-        let userStatus: LikeStatuses = LikeStatuses.None;
-
-        if (userId) {
-          userStatus =
-            (
-              await this.postLikesRepository.query(
-                `
-                  SELECT "likeStatus" FROM post_likes 
-                    WHERE "userId"=$1 AND "entityId"=$2
-                `,
-                [userId, post.id],
-              )
-            )[0]?.likeStatus ?? LikeStatuses.None;
-        }
-
-        const blogName =
-          (
-            await this.blogsRepository.query(
-              `
-                SELECT "name" FROM blogs WHERE id=$1
-              `,
-              [post.blogId],
-            )
-          )[0]?.name ?? '';
-
         result.push({
-          ...ConvertPostData.toDTO(post),
-          blogName,
-          likesCount: Number(likesCount),
-          dislikesCount: Number(dislikesCount),
-          userStatus,
-          newestLikes: likes.map(ConvertLikeData.toDTO),
-          images: post.images,
+          ...ConvertPostData.toDTO({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            shortDescription: post.shortDescription,
+            createdAt: post.createdAt,
+            blogId: post.blogId,
+          }),
+          blogName: post.blogName,
+          likesCount: post.likesCount,
+          dislikesCount: post.dislikesCount,
+          userStatus: post.userLikeStatus,
+          images: {
+            main: post.images ? post.images.map(ImageConverter.toView) : [],
+          },
+          newestLikes: post.likes ? post.likes.map(ConvertLikeData.toDTO) : [],
         });
       }
+
+      // refactor
+      // if (!posts) return null;
+
+      // const postsWithImages: PostsWithImagesDTO[] = [];
+
+      // for (const post of posts) {
+      //   const index = postsWithImages.findIndex(
+      //     (p) => String(post.id) === p.id,
+      //   );
+
+      //   const image = {
+      //     url: post.url,
+      //     fileSize: post.size,
+      //     width: post.width,
+      //     height: post.height,
+      //   };
+
+      //   if (index === -1) {
+      //     postsWithImages.push({
+      //       id: String(post.id),
+      //       blogId: String(post.blogId),
+      //       blogName: String(post.blogName),
+      //       content: post.content,
+      //       title: post.title,
+      //       createdAt: post.createdAt.toISOString(),
+      //       shortDescription: post.shortDescription,
+      //       images: {
+      //         main: [image],
+      //       },
+      //     });
+      //   } else {
+      //     postsWithImages[index].images.main.push(image);
+      //   }
+      // }
+
+      // for (const post of postsWithImages) {
+      //   const likes = await this.postLikesRepository.query(
+      //     getBlogPostLikesByQuery,
+      //     [post.id],
+      //   );
+
+      //   const likesAndDislikesCount = (
+      //     await this.postLikesRepository.query(getLikesCount, [post.id])
+      //   )[0];
+
+      //   let likesCount = 0;
+      //   let dislikesCount = 0;
+
+      //   if (likesAndDislikesCount) {
+      //     likesCount = Number(likesAndDislikesCount.likesCount);
+      //     dislikesCount = Number(likesAndDislikesCount.dislikesCount);
+      //   }
+
+      //   let userStatus: LikeStatuses = LikeStatuses.None;
+
+      //   if (userId) {
+      //     userStatus =
+      //       (
+      //         await this.postLikesRepository.query(
+      //           `
+      //             SELECT "likeStatus" FROM post_likes
+      //               WHERE "userId"=$1 AND "entityId"=$2
+      //           `,
+      //           [userId, post.id],
+      //         )
+      //       )[0]?.likeStatus ?? LikeStatuses.None;
+      //   }
+
+      //   const blogName =
+      //     (
+      //       await this.blogsRepository.query(
+      //         `
+      //           SELECT "name" FROM blogs WHERE id=$1
+      //         `,
+      //         [post.blogId],
+      //       )
+      //     )[0]?.name ?? '';
+
+      //   result.push({
+      //     ...ConvertPostData.toDTO(post),
+      //     blogName,
+      //     likesCount: Number(likesCount),
+      //     dislikesCount: Number(dislikesCount),
+      //     userStatus,
+      //     newestLikes: likes.map(ConvertLikeData.toDTO),
+      //     images: post.images,
+      //   });
+      // }
 
       return [result, Number(count)];
     } catch (error) {

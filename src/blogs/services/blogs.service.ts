@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { BlogDomainModel } from '../types';
-import { Roles } from 'root/users/types/roles';
-import { PostDomainModel } from 'root/posts/types';
-import { PaginationQueryType } from 'root/@core/types';
-import { BlogsRepository } from '../adapter/blogs.repository';
 import { BlogsQueryRepository } from '../adapter/blogs-query.repository';
+import { BlogsRepository } from '../adapter/blogs.repository';
+import { PaginationQueryType } from 'root/@core/types';
+import { PostDomainModel } from 'root/posts/types';
+import { Roles } from 'root/users/types/roles';
+import { BlogDomainModel } from '../types';
 
 @Injectable()
 export class BlogsService {

@@ -44,6 +44,7 @@ import Paginator from 'root/@core/models/Paginator';
 import { PostsService } from 'root/posts/posts.service';
 import { PostExtendedViewModel } from 'root/posts/types';
 import { CreateBlogDTO } from 'root/blogs/dto/create-blog.dto';
+import { ImageConverter } from 'root/blogs/utils/imageConverter';
 import { BlogsService } from 'root/blogs/services/blogs.service';
 import { UserId } from 'root/@core/decorators/user-id.decorator';
 import { Post as PostModel } from 'root/posts/domain/posts.model';
@@ -58,7 +59,6 @@ import { UpdateBlogPostDTO } from 'root/bloggers/application/dtos/update-blog-po
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
-import { ImageConverter } from 'root/blogs/utils/imageConverter';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -73,7 +73,7 @@ export class BloggersBlogsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @Header('Content-type', 'text/plain')
-  async saveBlog(@UserId() userId, @Body() body: CreateBlogDTO) {
+  async saveBlog(@UserId() userId: string, @Body() body: CreateBlogDTO) {
     const { name, description, websiteUrl } = body;
 
     const blog = new Blog(name, description, websiteUrl, userId);
@@ -96,7 +96,7 @@ export class BloggersBlogsController {
   @Get()
   async getAllBlogs(
     @UserId() userId: string,
-    @Query(PaginationQuerySanitizerPipe) query,
+    @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
     const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } =
@@ -355,7 +355,7 @@ export class BloggersBlogsController {
   @Delete(':id')
   async deleteBlog(
     @UserId() userId: string,
-    @Param('id') id,
+    @Param('id') id: string,
     @Res() res: Response,
   ) {
     const blog = await this.blogsService.findBlogByIdAndDelete(id);

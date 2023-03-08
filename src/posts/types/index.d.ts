@@ -1,9 +1,9 @@
 import { Schema, HydratedDocument, LeanDocument } from 'mongoose';
 
+import type { ImagesDBType, PhotoSizeViewModel } from 'root/@core/types';
 import type { PostImageDTO } from 'root/bloggers/@common/types';
-import type { PhotoSizeViewModel } from 'root/@core/types';
+import { ImageType, LikeStatuses } from 'root/@core/types/enum';
 import type { WithId } from 'root/@core/types/utility';
-import { LikeStatuses } from 'root/@core/types/enum';
 import type {
   CommentDatabaseModel,
   CommentDomainModel,
@@ -13,6 +13,7 @@ import type {
   ExtendedLikesInfoViewModel,
   LikeDatabaseModel,
   LikeDomainModel,
+  LikesDBType,
   LikeDTO,
 } from 'root/likes/types';
 
@@ -107,27 +108,42 @@ export type PostImagesViewModel = {
   main: PhotoSizeViewModel[];
 };
 
-type PostsWithImagesQueryResultType = {
+// type PostsWithImagesQueryResultType = {
+//   id: number;
+//   shortDescription: string;
+//   content: string;
+//   blogId: number;
+//   blogName: string;
+//   title: string;
+//   createdAt: Date;
+//   size: number;
+//   width: number;
+//   height: number;
+//   url: string;
+// };
+
+type ExtendedPostQueryResult = {
   id: number;
-  shortDescription: string;
+  title: string;
   content: string;
+  shortDescription: string;
+  createdAt: Date;
   blogId: number;
   blogName: string;
-  title: string;
-  createdAt: Date;
-  size: number;
-  width: number;
-  height: number;
-  url: string;
+  likesCount: number;
+  dislikesCount: number;
+  userLikeStatus: LikeStatuses;
+  images: ImagesDBType[] | null;
+  likes: LikesDBType[] | null;
 };
 
-type PostsWithImagesDTO = {
-  id: string;
-  shortDescription: string;
-  content: string;
-  blogId: string;
-  blogName: string;
-  title: string;
-  createdAt: string;
-  images: PostImagesViewModel;
-};
+// type PostsWithImagesDTO = {
+//   id: string;
+//   shortDescription: string;
+//   content: string;
+//   blogId: string;
+//   blogName: string;
+//   title: string;
+//   createdAt: string;
+//   images: PostImagesViewModel;
+// };

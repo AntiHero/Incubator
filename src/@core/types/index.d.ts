@@ -109,3 +109,14 @@ export type StorageConfig = {
   auth_provider_x509_cert_url: string;
   client_x509_cert_url: string;
 };
+
+export type ImagesDBType = {
+  id: number;
+  name: string;
+  type: ImageType;
+  height: number;
+  url: string;
+  width: number;
+  size: number;
+  createdAt: Date;
+};
