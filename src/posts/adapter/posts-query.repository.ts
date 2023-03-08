@@ -256,8 +256,8 @@ export class PostsQueryRepository {
             blogId: post.blogId,
           }),
           blogName: post.blogName,
-          likesCount: post.likesCount,
-          dislikesCount: post.dislikesCount,
+          likesCount: Number(post.likesCount),
+          dislikesCount: Number(post.dislikesCount),
           userStatus: post.userLikeStatus,
           images: {
             main: post.images ? post.images.map(ImageConverter.toView) : [],
