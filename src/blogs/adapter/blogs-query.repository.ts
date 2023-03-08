@@ -114,7 +114,7 @@ export class BlogsQueryRepository {
   async findBlogPostsByQuery(
     id: string,
     query: PaginationQueryType,
-    userId = '',
+    userId = null,
   ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
       const count = await this.countBlogPosts(id);
@@ -124,10 +124,8 @@ export class BlogsQueryRepository {
 
       const posts: ExtendedPostQueryResult[] = await this.postRepository.query(
         getBlogPostsByQuery(sortBy, SortDirectionKeys.asc, limit, offset),
-        [id, userId],
+        [id, userId ? userId : null],
       );
-
-      console.log(posts);
 
       const result: PostExtendedLikesDTO[] = [];
 
