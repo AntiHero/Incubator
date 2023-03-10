@@ -48,7 +48,16 @@ export type BlogDTO = {
   createdAt: string;
   banInfo: BanType;
   isMembership?: boolean;
-  images?: BlogImagesViewModel;
+  images?: [
+    {
+      type: ImageType;
+      height: number;
+      width: number;
+      fileSize: number;
+      url: string;
+    },
+  ];
+  // images?: BlogImagesViewModel;
 };
 
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;
@@ -93,15 +102,19 @@ export type BlogsWithImagesQueryResult = {
   name: string;
   description: string;
   websiteUrl: string;
-  banInfo: string;
+  banInfo: BanInfo;
   createdAt: Date;
   userId: number;
   isMembership: boolean;
-  type: ImageType;
-  size: number;
-  width: number;
-  height: number;
-  url: string;
+  images?: [
+    {
+      type: ImageType;
+      fileSize: number;
+      width: number;
+      height: number;
+      url: string;
+    },
+  ];
 };
 
 export type GroupedBlogsWithImages = {
@@ -117,4 +130,21 @@ export type GroupedBlogsWithImages = {
     wallpaper: PhotoSizeViewModel;
     main: PhotoSizeViewModel[];
   };
+};
+
+export type BlogsWithImagesQueryResult = {
+  id: number;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  createdAt: Date;
+  isMembership: boolean;
+  images: [
+    {
+      type: ImageType;
+      height: number;
+      width: number;
+      fileSize: number;
+    },
+  ];
 };

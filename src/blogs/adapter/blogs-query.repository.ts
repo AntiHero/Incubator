@@ -51,8 +51,6 @@ export class BlogsQueryRepository {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(PostLike)
     private readonly postLikesRepository: Repository<PostLike>,
-    // @InjectRepository(PostImage)
-    // private readonly postImagesRepository: Repository<PostImage>,
     @InjectRepository(CommentLike)
     private readonly commentLikesRepository: Repository<CommentLike>,
   ) {}
@@ -150,65 +148,6 @@ export class BlogsQueryRepository {
         });
       }
 
-      // for (const post of posts) {
-      //   const likes = await this.postLikesRepository.query(
-      // getBlogPostLikesByQuery,
-      //     [post.id],
-      //   );
-
-      //   const images = await this.postImagesRepository.query(
-      //     `
-      //       SELECT pi.size, pi.url, pi.height, pi.width
-      //       FROM post_images pi
-      //       WHERE pi."postId"=$1
-      //     `,
-      //     [post.id],
-      //   );
-
-      //   const likesAndDislikesCount = (
-      //     await this.postLikesRepository.query(getLikesCount, [post.id])
-      //   )[0];
-
-      //   let likesCount = 0;
-      //   let dislikesCount = 0;
-
-      //   if (likesAndDislikesCount) {
-      //     likesCount = Number(likesAndDislikesCount.likesCount);
-      //     dislikesCount = Number(likesAndDislikesCount.dislikesCount);
-      //   }
-
-      //   let userStatus: LikeStatuses = LikeStatuses.None;
-
-      //   if (userId) {
-      //     userStatus =
-      //       (
-      //         await this.postLikesRepository.query(
-      //           `
-      //             SELECT "likeStatus" FROM post_likes WHERE "userId"=$1 AND "entityId"=$2
-      //           `,
-      //           [userId, post.id],
-      //         )
-      //       )[0]?.likeStatus ?? LikeStatuses.None;
-      //   }
-
-      //   result.push({
-      //     ...ConvertPostData.toDTO(post),
-      //     blogName,
-      //     likesCount,
-      //     dislikesCount,
-      //     userStatus,
-      //     newestLikes: likes.map(ConvertLikeData.toDTO),
-      //     images: {
-      //       main: images.map((img) => ({
-      //         url: img.url,
-      //         fileSize: img.size,
-      //         height: img.height,
-      //         width: img.width,
-      //       })),
-      //     },
-      //   });
-      // }
-
       return [result, count];
     } catch (error) {
       console.error(error);
@@ -244,43 +183,7 @@ export class BlogsQueryRepository {
           getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
         );
 
-      const groupedBlogs: GroupedBlogsWithImages[] = [];
-
-      blogs.forEach((blog) => {
-        const index = groupedBlogs.findIndex((b) => blog.id === b.id);
-
-        const image = {
-          url: blog.url,
-          fileSize: blog.size,
-          height: blog.height,
-          width: blog.width,
-        };
-
-        if (index !== -1) {
-          if (blog.type === ImageType.wallpaper) {
-            groupedBlogs[index].images.wallpaper = image;
-          } else {
-            groupedBlogs[index].images.main.push(image);
-          }
-        } else {
-          groupedBlogs.push({
-            id: blog.id,
-            name: blog.name,
-            description: blog.description,
-            userId: blog.userId,
-            banInfo: JSON.parse(blog.banInfo),
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership,
-            images: {
-              wallpaper: blog.type === ImageType.wallpaper ? image : null,
-              main: blog.type === ImageType.main ? [image] : [],
-            },
-          });
-        }
-      });
-
-      return [groupedBlogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
+      return [blogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
     } catch (error) {
       console.error(error);
 
@@ -288,9 +191,11 @@ export class BlogsQueryRepository {
     }
   }
 
-  async findUserBlogsByQuery(userId: string, query: PaginationQueryType) {
+  async findUserBlogsByQuery(
+    userId: string,
+    query: PaginationQueryType,
+  ): Promise<[BlogDTO[], number]> {
     if (!userId) return [[], 0];
-    console.log(query);
 
     const filter = `name ~* '${query.searchNameTerm}' AND "userId"=${userId}`;
 
@@ -305,20 +210,12 @@ export class BlogsQueryRepository {
     const { sortBy, sortDirection, pageSize: limit } = query;
     const offset = countSkip(query.pageSize, query.pageNumber);
 
-    const blogs = await this.blogsRepository.query(
-      getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
-    );
+    const blogs: BlogsWithImagesQueryResult[] =
+      await this.blogsRepository.query(
+        getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
+      );
 
-    if (!blogs) return null;
-
-    return [
-      blogs.map((blog) => {
-        const banInfo = JSON.parse(blog.banInfo);
-
-        return ConvertBlogData.toDTO({ ...blog, banInfo });
-      }),
-      Number(count),
-    ];
+    return [blogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
   }
 
   async getAllComments(

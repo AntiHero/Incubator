@@ -12,10 +12,10 @@ import { TokensModule } from './tokens/tokens.module';
 import { AdminsModule } from './admins/admins.module';
 import { TestingModule } from './testing/testing.module';
 import { ServiceModule } from './service/service.module';
+import { BloggersModule } from './bloggers/bloggers.module';
 import { CommentsModule } from './comments/comments.module';
 import { getPostgresConfig } from './configs/postgres.config';
 import { QuizGameModule } from './quiz-game/application/pairs.module';
-import { BloggersModule } from './bloggers/application/bloggers.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 

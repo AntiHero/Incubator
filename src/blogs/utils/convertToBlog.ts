@@ -1,8 +1,9 @@
+import { BlogDTO, BlogsWithImagesQueryResult, BlogViewModel } from '../types';
 import { Blog } from '../entity/blog.entity';
-import { BlogDTO, BlogViewModel, GroupedBlogsWithImages } from '../types';
+import { ImageType } from 'root/@core/types/enum';
 
 export class ConvertBlogData {
-  static withImagesToDTO(blog: GroupedBlogsWithImages): BlogDTO {
+  static withImagesToDTO(blog: BlogsWithImagesQueryResult): BlogDTO {
     return {
       id: String(blog.id),
       posts: [],
@@ -42,7 +43,22 @@ export class ConvertBlogData {
       isMembership: blog.isMembership,
     };
   }
+
   static toView(blogDTO: BlogDTO): BlogViewModel {
+    const noImage = {
+      type: null,
+      fileSize: null,
+      height: null,
+      width: null,
+      url: null,
+    };
+
+    const { type: _, ...wallpaper } =
+      blogDTO.images.find((img) => img.type === ImageType.wallpaper) ?? noImage;
+
+    const { type: __, ...main } =
+      blogDTO.images.find((img) => img.type === ImageType.main) ?? noImage;
+
     return {
       id: blogDTO.id,
       name: blogDTO.name,
@@ -50,7 +66,10 @@ export class ConvertBlogData {
       description: blogDTO.description,
       createdAt: blogDTO.createdAt,
       isMembership: blogDTO.isMembership,
-      images: blogDTO.images,
+      images: {
+        wallpaper,
+        main: [main],
+      },
     };
   }
 }
