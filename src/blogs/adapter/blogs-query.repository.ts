@@ -182,6 +182,7 @@ export class BlogsQueryRepository {
         await this.blogsRepository.query(
           getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
         );
+      console.log(blogs, 'blogs without userID');
 
       return [blogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
     } catch (error) {
@@ -214,6 +215,7 @@ export class BlogsQueryRepository {
       await this.blogsRepository.query(
         getBlogsByQuery(filter, sortBy, sortDirection, limit, offset),
       );
+    console.log(blogs, 'blogs');
 
     return [blogs.map(ConvertBlogData.withImagesToDTO), Number(count)];
   }
