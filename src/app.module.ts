@@ -18,6 +18,7 @@ import { getPostgresConfig } from './configs/postgres.config';
 import { QuizGameModule } from './quiz-game/application/pairs.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { NotificationsModule } from './gateways/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -40,8 +41,9 @@ import { SecurityDevicesModule } from './security-devices/security-devices.modul
     BloggersModule,
     QuizGameModule,
     EmailManagerModule,
+    NotificationsModule,
     SecurityDevicesModule,
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+export class AppModule { }
