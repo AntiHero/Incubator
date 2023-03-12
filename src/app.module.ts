@@ -1,24 +1,24 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from '@nestjs/common';
 
-import { AuthModule } from './auth/auth.module';
-import { AppController } from './app.controller';
-import { PostsModule } from './posts/posts.module';
-import { LikesModule } from './likes/likes.module';
-import { BlogsModule } from './blogs/blogs.module';
-import { UsersModule } from './users/users.module';
-import { TokensModule } from './tokens/tokens.module';
-import { AdminsModule } from './admins/admins.module';
-import { TestingModule } from './testing/testing.module';
-import { ServiceModule } from './service/service.module';
-import { BloggersModule } from './bloggers/bloggers.module';
-import { CommentsModule } from './comments/comments.module';
-import { getPostgresConfig } from './configs/postgres.config';
-import { QuizGameModule } from './quiz-game/application/pairs.module';
-import { EmailManagerModule } from './email-manager/email-manager.module';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
-import { NotificationsModule } from './gateways/notifications/notifications.module';
+import { EmailManagerModule } from './email-manager/email-manager.module';
+import { QuizGameModule } from './quiz-game/application/pairs.module';
+import { getPostgresConfig } from './configs/postgres.config';
+import { CommentsModule } from './comments/comments.module';
+import { BloggersModule } from './bloggers/bloggers.module';
+import { ChatModule } from './gateways/chat/chat.module';
+import { ServiceModule } from './service/service.module';
+import { TestingModule } from './testing/testing.module';
+import { AdminsModule } from './admins/admins.module';
+import { TokensModule } from './tokens/tokens.module';
+import { UsersModule } from './users/users.module';
+import { BlogsModule } from './blogs/blogs.module';
+import { LikesModule } from './likes/likes.module';
+import { PostsModule } from './posts/posts.module';
+import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,22 +28,22 @@ import { NotificationsModule } from './gateways/notifications/notifications.modu
       inject: [ConfigService],
       useFactory: getPostgresConfig,
     }),
-    AuthModule,
-    BlogsModule,
-    PostsModule,
-    LikesModule,
-    UsersModule,
-    AdminsModule,
-    TokensModule,
-    TestingModule,
-    ServiceModule,
-    CommentsModule,
+    SecurityDevicesModule,
+    EmailManagerModule,
     BloggersModule,
     QuizGameModule,
-    EmailManagerModule,
-    NotificationsModule,
-    SecurityDevicesModule,
+    CommentsModule,
+    ServiceModule,
+    TestingModule,
+    TokensModule,
+    AdminsModule,
+    UsersModule,
+    LikesModule,
+    PostsModule,
+    BlogsModule,
+    AuthModule,
+    ChatModule,
   ],
   controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}
