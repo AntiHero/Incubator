@@ -1,6 +1,5 @@
-import { AnswerDTO, AnswerViewModel, QuestionDTO } from '../types';
-import { Answer } from '../../infrastructure/database/entity/answer.entity';
 import { Question } from '../../infrastructure/database/entity/question.entity';
+import type { AnswerDTO, AnswerViewModel, QuestionDTO } from '../types';
 
 export class QuestionsConverter {
   public static toDTO(question: Question): QuestionDTO {

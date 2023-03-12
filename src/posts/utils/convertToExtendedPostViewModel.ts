@@ -1,5 +1,4 @@
 import { convertToLikeViewModel } from 'root/likes/utils/convertToLikeViewModel';
-import { ImageConverter } from 'root/blogs/utils/imageConverter';
 import { LikeStatuses } from 'root/@core/types/enum';
 import { LikeViewModel } from 'root/likes/types';
 import type {

@@ -1,20 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
-import { Repository } from 'root/@core/repositories/post-image.repository';
 import { PostsQueryRepository } from './adapter/posts-query.repository';
 import { PostsRepository } from './adapter/posts.repostitory';
 import { PaginationQueryType } from 'root/@core/types';
 import { LikeDomainModel } from 'root/likes/types';
+import { Inject } from '@nestjs/common/decorators';
 import { CommentDTO } from 'root/comments/types';
 import { Roles } from 'root/users/types/roles';
 import { PostDomainModel } from './types';
-import { Inject } from '@nestjs/common/decorators';
 
 @Injectable()
 export class PostsService {
   constructor(
     @Inject('PostImagesRepository')
-    private readonly postImagesRepository: Repository,
     private readonly postsRepository: PostsRepository,
     private readonly postsQueryRepository: PostsQueryRepository,
   ) {}

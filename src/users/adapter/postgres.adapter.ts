@@ -1,15 +1,15 @@
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Roles } from '../types/roles';
 import { User } from '../entity/user.entity';
-import { UserDomainModel, UserDTO } from '../types';
 import { BanStatus } from 'root/@core/types/enum';
 import { fiveMinInMs } from 'root/@core/constants';
 import { ConvertToUser } from '../utils/convertToUser';
 import { PaginationQueryType } from 'root/@core/types';
+import type { UserDomainModel, UserDTO } from '../types';
 import { countSkip } from 'root/@core/utils/count-skip';
 import { getUsersByQuery } from '../query/get-users.query';
 import { UserBanInfo } from '../entity/user-ban-info.entity';
@@ -19,7 +19,6 @@ import { PasswordRecovery } from '../entity/password-recovery.entity';
 import { UserConfirmationInfo } from '../entity/user-confirmation-info.entity';
 import { getUserByLoginOrEmail } from '../query/get-user-by-email-or-login.query';
 import { getUserByConfirmationCode } from '../query/get-user-by-confirmation-code.query';
-import { textChangeRangeIsUnchanged } from 'typescript';
 
 @Injectable()
 export class UsersRepository {

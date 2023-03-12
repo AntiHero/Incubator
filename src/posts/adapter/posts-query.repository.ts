@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Post } from '../entity/post.entity';
 import { Roles } from 'root/users/types/roles';
-import { ExtendedPostQueryResult, PostExtendedLikesDTO } from '../types';
 import { User } from 'root/users/models/user.model';
 import { Blog } from 'root/blogs/entity/blog.entity';
 import { LikeStatuses } from 'root/@core/types/enum';
@@ -19,7 +18,7 @@ import { ImageConverter } from 'root/blogs/utils/imageConverter';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
 import { getPostCommentsByQuery } from '../query/get-post-comments.query';
-import { getLikesCount } from 'root/blogs/query/get-blog-post-likes-count.query';
+import type { ExtendedPostQueryResult, PostExtendedLikesDTO } from '../types';
 import { getBlogPostLikesByQuery } from 'root/blogs/query/get-blog-post-likes.query';
 import { getCommentLikesCount } from 'root/blogs/query/get-comment-likes-count.query';
 import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';

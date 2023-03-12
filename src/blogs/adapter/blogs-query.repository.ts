@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import type {
   BlogsWithImagesQueryResult,
-  GroupedBlogsWithImages,
   BlogCommentType,
   BlogDTO,
 } from '../types';
@@ -13,13 +12,11 @@ import type {
   PostExtendedLikesDTO,
 } from 'root/posts/types';
 
-import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
 import { ConvertBloggerData } from 'root/bloggers/@common/utils/convertBloggerData';
 import { getBlogPostCommentsByQuery } from '../query/get-blog-post-comments.query';
 import { getCommentLikesCount } from '../query/get-comment-likes-count.query';
-// import { getBlogPostLikesByQuery } from '../query/get-blog-post-likes.query';
-// import { getLikesCount } from '../query/get-blog-post-likes-count.query';
 import { ConvertCommentData } from 'root/comments/utils/convertComment';
+import { SortDirectionKeys, LikeStatuses } from 'root/@core/types/enum';
 import { CommentLike, PostLike } from 'root/likes/entity/like.entity';
 import { getBlogPostsByQuery } from '../query/get-blog-posts.query';
 import { ConvertPostData } from 'root/posts/utils/convertPostData';
@@ -34,11 +31,6 @@ import { PaginationQueryType } from 'root/@core/types';
 import { Post } from 'root/posts/entity/post.entity';
 import { Roles } from 'root/users/types/roles';
 import { Blog } from '../entity/blog.entity';
-import {
-  SortDirectionKeys,
-  LikeStatuses,
-  ImageType,
-} from 'root/@core/types/enum';
 
 @Injectable()
 export class BlogsQueryRepository {

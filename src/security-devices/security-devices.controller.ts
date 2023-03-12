@@ -1,9 +1,8 @@
-import { Request, Response } from 'express';
 import { Controller, Delete, Get, Param, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
-import { SecurityDevicesService } from './security-devices.service';
 import { convertToSecurityDeviceViewModel } from './utils/convertToDeviceViewModel';
-import { UserId } from 'root/@core/decorators/user-id.decorator';
+import { SecurityDevicesService } from './security-devices.service';
 
 @Controller('security/devices')
 export class SecurityDevicesController {

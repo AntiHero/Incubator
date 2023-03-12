@@ -1,19 +1,16 @@
-import { Inject } from '@nestjs/common';
+import { WebSocketServer } from '@nestjs/websockets/decorators';
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets/interfaces';
 import { Server } from 'socket.io';
 import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
 } from '@nestjs/websockets';
-import { WebSocketServer } from '@nestjs/websockets/decorators';
-import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets/interfaces';
 
-@WebSocketGateway(8000, {
-  path: '/chat',
-})
+@WebSocketGateway(8000, { path: '/chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
@@ -30,6 +27,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleMessage(@MessageBody() data: string) {
     console.log(`Client: ${data}`);
 
-    this.server.emit('message', 'great to see you!');
+    return 'connection approved';
   }
 }

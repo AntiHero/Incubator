@@ -1,6 +1,5 @@
-import { Types } from 'mongoose';
-import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { prop, Ref } from '@typegoose/typegoose';
 
 import { PostModel } from 'root/posts/schemas/post.schema';
 
