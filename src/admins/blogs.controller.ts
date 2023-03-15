@@ -17,11 +17,10 @@ import { BanDTO } from './dto/ban.dto';
 import { BanUserDTO } from './dto/ban-user.dto';
 import { AdminsService } from './admins.service';
 import Paginator from 'root/@core/models/Paginator';
-import { BlogsService } from 'root/blogs/services/blogs.service';
 import { PaginationQueryType } from 'root/@core/types';
+import { BlogsService } from 'root/blogs/services/blogs.service';
 import { BasicAuthGuard } from 'root/@core/guards/basic.auth.guard';
 import { BlogWithBanInfo, BlogWithExtendedOwnerInfoType } from './types';
-import { IdValidationPipe } from 'root/@core/pipes/id-validation.pipe';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 
 @Controller('sa/blogs')
@@ -94,7 +93,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   async banUser(
     @Param('id') id: string,
-    @Param('userId', IdValidationPipe) userId: string,
+    // @Param('userId', IdValidationPipe) userId: string,
     @Body() body: BanUserDTO,
     @Res() res: Response,
   ) {

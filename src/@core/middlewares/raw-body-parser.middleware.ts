@@ -8,7 +8,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 export class RawBodyMiddleware implements NestMiddleware {
   public use(req: any, res: any, next: () => any): any {
     json({
-      verify: (req: any, res, buffer) => {
+      verify: (req: any, _, buffer) => {
         if (Buffer.isBuffer(buffer)) {
           const rawBody = Buffer.from(buffer);
           req['parsedRawBody'] = rawBody;

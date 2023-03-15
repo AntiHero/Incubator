@@ -21,16 +21,8 @@ export class PostsService {
     return this.postsRepository.addPost(post);
   }
 
-  async getExtendedPostsInfoByQuery(
-    query: PaginationQueryType,
-    filter: any,
-    userId?: string,
-  ) {
-    return this.postsQueryRepository.getExtendedPostsInfoByQuery(
-      query,
-      filter,
-      userId,
-    );
+  async getExtendedPostsInfoByQuery(query: PaginationQueryType) {
+    return this.postsQueryRepository.getExtendedPostsInfoByQuery(query);
   }
 
   async getExtendedPostInfo(id: string, userId?: string, forRole?: Roles) {

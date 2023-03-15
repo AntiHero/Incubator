@@ -13,7 +13,7 @@
     "allowJs": false,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "incremental": true,
     "skipLibCheck": true,
     "noUnusedLocals": true,
@@ -22,6 +22,7 @@
     "strictNullChecks": false,
     "resolveJsonModule": true,
     "moduleResolution": "node",
+    "noUnusedParameters": true,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "forceConsistentCasingInFileNames": true

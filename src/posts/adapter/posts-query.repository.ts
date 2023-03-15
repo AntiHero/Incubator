@@ -223,8 +223,6 @@ export class PostsQueryRepository {
 
   async getExtendedPostsInfoByQuery(
     query: PaginationQueryType,
-    filter: any,
-    userId: string,
   ): Promise<[PostExtendedLikesDTO[], number]> {
     try {
       const count = (

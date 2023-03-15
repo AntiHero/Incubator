@@ -1,11 +1,11 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
   HttpException,
+  Controller,
   HttpStatus,
+  Delete,
   Param,
+  Body,
+  Get,
   Post,
   Put,
   Query,
@@ -43,7 +43,7 @@ export class PostsController {
 
   @Get()
   async getPosts(
-    @UserId() userId: string,
+    // @UserId() userId: string,
     @Query(PaginationQuerySanitizerPipe) query: PaginationQueryType,
     @Res() res: Response,
   ) {
@@ -51,17 +51,13 @@ export class PostsController {
       query;
 
     const [posts, totalCount] =
-      await this.postsService.getExtendedPostsInfoByQuery(
-        {
-          pageNumber,
-          pageSize,
-          sortBy,
-          sortDirection,
-          searchNameTerm,
-        },
-        {},
-        userId,
-      );
+      await this.postsService.getExtendedPostsInfoByQuery({
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+        searchNameTerm,
+      });
 
     const items = posts.map(convertToExtendedViewPostModel);
 

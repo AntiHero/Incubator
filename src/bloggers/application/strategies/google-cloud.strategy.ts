@@ -38,11 +38,7 @@ export class GoogleCloudStrategy extends CloudStrategy {
     }
   }
 
-  async upload(
-    fileName: string,
-    file: Express.Multer.File,
-    prefix?: string,
-  ): Promise<string> {
+  async upload(fileName: string, file: Express.Multer.File): Promise<string> {
     const bucketName = this.configService.get<string>('BUCKET_NAME');
     this.bucket = this.storage.bucket(bucketName);
 
