@@ -10,8 +10,9 @@ import {
 
 import { User } from 'root/users/entity/user.entity';
 import { Blog } from './blog.entity';
+import { SubscriptionStatus } from '../types';
 
-@Entity('subscription')
+@Entity('subscriptions')
 @Unique(['blogId', 'userId'])
 export class Subscription {
   @PrimaryGeneratedColumn()
@@ -28,6 +29,13 @@ export class Subscription {
 
   @Column()
   userId: number;
+
+  @Column({
+    type: 'enum',
+    enum: SubscriptionStatus,
+    default: SubscriptionStatus.SUBSCRIBED,
+  })
+  status: SubscriptionStatus;
 
   @CreateDateColumn()
   createdAt: Date;

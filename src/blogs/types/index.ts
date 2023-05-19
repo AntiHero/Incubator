@@ -1,6 +1,6 @@
 import { HydratedDocument, LeanDocument } from 'mongoose';
 
-import { LikeStatuses } from 'root/@core/types/enum';
+import { ImageType, LikeStatuses } from 'root/@core/types/enum';
 
 import type {
   PostDatabaseModel,
@@ -23,6 +23,7 @@ export type BlogSchemaModel = {
 export enum SubscriptionStatus {
   NONE = 'None',
   SUBSCRIBED = 'Subscribed',
+  UNSUBSCRIBED = 'Unsubscribed',
 }
 
 export type BlogDatabaseModel = HydratedDocument<BlogSchemaModel>;
@@ -37,11 +38,11 @@ export type BlogDomainModel = {
   posts: PostDomainModel[];
 };
 
-type BlogBannedUser = {
-  userId: string | null;
-  banReason: string | null;
-  isBanned: boolean;
-};
+// type BlogBannedUser = {
+//   userId: string | null;
+//   banReason: string | null;
+//   isBanned: boolean;
+// };
 
 export type BlogDTO = {
   id: string;
@@ -93,12 +94,14 @@ export type BlogViewModel = {
 };
 
 export type BlogCommentType = CommentDTO & {
-  blogId: Types.ObjectId;
+  // blogId: Types.ObjectId;
+  blogId: string;
   blogName: string;
   likesCount: number;
   dislikesCount: number;
   userStatus: LikeStatuses;
-  postId: Types.ObjectId;
+  postId: string;
+  // postId: Types.ObjectId;
   title: string;
 };
 
@@ -148,19 +151,19 @@ export type GroupedBlogsWithImages = {
   };
 };
 
-export type BlogsWithImagesQueryResult = {
-  id: number;
-  name: string;
-  description: string;
-  websiteUrl: string;
-  createdAt: Date;
-  isMembership: boolean;
-  images: [
-    {
-      type: ImageType;
-      height: number;
-      width: number;
-      fileSize: number;
-    },
-  ];
-};
+// export type BlogsWithImagesQueryResult = {
+//   id: number;
+//   name: string;
+//   description: string;
+//   websiteUrl: string;
+//   createdAt: Date;
+//   isMembership: boolean;
+//   images: [
+//     {
+//       type: ImageType;
+//       height: number;
+//       width: number;
+//       fileSize: number;
+//     },
+//   ];
+// };

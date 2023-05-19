@@ -67,12 +67,10 @@ export class BlogsQueryRepository {
         await this.blogsRepository.query(
           `
             SELECT *, 
-            CASE 
-              WHEN $2 IN (SELECT s."userId" FROM subscription s WHERE s."blogId"=$1)
-              THEN 'Subscribed' 
-              ELSE 'None' 
-            END AS "currentUserSubscriptionStatus",
-            (SELECT COUNT(*) FROM subscription s WHERE s."blogId"=$1) AS "subscribersCount"
+            COALESCE (
+              (SELECT s.status FROM subscriptions s WHERE s."blogId"=$1 AND s."userId"=$2), 'None'
+            ) AS "currentUserSubscriptionStatus",
+            (SELECT COUNT(*) FROM subscriptions s WHERE s."blogId"=$1) AS "subscribersCount"
             FROM blogs WHERE blogs.id=$1 LIMIT 1
          `,
           [id, userId],
@@ -87,11 +85,12 @@ export class BlogsQueryRepository {
         if (banInfo.isBanned) return null;
       }
 
+      console.log(blog);
       return ConvertBlogData.toDTO({
         ...blog,
         banInfo,
         currentUserSubscriptionStatus: blog.currentUserSubscriptionStatus,
-        subscribersCount: blog.subscribersCount,
+        subscribersCount: Number(blog.subscribersCount) || 0,
       });
     } catch (error) {
       console.error(error);

@@ -73,6 +73,6 @@ export class BlogsService {
   }
 
   async unsubscribe(userId: number, blogId: number) {
-    return this.subscriptionsRepository.delete(userId, blogId);
+    return this.subscriptionsRepository.unsubscribe(userId, blogId);
   }
 }
