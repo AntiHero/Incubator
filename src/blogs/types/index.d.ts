@@ -20,6 +20,11 @@ export type BlogSchemaModel = {
   createdAt: Date;
 };
 
+export enum SubscriptionStatus {
+  NONE = 'None',
+  SUBSCRIBED = 'Subscribed',
+}
+
 export type BlogDatabaseModel = HydratedDocument<BlogSchemaModel>;
 
 export type BlogLeanModel = LeanDocument<BlogDatabaseModel>;
@@ -44,6 +49,8 @@ export type BlogDTO = {
   description: string;
   websiteUrl: string;
   userId: string | null;
+  currentUserSubscriptionStatus?: SubscriptionStatus;
+  subscribersCount?: number;
   posts: PostDTO[];
   createdAt: string;
   banInfo: BanType;
@@ -60,6 +67,11 @@ export type BlogDTO = {
   // images?: BlogImagesViewModel;
 };
 
+export type SubscriptionData = {
+  subscribersCount: number;
+  currentUserSubscriptionStatus: SubscriptionStatus;
+};
+
 export type BlogDomainModelWithId = WithId<BlogDomainModel>;
 
 export type BlogInputModel = {
@@ -73,6 +85,8 @@ export type BlogViewModel = {
   name: string;
   websiteUrl: string;
   description: string;
+  currentUserSubscriptionStatus?: SubscriptionStatus;
+  subscribersCount?: number;
   createdAt: string;
   isMembership?: boolean;
   images?: BlogImagesViewModel;
@@ -103,6 +117,8 @@ export type BlogsWithImagesQueryResult = {
   description: string;
   websiteUrl: string;
   banInfo: BanInfo;
+  currentUserSubscriptionStatus?: SubscriptionStatus;
+  subscribersCount?: number;
   createdAt: Date;
   userId: number;
   isMembership: boolean;

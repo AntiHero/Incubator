@@ -1,4 +1,9 @@
-import { BlogDTO, BlogsWithImagesQueryResult, BlogViewModel } from '../types';
+import {
+  BlogDTO,
+  BlogsWithImagesQueryResult,
+  BlogViewModel,
+  SubscriptionData,
+} from '../types';
 import { Blog } from '../entity/blog.entity';
 import { ImageType } from 'root/@core/types/enum';
 
@@ -24,7 +29,7 @@ export class ConvertBlogData {
     };
   }
 
-  static toDTO(blog: Blog): BlogDTO {
+  static toDTO(blog: Blog & SubscriptionData): BlogDTO {
     return {
       id: String(blog.id),
       posts: [],
@@ -32,6 +37,8 @@ export class ConvertBlogData {
       websiteUrl: blog.websiteUrl,
       description: blog.description,
       userId: String(blog.userId),
+      subscribersCount: blog.subscribersCount,
+      currentUserSubscriptionStatus: blog.currentUserSubscriptionStatus,
       banInfo: {
         isBanned: blog.banInfo.isBanned,
         banDate:

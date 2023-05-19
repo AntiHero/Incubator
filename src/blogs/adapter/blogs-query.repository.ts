@@ -61,14 +61,21 @@ export class BlogsQueryRepository {
     }
   }
 
-  async findBlogById(id: string, forUser?: Roles) {
+  async findBlogById(id: string, forUser?: Roles, userId?: string) {
     try {
       const blog = (
         await this.blogsRepository.query(
           `
-            SELECT * FROM blogs WHERE blogs.id=$1 LIMIT 1
+            SELECT *, 
+            CASE 
+              WHEN $2 IN (SELECT s."userId" FROM subscription s WHERE s."blogId"=$1)
+              THEN 'Subscribed' 
+              ELSE 'None' 
+            END AS "currentUserSubscriptionStatus",
+            (SELECT COUNT(*) FROM subscription s WHERE s."blogId"=$1) AS "subscribersCount"
+            FROM blogs WHERE blogs.id=$1 LIMIT 1
          `,
-          [id],
+          [id, userId],
         )
       )[0];
 
@@ -80,7 +87,12 @@ export class BlogsQueryRepository {
         if (banInfo.isBanned) return null;
       }
 
-      return ConvertBlogData.toDTO({ ...blog, banInfo });
+      return ConvertBlogData.toDTO({
+        ...blog,
+        banInfo,
+        currentUserSubscriptionStatus: blog.currentUserSubscriptionStatus,
+        subscribersCount: blog.subscribersCount,
+      });
     } catch (error) {
       console.error(error);
 

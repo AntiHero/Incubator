@@ -7,6 +7,8 @@ export const convertToBlogViewModel = (blog: BlogDTO): BlogViewModel => {
     name,
     websiteUrl,
     description,
+    subscribersCount,
+    currentUserSubscriptionStatus,
     createdAt,
     isMembership,
     images = [],
@@ -16,6 +18,8 @@ export const convertToBlogViewModel = (blog: BlogDTO): BlogViewModel => {
     id,
     name,
     websiteUrl,
+    subscribersCount,
+    currentUserSubscriptionStatus,
     description,
     createdAt,
     isMembership,
@@ -30,10 +34,10 @@ export const convertToBlogViewModel = (blog: BlogDTO): BlogViewModel => {
   };
 
   const { type: _, ...wallpaper } =
-    images.find((img) => img?.type === ImageType.wallpaper) ?? noImage;
+    images.find((img) => <any>img?.type === ImageType.wallpaper) ?? noImage;
 
   const { type: __, ...main } =
-    images.find((img) => img?.type === ImageType.main) ?? noImage;
+    images.find((img) => <any>img?.type === ImageType.main) ?? noImage;
 
   blog.images &&
     (result.images = {
