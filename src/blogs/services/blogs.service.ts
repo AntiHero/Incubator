@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { SubscriptionsRepository } from '../adapter/subscriptions.repository';
 import { BlogsQueryRepository } from '../adapter/blogs-query.repository';
 import { BlogsRepository } from '../adapter/blogs.repository';
 import { PaginationQueryType } from 'root/@core/types';
@@ -12,6 +13,7 @@ export class BlogsService {
   constructor(
     private readonly blogsRepository: BlogsRepository,
     private readonly blogsQueryRepository: BlogsQueryRepository,
+    private readonly subscriptionsRepository: SubscriptionsRepository,
   ) {}
 
   async saveBlog(blog: BlogDomainModel) {
@@ -66,8 +68,11 @@ export class BlogsService {
     return this.blogsQueryRepository.getAllComments(userId, query);
   }
 
-  async subscribe(blogId: string, userId: string) {
-    console.log(blogId, userId);
-    return;
+  async subscribe(userId: number, blogId: number) {
+    return this.subscriptionsRepository.create(userId, blogId);
+  }
+
+  async unsubscribe(userId: number, blogId: number) {
+    return this.subscriptionsRepository.delete(userId, blogId);
   }
 }

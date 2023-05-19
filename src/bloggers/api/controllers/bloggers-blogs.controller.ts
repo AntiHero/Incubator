@@ -15,6 +15,7 @@ import {
   UploadedFile,
   HttpException,
   UseInterceptors,
+  NotFoundException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -59,6 +60,7 @@ import { PostsImagesService } from 'root/bloggers/application/services/post-imag
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
 import { convertToBloggerCommentViewModel } from 'root/bloggers/@common/utils/convertToBloggerCommentsViewModel';
+import { UsersService } from 'root/users/users.service';
 
 @Controller('blogger/blogs')
 @UseGuards(BearerAuthGuard)
@@ -66,6 +68,7 @@ export class BloggersBlogsController {
   constructor(
     private readonly blogsService: BlogsService,
     private readonly postsService: PostsService,
+    private readonly usersService: UsersService,
     private readonly postImagesService: PostsImagesService,
     private readonly blogImagesService: BlogImagesService,
   ) {}
@@ -75,6 +78,10 @@ export class BloggersBlogsController {
   @Header('Content-type', 'text/plain')
   async saveBlog(@UserId() userId: string, @Body() body: CreateBlogDTO) {
     const { name, description, websiteUrl } = body;
+
+    const user = await this.usersService.findUserById(userId);
+
+    if (!user) throw new NotFoundException();
 
     const blog = new Blog(name, description, websiteUrl, userId);
 

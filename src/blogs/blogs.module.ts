@@ -16,6 +16,8 @@ import { BlogImage } from 'root/bloggers/infrastructure/database/entities/blog-i
 import { YandexCloudStrategy } from 'root/bloggers/application/strategies/yandex-cloud.strategy';
 import { BlogImagesRepository } from 'root/bloggers/infrastructure/repositories/blog-image.repository';
 import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-image.entity';
+import { SubscriptionsRepository } from './adapter/subscriptions.repository';
+import { Subscription } from './entity/subscription.entity';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-i
       PostImage,
       BlogImage,
       CommentLike,
+      Subscription,
     ]),
   ],
   controllers: [BlogsController],
@@ -36,6 +39,7 @@ import { PostImage } from 'root/bloggers/infrastructure/database/entities/post-i
     BlogsRepository,
     BlogImagesService,
     BlogsQueryRepository,
+    SubscriptionsRepository,
     {
       provide: 'BlogImagesRepository',
       useClass: BlogImagesRepository,

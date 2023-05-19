@@ -10,6 +10,7 @@ import {
   UseGuards,
   Controller,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpException, NotFoundException } from '@nestjs/common/exceptions';
@@ -34,6 +35,7 @@ import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator';
 import { BlogImagesService } from 'root/bloggers/application/services/blog-images.service';
 import { PaginationQuerySanitizerPipe } from 'root/@core/pipes/pagination-query-sanitizer.pipe';
 import { convertToExtendedViewPostModel } from 'root/posts/utils/convertToExtendedPostViewModel';
+import { BearerAuthGuard } from 'root/@core/guards/bearer-auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -85,7 +87,8 @@ export class BlogsController {
   @Get(':id')
   @Header('Content-Type', 'text/plain')
   @HttpCode(HttpStatus.OK)
-  async getBlog(@Param('id') id: string) {
+  async getBlog(@Param('id') id: string, @UserId() userId: string) {
+    console.log(userId, 'userId');
     const blog = await this.blogsService.findBlogById(id, Roles.USER);
 
     if (!blog) {
@@ -207,22 +210,30 @@ export class BlogsController {
   }
 
   @Post('/:id/subscription')
-  @UseGuards(BasicAuthGuard)
-  async subscribeToBlog(@Param('id') blogId: string) {
-    const blog = await this.blogsService.findBlogById(blogId);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(BearerAuthGuard)
+  async subscribeToBlog(
+    @Param('id', ParseIntPipe) blogId: number,
+    @UserId(ParseIntPipe) userId: number,
+  ) {
+    const blog = await this.blogsService.findBlogById(String(blogId));
 
     if (!blog) throw new NotFoundException();
 
-    // await this.blogsService.subscribe(blogId);
+    await this.blogsService.subscribe(userId, blogId);
   }
 
   @Delete('/:id/subscription')
-  @UseGuards(BasicAuthGuard)
-  async remvoeSubscribeToBlog(@Param('id') blogId: string) {
-    const blog = await this.blogsService.findBlogById(blogId);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(BearerAuthGuard)
+  async remvoeSubscribeToBlog(
+    @Param('id', ParseIntPipe) blogId: number,
+    @UserId(ParseIntPipe) userId: number,
+  ) {
+    const blog = await this.blogsService.findBlogById(String(blogId));
 
     if (!blog) throw new NotFoundException();
 
-    // await this.blogsService.subscribe(blogId);
+    await this.blogsService.unsubscribe(userId, blogId);
   }
 }
