@@ -29,6 +29,7 @@ async function bootstrap() {
       exceptionFactory,
     }),
   );
+  // adds class-validator IOC support
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalFilters(
     new HttpExceptionFilter(),

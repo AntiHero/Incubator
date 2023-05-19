@@ -12,7 +12,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { HttpException } from '@nestjs/common/exceptions';
+import { HttpException, NotFoundException } from '@nestjs/common/exceptions';
 
 import type { BlogViewModel, BlogWithImagesViewModel } from './types';
 
@@ -204,5 +204,25 @@ export class BlogsController {
     if (!blog) return res.status(404).send();
 
     res.status(204).send();
+  }
+
+  @Post('/:id/subscription')
+  @UseGuards(BasicAuthGuard)
+  async subscribeToBlog(@Param('id') blogId: string) {
+    const blog = await this.blogsService.findBlogById(blogId);
+
+    if (!blog) throw new NotFoundException();
+
+    // await this.blogsService.subscribe(blogId);
+  }
+
+  @Delete('/:id/subscription')
+  @UseGuards(BasicAuthGuard)
+  async remvoeSubscribeToBlog(@Param('id') blogId: string) {
+    const blog = await this.blogsService.findBlogById(blogId);
+
+    if (!blog) throw new NotFoundException();
+
+    // await this.blogsService.subscribe(blogId);
   }
 }

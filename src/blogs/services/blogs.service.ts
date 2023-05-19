@@ -65,4 +65,9 @@ export class BlogsService {
   async getAllComments(userId: string, query: PaginationQueryType) {
     return this.blogsQueryRepository.getAllComments(userId, query);
   }
+
+  async subscribe(blogId: string, userId: string) {
+    console.log(blogId, userId);
+    return;
+  }
 }
