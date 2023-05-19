@@ -218,6 +218,8 @@ export class BlogsController {
   ) {
     const blog = await this.blogsService.findBlogById(String(blogId));
 
+    if (Number(blog.userId) === userId) return;
+
     if (!blog) throw new NotFoundException();
 
     await this.blogsService.subscribe(userId, blogId);
