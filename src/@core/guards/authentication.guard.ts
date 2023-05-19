@@ -13,7 +13,7 @@ export class AuthenticationGuard implements CanActivate {
   constructor(private readonly usersService: UsersService) {}
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
-    const { loginOrEmail, password } = req.body as LoginUserDTO;
+    const { loginOrEmail, password = '' } = req.body as LoginUserDTO;
 
     const isValid = await this.usersService.authenticateUser(
       loginOrEmail,

@@ -16,7 +16,10 @@ export class LoginUserDTO {
   loginOrEmail: string;
 
   @IsString({ message: NOT_STRING_ERROR })
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => {
+    console.log(value, 'value');
+    return value.trim();
+  })
   @MaxLength(MAX_PASSWORD_LEN, { message: MAX_LENGTH_ERROR(MAX_PASSWORD_LEN) })
   @MinLength(MIN_PASSWORD_LEN, { message: MIN_LENGTH_ERROR(MIN_PASSWORD_LEN) })
   password: string;

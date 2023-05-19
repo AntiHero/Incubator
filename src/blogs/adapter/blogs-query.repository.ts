@@ -63,19 +63,31 @@ export class BlogsQueryRepository {
 
   async findBlogById(id: string, forUser?: Roles, userId?: string) {
     try {
-      const blog = (
-        await this.blogsRepository.query(
-          `
+      const blog = userId
+        ? (
+            await this.blogsRepository.query(
+              `
             SELECT *, 
             COALESCE (
               (SELECT s.status FROM subscriptions s WHERE s."blogId"=$1 AND s."userId"=$2), 'None'
             ) AS "currentUserSubscriptionStatus",
-            (SELECT COUNT(*) FROM subscriptions s WHERE s."blogId"=$1) AS "subscribersCount"
+            (SELECT COUNT(*) FROM subscriptions s WHERE s."blogId"=$1 AND s.status='Subscribed') AS "subscribersCount"
             FROM blogs WHERE blogs.id=$1 LIMIT 1
          `,
-          [id, userId],
-        )
-      )[0];
+              [id, userId],
+            )
+          )[0]
+        : (
+            await this.blogsRepository.query(
+              `
+            SELECT *,
+            'None' AS "currentUserSubscriptionStatus",
+            (SELECT COUNT(*) FROM subscriptions s WHERE s."blogId"=$1 AND s.status='Subscribed') AS "subscribersCount"
+            FROM blogs WHERE blogs.id=$1 LIMIT 1
+         `,
+              [id],
+            )
+          )[0];
 
       if (!blog) return null;
 
@@ -85,7 +97,6 @@ export class BlogsQueryRepository {
         if (banInfo.isBanned) return null;
       }
 
-      console.log(blog);
       return ConvertBlogData.toDTO({
         ...blog,
         banInfo,

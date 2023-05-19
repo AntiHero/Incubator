@@ -88,8 +88,7 @@ export class BlogsController {
   @Header('Content-Type', 'text/plain')
   @HttpCode(HttpStatus.OK)
   async getBlog(@Param('id') id: string, @UserId() userId: string) {
-    console.log(userId, 'userId');
-    const blog = await this.blogsService.findBlogById(id, Roles.USER);
+    const blog = await this.blogsService.findBlogById(id, Roles.USER, userId);
 
     if (!blog) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
