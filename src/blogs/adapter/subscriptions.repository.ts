@@ -1,8 +1,9 @@
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Subscription } from '../entity/subscription.entity';
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+
 import { SubscriptionStatus } from '../types';
+import { Subscription } from '../entity/subscription.entity';
 
 @Injectable()
 export class SubscriptionsRepository {

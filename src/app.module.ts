@@ -4,10 +4,12 @@ import { Module } from '@nestjs/common';
 
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 import { EmailManagerModule } from './email-manager/email-manager.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 import { QuizGameModule } from './quiz-game/application/pairs.module';
 import { getPostgresConfig } from './configs/postgres.config';
 import { CommentsModule } from './comments/comments.module';
 import { BloggersModule } from './bloggers/bloggers.module';
+import { TelegramModule } from './telegram/telegram.module';
 import { ChatModule } from './gateways/chat/chat.module';
 import { ServiceModule } from './service/service.module';
 import { TestingModule } from './testing/testing.module';
@@ -43,6 +45,8 @@ import { AuthModule } from './auth/auth.module';
     BlogsModule,
     AuthModule,
     ChatModule,
+    TelegramModule,
+    IntegrationsModule,
   ],
   controllers: [AppController],
 })

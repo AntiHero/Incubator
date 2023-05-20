@@ -13,6 +13,7 @@ import { UserBanInfo } from './user-ban-info.entity';
 import { PasswordRecovery } from './password-recovery.entity';
 import { fiveMinInMs, saltRounds } from 'root/@core/constants';
 import { UserConfirmationInfo } from './user-confirmation-info.entity';
+import { TelegramNotification } from 'root/integrations/enitity/telegram-notification.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -33,6 +34,11 @@ export class User extends BaseEntity {
 
   @OneToOne(() => UserConfirmationInfo)
   userConfirmationInfo: UserConfirmationInfo;
+
+  @OneToOne(() => TelegramNotification, (n) => n.user, {
+    cascade: ['insert'],
+  })
+  telegramNotification: TelegramNotification;
 
   @Column({ select: false })
   password: string;
